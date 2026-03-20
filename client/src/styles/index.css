@@ -784,10 +784,11 @@ input, textarea { font-family: inherit; }
 /* ─── 3-Column Active Layout ─── */
 
 .dsp-3col {
-  display: flex; gap: 20px;
-  flex: 1; min-height: 0;
+  display: flex; gap: 24px;
+  height: 75vh;
   align-items: stretch;
-  padding: 8px 0;
+  padding: 0;
+  margin: auto 0;
 }
 
 .dsp-card {
@@ -799,7 +800,7 @@ input, textarea { font-family: inherit; }
 }
 
 .dsp-list-card {
-  flex: 1; min-width: 0;
+  width: 30%; flex-shrink: 0;
   padding: 10px 12px;
 }
 
@@ -823,7 +824,7 @@ input, textarea { font-family: inherit; }
 
 /* CENTER: Logo + Motto */
 .dsp-center-brand {
-  width: 200px; flex-shrink: 0;
+  flex: 1;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: 16px;
@@ -932,7 +933,7 @@ input, textarea { font-family: inherit; }
 
 /* RIGHT: QR Card */
 .dsp-qr-card {
-  width: 220px; flex-shrink: 0;
+  width: 30%; flex-shrink: 0;
   align-items: center; justify-content: center;
   gap: 12px; padding: 16px;
 }
