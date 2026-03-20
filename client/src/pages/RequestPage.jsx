@@ -218,7 +218,8 @@ export default function RequestPage() {
   if (error) return <div className="status-overlay"><div className="icon">😕</div><h2>Oops</h2><p>{error}</p></div>;
 
   const visibleRequests = requests.filter(r => r.status !== 'rejected' && r.status !== 'played');
-  const remaining = 3 - requestCount;
+  const limit = event.request_limit || 2;
+  const remaining = limit - requestCount;
   const canRequest = remaining > 0 && ['active', 'countdown'].includes(event.status);
 
   if (event.status === 'waiting') {
@@ -269,7 +270,7 @@ export default function RequestPage() {
         )}
         <div className="request-remaining">
           {remaining > 0
-            ? <>{T('request.remaining')}: <strong>{remaining}/3</strong></>
+            ? <>{T('request.remaining')}: <strong>{remaining}/{limit}</strong></>
             : <span style={{ color: 'var(--neon-pink)' }}>{T('request.limit_reached')}</span>
           }
         </div>

@@ -155,9 +155,10 @@ app.post('/api/events/:slug/requests', (req, res) => {
       return res.status(400).json({ error: 'Song name and device ID required' });
     }
 
+    const limit = event.request_limit || 2;
     const count = db.getDeviceRequestCount(event.id, deviceId);
-    if (count >= 3) {
-      return res.status(400).json({ error: 'Request limit reached', limit: 3 });
+    if (count >= limit) {
+      return res.status(400).json({ error: 'Request limit reached', limit });
     }
 
     const request = db.createRequest(event.id, songName, artist, albumArt, spotifyId, deviceId);
@@ -235,27 +236,12 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
   }
 });
 
-// Messages (Chat)
-app.get('/api/events/:slug/messages', djAuth, (req, res) => {
+app.put('/api/events/:slug/limit', djAuth, (req, res) => {
   try {
-    const event = db.getEventBySlug(req.params.slug);
-    if (!event) return res.status(404).json({ error: 'Event not found' });
-    const messages = db.getMessages(event.id);
-    res.json(messages);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/api/events/:slug/messages', djAuth, (req, res) => {
-  try {
-    const event = db.getEventBySlug(req.params.slug);
-    if (!event) return res.status(404).json({ error: 'Event not found' });
-    const { text, sender } = req.body;
-    if (!text?.trim()) return res.status(400).json({ error: 'Message text required' });
-    const message = db.createMessage(event.id, sender || 'dj', text.trim());
-    io.to(req.params.slug).emit('chat-message', message);
-    res.json(message);
+    const { requestLimit } = req.body;
+    if (![1, 2].includes(requestLimit)) return res.status(400).json({ error: 'Limit must be 1 or 2' });
+    const event = db.updateRequestLimit(req.params.slug, requestLimit);
+    res.json(event);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

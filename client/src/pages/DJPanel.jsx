@@ -27,12 +27,9 @@ export default function DJPanel() {
   const [tickerTexts, setTickerTexts] = useState('');
   const [tickerSaving, setTickerSaving] = useState(false);
   const [showQr, setShowQr] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [chatInput, setChatInput] = useState('');
-  const [chatSending, setChatSending] = useState(false);
+  const [requestLimit, setRequestLimit] = useState(2);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
-  const chatEndRef = useRef(null);
 
   const T = useCallback((key) => t(lang, key), [lang]);
 
@@ -57,11 +54,8 @@ export default function DJPanel() {
       setLang(data.language || 'tr');
       setBrandText(data.brand_text || '');
       setTickerTexts(data.ticker_texts || '');
+      setRequestLimit(data.request_limit || 2);
       await fetchRequests(eventSlug);
-      try {
-        const msgRes = await fetch(`${API}/api/events/${eventSlug}/messages`, { headers: { 'Content-Type': 'application/json', 'x-dj-password': password } });
-        if (msgRes.ok) { const msgs = await msgRes.json(); setMessages(msgs); }
-      } catch {}
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
     } catch (err) {
       showToast(err.message);
@@ -88,16 +82,11 @@ export default function DJPanel() {
       setEvent(prev => prev ? { ...prev, status } : prev);
     });
 
-    socket.on('chat-message', (msg) => {
-      setMessages(prev => [...prev, msg]);
-    });
-
     return () => {
       socket.off('request-added');
       socket.off('vote-updated');
       socket.off('list-updated');
       socket.off('event-status');
-      socket.off('chat-message');
       socket.disconnect();
     };
   }, [slug, fetchRequests]);
@@ -217,23 +206,15 @@ export default function DJPanel() {
     }
   }, [slug, password]);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const sendMessage = async (sender = 'dj') => {
-    if (!chatInput.trim() || chatSending) return;
-    setChatSending(true);
+  const updateRequestLimit = async (limit) => {
+    setRequestLimit(limit);
     try {
-      await fetch(`${API}/api/events/${slug}/messages`, {
-        method: 'POST',
+      await fetch(`${API}/api/events/${slug}/limit`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
-        body: JSON.stringify({ text: chatInput.trim(), sender }),
+        body: JSON.stringify({ requestLimit: limit }),
       });
-      setChatInput('');
-    } catch {} finally {
-      setChatSending(false);
-    }
+    } catch {}
   };
 
   const handleTickerChange = (val) => {
@@ -389,82 +370,52 @@ export default function DJPanel() {
         )}
       </AnimatePresence>
 
-      {/* ─── Split: Requests (left) + Chat (right) ─── */}
-      <div className="djc-split">
-        {/* LEFT: Request List */}
-        <div className="djc-split-left">
-          <div className="djc-list-header">
-            <span>🎵 {T('dj.requests_list')} ({pendingRequests.length})</span>
-          </div>
-          {pendingRequests.length === 0 ? (
-            <div className="empty-state" style={{ flex: 1 }}>
-              <div className="icon">📋</div>
-              <p>{T('dj.no_requests')}</p>
-            </div>
-          ) : (
-            <div className="dj-list-scroll">
-              <table className="dj-table">
-                <AnimatePresence>
-                  <tbody>
-                    {pendingRequests.map((req, idx) => (
-                      <motion.tr key={req.id} className="dj-table-row" layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
-                        <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>{idx + 1}</td>
-                        <td style={{ width: 40, padding: '6px' }}>
-                          {req.album_art
-                            ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
-                            : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
-                          }
-                        </td>
-                        <td>
-                          <div className="dj-table-song">{req.song_name}</div>
-                          {req.artist && <div className="dj-table-artist">{req.artist}</div>}
-                        </td>
-                        <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
-                        <td className="dj-table-actions">
-                          {req.status === 'pending' && <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')}>✓</button>}
-                          {req.status === 'approved' && <span style={{ fontSize: 10, color: 'var(--neon-cyan)', fontWeight: 600 }}>✓</span>}
-                          <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }}>✕</button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </AnimatePresence>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* RIGHT: Chat */}
-        <div className="djc-split-right">
-          <div className="djc-list-header">
-            <span>💬 {lang === 'tr' ? 'Teknik Masa' : 'Tech Desk'}</span>
-          </div>
-          <div className="djc-chat-messages">
-            {messages.length === 0 && (
-              <div className="djc-chat-empty">{lang === 'tr' ? 'Henüz mesaj yok' : 'No messages yet'}</div>
-            )}
-            {messages.map((msg) => (
-              <div key={msg.id} className={`djc-chat-msg ${msg.sender === 'dj' ? 'djc-msg-dj' : 'djc-msg-tech'}`}>
-                <div className="djc-msg-sender">{msg.sender === 'dj' ? '🎧 DJ' : '🔧 Teknik'}</div>
-                <div className="djc-msg-text">{msg.text}</div>
-              </div>
-            ))}
-            <div ref={chatEndRef} />
-          </div>
-          <div className="djc-chat-input-row">
-            <input
-              className="input djc-chat-input"
-              placeholder={lang === 'tr' ? 'Mesaj yaz...' : 'Type message...'}
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') sendMessage('dj'); }}
-            />
-            <button className="btn btn-primary djc-chat-send" onClick={() => sendMessage('dj')} disabled={chatSending || !chatInput.trim()}>
-              {lang === 'tr' ? 'Gönder' : 'Send'}
-            </button>
-          </div>
+      {/* ─── Request List ─── */}
+      <div className="djc-list-header">
+        <span>🎵 {T('dj.requests_list')} ({pendingRequests.length})</span>
+        <div className="djc-limit-toggle">
+          <span className="djc-limit-label">{lang === 'tr' ? 'Kişi başı limit:' : 'Per person:'}</span>
+          <button className={`preset-btn djc-preset ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
+          <button className={`preset-btn djc-preset ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
         </div>
       </div>
+
+      {pendingRequests.length === 0 ? (
+        <div className="empty-state" style={{ flex: 1 }}>
+          <div className="icon">📋</div>
+          <p>{T('dj.no_requests')}</p>
+        </div>
+      ) : (
+        <div className="dj-list-scroll">
+          <table className="dj-table">
+            <AnimatePresence>
+              <tbody>
+                {pendingRequests.map((req, idx) => (
+                  <motion.tr key={req.id} className="dj-table-row" layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
+                    <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>{idx + 1}</td>
+                    <td style={{ width: 40, padding: '6px' }}>
+                      {req.album_art
+                        ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
+                        : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
+                      }
+                    </td>
+                    <td>
+                      <div className="dj-table-song">{req.song_name}</div>
+                      {req.artist && <div className="dj-table-artist">{req.artist}</div>}
+                    </td>
+                    <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
+                    <td className="dj-table-actions">
+                      {req.status === 'pending' && <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')}>✓</button>}
+                      {req.status === 'approved' && <span style={{ fontSize: 10, color: 'var(--neon-cyan)', fontWeight: 600 }}>✓</span>}
+                      <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }}>✕</button>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </AnimatePresence>
+          </table>
+        </div>
+      )}
 
       <AnimatePresence>
         {toast && <motion.div className="success-toast" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>{toast}</motion.div>}
