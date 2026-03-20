@@ -760,8 +760,27 @@ input, textarea { font-family: inherit; }
   display: flex; align-items: center;
   padding: 6px 0; flex-shrink: 0;
 }
-.dsp-topbar-center { flex: 1; text-align: center; }
+.dsp-topbar-center { flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .dsp-topbar-right { flex-shrink: 0; position: absolute; right: 28px; top: 16px; }
+
+.dsp-brand-row {
+  display: flex; align-items: center; gap: 12px; justify-content: center;
+}
+.dsp-brand-logo {
+  height: 40px; width: auto;
+  filter: drop-shadow(0 0 16px rgba(0,212,255,0.35))
+         drop-shadow(0 0 30px rgba(184,41,221,0.2));
+  animation: logoBreathe 3s ease-in-out infinite;
+}
+.dsp-brand-motto {
+  font-family: var(--font-display);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  background-clip: text; -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
 
 .dsp-event-name {
   font-family: var(--font-display);
@@ -781,12 +800,13 @@ input, textarea { font-family: inherit; }
   50% { background-position: 100% 50%; }
 }
 
-/* ─── 3-Column Active Layout ─── */
+/* ─── 2-Column Active Layout ─── */
 
 .dsp-3col {
   display: flex; gap: 24px;
-  height: 75vh;
+  height: 70vh;
   align-items: stretch;
+  justify-content: center;
   padding: 0;
   margin: auto 0;
   width: 100%;
@@ -801,8 +821,8 @@ input, textarea { font-family: inherit; }
 }
 
 .dsp-list-card {
-  flex: 0 0 30%;
-  max-width: 30%;
+  flex: 0 0 40%;
+  max-width: 40%;
   padding: 10px 12px;
 }
 
@@ -824,32 +844,12 @@ input, textarea { font-family: inherit; }
   flex: 1; min-height: 0; overflow-y: auto;
 }
 
-/* CENTER: Logo + Motto */
-.dsp-center-brand {
-  flex: 1 1 auto;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 16px;
-}
-.dsp-center-logo {
-  height: 90px; width: auto;
-  filter: drop-shadow(0 0 24px rgba(0,212,255,0.35))
-         drop-shadow(0 0 50px rgba(184,41,221,0.2));
-  animation: logoBreathe 3s ease-in-out infinite;
-}
+/* (center brand moved to topbar) */
 @keyframes logoBreathe {
   0%, 100% { filter: drop-shadow(0 0 24px rgba(0,212,255,0.35)) drop-shadow(0 0 50px rgba(184,41,221,0.2)); transform: scale(1); }
   50% { filter: drop-shadow(0 0 36px rgba(0,212,255,0.5)) drop-shadow(0 0 70px rgba(184,41,221,0.35)); transform: scale(1.03); }
 }
-.dsp-center-motto {
-  font-family: var(--font-display);
-  font-size: 11px; font-weight: 700;
-  letter-spacing: 4px; text-transform: uppercase;
-  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
-  background-clip: text; -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-align: center;
-}
+/* dsp-center-motto removed, now using dsp-brand-motto in topbar */
 
 .dsp-table {
   width: 100%;
@@ -938,7 +938,7 @@ input, textarea { font-family: inherit; }
   flex: 0 0 30%;
   max-width: 30%;
   align-items: center; justify-content: center;
-  gap: 12px; padding: 16px;
+  gap: 16px; padding: 20px;
 }
 .dsp-qr-box {
   padding: 8px; background: #fff;

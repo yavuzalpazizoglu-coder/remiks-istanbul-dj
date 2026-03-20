@@ -332,13 +332,17 @@ export default function DisplayPage() {
       )}
 
       <div className="display-content dsp-v2">
-        {/* ─── Event Name (top center) + LIVE badge (top right) ─── */}
+        {/* ─── Event Name + Logo/Motto (top center) + LIVE badge (top right) ─── */}
         <div className="dsp-topbar">
           <div className="dsp-topbar-center">
             <motion.div className="dsp-event-name"
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
               {displayName}
             </motion.div>
+            <div className="dsp-brand-row">
+              <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="dsp-brand-logo" />
+              <div className="dsp-brand-motto">Request · Vote · Dance</div>
+            </div>
           </div>
           <div className="dsp-topbar-right">
             <div className="display-live-badge">
@@ -420,16 +424,10 @@ export default function DisplayPage() {
                 )}
               </div>
 
-              {/* CENTER: Logo + Motto */}
-              <div className="dsp-center-brand">
-                <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="dsp-center-logo" />
-                <div className="dsp-center-motto">Request · Vote · Dance</div>
-              </div>
-
               {/* RIGHT: QR Card */}
               <div className="dsp-card dsp-qr-card">
                 <div className="dsp-qr-box">
-                  <QRCodeSVG value={requestUrl} size={160} bgColor="#ffffff" fgColor="#000000" level="M" />
+                  <QRCodeSVG value={requestUrl} size={200} bgColor="#ffffff" fgColor="#000000" level="M" />
                 </div>
                 <div className="dsp-qr-label">
                   {lang === 'tr' ? 'QR Kodu Tara' : 'Scan QR Code'}
