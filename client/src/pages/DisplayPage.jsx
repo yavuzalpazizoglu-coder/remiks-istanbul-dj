@@ -340,14 +340,7 @@ export default function DisplayPage() {
   return (
     <div className="display-page">
       <div className="display-bg" />
-      {['active', 'paused'].includes(event.status) && (
-        <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
-      )}
-      {!['active', 'paused'].includes(event.status) && (
-        <div className="dsp-center-hero">
-          <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="dsp-hero-logo" />
-        </div>
-      )}
+      <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
       <DiscoParticles />
       <LightBeams />
       {showConfetti && <Confetti />}
@@ -384,8 +377,6 @@ export default function DisplayPage() {
         {/* ─── WAITING ─── */}
         {event.status === 'waiting' && (
           <div className="display-state-center display-waiting">
-            <motion.img src="/logos/logo-white.png" alt="" className="display-waiting-logo"
-              initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }} />
             <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
               {T('display.waiting')}
             </motion.h2>
