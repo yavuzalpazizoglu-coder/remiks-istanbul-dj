@@ -790,32 +790,12 @@ input, textarea { font-family: inherit; }
 .dj-table-actions { white-space: nowrap; }
 .dj-table-actions .btn { padding: 5px 10px; font-size: 11px; }
 
-.dj-table-row-pending {
-  opacity: 0.7;
-  border-left: 2px solid var(--rb-orange, #f59e0b) !important;
-}
 .dj-table-row-pending td:first-child {
-  border-left: 2px solid var(--rb-orange, #f59e0b);
+  border-left: 3px solid var(--rb-orange, #f59e0b) !important;
+  padding-left: 6px;
 }
-
-.djc-section-label {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  margin: 4px 0 2px;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
-}
-.djc-section-pending {
+.dj-table-row-pending .dj-table-song {
   color: var(--rb-orange, #f59e0b);
-  background: rgba(245, 158, 11, 0.08);
-  border-left: 3px solid var(--rb-orange, #f59e0b);
-}
-.djc-section-approved {
-  color: var(--rb-green, #00e05a);
-  background: rgba(0, 224, 90, 0.06);
-  border-left: 3px solid var(--rb-green, #00e05a);
 }
 
 .djc-stat-pending {

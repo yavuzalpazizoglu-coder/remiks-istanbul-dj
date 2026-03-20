@@ -614,73 +614,33 @@ export default function DJPanel() {
         </div>
       ) : (
         <div className="dj-list-scroll">
-          {waitingRequests.length > 0 && (
-            <>
-              <div className="djc-section-label djc-section-pending">
-                ⏳ {lang === 'tr' ? `Onay Bekleyen (${waitingRequests.length})` : `Pending Approval (${waitingRequests.length})`}
-              </div>
-              <table className="dj-table">
-                <AnimatePresence>
-                  <tbody>
-                    {waitingRequests.map((req, idx) => (
-                      <motion.tr key={req.id} className="dj-table-row dj-table-row-pending" layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
-                        <td className="dj-table-rank">{idx + 1}</td>
-                        <td style={{ width: 40, padding: '6px' }}>
-                          {req.album_art
-                            ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
-                            : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
-                          }
-                        </td>
-                        <td>
-                          <div className="dj-table-song">{req.song_name}</div>
-                          {req.artist && <div className="dj-table-artist">{req.artist}</div>}
-                        </td>
-                        <td className="dj-table-votes">{req.votes}</td>
-                        <td className="dj-table-actions">
-                          <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')} title={lang === 'tr' ? 'Onayla' : 'Approve'}>✓</button>
-                          <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }} title={lang === 'tr' ? 'Reddet' : 'Reject'}>✕</button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </AnimatePresence>
-              </table>
-            </>
-          )}
-
-          {approvedRequests.length > 0 && (
-            <>
-              <div className="djc-section-label djc-section-approved">
-                ✅ {lang === 'tr' ? `Onaylanan (${approvedRequests.length})` : `Approved (${approvedRequests.length})`}
-              </div>
-              <table className="dj-table">
-                <AnimatePresence>
-                  <tbody>
-                    {approvedRequests.map((req, idx) => (
-                      <motion.tr key={req.id} className="dj-table-row" layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
-                        <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>{idx + 1}</td>
-                        <td style={{ width: 40, padding: '6px' }}>
-                          {req.album_art
-                            ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
-                            : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
-                          }
-                        </td>
-                        <td>
-                          <div className="dj-table-song">{req.song_name}</div>
-                          {req.artist && <div className="dj-table-artist">{req.artist}</div>}
-                        </td>
-                        <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
-                        <td className="dj-table-actions">
-                          <button className="btn btn-small btn-played" onClick={() => updateRequestStatus(req.id, 'played')} title={lang === 'tr' ? 'Çalındı' : 'Played'}>♫</button>
-                          <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }} title={lang === 'tr' ? 'Reddet' : 'Reject'}>✕</button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </AnimatePresence>
-              </table>
-            </>
-          )}
+          <table className="dj-table">
+            <AnimatePresence>
+              <tbody>
+                {[...waitingRequests, ...approvedRequests].map((req, idx) => (
+                  <motion.tr key={req.id} className={`dj-table-row ${req.status === 'pending' ? 'dj-table-row-pending' : ''}`} layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
+                    <td className={`dj-table-rank ${req.status === 'approved' && idx - waitingRequests.length === 0 ? 'top-1' : req.status === 'approved' && idx - waitingRequests.length === 1 ? 'top-2' : req.status === 'approved' && idx - waitingRequests.length === 2 ? 'top-3' : ''}`}>{idx + 1}</td>
+                    <td style={{ width: 40, padding: '6px' }}>
+                      {req.album_art
+                        ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
+                        : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
+                      }
+                    </td>
+                    <td>
+                      <div className="dj-table-song">{req.song_name}</div>
+                      {req.artist && <div className="dj-table-artist">{req.artist}</div>}
+                    </td>
+                    <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
+                    <td className="dj-table-actions">
+                      {req.status === 'pending' && <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')} title={lang === 'tr' ? 'Onayla' : 'Approve'}>✓</button>}
+                      {req.status === 'approved' && <button className="btn btn-small btn-played" onClick={() => updateRequestStatus(req.id, 'played')} title={lang === 'tr' ? 'Çalındı' : 'Played'}>♫</button>}
+                      <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }} title={lang === 'tr' ? 'Reddet' : 'Reject'}>✕</button>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </AnimatePresence>
+          </table>
         </div>
       )}
 
