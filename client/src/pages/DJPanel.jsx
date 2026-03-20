@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
@@ -171,13 +171,14 @@ export default function DJPanel() {
     setBrandSaving(true);
     try {
       await fetch(`${API}/api/events/${slug}/brand`, {
-        method: 'PUT', headers,
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
         body: JSON.stringify({ brandText: text }),
       });
     } catch {} finally {
       setBrandSaving(false);
     }
-  }, [slug, headers]);
+  }, [slug, password]);
 
   const handleBrandChange = (val) => {
     setBrandText(val);
