@@ -97,69 +97,53 @@ function VoteFloat({ count }) {
   ));
 }
 
-function PodiumCard({ req, rank, lang }) {
+function SongRow({ req, rank, lang }) {
   const [shaking, setShaking] = useState(false);
   const prevVotes = useRef(req.votes);
+  const isTop3 = rank <= 3;
+
   useEffect(() => {
     if (req.votes > prevVotes.current) { setShaking(true); setTimeout(() => setShaking(false), 500); }
     prevVotes.current = req.votes;
   }, [req.votes]);
 
   return (
-    <motion.div
-      className={`podium-card rank-${rank} ${shaking ? 'animate-shake' : ''}`}
-      layout transition={{ type: 'spring', stiffness: 280, damping: 26 }}
-      initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-      style={{ order: rank === 1 ? 1 : rank === 2 ? 0 : 2 }}
+    <motion.tr
+      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${shaking ? 'animate-shake' : ''}`}
+      layout
+      transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
     >
-      <div className="podium-rank">#{rank}</div>
-      {req.album_art ? <img src={req.album_art} alt="" className="podium-art" /> : <div className="podium-art-placeholder">🎵</div>}
-      <div className="podium-song">{req.song_name}</div>
-      {req.artist && <div className="podium-artist">{req.artist}</div>}
-      <div className="podium-votes" style={{ position: 'relative' }}>
-        <VoteFloat count={req.votes} />
-        <motion.span key={req.votes} initial={{ scale: 1.4 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 400 }}>
-          {req.votes}
-        </motion.span>
-      </div>
-      <div className="podium-vote-label">{t(lang, 'request.votes')}</div>
-      {rank === 1 && req.votes >= 5 && (
-        <div style={{ position: 'absolute', top: 6, right: 8 }}>
-          <span className="badge badge-hot"><span className="fire-icon">🔥</span> HOT</span>
+      <td className={`dtable-rank rank-${rank}`}>
+        {rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
+      </td>
+      <td className="dtable-art-cell">
+        {req.album_art
+          ? <img src={req.album_art} alt="" className="dtable-art" />
+          : <div className="dtable-art-ph">🎵</div>
+        }
+      </td>
+      <td className="dtable-info-cell">
+        <div className={`dtable-song ${isTop3 ? 'dtable-song-lg' : ''}`}>{req.song_name}</div>
+        {req.artist && <div className="dtable-artist">{req.artist}</div>}
+      </td>
+      <td className="dtable-votes-cell">
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <VoteFloat count={req.votes} />
+          <motion.span className={`dtable-votes ${isTop3 ? 'dtable-votes-lg' : ''}`}
+            key={req.votes} initial={{ scale: 1.3 }} animate={{ scale: 1 }}>
+            {req.votes}
+          </motion.span>
         </div>
+        <span className="dtable-vote-label">{t(lang, 'request.votes')}</span>
+      </td>
+      {rank === 1 && req.votes >= 5 && (
+        <td className="dtable-badge-cell">
+          <span className="badge badge-hot"><span className="fire-icon">🔥</span></span>
+        </td>
       )}
-    </motion.div>
-  );
-}
-
-function GridItem({ req, rank }) {
-  const [shaking, setShaking] = useState(false);
-  const prevVotes = useRef(req.votes);
-  useEffect(() => {
-    if (req.votes > prevVotes.current) { setShaking(true); setTimeout(() => setShaking(false), 500); }
-    prevVotes.current = req.votes;
-  }, [req.votes]);
-
-  return (
-    <motion.div className={`display-grid-item ${shaking ? 'animate-shake' : ''}`}
-      layout transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-      style={{ animationDelay: `${(rank - 4) * 0.05}s` }}
-    >
-      <span className="display-grid-rank">{rank}</span>
-      {req.album_art
-        ? <img src={req.album_art} alt="" className="display-grid-art" />
-        : <div className="display-grid-art-ph">🎵</div>
-      }
-      <div className="display-grid-info">
-        <div className="display-grid-song">{req.song_name}</div>
-        {req.artist && <div className="display-grid-artist">{req.artist}</div>}
-      </div>
-      <div style={{ position: 'relative' }}>
-        <VoteFloat count={req.votes} />
-        <span className="display-grid-votes">{req.votes}</span>
-      </div>
-    </motion.div>
+    </motion.tr>
   );
 }
 
@@ -330,8 +314,8 @@ export default function DisplayPage() {
 
   if (!event) return <div className="display-page"><div className="display-bg" /></div>;
 
-  const top3 = requests.slice(0, 3);
-  const rest = requests.slice(3);
+  const top10 = requests.slice(0, 10);
+  const displayName = brandText || event.name;
 
   return (
     <div className="display-page">
@@ -347,26 +331,24 @@ export default function DisplayPage() {
         </div>
       )}
 
-      {/* Brand Watermark */}
-      {brandText && (
-        <div className="display-brand-watermark">
-          <span className="display-brand-text">{brandText}</span>
-        </div>
-      )}
-
       <div className="display-content">
-        {/* Header */}
-        <div className="display-header">
-          <div className="display-header-left">
-            <div className="display-logo-area">
-              <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="logo" style={{ height: 52 }} />
-              <div className="display-tagline">Request · Vote · Dance</div>
-            </div>
+        {/* ─── Top Bar: Logo left, Event name center, LIVE right ─── */}
+        <div className="dsp-topbar">
+          <div className="dsp-topbar-left">
+            <img src="/logos/logo-white.png" alt="Remiks İstanbul" style={{ height: 40 }} />
           </div>
-          <div className="display-live-badge">
-            <span className="live-dot" />
-            <span style={{ color: '#ff4444' }}>LIVE</span>
-            <span className="live-count">{connectedCount} {lang === 'tr' ? 'kişi' : 'people'}</span>
+          <div className="dsp-topbar-center">
+            <motion.div className="dsp-event-name"
+              initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+              {displayName}
+            </motion.div>
+          </div>
+          <div className="dsp-topbar-right">
+            <div className="display-live-badge">
+              <span className="live-dot" />
+              <span style={{ color: '#ff4444' }}>LIVE</span>
+              <span className="live-count">{connectedCount} {lang === 'tr' ? 'kişi' : 'people'}</span>
+            </div>
           </div>
         </div>
 
@@ -413,48 +395,42 @@ export default function DisplayPage() {
               </motion.div>
             )}
 
-            <div className="display-main">
-              <div className="display-list-col">
+            <div className="dsp-active-layout">
+              {/* LEFT: Song Table */}
+              <div className="dsp-table-area">
+                <div className="dsp-table-header">
+                  <span className="fire-icon">🔥</span> {T('display.hot_requests')}
+                </div>
+
                 {requests.length === 0 ? (
-                  <div className="display-state-center">
-                    <div style={{ fontSize: 44, marginBottom: 14 }}>🎵</div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: 16 }}>{T('display.no_requests')}</p>
+                  <div className="dsp-table-empty">
+                    <span>🎵</span> {T('display.no_requests')}
                   </div>
                 ) : (
-                  <LayoutGroup>
-                    <div className="display-list-title">
-                      <span className="fire-icon">🔥</span> {T('display.hot_requests')}
-                    </div>
-
-                    {top3.length > 0 && (
-                      <div className="display-podium">
-                        {top3.map((req, idx) => (
-                          <PodiumCard key={req.id} req={req} rank={idx + 1} lang={lang} />
-                        ))}
-                        {top3.length === 1 && <><div /><div /></>}
-                        {top3.length === 2 && <div />}
-                      </div>
-                    )}
-
-                    {rest.length > 0 && (
-                      <div className="display-grid-list">
-                        {rest.map((req, idx) => (
-                          <GridItem key={req.id} req={req} rank={idx + 4} />
-                        ))}
-                      </div>
-                    )}
-                  </LayoutGroup>
+                  <div className="dsp-table-wrap">
+                    <table className="dsp-table">
+                      <AnimatePresence>
+                        <tbody>
+                          {top10.map((req, idx) => (
+                            <SongRow key={req.id} req={req} rank={idx + 1} lang={lang} />
+                          ))}
+                        </tbody>
+                      </AnimatePresence>
+                    </table>
+                  </div>
                 )}
               </div>
 
-              {/* QR Right Side */}
-              <div className="display-qr-col">
-                <div className="display-qr-arrow">👆</div>
-                <div className="display-qr-box">
-                  <QRCodeSVG value={requestUrl} size={150} bgColor="#ffffff" fgColor="#000000" level="M" />
+              {/* RIGHT: QR Code */}
+              <div className="dsp-qr-area">
+                <div className="dsp-qr-box">
+                  <QRCodeSVG value={requestUrl} size={180} bgColor="#ffffff" fgColor="#000000" level="M" />
                 </div>
-                <div className="display-qr-text">
-                  {lang === 'tr' ? 'QR Kodu Tara\nİsteğini Gönder!' : 'Scan QR Code\nSend Your Request!'}
+                <div className="dsp-qr-label">
+                  {lang === 'tr' ? 'QR Kodu Tara' : 'Scan QR Code'}
+                </div>
+                <div className="dsp-qr-sub">
+                  {lang === 'tr' ? 'İsteğini Gönder!' : 'Send Your Request!'}
                 </div>
               </div>
             </div>
