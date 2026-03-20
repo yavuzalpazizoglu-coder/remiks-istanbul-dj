@@ -789,6 +789,7 @@ input, textarea { font-family: inherit; }
   align-items: stretch;
   padding: 0;
   margin: auto 0;
+  width: 100%;
 }
 
 .dsp-card {
@@ -800,7 +801,8 @@ input, textarea { font-family: inherit; }
 }
 
 .dsp-list-card {
-  width: 30%; flex-shrink: 0;
+  flex: 0 0 30%;
+  max-width: 30%;
   padding: 10px 12px;
 }
 
@@ -824,7 +826,7 @@ input, textarea { font-family: inherit; }
 
 /* CENTER: Logo + Motto */
 .dsp-center-brand {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: 16px;
@@ -933,7 +935,8 @@ input, textarea { font-family: inherit; }
 
 /* RIGHT: QR Card */
 .dsp-qr-card {
-  width: 30%; flex-shrink: 0;
+  flex: 0 0 30%;
+  max-width: 30%;
   align-items: center; justify-content: center;
   gap: 12px; padding: 16px;
 }
