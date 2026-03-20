@@ -1,0 +1,31 @@
+---
+description: Kod yazım standartları ve stil kuralları
+alwaysApply: true
+---
+
+# Kod Standartları
+
+## JavaScript/React
+- ES modules kullan (import/export)
+- async/await tercih et (callback yerine)
+- Fonksiyonel React bileşenleri + hooks
+- Değişken/fonksiyon adları İngilizce, yorumlar gerekmedikçe yok
+- CSS-in-JS yerine CSS modules veya global CSS tercih et (performans)
+
+## Backend
+- Express route'ları ayrı dosyalarda
+- Socket.io event'leri namespace ile grupla
+- Hata yönetimi: try/catch + meaningful error messages
+- DB işlemleri db.js üzerinden, doğrudan SQL sorgusu yazma
+
+## Animasyonlar
+- CSS transform/opacity tercih et (layout thrashing'den kaçın)
+- will-change property'si sadece aktif animasyonlarda
+- requestAnimationFrame for JS animations
+- Animasyon süreleri: giriş 0.3s, çıkış 0.2s, sıralama 0.5s
+
+## Güvenlik
+- DJ paneli şifre korumalı
+- Rate limiting: IP başına dakikada 10 istek
+- Input sanitization: XSS koruması
+- CORS: sadece aynı origin

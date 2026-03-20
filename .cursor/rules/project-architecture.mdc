@@ -1,0 +1,54 @@
+---
+description: Remiks İstanbul DJ İstek Sistemi - proje mimarisi ve geliştirme standartları
+alwaysApply: true
+---
+
+# Remiks İstanbul - DJ İstek Sistemi
+
+## Proje Özeti
+Etkinliklerde katılımcıların QR kod ile şarkı isteği gönderebildiği, oylayabildiği, DJ'in yönettiği ve LED ekranda canlı gösterilen real-time istek sistemi.
+
+## Teknik Stack
+- **Backend:** Node.js + Express + Socket.io + better-sqlite3
+- **Frontend:** React (Vite) - tek proje, üç görünüm
+- **API:** Spotify Web API (şarkı arama + kapak fotoğrafı)
+- **Veritabanı:** SQLite (dosya tabanlı, taşınabilir)
+- **Deploy:** Railway.app / Render.com + yerel çalışma
+
+## Üç Ana Ekran
+1. `/request` - Mobil istek sayfası (katılımcılar QR ile gelir)
+2. `/dj` - DJ kontrol paneli (laptop/iPad)
+3. `/display` - LED ekran/projeksiyon display
+
+## Kritik Kurallar
+- Dil: İkili (TR/EN), varsayılan Türkçe, DJ panelinden tek tuşla değiştirilebilir
+- Dil değişimi TÜM ekranlara (request, dj, display) anlık Socket.io ile yansır
+- Şarkı adları/sanatçı isimleri dil bağımsız - olduğu gibi gösterilir (İngilizce şarkı Türkçe arayüzde de İngilizce kalır)
+- Kişi başı istek limiti: 3 (cookie/localStorage ile takip)
+- Hedef kitle: 200-500 kişi
+- Tema: Koyu/neon DJ atmosferi (#0a0a1a arka plan, neon mavi/mor aksanlar)
+- Animasyonlar: FLIP animation, CSS keyframes, Canvas confetti - hepsi GPU hızlandırmalı
+- Performans: 60fps hedefi, animasyonlar istemci tarafında
+
+## Dosya Yapısı
+```
+server/          → Express + Socket.io backend
+  index.js       → Ana sunucu dosyası
+  db.js          → SQLite veritabanı yönetimi
+  routes/        → API route'ları
+  socket/        → Socket.io event handler'ları
+client/          → React (Vite) frontend
+  src/
+    pages/       → Request, DJ, Display sayfaları
+    components/  → Paylaşılan bileşenler
+    hooks/       → Custom React hooks (useSocket, useI18n vs.)
+    i18n/        → Dil dosyaları (tr.json, en.json)
+    styles/      → Global stiller, tema, animasyonlar
+```
+
+## Tasarım Kararları
+- Socket.io ile gerçek zamanlı iletişim (polling fallback ile)
+- SQLite tek dosya DB - etkinlik başına ayrı veritabanı YOK, tek DB
+- Spotify API: arama + kapak fotoğrafı, çalma yok
+- QR kod: etkinlik URL'si encode edilir, her etkinlik benzersiz slug
+- DJ paneli basit şifre korumalı (env variable)
