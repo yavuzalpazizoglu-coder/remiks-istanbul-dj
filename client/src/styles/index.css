@@ -1696,63 +1696,6 @@ input, textarea { font-family: inherit; }
   border-color: var(--theme-primary);
 }
 
-/* ─── Genre Distribution Chart ─── */
-
-.dsp-genre-chart {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px;
-  align-self: center;
-  min-width: 160px;
-  max-width: 220px;
-}
-
-.dsp-genre-title {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--theme-primary);
-  text-align: center;
-  margin-bottom: 4px;
-}
-
-.dsp-genre-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.dsp-genre-label {
-  font-size: 10px;
-  color: var(--text-secondary);
-  min-width: 64px;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.dsp-genre-bar-bg {
-  flex: 1;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.dsp-genre-bar-fill {
-  height: 100%;
-  background: var(--theme-primary);
-  border-radius: 5px;
-  box-shadow: 0 0 8px var(--theme-glow);
-}
-
-.dsp-genre-pct {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--theme-primary);
-  min-width: 28px;
-}
-
 /* ─── Event History (DJ Panel Login) ─── */
 
 .djc-history {

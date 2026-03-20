@@ -470,7 +470,6 @@ export default function DisplayPage() {
   const [playedId, setPlayedId] = useState(null);
   const [theme, setTheme] = useState('cyan');
   const [animLevel, setAnimLevel] = useState('high');
-  const [genreStats, setGenreStats] = useState([]);
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
 
@@ -495,7 +494,6 @@ export default function DisplayPage() {
       setAnimLevel(eventData.animation_level || 'high');
       setRequests((reqData.requests || []).filter(r => r.status === 'approved'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
-      fetch(`${API}/api/events/${slug}/genres`).then(r => r.json()).then(d => setGenreStats(d)).catch(() => {});
     } catch (err) { console.warn('DisplayPage fetchData failed:', err); }
   }, [slug]);
 
@@ -511,7 +509,6 @@ export default function DisplayPage() {
         if (prev.find(r => r.id === req.id)) return prev;
         return [...prev, req].sort((a, b) => b.votes - a.votes);
       });
-      fetch(`${API}/api/events/${slug}/genres`).then(r => r.json()).then(d => setGenreStats(d)).catch(() => {});
     });
 
     socket.on('vote-updated', ({ requestId, votes }) => {
@@ -743,29 +740,6 @@ export default function DisplayPage() {
                   </div>
                 )}
               </div>
-
-              {/* CENTER: Genre Distribution */}
-              {genreStats.length > 0 && (
-                <div className="dsp-genre-chart">
-                  <div className="dsp-genre-title">{lang === 'tr' ? '🎼 Tür Dağılımı' : '🎼 Genre Mix'}</div>
-                  {genreStats.map((g, i) => {
-                    const pct = totalGenre > 0 ? Math.round((g.count / totalGenre) * 100) : 0;
-                    return (
-                      <motion.div key={g.genre} className="dsp-genre-row" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
-                        <span className="dsp-genre-label">{g.genre}</span>
-                        <div className="dsp-genre-bar-bg">
-                          <motion.div className="dsp-genre-bar-fill"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${pct}%` }}
-                            transition={{ duration: 0.8, delay: i * 0.1 }}
-                          />
-                        </div>
-                        <span className="dsp-genre-pct">{pct}%</span>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              )}
 
               {/* RIGHT: QR Card */}
               <div className="dsp-card dsp-qr-card">
