@@ -2087,6 +2087,129 @@ input, textarea { font-family: inherit; }
   background: rgba(0, 212, 255, 0.3) !important;
 }
 
+/* ═══════════════════════════════════════════
+   MUSIC MODE OVERLAYS
+   ═══════════════════════════════════════════ */
+
+.music-mode-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mm-border-frame {
+  position: absolute;
+  inset: 12px;
+  border: 3px solid var(--mm-c1, #fff);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 3;
+  animation: mmBorderBlink 1.5s ease-in-out infinite;
+  box-shadow:
+    0 0 15px var(--mm-c1, #fff),
+    0 0 30px var(--mm-c2, #fff),
+    inset 0 0 15px var(--mm-c1, #fff),
+    inset 0 0 30px var(--mm-c2, #fff);
+}
+
+@keyframes mmBorderBlink {
+  0%, 100% {
+    opacity: 1;
+    box-shadow:
+      0 0 15px var(--mm-c1),
+      0 0 30px var(--mm-c2),
+      inset 0 0 15px var(--mm-c1),
+      inset 0 0 30px var(--mm-c2);
+  }
+  50% {
+    opacity: 0.5;
+    box-shadow:
+      0 0 25px var(--mm-c1),
+      0 0 50px var(--mm-c3),
+      inset 0 0 25px var(--mm-c1),
+      inset 0 0 50px var(--mm-c3);
+  }
+}
+
+.mm-line {
+  width: 400px;
+  height: 2px;
+  margin: 20px auto;
+  transform-origin: center;
+}
+
+.mm-title {
+  font-family: var(--font-display);
+  font-size: 100px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 8px;
+  margin: 0;
+}
+
+.mm-subtitle {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  margin-top: 8px;
+}
+
+/* DJ Panel Music Mode Buttons */
+
+.djc-mmode-btn {
+  font-size: 12px !important;
+  padding: 7px 12px !important;
+}
+
+.djc-mmode-btn.mm-arabesk {
+  background: rgba(212, 160, 23, 0.1);
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  color: #d4a017;
+}
+.djc-mmode-btn.mm-arabesk.active {
+  background: rgba(212, 160, 23, 0.25);
+  border-color: #d4a017;
+  box-shadow: 0 0 12px rgba(212, 160, 23, 0.3);
+}
+
+.djc-mmode-btn.mm-rock {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  color: #ff4444;
+}
+.djc-mmode-btn.mm-rock.active {
+  background: rgba(255, 68, 68, 0.25);
+  border-color: #ff4444;
+  box-shadow: 0 0 12px rgba(255, 68, 68, 0.3);
+}
+
+.djc-mmode-btn.mm-90s-pop {
+  background: rgba(255, 0, 128, 0.1);
+  border: 1px solid rgba(255, 0, 128, 0.3);
+  color: #ff0080;
+}
+.djc-mmode-btn.mm-90s-pop.active {
+  background: rgba(255, 0, 128, 0.25);
+  border-color: #ff0080;
+  box-shadow: 0 0 12px rgba(255, 0, 128, 0.3);
+}
+
+.djc-mmode-btn.mm-turkish-delight {
+  background: rgba(232, 160, 191, 0.1);
+  border: 1px solid rgba(232, 160, 191, 0.3);
+  color: #e8a0bf;
+}
+.djc-mmode-btn.mm-turkish-delight.active {
+  background: rgba(232, 160, 191, 0.25);
+  border-color: #e8a0bf;
+  box-shadow: 0 0 12px rgba(232, 160, 191, 0.3);
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 600px) {

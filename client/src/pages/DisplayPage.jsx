@@ -200,6 +200,88 @@ function ClosingOverlay({ lang, brandText, countdown }) {
   );
 }
 
+const MUSIC_MODE_CONFIG = {
+  arabesk: {
+    title: 'ARABESK MODE',
+    subtitle: 'Remiks ile Arabesk Mode',
+    icon: '🎻',
+    bg: 'radial-gradient(ellipse at center, rgba(40, 15, 5, 0.96) 0%, rgba(10, 3, 0, 0.98) 100%)',
+    color1: '#d4a017', color2: '#8b4513', color3: '#ff6b35',
+    sparkColor: '#d4a017',
+  },
+  rock: {
+    title: 'ROCK MODE',
+    subtitle: 'Remix Rock',
+    icon: '🎸',
+    bg: 'radial-gradient(ellipse at center, rgba(30, 5, 5, 0.96) 0%, rgba(5, 0, 0, 0.98) 100%)',
+    color1: '#ff4444', color2: '#ff0000', color3: '#ff6b35',
+    sparkColor: '#ff4444',
+  },
+  '90s-pop': {
+    title: "90'LAR POP",
+    subtitle: "90'lar Türkçe Pop",
+    icon: '💿',
+    bg: 'radial-gradient(ellipse at center, rgba(20, 5, 30, 0.96) 0%, rgba(5, 0, 10, 0.98) 100%)',
+    color1: '#ff0080', color2: '#00d4ff', color3: '#b829dd',
+    sparkColor: '#ff0080',
+  },
+  'turkish-delight': {
+    title: 'TURKISH DELIGHT',
+    subtitle: 'Remiks Turkish Delight',
+    icon: '🌹',
+    bg: 'radial-gradient(ellipse at center, rgba(25, 5, 15, 0.96) 0%, rgba(5, 0, 5, 0.98) 100%)',
+    color1: '#e8a0bf', color2: '#d4a017', color3: '#ff6b9d',
+    sparkColor: '#e8a0bf',
+  },
+};
+
+function MusicModeOverlay({ mode }) {
+  const cfg = MUSIC_MODE_CONFIG[mode];
+  if (!cfg) return null;
+
+  return (
+    <motion.div className={`music-mode-overlay mm-overlay-${mode}`}
+      style={{ background: cfg.bg }}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1 } }}>
+      <div className="mm-border-frame" style={{ '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }} />
+      <div className="ceremony-spotlights">
+        <div className="ceremony-spot spot-left" style={{ background: `linear-gradient(180deg, ${cfg.color1}, transparent 80%)` }} />
+        <div className="ceremony-spot spot-right" style={{ background: `linear-gradient(180deg, ${cfg.color3}, transparent 80%)` }} />
+      </div>
+      <div className="ceremony-content">
+        <motion.div style={{ fontSize: 80, marginBottom: 12 }}
+          initial={{ scale: 0 }} animate={{ scale: [0, 1.3, 1] }}
+          transition={{ duration: 0.8, times: [0, 0.6, 1] }}>
+          {cfg.icon}
+        </motion.div>
+        <motion.div className="mm-line" style={{ background: `linear-gradient(90deg, transparent, ${cfg.color1}, transparent)` }}
+          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3 }} />
+        <motion.h1 className="mm-title" style={{ color: cfg.color1, textShadow: `0 0 40px ${cfg.color1}, 0 0 80px ${cfg.color2}` }}
+          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}>
+          {cfg.title}
+        </motion.h1>
+        <motion.div className="mm-subtitle" style={{ color: cfg.color3 }}
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
+          {cfg.subtitle}
+        </motion.div>
+        <motion.div className="mm-line" style={{ background: `linear-gradient(90deg, transparent, ${cfg.color1}, transparent)` }}
+          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 1.5 }} />
+      </div>
+      <div className="ceremony-particles">
+        {Array.from({ length: 25 }, (_, i) => (
+          <div key={i} className="ceremony-spark" style={{
+            left: `${Math.random() * 100}%`,
+            background: cfg.sparkColor,
+            boxShadow: `0 0 6px ${cfg.sparkColor}`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${3 + Math.random() * 4}s`,
+          }} />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 function VoteFloat({ count }) {
   const [floats, setFloats] = useState([]);
   const prevCount = useRef(count);
@@ -374,6 +456,7 @@ export default function DisplayPage() {
   const [theme, setTheme] = useState('cyan');
   const [animLevel, setAnimLevel] = useState('high');
   const [genreStats, setGenreStats] = useState([]);
+  const [activeMusicMode, setActiveMusicMode] = useState(null);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -462,13 +545,17 @@ export default function DisplayPage() {
     socket.on('theme-changed', ({ theme }) => setTheme(theme));
     socket.on('animation-changed', ({ level }) => setAnimLevel(level));
 
+    socket.on('music-mode', ({ mode, active }) => {
+      setActiveMusicMode(active ? mode : null);
+    });
+
     socket.on('room-count', ({ count }) => setConnectedCount(count));
 
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
-      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('ceremony');
+      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('ceremony'); socket.off('music-mode');
       socket.disconnect();
     };
   }, [slug]);
@@ -689,6 +776,13 @@ export default function DisplayPage() {
         <AnimatePresence>
           {closingActive && (
             <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} />
+          )}
+        </AnimatePresence>
+
+        {/* ─── MUSIC MODE OVERLAY ─── */}
+        <AnimatePresence>
+          {activeMusicMode && !openingActive && !closingActive && (
+            <MusicModeOverlay mode={activeMusicMode} />
           )}
         </AnimatePresence>
 

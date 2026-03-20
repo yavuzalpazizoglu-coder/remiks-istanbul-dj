@@ -35,6 +35,7 @@ export default function DJPanel() {
   const [openingOn, setOpeningOn] = useState(false);
   const [closingOn, setClosingOn] = useState(false);
   const [ceremonyMinutes, setCeremonyMinutes] = useState(10);
+  const [activeMusicMode, setActiveMusicMode] = useState(null);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
 
@@ -262,6 +263,26 @@ export default function DJPanel() {
     if (activeType) await sendCeremony(activeType, true, m);
   };
 
+  const MUSIC_MODES = [
+    { id: 'arabesk', icon: '🎻', label: 'Arabesk Mode' },
+    { id: 'rock', icon: '🎸', label: 'Remix Rock' },
+    { id: '90s-pop', icon: '💿', label: "90'lar Türkçe Pop" },
+    { id: 'turkish-delight', icon: '🌹', label: 'Turkish Delight' },
+  ];
+
+  const toggleMusicMode = async (modeId) => {
+    const isActive = activeMusicMode === modeId;
+    const newMode = isActive ? null : modeId;
+    setActiveMusicMode(newMode);
+    try {
+      await fetch(`${API}/api/events/${slug}/music-mode`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ mode: modeId, active: !isActive }),
+      });
+    } catch (err) { console.warn('toggleMusicMode failed:', err); }
+  };
+
   const changeAnimationLevel = async (level) => {
     setAnimationLevel(level);
     try {
@@ -457,6 +478,20 @@ export default function DJPanel() {
             <button key={m} className={`preset-btn djc-preset ${ceremonyMinutes === m ? 'active' : ''}`} onClick={() => updateCeremonyMinutes(m)}>{m}′</button>
           ))}
           <input type="number" className="input" style={{ width: 48, textAlign: 'center', padding: '6px 4px', fontSize: 14 }} value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
+        </div>
+      </div>
+
+      {/* ─── Music Mode Controls ─── */}
+      <div className="djc-ceremony-bar" style={{ marginTop: 4 }}>
+        <span className="djc-limit-label">{lang === 'tr' ? '🎵 Müzik Modu:' : '🎵 Music Mode:'}</span>
+        <div className="djc-ceremony-btns" style={{ flexWrap: 'wrap' }}>
+          {MUSIC_MODES.map(m => (
+            <button key={m.id}
+              className={`btn djc-ceremony-btn djc-mmode-btn mm-${m.id} ${activeMusicMode === m.id ? 'active' : ''}`}
+              onClick={() => toggleMusicMode(m.id)}>
+              {activeMusicMode === m.id ? '⏹' : m.icon} {m.label}
+            </button>
+          ))}
         </div>
       </div>
 

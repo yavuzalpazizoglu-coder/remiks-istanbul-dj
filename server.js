@@ -309,6 +309,24 @@ app.post('/api/events/:slug/ceremony', djAuth, (req, res) => {
   }
 });
 
+app.post('/api/events/:slug/music-mode', djAuth, (req, res) => {
+  try {
+    const { mode, active } = req.body;
+    const validModes = ['arabesk', 'rock', '90s-pop', 'turkish-delight'];
+    if (!validModes.includes(mode)) return res.status(400).json({ error: 'Invalid mode' });
+    const payload = { mode, active: !!active };
+    if (active) {
+      activeMusicModes.set(req.params.slug, payload);
+    } else {
+      activeMusicModes.delete(req.params.slug);
+    }
+    io.to(req.params.slug).emit('music-mode', payload);
+    res.json({ ok: true, ...payload });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get('/api/events/:slug/genres', (req, res) => {
   try {
     const event = db.getEventBySlug(req.params.slug);
@@ -345,6 +363,7 @@ app.get('/api/spotify/search', async (req, res) => {
 // ─── Socket.io ───
 
 const activeCeremonies = new Map();
+const activeMusicModes = new Map();
 
 function emitRoomCount(eventSlug) {
   const room = io.sockets.adapter.rooms.get(eventSlug);
@@ -362,6 +381,10 @@ io.on('connection', (socket) => {
     const ceremony = activeCeremonies.get(eventSlug);
     if (ceremony && ceremony.endTime > Date.now()) {
       socket.emit('ceremony', ceremony);
+    }
+    const musicMode = activeMusicModes.get(eventSlug);
+    if (musicMode && musicMode.active) {
+      socket.emit('music-mode', musicMode);
     }
   });
 
