@@ -108,6 +108,88 @@ function Confetti() {
   );
 }
 
+function OpeningOverlay({ lang, brandText, onDismiss }) {
+  const name = brandText || 'Remiks İstanbul';
+  return (
+    <motion.div className="ceremony-overlay opening-overlay" onClick={onDismiss}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
+      <div className="ceremony-spotlights">
+        <div className="ceremony-spot spot-left" />
+        <div className="ceremony-spot spot-right" />
+        <div className="ceremony-spot spot-center" />
+      </div>
+      <div className="ceremony-content">
+        <motion.div className="ceremony-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, delay: 0.3 }} />
+        <motion.div className="ceremony-pre" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+          {lang === 'tr' ? '🎉 HOŞGELDİNİZ' : '🎉 WELCOME'}
+        </motion.div>
+        <motion.h1 className="ceremony-title opening-title"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: [0, 1.15, 1], opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.8, times: [0, 0.7, 1] }}>
+          {lang === 'tr' ? 'AÇILIŞ' : 'OPENING'}
+        </motion.h1>
+        <motion.div className="ceremony-brand" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }}>
+          {name}
+        </motion.div>
+        <motion.div className="ceremony-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, delay: 2.2 }} />
+        <motion.div className="ceremony-sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3 }}>
+          {lang === 'tr' ? 'İsteklerinizi bekliyoruz • QR kodu tarayın' : 'Send your requests • Scan QR code'}
+        </motion.div>
+      </div>
+      <div className="ceremony-particles">
+        {Array.from({ length: 30 }, (_, i) => (
+          <div key={i} className="ceremony-spark" style={{
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 5}s`,
+            animationDuration: `${3 + Math.random() * 4}s`,
+          }} />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function ClosingOverlay({ lang, brandText, onDismiss }) {
+  const name = brandText || 'Remiks İstanbul';
+  return (
+    <motion.div className="ceremony-overlay closing-overlay" onClick={onDismiss}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
+      <div className="closing-stars">
+        {Array.from({ length: 40 }, (_, i) => (
+          <div key={i} className="closing-star" style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 6}s`,
+            animationDuration: `${4 + Math.random() * 4}s`,
+            width: 2 + Math.random() * 3,
+            height: 2 + Math.random() * 3,
+          }} />
+        ))}
+      </div>
+      <div className="ceremony-content">
+        <motion.div className="ceremony-line closing-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.5, delay: 0.3 }} />
+        <motion.div className="ceremony-pre closing-pre" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
+          {lang === 'tr' ? '✨ TEŞEKKÜRLER' : '✨ THANK YOU'}
+        </motion.div>
+        <motion.h1 className="ceremony-title closing-title"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, delay: 1.2 }}>
+          {lang === 'tr' ? 'KAPANIŞ' : 'CLOSING'}
+        </motion.h1>
+        <motion.div className="ceremony-brand" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }}>
+          {name}
+        </motion.div>
+        <motion.div className="ceremony-line closing-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.5, delay: 3 }} />
+        <motion.div className="ceremony-sub closing-sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }}>
+          {lang === 'tr' ? 'Bu geceye renk kattınız • Tekrar görüşmek üzere!' : 'You made this night special • See you next time!'}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
 function VoteFloat({ count }) {
   const [floats, setFloats] = useState([]);
   const prevCount = useRef(count);
@@ -271,6 +353,10 @@ export default function DisplayPage() {
   const [countdownEnd, setCountdownEnd] = useState(null);
   const [countdownDisplay, setCountdownDisplay] = useState('');
   const [justOpened, setJustOpened] = useState(false);
+  const [openingActive, setOpeningActive] = useState(false);
+  const [closingActive, setClosingActive] = useState(false);
+  const openingTimer = useRef(null);
+  const closingTimer = useRef(null);
   const [connectedCount, setConnectedCount] = useState(0);
   const [brandText, setBrandText] = useState('');
   const [tickerTexts, setTickerTexts] = useState('');
@@ -337,13 +423,19 @@ export default function DisplayPage() {
     socket.on('event-status', ({ status, countdown_end }) => {
       setEvent(prev => {
         const oldStatus = prev?.status;
-        if (status === 'active' && oldStatus === 'countdown') {
-          setJustOpened(true); setShowConfetti(true);
-          setTimeout(() => { setShowConfetti(false); setJustOpened(false); }, 4000);
+        if (status === 'active' && (oldStatus === 'countdown' || oldStatus === 'waiting')) {
+          setOpeningActive(true);
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 12000);
+          if (openingTimer.current) clearTimeout(openingTimer.current);
+          openingTimer.current = setTimeout(() => setOpeningActive(false), 600000);
         }
         if (status === 'ended') {
+          setClosingActive(true);
           setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 6000);
+          setTimeout(() => setShowConfetti(false), 12000);
+          if (closingTimer.current) clearTimeout(closingTimer.current);
+          closingTimer.current = setTimeout(() => setClosingActive(false), 600000);
           fetch(`${API}/api/events/${slug}/requests?all=true`)
             .then(r => r.json())
             .then(d => { if (d.requests) setAllRequests(d.requests); })
@@ -481,21 +573,16 @@ export default function DisplayPage() {
           </div>
         )}
 
-        {/* ─── ACTIVE: 3-column layout ─── */}
-        {event.status === 'active' && (
-          <>
-            {justOpened && (
-              <motion.div className="display-state-center"
-                initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}
-                style={{ position: 'absolute', inset: 0, zIndex: 50, background: 'rgba(5,5,16,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <motion.h2
-                  style={{ fontFamily: 'var(--font-display)', fontSize: 56, fontWeight: 900, background: 'var(--gradient-main)', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
-                  initial={{ scale: 0.3 }} animate={{ scale: [0.3, 1.1, 1] }} transition={{ duration: 0.8, times: [0, 0.7, 1] }}>
-                  {T('display.requests_open')}
-                </motion.h2>
-              </motion.div>
-            )}
+        {/* ─── OPENING OVERLAY ─── */}
+        <AnimatePresence>
+          {openingActive && event.status === 'active' && (
+            <OpeningOverlay lang={lang} brandText={displayName} onDismiss={() => setOpeningActive(false)} />
+          )}
+        </AnimatePresence>
 
+        {/* ─── ACTIVE: 3-column layout ─── */}
+        {event.status === 'active' && !openingActive && (
+          <>
             <div className="dsp-3col">
               {/* LEFT: Song Table Card */}
               <div className="dsp-card dsp-list-card">
@@ -569,8 +656,15 @@ export default function DisplayPage() {
           </div>
         )}
 
-        {/* ─── ENDED ─── */}
-        {event.status === 'ended' && (
+        {/* ─── CLOSING OVERLAY ─── */}
+        <AnimatePresence>
+          {closingActive && event.status === 'ended' && (
+            <ClosingOverlay lang={lang} brandText={displayName} onDismiss={() => setClosingActive(false)} />
+          )}
+        </AnimatePresence>
+
+        {/* ─── ENDED (summary after closing) ─── */}
+        {event.status === 'ended' && !closingActive && (
           <EventSummary requests={allRequests.length > 0 ? allRequests : requests} lang={lang} />
         )}
       </div>

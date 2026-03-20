@@ -1733,6 +1733,210 @@ input, textarea { font-family: inherit; }
   transform: scale(1.2);
 }
 
+/* ─── Ceremony Overlays (Opening & Closing) ─── */
+
+.ceremony-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.opening-overlay {
+  background: radial-gradient(ellipse at center, rgba(5, 5, 30, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+}
+
+.closing-overlay {
+  background: radial-gradient(ellipse at center, rgba(10, 5, 25, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+}
+
+.ceremony-content {
+  text-align: center;
+  z-index: 2;
+  position: relative;
+}
+
+.ceremony-line {
+  width: 300px;
+  height: 2px;
+  margin: 16px auto;
+  background: linear-gradient(90deg, transparent, var(--theme-primary, #00d4ff), transparent);
+  transform-origin: center;
+}
+
+.closing-line {
+  background: linear-gradient(90deg, transparent, #b829dd, transparent);
+}
+
+.ceremony-pre {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 8px;
+  color: var(--theme-primary, #00d4ff);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.closing-pre {
+  color: #b829dd;
+  letter-spacing: 6px;
+}
+
+.ceremony-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  margin: 0;
+  line-height: 1;
+}
+
+.opening-title {
+  font-size: 120px;
+  background: linear-gradient(135deg, var(--theme-primary, #00d4ff), #00ff88, var(--theme-primary, #00d4ff));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: openingTitleShine 3s ease-in-out infinite;
+  text-shadow: none;
+}
+
+@keyframes openingTitleShine {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.closing-title {
+  font-size: 110px;
+  background: linear-gradient(135deg, #b829dd, #ff0080, #b829dd);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: closingTitleGlow 4s ease-in-out infinite;
+}
+
+@keyframes closingTitleGlow {
+  0%, 100% { background-position: 0% 50%; filter: brightness(1); }
+  50% { background-position: 100% 50%; filter: brightness(1.3); }
+}
+
+.ceremony-brand {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 12px 0;
+  letter-spacing: 3px;
+}
+
+.ceremony-sub {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 12px;
+  letter-spacing: 1px;
+}
+
+.closing-sub {
+  color: rgba(184, 41, 221, 0.6);
+}
+
+/* Opening Spotlights */
+.ceremony-spotlights {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ceremony-spot {
+  position: absolute;
+  width: 200px;
+  height: 100vh;
+  top: 0;
+  opacity: 0.08;
+  animation: spotlightSweep 6s ease-in-out infinite;
+}
+
+.spot-left {
+  left: 10%;
+  background: linear-gradient(180deg, var(--theme-primary, #00d4ff), transparent 80%);
+  transform-origin: top center;
+  animation-delay: 0s;
+}
+
+.spot-right {
+  right: 10%;
+  background: linear-gradient(180deg, #ff0080, transparent 80%);
+  transform-origin: top center;
+  animation-delay: 2s;
+}
+
+.spot-center {
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #00ff88, transparent 60%);
+  animation-delay: 4s;
+  width: 300px;
+  opacity: 0.05;
+}
+
+@keyframes spotlightSweep {
+  0%, 100% { transform: rotate(-20deg); opacity: 0.03; }
+  25% { opacity: 0.1; }
+  50% { transform: rotate(20deg); opacity: 0.06; }
+  75% { opacity: 0.1; }
+}
+
+/* Opening Sparks */
+.ceremony-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ceremony-spark {
+  position: absolute;
+  bottom: 0;
+  width: 3px;
+  height: 3px;
+  background: var(--theme-primary, #00d4ff);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--theme-primary, #00d4ff);
+  animation: sparkRise linear infinite;
+}
+
+@keyframes sparkRise {
+  0% { transform: translateY(0) scale(0); opacity: 0; }
+  10% { opacity: 1; transform: scale(1); }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+}
+
+/* Closing Stars */
+.closing-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.closing-star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: starTwinkle ease-in-out infinite alternate;
+}
+
+@keyframes starTwinkle {
+  0% { opacity: 0.1; transform: scale(0.8); box-shadow: 0 0 2px rgba(255,255,255,0.3); }
+  50% { opacity: 0.9; transform: scale(1.2); box-shadow: 0 0 8px rgba(184,41,221,0.5); }
+  100% { opacity: 0.2; transform: scale(0.9); box-shadow: 0 0 4px rgba(255,0,128,0.3); }
+}
+
 /* ─── Played Animation ─── */
 
 .dtable-played {
