@@ -226,104 +226,81 @@ export default function DJPanel() {
   const rejectedCount = requests.filter(r => r.status === 'rejected').length;
   const totalVotes = requests.reduce((sum, r) => sum + r.votes, 0);
 
+  const [showQr, setShowQr] = useState(false);
+
   return (
-    <div className="dj-panel">
-      <div className="dj-header">
-        <div className="dj-header-left">
-          <img src="/logos/logo-white.png" alt="" className="logo" />
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 16 }}>{event.name}</div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>/{slug}</div>
-          </div>
+    <div className="dj-panel dj-compact">
+      {/* ─── Row 1: Header + Status + Lang ─── */}
+      <div className="djc-row1">
+        <img src="/logos/logo-white.png" alt="" style={{ height: 28 }} />
+        <span className="djc-event-name">{event.name}</span>
+        <span className="djc-slug">/{slug}</span>
+        <div style={{ flex: 1 }} />
+        <div className="lang-toggle" style={{ transform: 'scale(0.85)' }}>
+          <button className={lang === 'tr' ? 'active' : ''} onClick={() => changeLang('tr')}>TR</button>
+          <button className={lang === 'en' ? 'active' : ''} onClick={() => changeLang('en')}>EN</button>
         </div>
-        <div className="dj-header-right">
-          <div className="lang-toggle">
-            <button className={lang === 'tr' ? 'active' : ''} onClick={() => changeLang('tr')}>TR</button>
-            <button className={lang === 'en' ? 'active' : ''} onClick={() => changeLang('en')}>EN</button>
-          </div>
-          <span className={`status-chip ${event.status}`}>
-            {T(`dj.status_${event.status}`)}
-          </span>
-        </div>
+        <span className={`status-chip ${event.status}`}>{T(`dj.status_${event.status}`)}</span>
       </div>
 
-      {/* Actions */}
-      <div className="dj-actions">
-        {event.status === 'waiting' && (
-          <>
-            <button className="btn btn-primary" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
-              <div className="countdown-presets">
+      {/* ─── Row 2: Actions + Stats + Quick Links ─── */}
+      <div className="djc-toolbar">
+        <div className="djc-actions">
+          {event.status === 'waiting' && (
+            <>
+              <button className="btn btn-primary btn-sm" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
+              <div className="djc-countdown-group">
                 {[5, 10, 15, 30].map(m => (
-                  <button key={m} className={`preset-btn ${countdownMinutes === m ? 'active' : ''}`} onClick={() => setCountdownMinutes(m)}>
-                    {m} {T('dj.countdown_minutes')}
-                  </button>
+                  <button key={m} className={`preset-btn ${countdownMinutes === m ? 'active' : ''}`} onClick={() => setCountdownMinutes(m)}>{m}′</button>
                 ))}
-                <input type="number" className="input" style={{ width: 56, textAlign: 'center', padding: '8px 4px', fontSize: 13 }} value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={120} />
+                <input type="number" className="input" style={{ width: 42, textAlign: 'center', padding: '4px 2px', fontSize: 12 }} value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={120} />
+                <button className="btn btn-ghost btn-sm" onClick={startCountdown}>⏱</button>
               </div>
-              <button className="btn btn-ghost" onClick={startCountdown} style={{ width: '100%' }}>⏱ {T('dj.start_countdown')}</button>
-            </div>
-          </>
-        )}
-        {event.status === 'countdown' && (
-          <button className="btn btn-primary" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
-        )}
-        {event.status === 'active' && (
-          <>
-            <button className="btn btn-ghost" onClick={() => updateStatus('paused')}>⏸ {T('dj.pause')}</button>
-            <button className="btn btn-danger" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
-          </>
-        )}
-        {event.status === 'paused' && (
-          <>
-            <button className="btn btn-primary" onClick={() => updateStatus('active')}>▶ {T('dj.resume')}</button>
-            <button className="btn btn-danger" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
-          </>
-        )}
-      </div>
+            </>
+          )}
+          {event.status === 'countdown' && (
+            <button className="btn btn-primary btn-sm" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
+          )}
+          {event.status === 'active' && (
+            <>
+              <button className="btn btn-ghost btn-sm" onClick={() => updateStatus('paused')}>⏸ {T('dj.pause')}</button>
+              <button className="btn btn-danger btn-sm" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
+            </>
+          )}
+          {event.status === 'paused' && (
+            <>
+              <button className="btn btn-primary btn-sm" onClick={() => updateStatus('active')}>▶ {T('dj.resume')}</button>
+              <button className="btn btn-danger btn-sm" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
+            </>
+          )}
+        </div>
 
-      {/* Stats */}
-      <div className="dj-stats">
-        <div className="stat-card glass">
-          <div className="stat-value">{pendingRequests.length}</div>
-          <div className="stat-label">{T('dj.total_requests')}</div>
+        <div className="djc-stats-strip">
+          <div className="djc-stat"><span className="djc-stat-val">{pendingRequests.length}</span><span className="djc-stat-lbl">{T('dj.total_requests')}</span></div>
+          <div className="djc-stat"><span className="djc-stat-val">{totalVotes}</span><span className="djc-stat-lbl">{T('dj.total_votes')}</span></div>
+          <div className="djc-stat"><span className="djc-stat-val">{rejectedCount}</span><span className="djc-stat-lbl">{T('dj.reject')}</span></div>
         </div>
-        <div className="stat-card glass">
-          <div className="stat-value">{totalVotes}</div>
-          <div className="stat-label">{T('dj.total_votes')}</div>
-        </div>
-        <div className="stat-card glass">
-          <div className="stat-value">{rejectedCount}</div>
-          <div className="stat-label">{T('dj.reject')}</div>
+
+        <div className="djc-quick-links">
+          <button className="copy-btn" onClick={copyLink}>{copied ? '✓' : '🔗'}</button>
+          <button className="copy-btn" onClick={() => setShowQr(!showQr)}>QR</button>
+          <a href={`/display/${slug}`} target="_blank" rel="noopener noreferrer" className="copy-btn" style={{ textDecoration: 'none' }}>🖥</a>
         </div>
       </div>
 
-      {/* QR Code + Links */}
-      <div className="dj-qr-section glass">
-        <QRCodeSVG value={requestUrl} size={100} bgColor="#ffffff" fgColor="#000000" level="M" />
-        <div className="dj-qr-info">
-          <div style={{ fontWeight: 600, fontSize: 14 }}>{T('dj.qr_code')}</div>
-          <div className="link">{requestUrl}</div>
-          <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
-            <button className="copy-btn" onClick={copyLink}>
-              {copied ? T('dj.copied') : T('dj.share_link')}
-            </button>
-            <a
-              href={`/display/${slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="copy-btn"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}
-            >
-              🖥 {lang === 'tr' ? 'Display Ekranı Aç' : 'Open Display Screen'}
-            </a>
-          </div>
-        </div>
-      </div>
+      {/* QR Popup */}
+      <AnimatePresence>
+        {showQr && (
+          <motion.div className="djc-qr-popup glass" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
+            <QRCodeSVG value={requestUrl} size={120} bgColor="#ffffff" fgColor="#000000" level="M" />
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', wordBreak: 'break-all', maxWidth: 260 }}>{requestUrl}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Request List */}
-      <div className="section-title">
-        <span>🎵</span> {T('dj.requests_list')} ({pendingRequests.length})
+      {/* ─── Request List (full remaining space) ─── */}
+      <div className="djc-list-header">
+        <span>🎵 {T('dj.requests_list')} ({pendingRequests.length})</span>
       </div>
 
       {pendingRequests.length === 0 ? (
