@@ -493,7 +493,7 @@ export default function DisplayPage() {
       setTickerTexts(eventData.ticker_texts || '');
       setTheme(eventData.theme || 'cyan');
       setAnimLevel(eventData.animation_level || 'high');
-      setRequests((reqData.requests || []).filter(r => r.status !== 'rejected' && r.status !== 'played'));
+      setRequests((reqData.requests || []).filter(r => r.status === 'approved'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
       fetch(`${API}/api/events/${slug}/genres`).then(r => r.json()).then(d => setGenreStats(d)).catch(() => {});
     } catch (err) { console.warn('DisplayPage fetchData failed:', err); }
@@ -506,6 +506,7 @@ export default function DisplayPage() {
     socket.emit('join-event', { eventSlug: slug, role: 'display' });
 
     socket.on('request-added', (req) => {
+      if (req.status !== 'approved') return;
       setRequests(prev => {
         if (prev.find(r => r.id === req.id)) return prev;
         return [...prev, req].sort((a, b) => b.votes - a.votes);
@@ -520,7 +521,7 @@ export default function DisplayPage() {
     });
 
     socket.on('list-updated', (list) => {
-      setRequests(list.filter(r => r.status !== 'rejected' && r.status !== 'played'));
+      setRequests(list.filter(r => r.status === 'approved'));
     });
 
     socket.on('request-played', (req) => {

@@ -78,6 +78,7 @@ export default function RequestPage() {
     socket.emit('join-event', { eventSlug: slug, role: 'audience' });
 
     socket.on('request-added', (req) => {
+      if (req.status !== 'approved') return;
       setRequests(prev => {
         if (prev.find(r => r.id === req.id)) return prev;
         return [...prev, req].sort((a, b) => b.votes - a.votes);
@@ -91,7 +92,7 @@ export default function RequestPage() {
       );
     });
 
-    socket.on('list-updated', (list) => setRequests(list));
+    socket.on('list-updated', (list) => setRequests(list.filter(r => r.status === 'approved')));
     socket.on('now-playing', () => fetchData());
 
     socket.on('event-status', ({ status, countdown_end }) => {
@@ -228,7 +229,7 @@ export default function RequestPage() {
   if (loading) return <div className="status-overlay"><div className="icon">🎧</div></div>;
   if (error) return <div className="status-overlay"><div className="icon">😕</div><h2>Oops</h2><p>{error}</p></div>;
 
-  const visibleRequests = requests.filter(r => r.status !== 'rejected' && r.status !== 'played');
+  const visibleRequests = requests.filter(r => r.status === 'approved');
   const limit = event.request_limit || 2;
   const remaining = limit - requestCount;
   const canRequest = remaining > 0 && ['active', 'countdown'].includes(event.status);
