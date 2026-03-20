@@ -351,65 +351,120 @@ export default function DJPanel() {
 
   if (!event) {
     return (
-      <div className="dj-panel">
-        <div className="create-event-form">
-          <span className="login-remiksbox">RemiksBox</span>
-          <h2>{T('dj.create_event')}</h2>
+      <div className="login-page">
+        {/* Animated background */}
+        <div className="login-bg">
+          <div className="login-grid" />
+          <div className="login-orb login-orb-1" />
+          <div className="login-orb login-orb-2" />
+          <div className="login-orb login-orb-3" />
+          <div className="login-scanline" />
+        </div>
 
-          <form onSubmit={(e) => { e.preventDefault(); createEvent(); }}>
-            <div className="form-group">
-              <label>{T('dj.event_name')}</label>
-              <input className="input" placeholder={T('dj.event_name_placeholder')} value={newEventName} onChange={(e) => { setNewEventName(e.target.value); setFormError(''); }} autoFocus />
+        <div className="login-content">
+          {/* Hero section */}
+          <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <span className="login-remiksbox">RemiksBox</span>
+            <p className="login-tagline">{lang === 'tr' ? 'DJ Etkinlik Yönetim Sistemi' : 'DJ Event Management System'}</p>
+            <div className="login-badge-row">
+              <span className="login-badge">Real-Time</span>
+              <span className="login-badge">Spotify</span>
+              <span className="login-badge">QR Code</span>
+            </div>
+          </motion.div>
+
+          {/* Form card */}
+          <motion.div className="login-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
+            <h2 className="login-card-title">{T('dj.create_event')}</h2>
+
+            <form onSubmit={(e) => { e.preventDefault(); createEvent(); }}>
+              <div className="form-group">
+                <label>{T('dj.event_name')}</label>
+                <div className="login-input-wrap">
+                  <span className="login-input-icon">🎤</span>
+                  <input className="input" placeholder={T('dj.event_name_placeholder')} value={newEventName} onChange={(e) => { setNewEventName(e.target.value); setFormError(''); }} autoFocus />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>{T('dj.password')}</label>
+                <div className="login-input-wrap">
+                  <span className="login-input-icon">🔒</span>
+                  <input className="input" type="password" placeholder="••••••" value={password} onChange={(e) => { setPassword(e.target.value); setFormError(''); }} />
+                </div>
+              </div>
+
+              {formError && (
+                <motion.div className="login-error" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
+                  {formError}
+                </motion.div>
+              )}
+
+              <motion.button type="submit" className="login-btn-primary" whileTap={{ scale: 0.96 }} whileHover={{ scale: 1.02 }}>
+                {T('dj.create')}
+              </motion.button>
+            </form>
+
+            <div className="form-divider">{T('dj.or_create')}</div>
+
+            <div className="connect-section">
+              <div className="connect-row">
+                <div className="login-input-wrap" style={{ flex: 1 }}>
+                  <span className="login-input-icon">🔗</span>
+                  <input className="input" placeholder={T('dj.enter_slug')} value={connectSlug} onChange={(e) => setConnectSlug(e.target.value)} />
+                </div>
+                <motion.button className="login-btn-ghost" whileTap={{ scale: 0.96 }} onClick={() => { if (connectSlug.trim()) loadEvent(connectSlug.trim()); }}>{T('dj.connect')}</motion.button>
+              </div>
             </div>
 
-            <div className="form-group">
-              <label>{T('dj.password')}</label>
-              <input className="input" type="password" placeholder="••••••" value={password} onChange={(e) => { setPassword(e.target.value); setFormError(''); }} />
-            </div>
-
-            {formError && (
-              <div style={{ color: '#ff4444', fontSize: 13, marginBottom: 12, padding: '8px 12px', background: 'rgba(255,68,68,0.1)', borderRadius: 8, border: '1px solid rgba(255,68,68,0.2)' }}>
-                {formError}
+            {eventHistory.length === 0 && password.trim() && (
+              <button className="login-btn-ghost" style={{ width: '100%', marginTop: 12 }} onClick={fetchHistory}>
+                {lang === 'tr' ? '📋 Geçmiş Etkinlikleri Getir' : '📋 Load Past Events'}
+              </button>
+            )}
+            {eventHistory.length > 0 && (
+              <div className="djc-history">
+                <div className="djc-history-title">{lang === 'tr' ? '📋 Geçmiş Etkinlikler' : '📋 Past Events'}</div>
+                {eventHistory.map(ev => (
+                  <div key={ev.id} className="djc-history-item" onClick={() => loadEvent(ev.slug)}>
+                    <div className="djc-history-name">{ev.name}</div>
+                    <div className="djc-history-meta">
+                      <span>{ev.total_requests} {lang === 'tr' ? 'istek' : 'req'}</span>
+                      <span>{ev.total_votes} {lang === 'tr' ? 'oy' : 'votes'}</span>
+                      <span className={`djc-history-status ${ev.status}`}>{ev.status}</span>
+                      <span>{new Date(ev.created_at).toLocaleDateString('tr-TR')}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
-
-            <motion.button type="submit" className="btn btn-primary" style={{ width: '100%' }} whileTap={{ scale: 0.96 }}>
-              {T('dj.create')}
-            </motion.button>
-          </form>
-
-          <div className="form-divider">{T('dj.or_create')}</div>
-
-          <div className="connect-section">
-            <div className="connect-row">
-              <input className="input" placeholder={T('dj.enter_slug')} value={connectSlug} onChange={(e) => setConnectSlug(e.target.value)} />
-              <button className="btn btn-ghost" onClick={() => { if (connectSlug.trim()) loadEvent(connectSlug.trim()); }}>{T('dj.connect')}</button>
-            </div>
-          </div>
-
-          {/* Event History */}
-          {eventHistory.length === 0 && password.trim() && (
-            <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }} onClick={fetchHistory}>
-              {lang === 'tr' ? '📋 Geçmiş Etkinlikleri Getir' : '📋 Load Past Events'}
-            </button>
-          )}
-          {eventHistory.length > 0 && (
-            <div className="djc-history">
-              <div className="djc-history-title">{lang === 'tr' ? '📋 Geçmiş Etkinlikler' : '📋 Past Events'}</div>
-              {eventHistory.map(ev => (
-                <div key={ev.id} className="djc-history-item" onClick={() => loadEvent(ev.slug)}>
-                  <div className="djc-history-name">{ev.name}</div>
-                  <div className="djc-history-meta">
-                    <span>{ev.total_requests} {lang === 'tr' ? 'istek' : 'req'}</span>
-                    <span>{ev.total_votes} {lang === 'tr' ? 'oy' : 'votes'}</span>
-                    <span className={`djc-history-status ${ev.status}`}>{ev.status}</span>
-                    <span>{new Date(ev.created_at).toLocaleDateString('tr-TR')}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          </motion.div>
         </div>
+
+        {/* Legal Footer */}
+        <footer className="login-footer">
+          <div className="login-footer-brand">
+            <span className="login-footer-logo">RemiksBox</span>
+            <span className="login-footer-by">by Remiks İstanbul</span>
+          </div>
+          <div className="login-footer-links">
+            <span>{lang === 'tr' ? 'Tüm hakları saklıdır.' : 'All rights reserved.'} © {new Date().getFullYear()}</span>
+            <span className="login-footer-sep">|</span>
+            <span>{lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}</span>
+            <span className="login-footer-sep">|</span>
+            <span>{lang === 'tr' ? 'Kullanım Koşulları' : 'Terms of Use'}</span>
+          </div>
+          <div className="login-footer-legal">
+            <p>{lang === 'tr'
+              ? 'Bu yazılım Remiks İstanbul tarafından geliştirilmiştir. Ticari veya kişisel kullanım için lisans gereklidir. Müzik içerikleri ilgili hak sahiplerine aittir. Spotify entegrasyonu Spotify AB lisansı altında kullanılmaktadır.'
+              : 'This software is developed by Remiks İstanbul. License required for commercial or personal use. Music content belongs to respective rights holders. Spotify integration is used under Spotify AB license.'
+            }</p>
+            <p>{lang === 'tr'
+              ? 'İletişim: info@remiksistanbul.com | KVKK ve GDPR uyumlu veri işleme politikalarımız geçerlidir.'
+              : 'Contact: info@remiksistanbul.com | KVKK and GDPR compliant data processing policies apply.'
+            }</p>
+          </div>
+        </footer>
 
         <AnimatePresence>
           {toast && <motion.div className="success-toast" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>{toast}</motion.div>}
