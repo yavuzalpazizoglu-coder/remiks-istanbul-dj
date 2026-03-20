@@ -24,8 +24,11 @@ export default function DJPanel() {
   const [copied, setCopied] = useState(false);
   const [brandText, setBrandText] = useState('');
   const [brandSaving, setBrandSaving] = useState(false);
+  const [tickerTexts, setTickerTexts] = useState('');
+  const [tickerSaving, setTickerSaving] = useState(false);
   const [showQr, setShowQr] = useState(false);
   const brandTimer = useRef(null);
+  const tickerTimer = useRef(null);
 
   const T = useCallback((key) => t(lang, key), [lang]);
 
@@ -49,6 +52,7 @@ export default function DJPanel() {
       setSlug(eventSlug);
       setLang(data.language || 'tr');
       setBrandText(data.brand_text || '');
+      setTickerTexts(data.ticker_texts || '');
       await fetchRequests(eventSlug);
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
     } catch (err) {
@@ -187,6 +191,25 @@ export default function DJPanel() {
     brandTimer.current = setTimeout(() => saveBrandText(val), 800);
   };
 
+  const saveTickerTexts = useCallback(async (text) => {
+    setTickerSaving(true);
+    try {
+      await fetch(`${API}/api/events/${slug}/ticker`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ tickerTexts: text }),
+      });
+    } catch {} finally {
+      setTickerSaving(false);
+    }
+  }, [slug, password]);
+
+  const handleTickerChange = (val) => {
+    setTickerTexts(val);
+    if (tickerTimer.current) clearTimeout(tickerTimer.current);
+    tickerTimer.current = setTimeout(() => saveTickerTexts(val), 800);
+  };
+
   const copyLink = () => {
     const appUrl = window.location.origin;
     navigator.clipboard.writeText(`${appUrl}/request/${slug}`);
@@ -320,6 +343,21 @@ export default function DJPanel() {
           onChange={(e) => handleBrandChange(e.target.value)}
         />
         {brandSaving && <span className="djc-brand-saving">⏳</span>}
+      </div>
+
+      {/* Ticker Texts */}
+      <div className="djc-brand-row" style={{ alignItems: 'flex-start' }}>
+        <span className="djc-brand-label">{lang === 'tr' ? '📜 Kayan Yazılar' : '📜 Ticker Texts'}</span>
+        <textarea
+          className="input djc-ticker-input"
+          placeholder={lang === 'tr'
+            ? 'Her satıra bir mesaj yazın...\nÖrn: Remiks İstanbul etkinliğine hoşgeldiniz!\nİsteklerinizi gönderin!'
+            : 'One message per line...\nE.g.: Welcome to Remiks Istanbul!\nSend your requests!'}
+          value={tickerTexts}
+          onChange={(e) => handleTickerChange(e.target.value)}
+          rows={3}
+        />
+        {tickerSaving && <span className="djc-brand-saving">⏳</span>}
       </div>
 
       {/* QR Popup */}

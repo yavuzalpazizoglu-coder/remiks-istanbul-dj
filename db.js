@@ -61,6 +61,12 @@ try {
   db.exec("ALTER TABLE events ADD COLUMN brand_text TEXT DEFAULT ''");
 }
 
+try {
+  db.prepare("SELECT ticker_texts FROM events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE events ADD COLUMN ticker_texts TEXT DEFAULT ''");
+}
+
 // ─── Events ───
 
 export function createEvent(name, djPassword) {
@@ -98,6 +104,11 @@ export function setCountdownEnd(slug, timestamp) {
 
 export function updateBrandText(slug, brandText) {
   db.prepare('UPDATE events SET brand_text = ? WHERE slug = ?').run(brandText, slug);
+  return getEventBySlug(slug);
+}
+
+export function updateTickerTexts(slug, tickerTexts) {
+  db.prepare('UPDATE events SET ticker_texts = ? WHERE slug = ?').run(tickerTexts, slug);
   return getEventBySlug(slug);
 }
 

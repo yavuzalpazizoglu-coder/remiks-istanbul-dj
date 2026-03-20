@@ -188,21 +188,37 @@ function EventSummary({ requests, lang }) {
   );
 }
 
-function Ticker({ requests, lang }) {
-  if (requests.length === 0) return null;
-  const items = requests.slice(0, 12);
+function Ticker({ requests, lang, tickerTexts }) {
+  const hasRequests = requests.length > 0;
+  const customLines = (tickerTexts || '').split('\n').map(s => s.trim()).filter(Boolean);
+
+  const reqItems = requests.slice(0, 12);
+  const textItems = customLines.length > 0
+    ? customLines
+    : [lang === 'tr' ? 'Remiks İstanbul etkinliğine hoşgeldiniz!' : 'Welcome to Remiks Istanbul!'];
+
+  const items = hasRequests ? reqItems : textItems;
   const doubled = [...items, ...items];
   const duration = Math.max(20, items.length * 4);
 
   return (
     <div className="display-ticker">
       <div className="ticker-track" style={{ '--ticker-duration': `${duration}s` }}>
-        {doubled.map((req, i) => (
-          <div key={`${req.id}-${i}`} className="ticker-item">
-            <span className="ticker-emoji">🎵</span>
-            <span className="ticker-song">{req.song_name}</span>
-            {req.artist && <span>- {req.artist}</span>}
-            <span style={{ color: 'var(--neon-cyan)', fontWeight: 700 }}>({req.votes} {t(lang, 'request.votes')})</span>
+        {doubled.map((item, i) => (
+          <div key={`ticker-${i}`} className="ticker-item">
+            {hasRequests ? (
+              <>
+                <span className="ticker-emoji">🎵</span>
+                <span className="ticker-song">{item.song_name}</span>
+                {item.artist && <span>- {item.artist}</span>}
+                <span style={{ color: 'var(--neon-cyan)', fontWeight: 700 }}>({item.votes} {t(lang, 'request.votes')})</span>
+              </>
+            ) : (
+              <>
+                <span className="ticker-emoji">✨</span>
+                <span className="ticker-song">{item}</span>
+              </>
+            )}
             <span className="ticker-dot">●</span>
           </div>
         ))}
@@ -223,6 +239,7 @@ export default function DisplayPage() {
   const [justOpened, setJustOpened] = useState(false);
   const [connectedCount, setConnectedCount] = useState(0);
   const [brandText, setBrandText] = useState('');
+  const [tickerTexts, setTickerTexts] = useState('');
 
   const T = useCallback((key) => t(lang, key), [lang]);
   const requestUrl = `${window.location.origin}/request/${slug}`;
@@ -239,6 +256,7 @@ export default function DisplayPage() {
       setEvent(eventData);
       setLang(eventData.language || 'tr');
       setBrandText(eventData.brand_text || '');
+      setTickerTexts(eventData.ticker_texts || '');
       setRequests((reqData.requests || []).filter(r => r.status !== 'rejected' && r.status !== 'played'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
     } catch {}
@@ -282,6 +300,7 @@ export default function DisplayPage() {
 
     socket.on('language-changed', ({ language }) => setLang(language));
     socket.on('brand-updated', ({ brand_text }) => setBrandText(brand_text || ''));
+    socket.on('ticker-updated', ({ ticker_texts }) => setTickerTexts(ticker_texts || ''));
 
     const countInterval = setInterval(() => {
       setConnectedCount(Math.max(1, Math.floor(Math.random() * 3) + (requests.length * 2)));
@@ -290,6 +309,7 @@ export default function DisplayPage() {
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
+      socket.off('ticker-updated');
       socket.disconnect();
       clearInterval(countInterval);
     };
@@ -351,8 +371,8 @@ export default function DisplayPage() {
           </div>
         </div>
 
-        {/* ─── Ticker (below event name) ─── */}
-        {event.status === 'active' && <Ticker requests={requests} lang={lang} />}
+        {/* ─── Ticker (always visible) ─── */}
+        <Ticker requests={requests} lang={lang} tickerTexts={tickerTexts} />
 
         {/* ─── WAITING ─── */}
         {event.status === 'waiting' && (

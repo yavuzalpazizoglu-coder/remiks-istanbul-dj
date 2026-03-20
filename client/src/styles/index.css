@@ -518,6 +518,14 @@ input, textarea { font-family: inherit; }
   font-size: 13px !important;
   font-weight: 600;
 }
+.djc-ticker-input {
+  flex: 1; padding: 5px 10px !important;
+  font-size: 12px !important;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 54px;
+  line-height: 1.4;
+}
 .djc-brand-saving {
   font-size: 12px; animation: pulse 1s ease infinite;
 }

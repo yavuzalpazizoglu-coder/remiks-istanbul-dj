@@ -102,6 +102,17 @@ app.put('/api/events/:slug/language', djAuth, (req, res) => {
   }
 });
 
+app.put('/api/events/:slug/ticker', djAuth, (req, res) => {
+  try {
+    const { tickerTexts } = req.body;
+    const event = db.updateTickerTexts(req.params.slug, tickerTexts || '');
+    io.to(req.params.slug).emit('ticker-updated', { ticker_texts: event.ticker_texts });
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.put('/api/events/:slug/brand', djAuth, (req, res) => {
   try {
     const { brandText } = req.body;
