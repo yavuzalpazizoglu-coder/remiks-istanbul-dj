@@ -29,6 +29,9 @@ export default function DJPanel() {
   const [tickerSaving, setTickerSaving] = useState(false);
   const [showQr, setShowQr] = useState(false);
   const [requestLimit, setRequestLimit] = useState(2);
+  const [theme, setTheme] = useState('cyan');
+  const [animationLevel, setAnimationLevel] = useState('high');
+  const [eventHistory, setEventHistory] = useState([]);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
 
@@ -57,6 +60,8 @@ export default function DJPanel() {
       setBrandText(data.brand_text || '');
       setTickerTexts(data.ticker_texts || '');
       setRequestLimit(data.request_limit || 2);
+      setTheme(data.theme || 'cyan');
+      setAnimationLevel(data.animation_level || 'high');
       await fetchRequests(eventSlug);
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
     } catch (err) {
@@ -219,6 +224,28 @@ export default function DJPanel() {
     } catch {}
   };
 
+  const changeTheme = async (newTheme) => {
+    setTheme(newTheme);
+    try {
+      await fetch(`${API}/api/events/${slug}/theme`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ theme: newTheme }),
+      });
+    } catch {}
+  };
+
+  const changeAnimationLevel = async (level) => {
+    setAnimationLevel(level);
+    try {
+      await fetch(`${API}/api/events/${slug}/animation`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ level }),
+      });
+    } catch {}
+  };
+
   const handleTickerChange = (val) => {
     setTickerTexts(val);
     if (tickerTimer.current) clearTimeout(tickerTimer.current);
@@ -233,6 +260,19 @@ export default function DJPanel() {
   };
 
   const requestUrl = `${window.location.origin}/request/${slug}`;
+
+  // ─── Fetch event history ───
+
+  const fetchHistory = useCallback(async () => {
+    if (!password.trim()) return;
+    try {
+      const res = await fetch(`${API}/api/events/history`, { headers: { 'x-dj-password': password } });
+      if (res.ok) {
+        const data = await res.json();
+        setEventHistory(data);
+      }
+    } catch {}
+  }, [password]);
 
   // ─── Create / Connect Form ───
 
@@ -273,6 +313,29 @@ export default function DJPanel() {
               <button className="btn btn-ghost" onClick={() => loadEvent(connectSlug)}>{T('dj.connect')}</button>
             </div>
           </div>
+
+          {/* Event History */}
+          {eventHistory.length === 0 && password.trim() && (
+            <button className="btn btn-ghost" style={{ width: '100%', marginTop: 12 }} onClick={fetchHistory}>
+              {lang === 'tr' ? '📋 Geçmiş Etkinlikleri Getir' : '📋 Load Past Events'}
+            </button>
+          )}
+          {eventHistory.length > 0 && (
+            <div className="djc-history">
+              <div className="djc-history-title">{lang === 'tr' ? '📋 Geçmiş Etkinlikler' : '📋 Past Events'}</div>
+              {eventHistory.map(ev => (
+                <div key={ev.id} className="djc-history-item" onClick={() => loadEvent(ev.slug)}>
+                  <div className="djc-history-name">{ev.name}</div>
+                  <div className="djc-history-meta">
+                    <span>{ev.total_requests} {lang === 'tr' ? 'istek' : 'req'}</span>
+                    <span>{ev.total_votes} {lang === 'tr' ? 'oy' : 'votes'}</span>
+                    <span className={`djc-history-status ${ev.status}`}>{ev.status}</span>
+                    <span>{new Date(ev.created_at).toLocaleDateString('tr-TR')}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <AnimatePresence>
@@ -351,7 +414,7 @@ export default function DJPanel() {
         </div>
       </div>
 
-      {/* Brand + Ticker Row */}
+      {/* Brand + Ticker + Theme + Animation Row */}
       <div className="djc-settings-row">
         <div className="djc-brand-row">
           <span className="djc-brand-label">{lang === 'tr' ? '📺 Ekran Yazısı' : '📺 Screen Text'}</span>
@@ -362,6 +425,42 @@ export default function DJPanel() {
           <span className="djc-brand-label">{lang === 'tr' ? '📜 Kayan Yazılar' : '📜 Ticker'}</span>
           <textarea className="input djc-ticker-input" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One message per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={2} />
           {tickerSaving && <span className="djc-brand-saving">⏳</span>}
+        </div>
+        <div className="djc-brand-row">
+          <span className="djc-brand-label">{lang === 'tr' ? '🎨 Tema' : '🎨 Theme'}</span>
+          <div className="djc-theme-picker">
+            {[
+              { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
+              { id: 'purple', color: '#b829dd', label: 'Mor' },
+              { id: 'pink', color: '#ff0080', label: 'Pembe' },
+              { id: 'green', color: '#00ff88', label: 'Yeşil' },
+              { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
+              { id: 'red', color: '#ff4444', label: 'Kırmızı' },
+            ].map(t => (
+              <button key={t.id}
+                className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
+                style={{ background: t.color }}
+                onClick={() => changeTheme(t.id)}
+                title={t.label}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="djc-brand-row">
+          <span className="djc-brand-label">{lang === 'tr' ? '✨ Efekt' : '✨ Effects'}</span>
+          <div className="djc-limit-toggle">
+            {[
+              { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
+              { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Medium' },
+              { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
+            ].map(l => (
+              <button key={l.id}
+                className={`preset-btn djc-preset ${animationLevel === l.id ? 'active' : ''}`}
+                onClick={() => changeAnimationLevel(l.id)}>
+                {l.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

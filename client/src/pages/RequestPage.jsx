@@ -167,6 +167,7 @@ export default function RequestPage() {
           artist,
           albumArt: selectedSong?.albumArt || '',
           spotifyId: selectedSong?.spotifyId || '',
+          genre: selectedSong?.genre || '',
           deviceId,
         }),
       });

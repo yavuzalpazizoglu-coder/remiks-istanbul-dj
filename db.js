@@ -74,6 +74,24 @@ try {
   db.exec("ALTER TABLE events ADD COLUMN request_limit INTEGER DEFAULT 2");
 }
 
+try {
+  db.prepare("SELECT theme FROM events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE events ADD COLUMN theme TEXT DEFAULT 'cyan'");
+}
+
+try {
+  db.prepare("SELECT animation_level FROM events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE events ADD COLUMN animation_level TEXT DEFAULT 'high'");
+}
+
+try {
+  db.prepare("SELECT genre FROM requests LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE requests ADD COLUMN genre TEXT DEFAULT ''");
+}
+
 // ─── Events ───
 
 export function createEvent(name, djPassword) {
@@ -121,12 +139,12 @@ export function updateTickerTexts(slug, tickerTexts) {
 
 // ─── Requests ───
 
-export function createRequest(eventId, songName, artist, albumArt, spotifyId, deviceId) {
+export function createRequest(eventId, songName, artist, albumArt, spotifyId, deviceId, genre) {
   const id = nanoid(12);
   db.prepare(`
-    INSERT INTO requests (id, event_id, song_name, artist, album_art, spotify_id, device_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `).run(id, eventId, songName, artist || '', albumArt || '', spotifyId || '', deviceId);
+    INSERT INTO requests (id, event_id, song_name, artist, album_art, spotify_id, device_id, genre)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(id, eventId, songName, artist || '', albumArt || '', spotifyId || '', deviceId, genre || '');
 
   db.prepare('INSERT INTO votes (id, request_id, device_id) VALUES (?, ?, ?)')
     .run(nanoid(12), id, deviceId);
@@ -208,6 +226,34 @@ export function getVotedRequestIds(eventId, deviceId) {
 export function updateRequestLimit(slug, limit) {
   db.prepare('UPDATE events SET request_limit = ? WHERE slug = ?').run(limit, slug);
   return getEventBySlug(slug);
+}
+
+export function updateTheme(slug, theme) {
+  db.prepare('UPDATE events SET theme = ? WHERE slug = ?').run(theme, slug);
+  return getEventBySlug(slug);
+}
+
+export function updateAnimationLevel(slug, level) {
+  db.prepare('UPDATE events SET animation_level = ? WHERE slug = ?').run(level, slug);
+  return getEventBySlug(slug);
+}
+
+export function getEventHistory(password) {
+  return db.prepare(`
+    SELECT e.id, e.name, e.slug, e.status, e.created_at,
+      (SELECT COUNT(*) FROM requests r WHERE r.event_id = e.id) as total_requests,
+      (SELECT COALESCE(SUM(r.votes), 0) FROM requests r WHERE r.event_id = e.id) as total_votes
+    FROM events e WHERE e.dj_password = ?
+    ORDER BY e.created_at DESC
+  `).all(password);
+}
+
+export function getGenreStats(eventId) {
+  return db.prepare(`
+    SELECT genre, COUNT(*) as count FROM requests
+    WHERE event_id = ? AND genre != '' AND status != 'rejected'
+    GROUP BY genre ORDER BY count DESC
+  `).all(eventId);
 }
 
 export function getNowPlaying(eventId) {

@@ -28,6 +28,44 @@ async function getToken() {
   }
 }
 
+const GENRE_MAP = [
+  { category: 'Türkçe Pop', keywords: ['turkish pop', 'turkce pop', 'turkish dance', 'anatolian pop'] },
+  { category: 'Yabancı Pop', keywords: ['pop', 'dance pop', 'electropop', 'synthpop', 'indie pop', 'k-pop', 'latin pop', 'europop'] },
+  { category: 'Rap', keywords: ['turkish hip hop', 'rap', 'hip hop', 'trap', 'drill', 'grime', 'turkish trap'] },
+  { category: 'Arabesk', keywords: ['arabesk', 'arabesque'] },
+  { category: 'Türk Halk', keywords: ['turkish folk', 'turkish classical', 'anatolian rock', 'anatolian', 'turku', 'türkü', 'halk'] },
+  { category: 'Özgün', keywords: ['özgün', 'ozgun', 'protest'] },
+  { category: 'Rock', keywords: ['turkish rock', 'rock', 'alternative rock', 'indie rock', 'metal', 'hard rock', 'punk'] },
+  { category: 'Elektronik', keywords: ['electronic', 'edm', 'house', 'techno', 'trance', 'dubstep', 'drum and bass'] },
+  { category: 'R&B', keywords: ['r&b', 'soul', 'funk', 'neo soul'] },
+];
+
+function classifyGenre(spotifyGenres) {
+  if (!spotifyGenres || spotifyGenres.length === 0) return '';
+  const joined = spotifyGenres.join(' ').toLowerCase();
+  for (const { category, keywords } of GENRE_MAP) {
+    if (keywords.some(k => joined.includes(k))) return category;
+  }
+  return 'Diğer';
+}
+
+const artistGenreCache = new Map();
+
+async function getArtistGenres(artistId, accessToken) {
+  if (artistGenreCache.has(artistId)) return artistGenreCache.get(artistId);
+  try {
+    const res = await fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const data = await res.json();
+    const genres = data.genres || [];
+    artistGenreCache.set(artistId, genres);
+    return genres;
+  } catch {
+    return [];
+  }
+}
+
 export async function searchSpotify(query) {
   const accessToken = await getToken();
   if (!accessToken) return [];
@@ -47,13 +85,21 @@ export async function searchSpotify(query) {
     const data = await res.json();
     if (!data.tracks?.items) return [];
 
-    return data.tracks.items.map(track => ({
-      spotifyId: track.id,
-      name: track.name,
-      artist: track.artists.map(a => a.name).join(', '),
-      albumArt: track.album.images?.[1]?.url || track.album.images?.[0]?.url || '',
-      previewUrl: track.preview_url,
-    }));
+    const artistIds = [...new Set(data.tracks.items.map(t => t.artists[0]?.id).filter(Boolean))];
+    await Promise.all(artistIds.map(id => getArtistGenres(id, accessToken)));
+
+    return data.tracks.items.map(track => {
+      const primaryArtistId = track.artists[0]?.id;
+      const genres = primaryArtistId ? (artistGenreCache.get(primaryArtistId) || []) : [];
+      return {
+        spotifyId: track.id,
+        name: track.name,
+        artist: track.artists.map(a => a.name).join(', '),
+        albumArt: track.album.images?.[1]?.url || track.album.images?.[0]?.url || '',
+        previewUrl: track.preview_url,
+        genre: classifyGenre(genres),
+      };
+    });
   } catch (err) {
     console.error('Spotify search error:', err.message);
     return [];

@@ -1501,6 +1501,167 @@ input, textarea { font-family: inherit; }
   -webkit-text-fill-color: transparent;
 }
 
+/* ─── Theme Variables (overrides via inline style) ─── */
+
+.display-page {
+  --theme-primary: #00d4ff;
+  --theme-glow: rgba(0, 212, 255, 0.3);
+}
+
+.display-page .dsp-event-name,
+.display-page .dsp-brand-motto,
+.display-page .dsp-card-title,
+.display-page .dsp-qr-label,
+.display-page .dtable-votes-lg,
+.display-page .countdown-timer,
+.display-page .display-live-badge .live-count {
+  color: var(--theme-primary);
+}
+
+.display-page .dtable-top3 {
+  border-color: var(--theme-primary);
+}
+
+/* ─── Genre Distribution Chart ─── */
+
+.dsp-genre-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  align-self: center;
+  min-width: 160px;
+  max-width: 220px;
+}
+
+.dsp-genre-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--theme-primary);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.dsp-genre-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dsp-genre-label {
+  font-size: 10px;
+  color: var(--text-secondary);
+  min-width: 64px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.dsp-genre-bar-bg {
+  flex: 1;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.dsp-genre-bar-fill {
+  height: 100%;
+  background: var(--theme-primary);
+  border-radius: 5px;
+  box-shadow: 0 0 8px var(--theme-glow);
+}
+
+.dsp-genre-pct {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--theme-primary);
+  min-width: 28px;
+}
+
+/* ─── Event History (DJ Panel Login) ─── */
+
+.djc-history {
+  margin-top: 16px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+
+.djc-history-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.djc-history-item {
+  padding: 10px 12px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.djc-history-item:hover {
+  border-color: var(--neon-cyan);
+  background: var(--bg-glass-strong);
+}
+
+.djc-history-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.djc-history-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.djc-history-status {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.djc-history-status.ended { background: rgba(255,68,68,0.15); color: #ff6b6b; }
+.djc-history-status.active { background: rgba(0,255,136,0.15); color: #00ff88; }
+.djc-history-status.waiting { background: rgba(0,212,255,0.15); color: #00d4ff; }
+
+/* ─── Theme Picker ─── */
+
+.djc-theme-picker {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.djc-theme-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.djc-theme-dot:hover {
+  transform: scale(1.15);
+}
+
+.djc-theme-dot.active {
+  border-color: #fff;
+  box-shadow: 0 0 8px currentColor;
+  transform: scale(1.2);
+}
+
 /* ─── Played Animation ─── */
 
 .dtable-played {

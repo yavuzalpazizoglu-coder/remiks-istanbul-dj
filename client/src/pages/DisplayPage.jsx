@@ -245,6 +245,9 @@ export default function DisplayPage() {
   const [tickerTexts, setTickerTexts] = useState('');
   const [allRequests, setAllRequests] = useState([]);
   const [playedId, setPlayedId] = useState(null);
+  const [theme, setTheme] = useState('cyan');
+  const [animLevel, setAnimLevel] = useState('high');
+  const [genreStats, setGenreStats] = useState([]);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -263,8 +266,11 @@ export default function DisplayPage() {
       setLang(eventData.language || 'tr');
       setBrandText(eventData.brand_text || '');
       setTickerTexts(eventData.ticker_texts || '');
+      setTheme(eventData.theme || 'cyan');
+      setAnimLevel(eventData.animation_level || 'high');
       setRequests((reqData.requests || []).filter(r => r.status !== 'rejected' && r.status !== 'played'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
+      fetch(`${API}/api/events/${slug}/genres`).then(r => r.json()).then(d => setGenreStats(d)).catch(() => {});
     } catch {}
   }, [slug]);
 
@@ -279,6 +285,7 @@ export default function DisplayPage() {
         if (prev.find(r => r.id === req.id)) return prev;
         return [...prev, req].sort((a, b) => b.votes - a.votes);
       });
+      fetch(`${API}/api/events/${slug}/genres`).then(r => r.json()).then(d => setGenreStats(d)).catch(() => {});
     });
 
     socket.on('vote-updated', ({ requestId, votes }) => {
@@ -319,6 +326,8 @@ export default function DisplayPage() {
     socket.on('language-changed', ({ language }) => setLang(language));
     socket.on('brand-updated', ({ brand_text }) => setBrandText(brand_text || ''));
     socket.on('ticker-updated', ({ ticker_texts }) => setTickerTexts(ticker_texts || ''));
+    socket.on('theme-changed', ({ theme }) => setTheme(theme));
+    socket.on('animation-changed', ({ level }) => setAnimLevel(level));
 
     socket.on('room-count', ({ count }) => setConnectedCount(count));
 
@@ -326,6 +335,7 @@ export default function DisplayPage() {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
+      socket.off('theme-changed'); socket.off('animation-changed');
       socket.disconnect();
     };
   }, [slug]);
@@ -352,12 +362,24 @@ export default function DisplayPage() {
   const top10 = requests.slice(0, 10);
   const displayName = brandText || event.name;
 
+  const themeColors = {
+    cyan: { primary: '#00d4ff', glow: 'rgba(0,212,255,0.3)' },
+    purple: { primary: '#b829dd', glow: 'rgba(184,41,221,0.3)' },
+    pink: { primary: '#ff0080', glow: 'rgba(255,0,128,0.3)' },
+    green: { primary: '#00ff88', glow: 'rgba(0,255,136,0.3)' },
+    orange: { primary: '#ff6b35', glow: 'rgba(255,107,53,0.3)' },
+    red: { primary: '#ff4444', glow: 'rgba(255,68,68,0.3)' },
+  };
+  const tc = themeColors[theme] || themeColors.cyan;
+
+  const totalGenre = genreStats.reduce((s, g) => s + g.count, 0);
+
   return (
-    <div className="display-page">
+    <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
       <div className="display-bg" />
       <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
-      <DiscoParticles />
-      <LightBeams />
+      {animLevel !== 'low' && <DiscoParticles />}
+      {animLevel === 'high' && <LightBeams />}
       {showConfetti && <Confetti />}
 
       {!socketConnected && (
@@ -466,6 +488,29 @@ export default function DisplayPage() {
                   </div>
                 )}
               </div>
+
+              {/* CENTER: Genre Distribution */}
+              {genreStats.length > 0 && (
+                <div className="dsp-genre-chart">
+                  <div className="dsp-genre-title">{lang === 'tr' ? '🎼 Tür Dağılımı' : '🎼 Genre Mix'}</div>
+                  {genreStats.map((g, i) => {
+                    const pct = totalGenre > 0 ? Math.round((g.count / totalGenre) * 100) : 0;
+                    return (
+                      <motion.div key={g.genre} className="dsp-genre-row" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
+                        <span className="dsp-genre-label">{g.genre}</span>
+                        <div className="dsp-genre-bar-bg">
+                          <motion.div className="dsp-genre-bar-fill"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${pct}%` }}
+                            transition={{ duration: 0.8, delay: i * 0.1 }}
+                          />
+                        </div>
+                        <span className="dsp-genre-pct">{pct}%</span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* RIGHT: QR Card */}
               <div className="dsp-card dsp-qr-card">

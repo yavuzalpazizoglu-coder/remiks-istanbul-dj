@@ -157,7 +157,7 @@ app.post('/api/events/:slug/requests', (req, res) => {
       return res.status(400).json({ error: 'Requests not open' });
     }
 
-    const { albumArt, spotifyId, deviceId } = req.body;
+    const { albumArt, spotifyId, deviceId, genre } = req.body;
     const songName = sanitize(req.body.songName);
     const artist = sanitize(req.body.artist);
     if (!songName || !deviceId) {
@@ -170,7 +170,7 @@ app.post('/api/events/:slug/requests', (req, res) => {
       return res.status(400).json({ error: 'Request limit reached', limit });
     }
 
-    const request = db.createRequest(event.id, songName, artist, albumArt, spotifyId, deviceId);
+    const request = db.createRequest(event.id, songName, artist, albumArt, spotifyId, deviceId, genre || '');
     io.to(req.params.slug).emit('request-added', request);
     res.json(request);
   } catch (err) {
@@ -260,6 +260,51 @@ app.put('/api/events/:slug/limit', djAuth, (req, res) => {
     if (![1, 2].includes(requestLimit)) return res.status(400).json({ error: 'Limit must be 1 or 2' });
     const event = db.updateRequestLimit(req.params.slug, requestLimit);
     res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/events/:slug/theme', djAuth, (req, res) => {
+  try {
+    const { theme } = req.body;
+    const valid = ['cyan', 'purple', 'pink', 'green', 'orange', 'red'];
+    if (!valid.includes(theme)) return res.status(400).json({ error: 'Invalid theme' });
+    const event = db.updateTheme(req.params.slug, theme);
+    io.to(req.params.slug).emit('theme-changed', { theme });
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/events/:slug/animation', djAuth, (req, res) => {
+  try {
+    const { level } = req.body;
+    const valid = ['low', 'medium', 'high'];
+    if (!valid.includes(level)) return res.status(400).json({ error: 'Invalid level' });
+    const event = db.updateAnimationLevel(req.params.slug, level);
+    io.to(req.params.slug).emit('animation-changed', { level });
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/events/:slug/genres', (req, res) => {
+  try {
+    const event = db.getEventBySlug(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    res.json(db.getGenreStats(event.id));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/events/history', djAuth, (req, res) => {
+  try {
+    const history = db.getEventHistory(process.env.DJ_PASSWORD);
+    res.json(history);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
