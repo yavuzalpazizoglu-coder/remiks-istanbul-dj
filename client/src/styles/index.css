@@ -775,8 +775,8 @@ input, textarea { font-family: inherit; }
 
 .display-disco-img {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  margin: auto;
   width: min(65vw, 65vh);
   height: auto;
   opacity: 0.35;
@@ -787,8 +787,8 @@ input, textarea { font-family: inherit; }
 }
 
 @keyframes discoPulse {
-  0%, 100% { opacity: 0.35; filter: drop-shadow(0 0 30px rgba(255,255,255,0.1)); transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.45; filter: drop-shadow(0 0 50px rgba(255,255,255,0.2)); transform: translate(-50%, -50%) scale(1.02); }
+  0%, 100% { opacity: 0.35; filter: drop-shadow(0 0 30px rgba(255,255,255,0.1)); transform: scale(1); }
+  50% { opacity: 0.45; filter: drop-shadow(0 0 50px rgba(255,255,255,0.2)); transform: scale(1.02); }
 }
 
 .dsp-center-hero {

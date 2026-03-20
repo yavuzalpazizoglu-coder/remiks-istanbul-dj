@@ -277,25 +277,6 @@ function MusicModeOverlay({ mode, lang }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.5 }}
       />}
-      <div className="ceremony-content">
-        <motion.div style={{ fontSize: 80, marginBottom: 12 }}
-          initial={{ scale: 0 }} animate={{ scale: [0, 1.3, 1] }}
-          transition={{ duration: 0.8, times: [0, 0.6, 1] }}>
-          {cfg.icon}
-        </motion.div>
-        <motion.div className="mm-line" style={{ background: `linear-gradient(90deg, transparent, ${cfg.color1}, transparent)` }}
-          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3 }} />
-        <motion.h1 className="mm-title" style={{ color: cfg.color1, textShadow: `0 0 40px ${cfg.color1}, 0 0 80px ${cfg.color2}` }}
-          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}>
-          {cfg.title[lang] || cfg.title.tr}
-        </motion.h1>
-        <motion.div className="mm-subtitle" style={{ color: cfg.color3 }}
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-          {cfg.subtitle[lang] || cfg.subtitle.tr}
-        </motion.div>
-        <motion.div className="mm-line" style={{ background: `linear-gradient(90deg, transparent, ${cfg.color1}, transparent)` }}
-          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 1.5 }} />
-      </div>
     </motion.div>
   );
 }
