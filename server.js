@@ -228,15 +228,24 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
       return res.status(400).json({ error: 'Invalid status' });
     }
 
+    const beforeUpdate = (status === 'played') ? db.getRequestById(req.params.id) : null;
     const updated = db.updateRequestStatus(req.params.id, status);
     const event = db.getEventById(updated.event_id);
 
     if (event) {
-      if (status === 'playing') {
-        io.to(event.slug).emit('now-playing', updated);
+      if (status === 'played' && beforeUpdate) {
+        io.to(event.slug).emit('request-played', beforeUpdate);
+        setTimeout(() => {
+          const requests = db.getRequests(event.id);
+          io.to(event.slug).emit('list-updated', requests);
+        }, 3000);
+      } else {
+        if (status === 'playing') {
+          io.to(event.slug).emit('now-playing', updated);
+        }
+        const requests = db.getRequests(event.id);
+        io.to(event.slug).emit('list-updated', requests);
       }
-      const requests = db.getRequests(event.id);
-      io.to(event.slug).emit('list-updated', requests);
     }
 
     res.json(updated);

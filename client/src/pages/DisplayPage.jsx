@@ -98,7 +98,7 @@ function VoteFloat({ count }) {
   ));
 }
 
-function SongRow({ req, rank, lang }) {
+function SongRow({ req, rank, lang, isPlayed }) {
   const [shaking, setShaking] = useState(false);
   const prevVotes = useRef(req.votes);
   const isTop3 = rank <= 3;
@@ -110,14 +110,15 @@ function SongRow({ req, rank, lang }) {
 
   return (
     <motion.tr
-      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${shaking ? 'animate-shake' : ''}`}
+      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${shaking ? 'animate-shake' : ''} ${isPlayed ? 'dtable-played' : ''}`}
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       initial={{ opacity: 0, x: -30 }}
-      animate={{ opacity: 1, x: 0 }}
+      animate={isPlayed ? { opacity: [1, 1, 0], x: 0, scale: [1, 1.03, 0.95] } : { opacity: 1, x: 0 }}
+      {...(isPlayed ? { transition: { duration: 2.8, times: [0, 0.7, 1] } } : {})}
     >
       <td className={`dtable-rank rank-${rank}`}>
-        {rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
+        {isPlayed ? <span className="dtable-medal">🎶</span> : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
       </td>
       <td className="dtable-art-cell">
         {req.album_art
@@ -128,6 +129,7 @@ function SongRow({ req, rank, lang }) {
       <td className="dtable-info-cell">
         <div className={`dtable-song ${isTop3 ? 'dtable-song-lg' : ''}`}>{req.song_name}</div>
         {req.artist && <div className="dtable-artist">{req.artist}</div>}
+        {isPlayed && <div className="dtable-played-label">{lang === 'tr' ? '🎶 Çalınıyor!' : '🎶 Now Playing!'}</div>}
       </td>
       <td className="dtable-votes-cell">
         <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -139,7 +141,7 @@ function SongRow({ req, rank, lang }) {
         </div>
         <span className="dtable-vote-label">{t(lang, 'request.votes')}</span>
       </td>
-      {rank === 1 && req.votes >= 5 && (
+      {rank === 1 && req.votes >= 5 && !isPlayed && (
         <td className="dtable-badge-cell">
           <span className="badge badge-hot"><span className="fire-icon">🔥</span></span>
         </td>
@@ -242,6 +244,7 @@ export default function DisplayPage() {
   const [brandText, setBrandText] = useState('');
   const [tickerTexts, setTickerTexts] = useState('');
   const [allRequests, setAllRequests] = useState([]);
+  const [playedId, setPlayedId] = useState(null);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -288,6 +291,11 @@ export default function DisplayPage() {
       setRequests(list.filter(r => r.status !== 'rejected' && r.status !== 'played'));
     });
 
+    socket.on('request-played', (req) => {
+      setPlayedId(req.id);
+      setTimeout(() => setPlayedId(null), 3000);
+    });
+
     socket.on('event-status', ({ status, countdown_end }) => {
       setEvent(prev => {
         const oldStatus = prev?.status;
@@ -317,7 +325,7 @@ export default function DisplayPage() {
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
-      socket.off('ticker-updated'); socket.off('room-count');
+      socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.disconnect();
     };
   }, [slug]);
@@ -450,7 +458,7 @@ export default function DisplayPage() {
                       <AnimatePresence>
                         <tbody>
                           {top10.map((req, idx) => (
-                            <SongRow key={req.id} req={req} rank={idx + 1} lang={lang} />
+                            <SongRow key={req.id} req={req} rank={idx + 1} lang={lang} isPlayed={playedId === req.id} />
                           ))}
                         </tbody>
                       </AnimatePresence>
