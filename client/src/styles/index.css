@@ -998,6 +998,32 @@ input, textarea { font-family: inherit; }
 }
 .form-divider::before, .form-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #2a2a32, transparent); }
 
+/* User chip (logged-in state) */
+.login-user-chip {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 30px; padding: 6px 14px 6px 6px;
+  margin-top: 12px;
+}
+.login-user-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: #fff;
+}
+.login-user-name {
+  font-size: 14px; font-weight: 600; color: #ddd; letter-spacing: 0.3px;
+}
+.login-user-logout {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%; width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  color: #888; font-size: 11px; cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  margin-left: 4px;
+}
+.login-user-logout:hover { background: rgba(255,68,68,0.15); color: #ff6666; border-color: rgba(255,68,68,0.3); }
+
 .connect-row { display: flex; gap: 8px; }
 .connect-row .input { flex: 1; }
 

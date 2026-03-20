@@ -62,6 +62,21 @@ app.get('/api/config', (req, res) => {
   res.json({ spotifyEnabled: isSpotifyConfigured() });
 });
 
+// ─── DJ Auth Login ───
+app.post('/api/auth/login', (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+    if (password !== process.env.DJ_PASSWORD) return res.status(401).json({ error: 'wrong_password' });
+    const user = db.getDJByEmail(email.toLowerCase().trim());
+    if (!user) return res.status(401).json({ error: 'user_not_found' });
+    const { created_at, ...safeUser } = user;
+    res.json({ user: safeUser, token: password });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Events
 app.post('/api/events', djAuth, (req, res) => {
   try {

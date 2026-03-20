@@ -13,6 +13,11 @@ export default function DJPanel() {
   const navigate = useNavigate();
 
   const [password, setPassword] = useState(() => localStorage.getItem('remiks_dj_pw') || '');
+  const [djUser, setDjUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('remiks_dj_user')); } catch { return null; }
+  });
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [slug, setSlug] = useState(paramSlug || '');
   const [event, setEvent] = useState(null);
   const [lang, setLang] = useState('tr');
@@ -121,17 +126,54 @@ export default function DJPanel() {
 
   const [formError, setFormError] = useState('');
 
+  const handleLogin = async () => {
+    setFormError('');
+    if (!loginEmail.trim()) {
+      setFormError(lang === 'tr' ? 'E-posta adresi gerekli' : 'Email required');
+      return;
+    }
+    if (!loginPassword.trim()) {
+      setFormError(lang === 'tr' ? 'Şifre gerekli' : 'Password required');
+      return;
+    }
+    try {
+      const res = await fetch(`${API}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: loginEmail.trim(), password: loginPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (data.error === 'wrong_password') setFormError(lang === 'tr' ? 'Şifre yanlış' : 'Wrong password');
+        else if (data.error === 'user_not_found') setFormError(lang === 'tr' ? 'Bu e-posta ile kayıtlı DJ bulunamadı' : 'No DJ found with this email');
+        else setFormError(data.error);
+        return;
+      }
+      setDjUser(data.user);
+      setPassword(data.token);
+      localStorage.setItem('remiks_dj_user', JSON.stringify(data.user));
+      localStorage.setItem('remiks_dj_pw', data.token);
+    } catch (err) {
+      setFormError(err.message);
+    }
+  };
+
+  const handleLogout = () => {
+    setDjUser(null);
+    setPassword('');
+    setEvent(null);
+    setSlug('');
+    localStorage.removeItem('remiks_dj_user');
+    localStorage.removeItem('remiks_dj_pw');
+    navigate('/dj', { replace: true });
+  };
+
   const createEvent = async () => {
     setFormError('');
     if (!newEventName.trim()) {
       setFormError(lang === 'tr' ? 'Etkinlik adı gerekli' : 'Event name required');
       return;
     }
-    if (!password.trim()) {
-      setFormError(lang === 'tr' ? 'DJ şifresi gerekli' : 'DJ password required');
-      return;
-    }
-    localStorage.setItem('remiks_dj_pw', password);
     try {
       const res = await fetch(`${API}/api/events`, {
         method: 'POST',
@@ -141,7 +183,7 @@ export default function DJPanel() {
       const data = await res.json();
       if (!res.ok) {
         setFormError(data.error === 'Unauthorized'
-          ? (lang === 'tr' ? 'Şifre yanlış' : 'Wrong password')
+          ? (lang === 'tr' ? 'Oturum süresi doldu, tekrar giriş yapın' : 'Session expired, please login again')
           : data.error);
         return;
       }
@@ -347,12 +389,11 @@ export default function DJPanel() {
     } catch (err) { console.warn('fetchHistory failed:', err); }
   }, [password]);
 
-  // ─── Create / Connect Form ───
+  // ─── Login / Create / Connect ───
 
   if (!event) {
-    return (
-      <div className="login-page">
-        {/* Animated background */}
+    const loginBg = (
+      <>
         <div className="login-bg">
           <div className="login-grid" />
           <div className="login-orb login-orb-1" />
@@ -360,20 +401,106 @@ export default function DJPanel() {
           <div className="login-orb login-orb-3" />
           <div className="login-scanline" />
         </div>
+      </>
+    );
 
+    const loginFooter = (
+      <footer className="login-footer">
+        <div className="login-footer-brand">
+          <span className="login-footer-logo">RemiksBox</span>
+          <span className="login-footer-by">by Remiks İstanbul</span>
+        </div>
+        <div className="login-footer-links">
+          <span>{lang === 'tr' ? 'Tüm hakları saklıdır.' : 'All rights reserved.'} &copy; {new Date().getFullYear()}</span>
+          <span className="login-footer-sep">|</span>
+          <span>{lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}</span>
+          <span className="login-footer-sep">|</span>
+          <span>{lang === 'tr' ? 'Kullanım Koşulları' : 'Terms of Use'}</span>
+        </div>
+        <div className="login-footer-legal">
+          <p>{lang === 'tr'
+            ? 'Bu yazılım Remiks İstanbul tarafından geliştirilmiştir. Ticari veya kişisel kullanım için lisans gereklidir. Müzik içerikleri ilgili hak sahiplerine aittir. Spotify entegrasyonu Spotify AB lisansı altında kullanılmaktadır.'
+            : 'This software is developed by Remiks İstanbul. License required for commercial or personal use. Music content belongs to respective rights holders. Spotify integration is used under Spotify AB license.'
+          }</p>
+          <p>{lang === 'tr'
+            ? 'İletişim: info@remiksistanbul.com | KVKK ve GDPR uyumlu veri işleme politikalarımız geçerlidir.'
+            : 'Contact: info@remiksistanbul.com | KVKK and GDPR compliant data processing policies apply.'
+          }</p>
+        </div>
+      </footer>
+    );
+
+    // Step 1: Login
+    if (!djUser) {
+      return (
+        <div className="login-page">
+          {loginBg}
+          <div className="login-content">
+            <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <span className="login-remiksbox">RemiksBox</span>
+              <p className="login-tagline">{lang === 'tr' ? 'DJ Etkinlik Yönetim Sistemi' : 'DJ Event Management System'}</p>
+              <div className="login-badge-row">
+                <span className="login-badge">Real-Time</span>
+                <span className="login-badge">Spotify</span>
+                <span className="login-badge">QR Code</span>
+              </div>
+            </motion.div>
+
+            <motion.div className="login-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
+              <h2 className="login-card-title">{lang === 'tr' ? 'DJ Girişi' : 'DJ Login'}</h2>
+
+              <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+                <div className="form-group">
+                  <label>{lang === 'tr' ? 'E-POSTA' : 'EMAIL'}</label>
+                  <div className="login-input-wrap">
+                    <span className="login-input-icon">📧</span>
+                    <input className="input" type="email" placeholder="email@example.com" value={loginEmail} onChange={(e) => { setLoginEmail(e.target.value); setFormError(''); }} autoFocus />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>{lang === 'tr' ? 'ŞİFRE' : 'PASSWORD'}</label>
+                  <div className="login-input-wrap">
+                    <span className="login-input-icon">🔒</span>
+                    <input className="input" type="password" placeholder="••••••" value={loginPassword} onChange={(e) => { setLoginPassword(e.target.value); setFormError(''); }} />
+                  </div>
+                </div>
+
+                {formError && (
+                  <motion.div className="login-error" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
+                    {formError}
+                  </motion.div>
+                )}
+
+                <motion.button type="submit" className="login-btn-primary" whileTap={{ scale: 0.96 }} whileHover={{ scale: 1.02 }}>
+                  {lang === 'tr' ? 'Giriş Yap' : 'Sign In'}
+                </motion.button>
+              </form>
+            </motion.div>
+          </div>
+
+          {loginFooter}
+          <AnimatePresence>
+            {toast && <motion.div className="success-toast" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>{toast}</motion.div>}
+          </AnimatePresence>
+        </div>
+      );
+    }
+
+    // Step 2: Create / Connect (logged in)
+    return (
+      <div className="login-page">
+        {loginBg}
         <div className="login-content">
-          {/* Hero section */}
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <span className="login-remiksbox">RemiksBox</span>
-            <p className="login-tagline">{lang === 'tr' ? 'DJ Etkinlik Yönetim Sistemi' : 'DJ Event Management System'}</p>
-            <div className="login-badge-row">
-              <span className="login-badge">Real-Time</span>
-              <span className="login-badge">Spotify</span>
-              <span className="login-badge">QR Code</span>
+            <div className="login-user-chip">
+              <span className="login-user-avatar">{djUser.name?.charAt(0) || 'D'}</span>
+              <span className="login-user-name">{djUser.name}</span>
+              <button className="login-user-logout" onClick={handleLogout} title={lang === 'tr' ? 'Çıkış' : 'Logout'}>✕</button>
             </div>
           </motion.div>
 
-          {/* Form card */}
           <motion.div className="login-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
             <h2 className="login-card-title">{T('dj.create_event')}</h2>
 
@@ -383,14 +510,6 @@ export default function DJPanel() {
                 <div className="login-input-wrap">
                   <span className="login-input-icon">🎤</span>
                   <input className="input" placeholder={T('dj.event_name_placeholder')} value={newEventName} onChange={(e) => { setNewEventName(e.target.value); setFormError(''); }} autoFocus />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>{T('dj.password')}</label>
-                <div className="login-input-wrap">
-                  <span className="login-input-icon">🔒</span>
-                  <input className="input" type="password" placeholder="••••••" value={password} onChange={(e) => { setPassword(e.target.value); setFormError(''); }} />
                 </div>
               </div>
 
@@ -417,7 +536,7 @@ export default function DJPanel() {
               </div>
             </div>
 
-            {eventHistory.length === 0 && password.trim() && (
+            {eventHistory.length === 0 && (
               <button className="login-btn-ghost" style={{ width: '100%', marginTop: 12 }} onClick={fetchHistory}>
                 {lang === 'tr' ? '📋 Geçmiş Etkinlikleri Getir' : '📋 Load Past Events'}
               </button>
@@ -441,31 +560,7 @@ export default function DJPanel() {
           </motion.div>
         </div>
 
-        {/* Legal Footer */}
-        <footer className="login-footer">
-          <div className="login-footer-brand">
-            <span className="login-footer-logo">RemiksBox</span>
-            <span className="login-footer-by">by Remiks İstanbul</span>
-          </div>
-          <div className="login-footer-links">
-            <span>{lang === 'tr' ? 'Tüm hakları saklıdır.' : 'All rights reserved.'} © {new Date().getFullYear()}</span>
-            <span className="login-footer-sep">|</span>
-            <span>{lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}</span>
-            <span className="login-footer-sep">|</span>
-            <span>{lang === 'tr' ? 'Kullanım Koşulları' : 'Terms of Use'}</span>
-          </div>
-          <div className="login-footer-legal">
-            <p>{lang === 'tr'
-              ? 'Bu yazılım Remiks İstanbul tarafından geliştirilmiştir. Ticari veya kişisel kullanım için lisans gereklidir. Müzik içerikleri ilgili hak sahiplerine aittir. Spotify entegrasyonu Spotify AB lisansı altında kullanılmaktadır.'
-              : 'This software is developed by Remiks İstanbul. License required for commercial or personal use. Music content belongs to respective rights holders. Spotify integration is used under Spotify AB license.'
-            }</p>
-            <p>{lang === 'tr'
-              ? 'İletişim: info@remiksistanbul.com | KVKK ve GDPR uyumlu veri işleme politikalarımız geçerlidir.'
-              : 'Contact: info@remiksistanbul.com | KVKK and GDPR compliant data processing policies apply.'
-            }</p>
-          </div>
-        </footer>
-
+        {loginFooter}
         <AnimatePresence>
           {toast && <motion.div className="success-toast" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>{toast}</motion.div>}
         </AnimatePresence>

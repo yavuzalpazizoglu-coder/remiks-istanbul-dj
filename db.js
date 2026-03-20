@@ -48,12 +48,32 @@ db.exec(`
     UNIQUE(request_id, device_id)
   );
 
+  CREATE TABLE IF NOT EXISTS dj_users (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    role TEXT DEFAULT 'dj',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
   CREATE INDEX IF NOT EXISTS idx_requests_event ON requests(event_id);
   CREATE INDEX IF NOT EXISTS idx_requests_status ON requests(status);
   CREATE INDEX IF NOT EXISTS idx_votes_request ON votes(request_id);
   CREATE INDEX IF NOT EXISTS idx_votes_device ON votes(device_id);
 
 `);
+
+// ─── Seed DJ Users ───
+const djUsers = [
+  { id: 'dj-alp', name: 'DJ Alp', email: 'yavuzalpazizoglu@gmail.com', role: 'admin' },
+  { id: 'dj-derin', name: 'DJ Derin', email: 'cnderinderyan@hotmail.com', role: 'dj' },
+];
+for (const u of djUsers) {
+  const existing = db.prepare('SELECT id FROM dj_users WHERE id = ?').get(u.id);
+  if (!existing) {
+    db.prepare('INSERT INTO dj_users (id, name, email, role) VALUES (?, ?, ?, ?)').run(u.id, u.name, u.email, u.role);
+  }
+}
 
 // ─── Migrations ───
 try {
@@ -260,6 +280,16 @@ export function getNowPlaying(eventId) {
   return db.prepare(
     "SELECT * FROM requests WHERE event_id = ? AND status = 'playing' LIMIT 1"
   ).get(eventId);
+}
+
+// ─── DJ Users ───
+
+export function getDJByEmail(email) {
+  return db.prepare('SELECT * FROM dj_users WHERE email = ?').get(email);
+}
+
+export function getAllDJs() {
+  return db.prepare('SELECT id, name, email, role FROM dj_users').all();
 }
 
 export default db;
