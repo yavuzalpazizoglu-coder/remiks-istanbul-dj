@@ -235,6 +235,32 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
   }
 });
 
+// Messages (Chat)
+app.get('/api/events/:slug/messages', djAuth, (req, res) => {
+  try {
+    const event = db.getEventBySlug(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    const messages = db.getMessages(event.id);
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/events/:slug/messages', djAuth, (req, res) => {
+  try {
+    const event = db.getEventBySlug(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    const { text, sender } = req.body;
+    if (!text?.trim()) return res.status(400).json({ error: 'Message text required' });
+    const message = db.createMessage(event.id, sender || 'dj', text.trim());
+    io.to(req.params.slug).emit('chat-message', message);
+    res.json(message);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Spotify Search
 app.get('/api/spotify/search', async (req, res) => {
   if (!rateLimit(req.ip, 20)) return res.status(429).json({ error: 'Too many searches' });

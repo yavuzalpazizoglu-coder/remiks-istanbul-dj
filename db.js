@@ -52,6 +52,16 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_requests_status ON requests(status);
   CREATE INDEX IF NOT EXISTS idx_votes_request ON votes(request_id);
   CREATE INDEX IF NOT EXISTS idx_votes_device ON votes(device_id);
+
+  CREATE TABLE IF NOT EXISTS messages (
+    id TEXT PRIMARY KEY,
+    event_id TEXT NOT NULL,
+    sender TEXT NOT NULL DEFAULT 'dj',
+    text TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (event_id) REFERENCES events(id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_messages_event ON messages(event_id);
 `);
 
 // ─── Migrations ───
@@ -196,6 +206,18 @@ export function getVotedRequestIds(eventId, deviceId) {
     JOIN requests r ON r.id = v.request_id
     WHERE r.event_id = ? AND v.device_id = ?
   `).all(eventId, deviceId).map(r => r.request_id);
+}
+
+// ─── Messages ───
+
+export function createMessage(eventId, sender, text) {
+  const id = nanoid(12);
+  db.prepare('INSERT INTO messages (id, event_id, sender, text) VALUES (?, ?, ?, ?)').run(id, eventId, sender, text);
+  return db.prepare('SELECT * FROM messages WHERE id = ?').get(id);
+}
+
+export function getMessages(eventId, limit = 50) {
+  return db.prepare('SELECT * FROM messages WHERE event_id = ? ORDER BY created_at DESC LIMIT ?').all(eventId, limit).reverse();
 }
 
 export function getNowPlaying(eventId) {

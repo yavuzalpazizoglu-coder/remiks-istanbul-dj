@@ -27,8 +27,12 @@ export default function DJPanel() {
   const [tickerTexts, setTickerTexts] = useState('');
   const [tickerSaving, setTickerSaving] = useState(false);
   const [showQr, setShowQr] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatSending, setChatSending] = useState(false);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
+  const chatEndRef = useRef(null);
 
   const T = useCallback((key) => t(lang, key), [lang]);
 
@@ -54,6 +58,10 @@ export default function DJPanel() {
       setBrandText(data.brand_text || '');
       setTickerTexts(data.ticker_texts || '');
       await fetchRequests(eventSlug);
+      try {
+        const msgRes = await fetch(`${API}/api/events/${eventSlug}/messages`, { headers: { 'Content-Type': 'application/json', 'x-dj-password': password } });
+        if (msgRes.ok) { const msgs = await msgRes.json(); setMessages(msgs); }
+      } catch {}
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
     } catch (err) {
       showToast(err.message);
@@ -80,11 +88,16 @@ export default function DJPanel() {
       setEvent(prev => prev ? { ...prev, status } : prev);
     });
 
+    socket.on('chat-message', (msg) => {
+      setMessages(prev => [...prev, msg]);
+    });
+
     return () => {
       socket.off('request-added');
       socket.off('vote-updated');
       socket.off('list-updated');
       socket.off('event-status');
+      socket.off('chat-message');
       socket.disconnect();
     };
   }, [slug, fetchRequests]);
@@ -204,6 +217,25 @@ export default function DJPanel() {
     }
   }, [slug, password]);
 
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const sendMessage = async (sender = 'dj') => {
+    if (!chatInput.trim() || chatSending) return;
+    setChatSending(true);
+    try {
+      await fetch(`${API}/api/events/${slug}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ text: chatInput.trim(), sender }),
+      });
+      setChatInput('');
+    } catch {} finally {
+      setChatSending(false);
+    }
+  };
+
   const handleTickerChange = (val) => {
     setTickerTexts(val);
     if (tickerTimer.current) clearTimeout(tickerTimer.current);
@@ -277,11 +309,11 @@ export default function DJPanel() {
     <div className="dj-panel dj-compact">
       {/* ─── Row 1: Header + Status + Lang ─── */}
       <div className="djc-row1">
-        <img src="/logos/logo-white.png" alt="" style={{ height: 28 }} />
+        <img src="/logos/logo-white.png" alt="" style={{ height: 32 }} />
         <span className="djc-event-name">{event.name}</span>
         <span className="djc-slug">/{slug}</span>
         <div style={{ flex: 1 }} />
-        <div className="lang-toggle" style={{ transform: 'scale(0.85)' }}>
+        <div className="lang-toggle">
           <button className={lang === 'tr' ? 'active' : ''} onClick={() => changeLang('tr')}>TR</button>
           <button className={lang === 'en' ? 'active' : ''} onClick={() => changeLang('en')}>EN</button>
         </div>
@@ -293,29 +325,29 @@ export default function DJPanel() {
         <div className="djc-actions">
           {event.status === 'waiting' && (
             <>
-              <button className="btn btn-primary btn-sm" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
+              <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
               <div className="djc-countdown-group">
                 {[5, 10, 15, 30].map(m => (
-                  <button key={m} className={`preset-btn ${countdownMinutes === m ? 'active' : ''}`} onClick={() => setCountdownMinutes(m)}>{m}′</button>
+                  <button key={m} className={`preset-btn djc-preset ${countdownMinutes === m ? 'active' : ''}`} onClick={() => setCountdownMinutes(m)}>{m}′</button>
                 ))}
-                <input type="number" className="input" style={{ width: 42, textAlign: 'center', padding: '4px 2px', fontSize: 12 }} value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={120} />
-                <button className="btn btn-ghost btn-sm" onClick={startCountdown}>⏱</button>
+                <input type="number" className="input" style={{ width: 48, textAlign: 'center', padding: '6px 4px', fontSize: 14 }} value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={120} />
+                <button className="btn btn-ghost djc-btn" onClick={startCountdown}>⏱ {lang === 'tr' ? 'Başlat' : 'Start'}</button>
               </div>
             </>
           )}
           {event.status === 'countdown' && (
-            <button className="btn btn-primary btn-sm" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
+            <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
           )}
           {event.status === 'active' && (
             <>
-              <button className="btn btn-ghost btn-sm" onClick={() => updateStatus('paused')}>⏸ {T('dj.pause')}</button>
-              <button className="btn btn-danger btn-sm" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
+              <button className="btn btn-ghost djc-btn" onClick={() => updateStatus('paused')}>⏸ {T('dj.pause')}</button>
+              <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
             </>
           )}
           {event.status === 'paused' && (
             <>
-              <button className="btn btn-primary btn-sm" onClick={() => updateStatus('active')}>▶ {T('dj.resume')}</button>
-              <button className="btn btn-danger btn-sm" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
+              <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>▶ {T('dj.resume')}</button>
+              <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
             </>
           )}
         </div>
@@ -327,37 +359,24 @@ export default function DJPanel() {
         </div>
 
         <div className="djc-quick-links">
-          <button className="copy-btn" onClick={copyLink}>{copied ? '✓' : '🔗'}</button>
-          <button className="copy-btn" onClick={() => setShowQr(!showQr)}>QR</button>
-          <a href={`/display/${slug}`} target="_blank" rel="noopener noreferrer" className="copy-btn" style={{ textDecoration: 'none' }}>🖥</a>
+          <button className="copy-btn djc-link-btn" onClick={copyLink} title="Link Kopyala">{copied ? '✓' : '🔗'}</button>
+          <button className="copy-btn djc-link-btn" onClick={() => setShowQr(!showQr)} title="QR Kod">📱</button>
+          <a href={`/display/${slug}`} target="_blank" rel="noopener noreferrer" className="copy-btn djc-link-btn" title="Display Ekranı" style={{ textDecoration: 'none' }}>🖥️</a>
         </div>
       </div>
 
-      {/* Brand Text */}
-      <div className="djc-brand-row">
-        <span className="djc-brand-label">{lang === 'tr' ? '📺 Ekran Yazısı' : '📺 Screen Text'}</span>
-        <input
-          className="input djc-brand-input"
-          placeholder={lang === 'tr' ? 'Organizasyon adını yazın...' : 'Type organization name...'}
-          value={brandText}
-          onChange={(e) => handleBrandChange(e.target.value)}
-        />
-        {brandSaving && <span className="djc-brand-saving">⏳</span>}
-      </div>
-
-      {/* Ticker Texts */}
-      <div className="djc-brand-row" style={{ alignItems: 'flex-start' }}>
-        <span className="djc-brand-label">{lang === 'tr' ? '📜 Kayan Yazılar' : '📜 Ticker Texts'}</span>
-        <textarea
-          className="input djc-ticker-input"
-          placeholder={lang === 'tr'
-            ? 'Her satıra bir mesaj yazın...\nÖrn: Remiks İstanbul etkinliğine hoşgeldiniz!\nİsteklerinizi gönderin!'
-            : 'One message per line...\nE.g.: Welcome to Remiks Istanbul!\nSend your requests!'}
-          value={tickerTexts}
-          onChange={(e) => handleTickerChange(e.target.value)}
-          rows={3}
-        />
-        {tickerSaving && <span className="djc-brand-saving">⏳</span>}
+      {/* Brand + Ticker Row */}
+      <div className="djc-settings-row">
+        <div className="djc-brand-row">
+          <span className="djc-brand-label">{lang === 'tr' ? '📺 Ekran Yazısı' : '📺 Screen Text'}</span>
+          <input className="input djc-brand-input" placeholder={lang === 'tr' ? 'Organizasyon adını yazın...' : 'Type organization name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
+          {brandSaving && <span className="djc-brand-saving">⏳</span>}
+        </div>
+        <div className="djc-brand-row" style={{ alignItems: 'flex-start' }}>
+          <span className="djc-brand-label">{lang === 'tr' ? '📜 Kayan Yazılar' : '📜 Ticker'}</span>
+          <textarea className="input djc-ticker-input" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One message per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={2} />
+          {tickerSaving && <span className="djc-brand-saving">⏳</span>}
+        </div>
       </div>
 
       {/* QR Popup */}
@@ -370,63 +389,82 @@ export default function DJPanel() {
         )}
       </AnimatePresence>
 
-      {/* ─── Request List (full remaining space) ─── */}
-      <div className="djc-list-header">
-        <span>🎵 {T('dj.requests_list')} ({pendingRequests.length})</span>
-      </div>
+      {/* ─── Split: Requests (left) + Chat (right) ─── */}
+      <div className="djc-split">
+        {/* LEFT: Request List */}
+        <div className="djc-split-left">
+          <div className="djc-list-header">
+            <span>🎵 {T('dj.requests_list')} ({pendingRequests.length})</span>
+          </div>
+          {pendingRequests.length === 0 ? (
+            <div className="empty-state" style={{ flex: 1 }}>
+              <div className="icon">📋</div>
+              <p>{T('dj.no_requests')}</p>
+            </div>
+          ) : (
+            <div className="dj-list-scroll">
+              <table className="dj-table">
+                <AnimatePresence>
+                  <tbody>
+                    {pendingRequests.map((req, idx) => (
+                      <motion.tr key={req.id} className="dj-table-row" layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
+                        <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>{idx + 1}</td>
+                        <td style={{ width: 40, padding: '6px' }}>
+                          {req.album_art
+                            ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
+                            : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
+                          }
+                        </td>
+                        <td>
+                          <div className="dj-table-song">{req.song_name}</div>
+                          {req.artist && <div className="dj-table-artist">{req.artist}</div>}
+                        </td>
+                        <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
+                        <td className="dj-table-actions">
+                          {req.status === 'pending' && <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')}>✓</button>}
+                          {req.status === 'approved' && <span style={{ fontSize: 10, color: 'var(--neon-cyan)', fontWeight: 600 }}>✓</span>}
+                          <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }}>✕</button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </AnimatePresence>
+              </table>
+            </div>
+          )}
+        </div>
 
-      {pendingRequests.length === 0 ? (
-        <div className="empty-state">
-          <div className="icon">📋</div>
-          <p>{T('dj.no_requests')}</p>
+        {/* RIGHT: Chat */}
+        <div className="djc-split-right">
+          <div className="djc-list-header">
+            <span>💬 {lang === 'tr' ? 'Teknik Masa' : 'Tech Desk'}</span>
+          </div>
+          <div className="djc-chat-messages">
+            {messages.length === 0 && (
+              <div className="djc-chat-empty">{lang === 'tr' ? 'Henüz mesaj yok' : 'No messages yet'}</div>
+            )}
+            {messages.map((msg) => (
+              <div key={msg.id} className={`djc-chat-msg ${msg.sender === 'dj' ? 'djc-msg-dj' : 'djc-msg-tech'}`}>
+                <div className="djc-msg-sender">{msg.sender === 'dj' ? '🎧 DJ' : '🔧 Teknik'}</div>
+                <div className="djc-msg-text">{msg.text}</div>
+              </div>
+            ))}
+            <div ref={chatEndRef} />
+          </div>
+          <div className="djc-chat-input-row">
+            <input
+              className="input djc-chat-input"
+              placeholder={lang === 'tr' ? 'Mesaj yaz...' : 'Type message...'}
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') sendMessage('dj'); }}
+            />
+            <button className="btn btn-primary djc-chat-send" onClick={() => sendMessage('dj')} disabled={chatSending || !chatInput.trim()}>
+              {lang === 'tr' ? 'Gönder' : 'Send'}
+            </button>
+          </div>
         </div>
-      ) : (
-        <div className="dj-list-scroll">
-          <table className="dj-table">
-            <AnimatePresence>
-              <tbody>
-                {pendingRequests.map((req, idx) => (
-                  <motion.tr
-                    key={req.id}
-                    className="dj-table-row"
-                    layout
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-                  >
-                    <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>
-                      {idx + 1}
-                    </td>
-                    <td style={{ width: 40, padding: '6px' }}>
-                      {req.album_art
-                        ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
-                        : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
-                      }
-                    </td>
-                    <td>
-                      <div className="dj-table-song">{req.song_name}</div>
-                      {req.artist && <div className="dj-table-artist">{req.artist}</div>}
-                    </td>
-                    <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>
-                      {req.votes}
-                    </td>
-                    <td className="dj-table-actions">
-                      {req.status === 'pending' && (
-                        <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')}>✓</button>
-                      )}
-                      {req.status === 'approved' && (
-                        <span style={{ fontSize: 10, color: 'var(--neon-cyan)', fontWeight: 600 }}>✓</span>
-                      )}
-                      <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }}>✕</button>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </AnimatePresence>
-          </table>
-        </div>
-      )}
+      </div>
 
       <AnimatePresence>
         {toast && <motion.div className="success-toast" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>{toast}</motion.div>}
