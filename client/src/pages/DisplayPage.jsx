@@ -8,6 +8,37 @@ import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
 
+function AmbientGlow() {
+  return <div className="ambient-glow" />;
+}
+
+function NeonOrbs() {
+  const orbs = useMemo(() =>
+    Array.from({ length: 6 }, (_, i) => ({
+      id: i,
+      left: 10 + (i * 16),
+      top: 20 + Math.random() * 50,
+      size: 80 + Math.random() * 120,
+      duration: 12 + Math.random() * 10,
+      delay: i * 2,
+      color: ['rgba(0,212,255,0.12)', 'rgba(184,41,221,0.10)', 'rgba(255,0,128,0.08)', 'rgba(0,255,136,0.10)', 'rgba(255,107,53,0.08)', 'rgba(255,255,255,0.06)'][i],
+    })), []);
+
+  return (
+    <div className="neon-orbs">
+      {orbs.map(o => (
+        <div key={o.id} className="neon-orb" style={{
+          left: `${o.left}%`, top: `${o.top}%`,
+          width: o.size, height: o.size,
+          background: `radial-gradient(circle, ${o.color}, transparent 70%)`,
+          animationDuration: `${o.duration}s`,
+          animationDelay: `${o.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 function DiscoParticles() {
   const particles = useMemo(() =>
     Array.from({ length: 35 }, (_, i) => ({
@@ -378,8 +409,9 @@ export default function DisplayPage() {
     <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
       <div className="display-bg" />
       <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
-      {animLevel !== 'low' && <DiscoParticles />}
-      {animLevel === 'high' && <LightBeams />}
+      {animLevel === 'low' && <AmbientGlow />}
+      {animLevel === 'medium' && <NeonOrbs />}
+      {animLevel === 'high' && <><DiscoParticles /><LightBeams /></>}
       {showConfetti && <Confetti />}
 
       {!socketConnected && (

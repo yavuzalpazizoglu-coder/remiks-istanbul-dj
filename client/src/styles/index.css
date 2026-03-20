@@ -997,7 +997,78 @@ input, textarea { font-family: inherit; }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Disco Particles */
+/* ─── LOW: Ambient Glow ─── */
+
+.ambient-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, rgba(184, 41, 221, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 80%, rgba(255, 0, 128, 0.05) 0%, transparent 50%);
+  animation: ambientShift 15s ease-in-out infinite alternate;
+}
+
+@keyframes ambientShift {
+  0% {
+    opacity: 0.6;
+    filter: hue-rotate(0deg);
+  }
+  33% {
+    opacity: 0.9;
+  }
+  66% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+    filter: hue-rotate(40deg);
+  }
+}
+
+/* ─── MEDIUM: Neon Orbs ─── */
+
+.neon-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.neon-orb {
+  position: absolute;
+  border-radius: 50%;
+  animation: orbDrift ease-in-out infinite alternate;
+  filter: blur(40px);
+}
+
+@keyframes orbDrift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  25% {
+    transform: translate(30px, -40px) scale(1.15);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.9);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translate(15px, 30px) scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-30px, -15px) scale(1);
+    opacity: 0.5;
+  }
+}
+
+/* ─── HIGH: Disco Particles ─── */
 .disco-particles {
   position: absolute; inset: 0; overflow: hidden;
   pointer-events: none; z-index: 0;
