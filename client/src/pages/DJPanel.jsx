@@ -238,18 +238,28 @@ export default function DJPanel() {
     } catch {}
   };
 
+  const sendCeremony = async (type, active, minutes) => {
+    try {
+      await fetch(`${API}/api/events/${slug}/ceremony`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ type, active, minutes: active ? minutes : 0 }),
+      });
+    } catch {}
+  };
+
   const toggleCeremony = async (type) => {
     const isOn = type === 'opening' ? openingOn : closingOn;
     const newState = !isOn;
     if (type === 'opening') { setOpeningOn(newState); if (newState) setClosingOn(false); }
     if (type === 'closing') { setClosingOn(newState); if (newState) setOpeningOn(false); }
-    try {
-      await fetch(`${API}/api/events/${slug}/ceremony`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
-        body: JSON.stringify({ type, active: newState, minutes: newState ? ceremonyMinutes : 0 }),
-      });
-    } catch {}
+    await sendCeremony(type, newState, ceremonyMinutes);
+  };
+
+  const updateCeremonyMinutes = async (m) => {
+    setCeremonyMinutes(m);
+    const activeType = openingOn ? 'opening' : closingOn ? 'closing' : null;
+    if (activeType) await sendCeremony(activeType, true, m);
   };
 
   const changeAnimationLevel = async (level) => {
@@ -444,9 +454,9 @@ export default function DJPanel() {
         <div className="djc-ceremony-timer">
           <span className="djc-limit-label">{lang === 'tr' ? 'Süre:' : 'Duration:'}</span>
           {[5, 10, 15, 30].map(m => (
-            <button key={m} className={`preset-btn djc-preset ${ceremonyMinutes === m ? 'active' : ''}`} onClick={() => setCeremonyMinutes(m)}>{m}′</button>
+            <button key={m} className={`preset-btn djc-preset ${ceremonyMinutes === m ? 'active' : ''}`} onClick={() => updateCeremonyMinutes(m)}>{m}′</button>
           ))}
-          <input type="number" className="input" style={{ width: 48, textAlign: 'center', padding: '6px 4px', fontSize: 14 }} value={ceremonyMinutes} onChange={(e) => setCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
+          <input type="number" className="input" style={{ width: 48, textAlign: 'center', padding: '6px 4px', fontSize: 14 }} value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
         </div>
       </div>
 
