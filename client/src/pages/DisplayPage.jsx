@@ -202,40 +202,64 @@ function ClosingOverlay({ lang, brandText, countdown }) {
 
 const MUSIC_MODE_CONFIG = {
   arabesk: {
-    title: 'ARABESK MODE',
-    subtitle: 'Remiks ile Arabesk Mode',
+    title: { tr: 'ARABESK MODE', en: 'ARABESK MODE' },
+    subtitle: { tr: 'Remiks Arabesk Mode', en: 'Arabesk Mode' },
     icon: '🎻',
     bg: 'radial-gradient(ellipse at center, rgba(40, 15, 5, 0.96) 0%, rgba(10, 3, 0, 0.98) 100%)',
     color1: '#d4a017', color2: '#8b4513', color3: '#ff6b35',
-    sparkColor: '#d4a017',
+    sparkColor: '#d4a017', image: '/modes/mode-arabesk.png',
   },
   rock: {
-    title: 'ROCK MODE',
-    subtitle: 'Remix Rock',
+    title: { tr: 'ROCK MODE', en: 'ROCK MODE' },
+    subtitle: { tr: 'Remiks Rock', en: 'Remiks Rock' },
     icon: '🎸',
     bg: 'radial-gradient(ellipse at center, rgba(30, 5, 5, 0.96) 0%, rgba(5, 0, 0, 0.98) 100%)',
     color1: '#ff4444', color2: '#ff0000', color3: '#ff6b35',
-    sparkColor: '#ff4444',
+    sparkColor: '#ff4444', image: '/modes/mode-rock.png',
   },
   '90s-pop': {
-    title: "90'LAR POP",
-    subtitle: "90'lar Türkçe Pop",
+    title: { tr: "90'LAR POP", en: "90S TURKISH POP" },
+    subtitle: { tr: "90'lar Türkçe Pop", en: "90s Turkish Pop" },
     icon: '💿',
     bg: 'radial-gradient(ellipse at center, rgba(20, 5, 30, 0.96) 0%, rgba(5, 0, 10, 0.98) 100%)',
     color1: '#ff0080', color2: '#00d4ff', color3: '#b829dd',
-    sparkColor: '#ff0080',
+    sparkColor: '#ff0080', image: '/modes/mode-90s-pop.png',
   },
   'turkish-delight': {
-    title: 'TURKISH DELIGHT',
-    subtitle: 'Remiks Turkish Delight',
+    title: { tr: 'TURKISH DELIGHT', en: 'TURKISH DELIGHT' },
+    subtitle: { tr: 'Remiks Turkish Delight', en: 'Turkish Delight' },
     icon: '🌹',
     bg: 'radial-gradient(ellipse at center, rgba(25, 5, 15, 0.96) 0%, rgba(5, 0, 5, 0.98) 100%)',
     color1: '#e8a0bf', color2: '#d4a017', color3: '#ff6b9d',
-    sparkColor: '#e8a0bf',
+    sparkColor: '#e8a0bf', image: '/modes/mode-turkish-delight.png',
+  },
+  tech: {
+    title: { tr: 'TECH MODE', en: 'TECH MODE' },
+    subtitle: { tr: 'Remiks Tech', en: 'Remiks Tech' },
+    icon: '🎧',
+    bg: 'radial-gradient(ellipse at center, rgba(0, 5, 20, 0.96) 0%, rgba(0, 2, 8, 0.98) 100%)',
+    color1: '#0088ff', color2: '#00ff88', color3: '#00d4ff',
+    sparkColor: '#0088ff', image: '/modes/mode-tech.png',
+  },
+  latino: {
+    title: { tr: 'LATINO MODE', en: 'LATINO MODE' },
+    subtitle: { tr: 'Remiks Latino', en: 'Remiks Latino' },
+    icon: '💃',
+    bg: 'radial-gradient(ellipse at center, rgba(30, 8, 0, 0.96) 0%, rgba(8, 2, 0, 0.98) 100%)',
+    color1: '#e63946', color2: '#f4a261', color3: '#ff6b35',
+    sparkColor: '#e63946', image: '/modes/mode-latino.png',
+  },
+  rap: {
+    title: { tr: 'RAP MODE', en: 'RAP MODE' },
+    subtitle: { tr: 'Remiks Rap', en: 'Remiks Rap' },
+    icon: '🎤',
+    bg: 'radial-gradient(ellipse at center, rgba(20, 0, 0, 0.96) 0%, rgba(5, 0, 0, 0.98) 100%)',
+    color1: '#cc0000', color2: '#444444', color3: '#8b0000',
+    sparkColor: '#cc0000', image: '/modes/mode-rap.png',
   },
 };
 
-function MusicModeOverlay({ mode }) {
+function MusicModeOverlay({ mode, lang }) {
   const cfg = MUSIC_MODE_CONFIG[mode];
   if (!cfg) return null;
 
@@ -244,6 +268,7 @@ function MusicModeOverlay({ mode }) {
       style={{ background: cfg.bg }}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1 } }}>
       <div className="mm-border-frame" style={{ '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }} />
+      {cfg.image && <img src={cfg.image} alt="" className="mm-bg-image" />}
       <div className="ceremony-spotlights">
         <div className="ceremony-spot spot-left" style={{ background: `linear-gradient(180deg, ${cfg.color1}, transparent 80%)` }} />
         <div className="ceremony-spot spot-right" style={{ background: `linear-gradient(180deg, ${cfg.color3}, transparent 80%)` }} />
@@ -258,11 +283,11 @@ function MusicModeOverlay({ mode }) {
           initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.3 }} />
         <motion.h1 className="mm-title" style={{ color: cfg.color1, textShadow: `0 0 40px ${cfg.color1}, 0 0 80px ${cfg.color2}` }}
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}>
-          {cfg.title}
+          {cfg.title[lang] || cfg.title.tr}
         </motion.h1>
         <motion.div className="mm-subtitle" style={{ color: cfg.color3 }}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-          {cfg.subtitle}
+          {cfg.subtitle[lang] || cfg.subtitle.tr}
         </motion.div>
         <motion.div className="mm-line" style={{ background: `linear-gradient(90deg, transparent, ${cfg.color1}, transparent)` }}
           initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 1.5 }} />
@@ -782,7 +807,7 @@ export default function DisplayPage() {
         {/* ─── MUSIC MODE OVERLAY ─── */}
         <AnimatePresence>
           {activeMusicMode && !openingActive && !closingActive && (
-            <MusicModeOverlay mode={activeMusicMode} />
+            <MusicModeOverlay mode={activeMusicMode} lang={lang} />
           )}
         </AnimatePresence>
 

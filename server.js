@@ -25,6 +25,7 @@ function sanitize(str) {
   return str.replace(/[<>]/g, '').trim().slice(0, 200);
 }
 app.use('/logos', express.static(path.join(__dirname, 'public/logos')));
+app.use('/modes', express.static(path.join(__dirname, 'public/modes')));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/dist')));
@@ -312,7 +313,7 @@ app.post('/api/events/:slug/ceremony', djAuth, (req, res) => {
 app.post('/api/events/:slug/music-mode', djAuth, (req, res) => {
   try {
     const { mode, active } = req.body;
-    const validModes = ['arabesk', 'rock', '90s-pop', 'turkish-delight'];
+    const validModes = ['arabesk', 'rock', '90s-pop', 'turkish-delight', 'tech', 'latino', 'rap'];
     if (!validModes.includes(mode)) return res.status(400).json({ error: 'Invalid mode' });
     const payload = { mode, active: !!active };
     if (active) {

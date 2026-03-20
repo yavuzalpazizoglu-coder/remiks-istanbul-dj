@@ -264,10 +264,13 @@ export default function DJPanel() {
   };
 
   const MUSIC_MODES = [
-    { id: 'arabesk', icon: '🎻', label: 'Arabesk Mode' },
-    { id: 'rock', icon: '🎸', label: 'Remix Rock' },
-    { id: '90s-pop', icon: '💿', label: "90'lar Türkçe Pop" },
-    { id: 'turkish-delight', icon: '🌹', label: 'Turkish Delight' },
+    { id: 'arabesk', icon: '🎻', tr: 'Remiks Arabesk Mode', en: 'Arabesk Mode' },
+    { id: 'rock', icon: '🎸', tr: 'Remiks Rock', en: 'Remiks Rock' },
+    { id: '90s-pop', icon: '💿', tr: "90'lar Türkçe Pop", en: "90s Turkish Pop" },
+    { id: 'turkish-delight', icon: '🌹', tr: 'Remiks Turkish Delight', en: 'Turkish Delight' },
+    { id: 'tech', icon: '🎧', tr: 'Remiks Tech', en: 'Remiks Tech' },
+    { id: 'latino', icon: '💃', tr: 'Remiks Latino', en: 'Remiks Latino' },
+    { id: 'rap', icon: '🎤', tr: 'Remiks Rap', en: 'Remiks Rap' },
   ];
 
   const toggleMusicMode = async (modeId) => {
@@ -489,7 +492,7 @@ export default function DJPanel() {
             <button key={m.id}
               className={`btn djc-ceremony-btn djc-mmode-btn mm-${m.id} ${activeMusicMode === m.id ? 'active' : ''}`}
               onClick={() => toggleMusicMode(m.id)}>
-              {activeMusicMode === m.id ? '⏹' : m.icon} {m.label}
+              {activeMusicMode === m.id ? '⏹' : m.icon} {lang === 'tr' ? m.tr : m.en}
             </button>
           ))}
         </div>

@@ -2159,6 +2159,18 @@ input, textarea { font-family: inherit; }
   margin-top: 8px;
 }
 
+.mm-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(1px);
+}
+
 /* DJ Panel Music Mode Buttons */
 
 .djc-mmode-btn {
@@ -2208,6 +2220,39 @@ input, textarea { font-family: inherit; }
   background: rgba(232, 160, 191, 0.25);
   border-color: #e8a0bf;
   box-shadow: 0 0 12px rgba(232, 160, 191, 0.3);
+}
+
+.djc-mmode-btn.mm-tech {
+  background: rgba(0, 136, 255, 0.1);
+  border: 1px solid rgba(0, 136, 255, 0.3);
+  color: #0088ff;
+}
+.djc-mmode-btn.mm-tech.active {
+  background: rgba(0, 136, 255, 0.25);
+  border-color: #0088ff;
+  box-shadow: 0 0 12px rgba(0, 136, 255, 0.3);
+}
+
+.djc-mmode-btn.mm-latino {
+  background: rgba(230, 57, 70, 0.1);
+  border: 1px solid rgba(230, 57, 70, 0.3);
+  color: #e63946;
+}
+.djc-mmode-btn.mm-latino.active {
+  background: rgba(230, 57, 70, 0.25);
+  border-color: #e63946;
+  box-shadow: 0 0 12px rgba(230, 57, 70, 0.3);
+}
+
+.djc-mmode-btn.mm-rap {
+  background: rgba(204, 0, 0, 0.1);
+  border: 1px solid rgba(204, 0, 0, 0.3);
+  color: #cc0000;
+}
+.djc-mmode-btn.mm-rap.active {
+  background: rgba(204, 0, 0, 0.25);
+  border-color: #cc0000;
+  box-shadow: 0 0 12px rgba(204, 0, 0, 0.3);
 }
 
 /* ─── Responsive ─── */
