@@ -77,6 +77,16 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
+// Event History (must be before :slug route)
+app.get('/api/events/history', djAuth, (req, res) => {
+  try {
+    const history = db.getEventHistory(process.env.DJ_PASSWORD);
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Events
 app.post('/api/events', djAuth, (req, res) => {
   try {
@@ -349,15 +359,6 @@ app.get('/api/events/:slug/genres', (req, res) => {
     const event = db.getEventBySlug(req.params.slug);
     if (!event) return res.status(404).json({ error: 'Event not found' });
     res.json(db.getGenreStats(event.id));
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get('/api/events/history', djAuth, (req, res) => {
-  try {
-    const history = db.getEventHistory(process.env.DJ_PASSWORD);
-    res.json(history);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
