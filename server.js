@@ -102,6 +102,17 @@ app.put('/api/events/:slug/language', djAuth, (req, res) => {
   }
 });
 
+app.put('/api/events/:slug/brand', djAuth, (req, res) => {
+  try {
+    const { brandText } = req.body;
+    const event = db.updateBrandText(req.params.slug, brandText || '');
+    io.to(req.params.slug).emit('brand-updated', { brand_text: event.brand_text });
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/events/:slug/countdown', djAuth, (req, res) => {
   try {
     const { minutes } = req.body;

@@ -238,6 +238,7 @@ export default function DisplayPage() {
   const [countdownDisplay, setCountdownDisplay] = useState('');
   const [justOpened, setJustOpened] = useState(false);
   const [connectedCount, setConnectedCount] = useState(0);
+  const [brandText, setBrandText] = useState('');
 
   const T = useCallback((key) => t(lang, key), [lang]);
   const requestUrl = `${window.location.origin}/request/${slug}`;
@@ -253,6 +254,7 @@ export default function DisplayPage() {
       const reqData = await reqRes.json();
       setEvent(eventData);
       setLang(eventData.language || 'tr');
+      setBrandText(eventData.brand_text || '');
       setRequests((reqData.requests || []).filter(r => r.status !== 'rejected' && r.status !== 'played'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
     } catch {}
@@ -295,6 +297,7 @@ export default function DisplayPage() {
     });
 
     socket.on('language-changed', ({ language }) => setLang(language));
+    socket.on('brand-updated', ({ brand_text }) => setBrandText(brand_text || ''));
 
     const countInterval = setInterval(() => {
       setConnectedCount(Math.max(1, Math.floor(Math.random() * 3) + (requests.length * 2)));
@@ -302,7 +305,7 @@ export default function DisplayPage() {
 
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
-      socket.off('event-status'); socket.off('language-changed');
+      socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.disconnect();
       clearInterval(countInterval);
     };
@@ -341,6 +344,13 @@ export default function DisplayPage() {
       {showFullscreenHint && (
         <div className="display-fullscreen-hint" onClick={goFullscreen}>
           <span>{T('display.click_fullscreen')}</span>
+        </div>
+      )}
+
+      {/* Brand Watermark */}
+      {brandText && (
+        <div className="display-brand-watermark">
+          <span className="display-brand-text">{brandText}</span>
         </div>
       )}
 

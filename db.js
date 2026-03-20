@@ -21,6 +21,7 @@ db.exec(`
     language TEXT DEFAULT 'tr',
     dj_password TEXT NOT NULL,
     countdown_end INTEGER,
+    brand_text TEXT DEFAULT '',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -52,6 +53,13 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_votes_request ON votes(request_id);
   CREATE INDEX IF NOT EXISTS idx_votes_device ON votes(device_id);
 `);
+
+// ─── Migrations ───
+try {
+  db.prepare("SELECT brand_text FROM events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE events ADD COLUMN brand_text TEXT DEFAULT ''");
+}
 
 // ─── Events ───
 
@@ -85,6 +93,11 @@ export function updateEventLanguage(slug, language) {
 export function setCountdownEnd(slug, timestamp) {
   db.prepare('UPDATE events SET countdown_end = ?, status = ? WHERE slug = ?')
     .run(timestamp, 'countdown', slug);
+  return getEventBySlug(slug);
+}
+
+export function updateBrandText(slug, brandText) {
+  db.prepare('UPDATE events SET brand_text = ? WHERE slug = ?').run(brandText, slug);
   return getEventBySlug(slug);
 }
 

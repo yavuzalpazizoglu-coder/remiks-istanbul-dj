@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
@@ -22,6 +22,9 @@ export default function DJPanel() {
   const [connectSlug, setConnectSlug] = useState('');
   const [countdownMinutes, setCountdownMinutes] = useState(10);
   const [copied, setCopied] = useState(false);
+  const [brandText, setBrandText] = useState('');
+  const [brandSaving, setBrandSaving] = useState(false);
+  const brandTimer = useRef(null);
 
   const T = useCallback((key) => t(lang, key), [lang]);
 
@@ -44,6 +47,7 @@ export default function DJPanel() {
       setEvent(data);
       setSlug(eventSlug);
       setLang(data.language || 'tr');
+      setBrandText(data.brand_text || '');
       await fetchRequests(eventSlug);
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
     } catch (err) {
@@ -161,6 +165,24 @@ export default function DJPanel() {
       });
       if (res.ok) await fetchRequests(slug);
     } catch {}
+  };
+
+  const saveBrandText = useCallback(async (text) => {
+    setBrandSaving(true);
+    try {
+      await fetch(`${API}/api/events/${slug}/brand`, {
+        method: 'PUT', headers,
+        body: JSON.stringify({ brandText: text }),
+      });
+    } catch {} finally {
+      setBrandSaving(false);
+    }
+  }, [slug, headers]);
+
+  const handleBrandChange = (val) => {
+    setBrandText(val);
+    if (brandTimer.current) clearTimeout(brandTimer.current);
+    brandTimer.current = setTimeout(() => saveBrandText(val), 800);
   };
 
   const copyLink = () => {
@@ -286,6 +308,18 @@ export default function DJPanel() {
           <button className="copy-btn" onClick={() => setShowQr(!showQr)}>QR</button>
           <a href={`/display/${slug}`} target="_blank" rel="noopener noreferrer" className="copy-btn" style={{ textDecoration: 'none' }}>🖥</a>
         </div>
+      </div>
+
+      {/* Brand Text */}
+      <div className="djc-brand-row">
+        <span className="djc-brand-label">{lang === 'tr' ? '📺 Ekran Yazısı' : '📺 Screen Text'}</span>
+        <input
+          className="input djc-brand-input"
+          placeholder={lang === 'tr' ? 'Organizasyon adını yazın...' : 'Type organization name...'}
+          value={brandText}
+          onChange={(e) => handleBrandChange(e.target.value)}
+        />
+        {brandSaving && <span className="djc-brand-saving">⏳</span>}
       </div>
 
       {/* QR Popup */}
