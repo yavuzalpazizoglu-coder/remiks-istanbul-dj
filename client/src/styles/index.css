@@ -1970,27 +1970,54 @@ input, textarea { font-family: inherit; }
 }
 
 .djc-ceremony-btn.opening {
-  background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  color: var(--neon-cyan);
+  background: var(--bg-glass);
+  border: 2px solid var(--border-glass);
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.djc-ceremony-btn.opening:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-primary);
 }
 
 .djc-ceremony-btn.opening.active {
-  background: rgba(0, 212, 255, 0.25);
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+  background: rgba(0, 212, 255, 0.15);
+  border: 2px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  font-weight: 700;
+  animation: btnActiveBlink 1.2s ease-in-out infinite;
 }
 
 .djc-ceremony-btn.closing {
-  background: rgba(184, 41, 221, 0.1);
-  border: 1px solid rgba(184, 41, 221, 0.3);
-  color: var(--neon-purple);
+  background: var(--bg-glass);
+  border: 2px solid var(--border-glass);
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.djc-ceremony-btn.closing:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-primary);
 }
 
 .djc-ceremony-btn.closing.active {
-  background: rgba(184, 41, 221, 0.25);
-  border-color: var(--neon-purple);
-  box-shadow: 0 0 12px rgba(184, 41, 221, 0.3);
+  background: rgba(184, 41, 221, 0.15);
+  border: 2px solid var(--neon-purple);
+  color: var(--neon-purple);
+  font-weight: 700;
+  animation: btnActiveBlink 1.2s ease-in-out infinite;
+}
+
+@keyframes btnActiveBlink {
+  0%, 100% {
+    box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+    opacity: 0.85;
+  }
 }
 
 .djc-ceremony-timer {
@@ -2176,83 +2203,24 @@ input, textarea { font-family: inherit; }
 .djc-mmode-btn {
   font-size: 12px !important;
   padding: 7px 12px !important;
+  background: var(--bg-glass);
+  border: 2px solid var(--border-glass);
+  color: var(--text-secondary);
+  transition: all 0.2s;
 }
 
-.djc-mmode-btn.mm-arabesk {
-  background: rgba(212, 160, 23, 0.1);
-  border: 1px solid rgba(212, 160, 23, 0.3);
-  color: #d4a017;
-}
-.djc-mmode-btn.mm-arabesk.active {
-  background: rgba(212, 160, 23, 0.25);
-  border-color: #d4a017;
-  box-shadow: 0 0 12px rgba(212, 160, 23, 0.3);
+.djc-mmode-btn:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-primary);
+  background: var(--bg-glass-strong);
 }
 
-.djc-mmode-btn.mm-rock {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid rgba(255, 68, 68, 0.3);
-  color: #ff4444;
-}
-.djc-mmode-btn.mm-rock.active {
-  background: rgba(255, 68, 68, 0.25);
-  border-color: #ff4444;
-  box-shadow: 0 0 12px rgba(255, 68, 68, 0.3);
-}
-
-.djc-mmode-btn.mm-90s-pop {
-  background: rgba(255, 0, 128, 0.1);
-  border: 1px solid rgba(255, 0, 128, 0.3);
-  color: #ff0080;
-}
-.djc-mmode-btn.mm-90s-pop.active {
-  background: rgba(255, 0, 128, 0.25);
-  border-color: #ff0080;
-  box-shadow: 0 0 12px rgba(255, 0, 128, 0.3);
-}
-
-.djc-mmode-btn.mm-turkish-delight {
-  background: rgba(232, 160, 191, 0.1);
-  border: 1px solid rgba(232, 160, 191, 0.3);
-  color: #e8a0bf;
-}
-.djc-mmode-btn.mm-turkish-delight.active {
-  background: rgba(232, 160, 191, 0.25);
-  border-color: #e8a0bf;
-  box-shadow: 0 0 12px rgba(232, 160, 191, 0.3);
-}
-
-.djc-mmode-btn.mm-tech {
-  background: rgba(0, 136, 255, 0.1);
-  border: 1px solid rgba(0, 136, 255, 0.3);
-  color: #0088ff;
-}
-.djc-mmode-btn.mm-tech.active {
-  background: rgba(0, 136, 255, 0.25);
-  border-color: #0088ff;
-  box-shadow: 0 0 12px rgba(0, 136, 255, 0.3);
-}
-
-.djc-mmode-btn.mm-latino {
-  background: rgba(230, 57, 70, 0.1);
-  border: 1px solid rgba(230, 57, 70, 0.3);
-  color: #e63946;
-}
-.djc-mmode-btn.mm-latino.active {
-  background: rgba(230, 57, 70, 0.25);
-  border-color: #e63946;
-  box-shadow: 0 0 12px rgba(230, 57, 70, 0.3);
-}
-
-.djc-mmode-btn.mm-rap {
-  background: rgba(204, 0, 0, 0.1);
-  border: 1px solid rgba(204, 0, 0, 0.3);
-  color: #cc0000;
-}
-.djc-mmode-btn.mm-rap.active {
-  background: rgba(204, 0, 0, 0.25);
-  border-color: #cc0000;
-  box-shadow: 0 0 12px rgba(204, 0, 0, 0.3);
+.djc-mmode-btn.active {
+  background: rgba(0, 255, 136, 0.12);
+  border: 2px solid #00ff88;
+  color: #00ff88;
+  font-weight: 700;
+  animation: btnActiveBlink 1.2s ease-in-out infinite;
 }
 
 /* ─── Responsive ─── */
