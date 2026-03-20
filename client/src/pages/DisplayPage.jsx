@@ -288,6 +288,7 @@ export default function DisplayPage() {
   return (
     <div className="display-page">
       <div className="display-bg" />
+      <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
       <DiscoParticles />
       <LightBeams />
       {showConfetti && <Confetti />}
