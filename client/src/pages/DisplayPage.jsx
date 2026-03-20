@@ -114,8 +114,8 @@ function SongRow({ req, rank, lang, isPlayed }) {
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       initial={{ opacity: 0, x: -30 }}
-      animate={isPlayed ? { opacity: [1, 1, 0], x: 0, scale: [1, 1.03, 0.95] } : { opacity: 1, x: 0 }}
-      {...(isPlayed ? { transition: { duration: 2.8, times: [0, 0.7, 1] } } : {})}
+      animate={isPlayed ? { opacity: [1, 1, 0], x: 0, scale: [1, 1.02, 0.95] } : { opacity: 1, x: 0 }}
+      {...(isPlayed ? { transition: { duration: 10, times: [0, 0.85, 1] } } : {})}
     >
       <td className={`dtable-rank rank-${rank}`}>
         {isPlayed ? <span className="dtable-medal">🎶</span> : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
@@ -293,7 +293,7 @@ export default function DisplayPage() {
 
     socket.on('request-played', (req) => {
       setPlayedId(req.id);
-      setTimeout(() => setPlayedId(null), 3000);
+      setTimeout(() => setPlayedId(null), 10000);
     });
 
     socket.on('event-status', ({ status, countdown_end }) => {
