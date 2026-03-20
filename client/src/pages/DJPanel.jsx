@@ -24,6 +24,7 @@ export default function DJPanel() {
   const [copied, setCopied] = useState(false);
   const [brandText, setBrandText] = useState('');
   const [brandSaving, setBrandSaving] = useState(false);
+  const [showQr, setShowQr] = useState(false);
   const brandTimer = useRef(null);
 
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -248,8 +249,6 @@ export default function DJPanel() {
   const pendingRequests = requests.filter(r => r.status === 'pending' || r.status === 'approved');
   const rejectedCount = requests.filter(r => r.status === 'rejected').length;
   const totalVotes = requests.reduce((sum, r) => sum + r.votes, 0);
-
-  const [showQr, setShowQr] = useState(false);
 
   return (
     <div className="dj-panel dj-compact">
