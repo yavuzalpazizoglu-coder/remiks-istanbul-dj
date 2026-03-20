@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import socket from '../socket.js';
+import useSocketStatus from '../useSocketStatus.js';
 import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
@@ -31,6 +32,7 @@ export default function DJPanel() {
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
 
+  const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
 
   const headers = { 'Content-Type': 'application/json', 'x-dj-password': password };
@@ -288,6 +290,9 @@ export default function DJPanel() {
 
   return (
     <div className="dj-panel dj-compact">
+      {!socketConnected && (
+        <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi, yeniden bağlanılıyor...' : '⚠ Disconnected, reconnecting...'}</div>
+      )}
       {/* ─── Row 1: Header + Status + Lang ─── */}
       <div className="djc-row1">
         <img src="/logos/logo-white.png" alt="" style={{ height: 32 }} />
@@ -405,9 +410,9 @@ export default function DJPanel() {
                     </td>
                     <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
                     <td className="dj-table-actions">
-                      {req.status === 'pending' && <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')}>✓</button>}
-                      {req.status === 'approved' && <span style={{ fontSize: 10, color: 'var(--neon-cyan)', fontWeight: 600 }}>✓</span>}
-                      <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }}>✕</button>
+                      {req.status === 'pending' && <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')} title={lang === 'tr' ? 'Onayla' : 'Approve'}>✓</button>}
+                      {req.status === 'approved' && <button className="btn btn-small btn-played" onClick={() => updateRequestStatus(req.id, 'played')} title={lang === 'tr' ? 'Çalındı' : 'Played'}>♫</button>}
+                      <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }} title={lang === 'tr' ? 'Reddet' : 'Reject'}>✕</button>
                     </td>
                   </motion.tr>
                 ))}

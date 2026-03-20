@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import socket from '../socket.js';
+import useSocketStatus from '../useSocketStatus.js';
 import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
@@ -240,7 +241,9 @@ export default function DisplayPage() {
   const [connectedCount, setConnectedCount] = useState(0);
   const [brandText, setBrandText] = useState('');
   const [tickerTexts, setTickerTexts] = useState('');
+  const [allRequests, setAllRequests] = useState([]);
 
+  const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
   const requestUrl = `${window.location.origin}/request/${slug}`;
 
@@ -292,7 +295,14 @@ export default function DisplayPage() {
           setJustOpened(true); setShowConfetti(true);
           setTimeout(() => { setShowConfetti(false); setJustOpened(false); }, 4000);
         }
-        if (status === 'ended') { setShowConfetti(true); setTimeout(() => setShowConfetti(false), 6000); }
+        if (status === 'ended') {
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 6000);
+          fetch(`${API}/api/events/${slug}/requests?all=true`)
+            .then(r => r.json())
+            .then(d => { if (d.requests) setAllRequests(d.requests); })
+            .catch(() => {});
+        }
         return prev ? { ...prev, status } : prev;
       });
       if (countdown_end) setCountdownEnd(countdown_end);
@@ -302,18 +312,15 @@ export default function DisplayPage() {
     socket.on('brand-updated', ({ brand_text }) => setBrandText(brand_text || ''));
     socket.on('ticker-updated', ({ ticker_texts }) => setTickerTexts(ticker_texts || ''));
 
-    const countInterval = setInterval(() => {
-      setConnectedCount(Math.max(1, Math.floor(Math.random() * 3) + (requests.length * 2)));
-    }, 5000);
+    socket.on('room-count', ({ count }) => setConnectedCount(count));
 
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
-      socket.off('ticker-updated');
+      socket.off('ticker-updated'); socket.off('room-count');
       socket.disconnect();
-      clearInterval(countInterval);
     };
-  }, [slug, requests.length]);
+  }, [slug]);
 
   useEffect(() => {
     if (!countdownEnd || event?.status !== 'countdown') { setCountdownDisplay(''); return; }
@@ -344,6 +351,10 @@ export default function DisplayPage() {
       <DiscoParticles />
       <LightBeams />
       {showConfetti && <Confetti />}
+
+      {!socketConnected && (
+        <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi' : '⚠ Disconnected'}</div>
+      )}
 
       {showFullscreenHint && (
         <div className="display-fullscreen-hint" onClick={goFullscreen}>
@@ -383,6 +394,10 @@ export default function DisplayPage() {
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
               {T('display.scan_to_request')}
             </motion.p>
+            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.9 }}
+              style={{ marginTop: 24, padding: 16, background: '#fff', borderRadius: 12, display: 'inline-block' }}>
+              <QRCodeSVG value={requestUrl} size={140} bgColor="#ffffff" fgColor="#000000" level="M" />
+            </motion.div>
           </div>
         )}
 
@@ -397,6 +412,10 @@ export default function DisplayPage() {
               {countdownDisplay || '--:--'}
             </motion.div>
             <div className="countdown-sub">{T('display.scan_to_request')}</div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+              style={{ marginTop: 20, padding: 14, background: '#fff', borderRadius: 12, display: 'inline-block' }}>
+              <QRCodeSVG value={requestUrl} size={120} bgColor="#ffffff" fgColor="#000000" level="M" />
+            </motion.div>
           </div>
         )}
 
@@ -467,7 +486,7 @@ export default function DisplayPage() {
 
         {/* ─── ENDED ─── */}
         {event.status === 'ended' && (
-          <EventSummary requests={requests} lang={lang} />
+          <EventSummary requests={allRequests.length > 0 ? allRequests : requests} lang={lang} />
         )}
       </div>
     </div>

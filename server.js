@@ -11,12 +11,19 @@ import { searchSpotify, isSpotifyConfigured } from './spotify.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const server = createServer(app);
+
+const allowedOrigin = process.env.APP_URL || '*';
 const io = new Server(server, {
-  cors: { origin: '*', methods: ['GET', 'POST'] },
+  cors: { origin: allowedOrigin, methods: ['GET', 'POST'] },
 });
 
-app.use(cors());
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
+
+function sanitize(str) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>]/g, '').trim().slice(0, 200);
+}
 app.use('/logos', express.static(path.join(__dirname, 'public/logos')));
 
 if (process.env.NODE_ENV === 'production') {
@@ -104,8 +111,8 @@ app.put('/api/events/:slug/language', djAuth, (req, res) => {
 
 app.put('/api/events/:slug/ticker', djAuth, (req, res) => {
   try {
-    const { tickerTexts } = req.body;
-    const event = db.updateTickerTexts(req.params.slug, tickerTexts || '');
+    const tickerTexts = (req.body.tickerTexts || '').split('\n').map(l => sanitize(l)).join('\n');
+    const event = db.updateTickerTexts(req.params.slug, tickerTexts);
     io.to(req.params.slug).emit('ticker-updated', { ticker_texts: event.ticker_texts });
     res.json(event);
   } catch (err) {
@@ -115,8 +122,8 @@ app.put('/api/events/:slug/ticker', djAuth, (req, res) => {
 
 app.put('/api/events/:slug/brand', djAuth, (req, res) => {
   try {
-    const { brandText } = req.body;
-    const event = db.updateBrandText(req.params.slug, brandText || '');
+    const brandText = sanitize(req.body.brandText || '');
+    const event = db.updateBrandText(req.params.slug, brandText);
     io.to(req.params.slug).emit('brand-updated', { brand_text: event.brand_text });
     res.json(event);
   } catch (err) {
@@ -150,7 +157,9 @@ app.post('/api/events/:slug/requests', (req, res) => {
       return res.status(400).json({ error: 'Requests not open' });
     }
 
-    const { songName, artist, albumArt, spotifyId, deviceId } = req.body;
+    const { albumArt, spotifyId, deviceId } = req.body;
+    const songName = sanitize(req.body.songName);
+    const artist = sanitize(req.body.artist);
     if (!songName || !deviceId) {
       return res.status(400).json({ error: 'Song name and device ID required' });
     }
@@ -263,14 +272,26 @@ app.get('/api/spotify/search', async (req, res) => {
 
 // ─── Socket.io ───
 
+function emitRoomCount(eventSlug) {
+  const room = io.sockets.adapter.rooms.get(eventSlug);
+  const count = room ? room.size : 0;
+  io.to(eventSlug).emit('room-count', { count });
+}
+
 io.on('connection', (socket) => {
   socket.on('join-event', ({ eventSlug, role }) => {
     socket.join(eventSlug);
     socket.data.role = role;
     socket.data.eventSlug = eventSlug;
+    emitRoomCount(eventSlug);
   });
 
-  socket.on('disconnect', () => {});
+  socket.on('disconnect', () => {
+    const { eventSlug } = socket.data;
+    if (eventSlug) {
+      setTimeout(() => emitRoomCount(eventSlug), 500);
+    }
+  });
 });
 
 // SPA fallback

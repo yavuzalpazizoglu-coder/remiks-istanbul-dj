@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import socket from '../socket.js';
+import useSocketStatus from '../useSocketStatus.js';
 import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
@@ -41,6 +42,7 @@ export default function RequestPage() {
   const [countdownDisplay, setCountdownDisplay] = useState('');
 
   const searchTimer = useRef(null);
+  const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
 
   useEffect(() => {
@@ -138,10 +140,12 @@ export default function RequestPage() {
     searchTimer.current = setTimeout(async () => {
       try {
         const res = await fetch(`${API}/api/spotify/search?q=${encodeURIComponent(value)}`);
+        if (!res.ok) throw new Error();
         const data = await res.json();
         setSearchResults(data);
       } catch {
         setSearchResults([]);
+        showToast(lang === 'tr' ? 'Arama başarısız' : 'Search failed');
       } finally {
         setSearching(false);
       }
@@ -195,18 +199,23 @@ export default function RequestPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ deviceId }),
       });
-      if (res.ok) {
-        setVotedIds(prev => [...prev, requestId]);
-        setVotedAnimation(requestId);
-        setTimeout(() => setVotedAnimation(null), 600);
-
-        if (e?.currentTarget) {
-          const rect = e.currentTarget.getBoundingClientRect();
-          setConfettiPos({ x: rect.left + rect.width / 2, y: rect.top });
-          setTimeout(() => setConfettiPos(null), 700);
-        }
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || T('request.vote_error'));
+        return;
       }
-    } catch {}
+      setVotedIds(prev => [...prev, requestId]);
+      setVotedAnimation(requestId);
+      setTimeout(() => setVotedAnimation(null), 600);
+
+      if (e?.currentTarget) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        setConfettiPos({ x: rect.left + rect.width / 2, y: rect.top });
+        setTimeout(() => setConfettiPos(null), 700);
+      }
+    } catch {
+      showToast(lang === 'tr' ? 'Bağlantı hatası' : 'Connection error');
+    }
   };
 
   const showToast = (msg) => {
@@ -260,6 +269,9 @@ export default function RequestPage() {
 
   return (
     <div className="request-page">
+      {!socketConnected && (
+        <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi, yeniden bağlanılıyor...' : '⚠ Disconnected, reconnecting...'}</div>
+      )}
       <div className="request-header">
         <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="logo" />
         <h1>{T('request.title')}</h1>
