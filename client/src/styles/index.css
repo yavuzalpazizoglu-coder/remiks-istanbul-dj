@@ -749,17 +749,19 @@ input, textarea { font-family: inherit; }
   filter: blur(2px);
 }
 
-/* ─── Display Top Bar ─── */
+/* ─── Display V2 Layout ─── */
+
+.dsp-v2 {
+  display: flex; flex-direction: column;
+  height: 100%; padding: 12px 28px 0;
+}
 
 .dsp-topbar {
   display: flex; align-items: center;
-  padding: 10px 0; flex-shrink: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  margin-bottom: 10px;
+  padding: 6px 0; flex-shrink: 0;
 }
-.dsp-topbar-left { flex-shrink: 0; }
 .dsp-topbar-center { flex: 1; text-align: center; }
-.dsp-topbar-right { flex-shrink: 0; }
+.dsp-topbar-right { flex-shrink: 0; position: absolute; right: 28px; top: 16px; }
 
 .dsp-event-name {
   font-family: var(--font-display);
@@ -779,33 +781,64 @@ input, textarea { font-family: inherit; }
   50% { background-position: 100% 50%; }
 }
 
-/* ─── Display Active Layout ─── */
+/* ─── 3-Column Active Layout ─── */
 
-.dsp-active-layout {
-  display: flex; gap: 24px;
+.dsp-3col {
+  display: flex; gap: 20px;
   flex: 1; min-height: 0;
   align-items: stretch;
+  padding: 8px 0;
 }
 
-/* LEFT: Table */
-.dsp-table-area {
-  flex: 1; min-width: 0;
+.dsp-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px);
   display: flex; flex-direction: column;
+  overflow: hidden;
 }
-.dsp-table-header {
+
+.dsp-list-card {
+  flex: 1; min-width: 0;
+  padding: 12px 14px;
+}
+
+.dsp-card-title {
   font-family: var(--font-display);
-  font-size: 16px; font-weight: 700;
-  padding: 6px 0 10px;
+  font-size: 15px; font-weight: 700;
+  padding: 0 0 8px;
   color: var(--text-secondary);
   flex-shrink: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 6px;
 }
+
 .dsp-table-empty {
   flex: 1; display: flex; align-items: center; justify-content: center;
   gap: 10px; color: var(--text-muted); font-size: 16px;
 }
 .dsp-table-wrap {
   flex: 1; min-height: 0; overflow-y: auto;
-  border-radius: var(--radius-md);
+}
+
+/* CENTER: Logo + Motto */
+.dsp-center-brand {
+  width: 180px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px;
+}
+.dsp-center-logo {
+  height: 80px; width: auto;
+  filter: drop-shadow(0 0 20px rgba(0,212,255,0.2));
+}
+.dsp-center-motto {
+  font-family: var(--font-display);
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: center;
 }
 
 .dsp-table {
@@ -900,17 +933,11 @@ input, textarea { font-family: inherit; }
 }
 .dtable-badge-cell { width: 30px; text-align: center; }
 
-/* RIGHT: QR */
-.dsp-qr-area {
+/* RIGHT: QR Card */
+.dsp-qr-card {
   width: 220px; flex-shrink: 0;
-  display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 12px;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  padding: 24px 16px;
-  backdrop-filter: blur(16px);
+  gap: 12px; padding: 20px 16px;
 }
 .dsp-qr-box {
   padding: 10px; background: #fff;
@@ -920,7 +947,7 @@ input, textarea { font-family: inherit; }
 .dsp-qr-label {
   font-family: var(--font-display);
   font-size: 16px; font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-primary); text-align: center;
 }
 .dsp-qr-sub {
   font-size: 13px; color: var(--neon-cyan);
@@ -1202,7 +1229,9 @@ input, textarea { font-family: inherit; }
 .display-ticker {
   flex-shrink: 0;
   border-top: 1px solid var(--border-subtle);
-  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 6px 0;
+  margin-bottom: 6px;
   overflow: hidden;
   position: relative;
 }

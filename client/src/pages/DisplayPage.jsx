@@ -331,12 +331,9 @@ export default function DisplayPage() {
         </div>
       )}
 
-      <div className="display-content">
-        {/* ─── Top Bar: Logo left, Event name center, LIVE right ─── */}
+      <div className="display-content dsp-v2">
+        {/* ─── Event Name (top center) + LIVE badge (top right) ─── */}
         <div className="dsp-topbar">
-          <div className="dsp-topbar-left">
-            <img src="/logos/logo-white.png" alt="Remiks İstanbul" style={{ height: 40 }} />
-          </div>
           <div className="dsp-topbar-center">
             <motion.div className="dsp-event-name"
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
@@ -351,6 +348,9 @@ export default function DisplayPage() {
             </div>
           </div>
         </div>
+
+        {/* ─── Ticker (below event name) ─── */}
+        {event.status === 'active' && <Ticker requests={requests} lang={lang} />}
 
         {/* ─── WAITING ─── */}
         {event.status === 'waiting' && (
@@ -380,7 +380,7 @@ export default function DisplayPage() {
           </div>
         )}
 
-        {/* ─── ACTIVE ─── */}
+        {/* ─── ACTIVE: 3-column layout ─── */}
         {event.status === 'active' && (
           <>
             {justOpened && (
@@ -395,13 +395,12 @@ export default function DisplayPage() {
               </motion.div>
             )}
 
-            <div className="dsp-active-layout">
-              {/* LEFT: Song Table */}
-              <div className="dsp-table-area">
-                <div className="dsp-table-header">
+            <div className="dsp-3col">
+              {/* LEFT: Song Table Card */}
+              <div className="dsp-card dsp-list-card">
+                <div className="dsp-card-title">
                   <span className="fire-icon">🔥</span> {T('display.hot_requests')}
                 </div>
-
                 {requests.length === 0 ? (
                   <div className="dsp-table-empty">
                     <span>🎵</span> {T('display.no_requests')}
@@ -421,10 +420,20 @@ export default function DisplayPage() {
                 )}
               </div>
 
-              {/* RIGHT: QR Code */}
-              <div className="dsp-qr-area">
+              {/* CENTER: Logo + Motto */}
+              <div className="dsp-center-brand">
+                <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul"
+                  className="dsp-center-logo"
+                  animate={{ scale: [1, 1.03, 1] }}
+                  transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+                />
+                <div className="dsp-center-motto">Request · Vote · Dance</div>
+              </div>
+
+              {/* RIGHT: QR Card */}
+              <div className="dsp-card dsp-qr-card">
                 <div className="dsp-qr-box">
-                  <QRCodeSVG value={requestUrl} size={180} bgColor="#ffffff" fgColor="#000000" level="M" />
+                  <QRCodeSVG value={requestUrl} size={160} bgColor="#ffffff" fgColor="#000000" level="M" />
                 </div>
                 <div className="dsp-qr-label">
                   {lang === 'tr' ? 'QR Kodu Tara' : 'Scan QR Code'}
@@ -450,9 +459,6 @@ export default function DisplayPage() {
         {event.status === 'ended' && (
           <EventSummary requests={requests} lang={lang} />
         )}
-
-        {/* Ticker */}
-        {event.status === 'active' && <Ticker requests={requests} lang={lang} />}
       </div>
     </div>
   );
