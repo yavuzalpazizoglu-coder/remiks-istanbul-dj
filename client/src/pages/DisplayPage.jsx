@@ -118,9 +118,9 @@ function OpeningOverlay({ lang, brandText, countdown }) {
         <div className="ceremony-spot spot-right" />
         <div className="ceremony-spot spot-center" />
       </div>
-      <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul" className="ceremony-logo"
-        initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} />
       <div className="ceremony-content">
+        <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul" className="ceremony-logo"
+          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} />
         <motion.div className="ceremony-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, delay: 0.3 }} />
         <motion.div className="ceremony-pre" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
           {lang === 'tr' ? '🎉 HOŞGELDİNİZ' : '🎉 WELCOME'}
@@ -174,9 +174,9 @@ function ClosingOverlay({ lang, brandText, countdown }) {
           }} />
         ))}
       </div>
-      <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul" className="ceremony-logo"
-        initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} />
       <div className="ceremony-content">
+        <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul" className="ceremony-logo"
+          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} />
         <motion.div className="ceremony-line closing-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.5, delay: 0.3 }} />
         <motion.div className="ceremony-pre closing-pre" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
           {lang === 'tr' ? '✨ TEŞEKKÜRLER' : '✨ THANK YOU'}
