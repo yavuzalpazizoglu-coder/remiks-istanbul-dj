@@ -828,13 +828,13 @@ input, textarea { font-family: inherit; }
   opacity: 0.35;
   pointer-events: none;
   z-index: 0;
-  animation: discoRotate 30s linear infinite, discoPulse 5s ease-in-out infinite;
+  animation: discoPulse 5s ease-in-out infinite;
   filter: drop-shadow(0 0 30px rgba(255,255,255,0.1));
 }
 
 @keyframes discoPulse {
-  0%, 100% { opacity: 0.35; filter: drop-shadow(0 0 30px rgba(255,255,255,0.1)); }
-  50% { opacity: 0.45; filter: drop-shadow(0 0 50px rgba(255,255,255,0.15)); }
+  0%, 100% { opacity: 0.35; filter: drop-shadow(0 0 30px rgba(255,255,255,0.1)); transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.45; filter: drop-shadow(0 0 50px rgba(255,255,255,0.2)); transform: translate(-50%, -50%) scale(1.02); }
 }
 
 .dsp-center-hero {
