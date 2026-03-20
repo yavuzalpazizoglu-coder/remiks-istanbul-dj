@@ -32,6 +32,9 @@ export default function DJPanel() {
   const [theme, setTheme] = useState('cyan');
   const [animationLevel, setAnimationLevel] = useState('high');
   const [eventHistory, setEventHistory] = useState([]);
+  const [openingOn, setOpeningOn] = useState(false);
+  const [closingOn, setClosingOn] = useState(false);
+  const [ceremonyMinutes, setCeremonyMinutes] = useState(10);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
 
@@ -235,6 +238,20 @@ export default function DJPanel() {
     } catch {}
   };
 
+  const toggleCeremony = async (type) => {
+    const isOn = type === 'opening' ? openingOn : closingOn;
+    const newState = !isOn;
+    if (type === 'opening') { setOpeningOn(newState); if (newState) setClosingOn(false); }
+    if (type === 'closing') { setClosingOn(newState); if (newState) setOpeningOn(false); }
+    try {
+      await fetch(`${API}/api/events/${slug}/ceremony`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ type, active: newState, minutes: newState ? ceremonyMinutes : 0 }),
+      });
+    } catch {}
+  };
+
   const changeAnimationLevel = async (level) => {
     setAnimationLevel(level);
     try {
@@ -411,6 +428,25 @@ export default function DJPanel() {
           <button className="copy-btn djc-link-btn" onClick={copyLink} title="Link Kopyala">{copied ? '✓' : '🔗'}</button>
           <button className="copy-btn djc-link-btn" onClick={() => setShowQr(!showQr)} title="QR Kod">📱</button>
           <a href={`/display/${slug}`} target="_blank" rel="noopener noreferrer" className="copy-btn djc-link-btn" title="Display Ekranı" style={{ textDecoration: 'none' }}>🖥️</a>
+        </div>
+      </div>
+
+      {/* ─── Ceremony Controls ─── */}
+      <div className="djc-ceremony-bar">
+        <div className="djc-ceremony-btns">
+          <button className={`btn djc-ceremony-btn opening ${openingOn ? 'active' : ''}`} onClick={() => toggleCeremony('opening')}>
+            {openingOn ? '⏹' : '🎉'} {lang === 'tr' ? 'Açılış' : 'Opening'}
+          </button>
+          <button className={`btn djc-ceremony-btn closing ${closingOn ? 'active' : ''}`} onClick={() => toggleCeremony('closing')}>
+            {closingOn ? '⏹' : '✨'} {lang === 'tr' ? 'Kapanış' : 'Closing'}
+          </button>
+        </div>
+        <div className="djc-ceremony-timer">
+          <span className="djc-limit-label">{lang === 'tr' ? 'Süre:' : 'Duration:'}</span>
+          {[5, 10, 15, 30].map(m => (
+            <button key={m} className={`preset-btn djc-preset ${ceremonyMinutes === m ? 'active' : ''}`} onClick={() => setCeremonyMinutes(m)}>{m}′</button>
+          ))}
+          <input type="number" className="input" style={{ width: 48, textAlign: 'center', padding: '6px 4px', fontSize: 14 }} value={ceremonyMinutes} onChange={(e) => setCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
         </div>
       </div>
 

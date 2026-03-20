@@ -108,10 +108,10 @@ function Confetti() {
   );
 }
 
-function OpeningOverlay({ lang, brandText, onDismiss }) {
+function OpeningOverlay({ lang, brandText, countdown }) {
   const name = brandText || 'Remiks İstanbul';
   return (
-    <motion.div className="ceremony-overlay opening-overlay" onClick={onDismiss}
+    <motion.div className="ceremony-overlay opening-overlay"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
       <div className="ceremony-spotlights">
         <div className="ceremony-spot spot-left" />
@@ -133,6 +133,11 @@ function OpeningOverlay({ lang, brandText, onDismiss }) {
           {name}
         </motion.div>
         <motion.div className="ceremony-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, delay: 2.2 }} />
+        {countdown && (
+          <motion.div className="ceremony-timer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }}>
+            {countdown}
+          </motion.div>
+        )}
         <motion.div className="ceremony-sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3 }}>
           {lang === 'tr' ? 'İsteklerinizi bekliyoruz • QR kodu tarayın' : 'Send your requests • Scan QR code'}
         </motion.div>
@@ -150,10 +155,10 @@ function OpeningOverlay({ lang, brandText, onDismiss }) {
   );
 }
 
-function ClosingOverlay({ lang, brandText, onDismiss }) {
+function ClosingOverlay({ lang, brandText, countdown }) {
   const name = brandText || 'Remiks İstanbul';
   return (
-    <motion.div className="ceremony-overlay closing-overlay" onClick={onDismiss}
+    <motion.div className="ceremony-overlay closing-overlay"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
       <div className="closing-stars">
         {Array.from({ length: 40 }, (_, i) => (
@@ -182,6 +187,11 @@ function ClosingOverlay({ lang, brandText, onDismiss }) {
           {name}
         </motion.div>
         <motion.div className="ceremony-line closing-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.5, delay: 3 }} />
+        {countdown && (
+          <motion.div className="ceremony-timer closing-timer-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.2 }}>
+            {countdown}
+          </motion.div>
+        )}
         <motion.div className="ceremony-sub closing-sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }}>
           {lang === 'tr' ? 'Bu geceye renk kattınız • Tekrar görüşmek üzere!' : 'You made this night special • See you next time!'}
         </motion.div>
@@ -352,11 +362,10 @@ export default function DisplayPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [countdownEnd, setCountdownEnd] = useState(null);
   const [countdownDisplay, setCountdownDisplay] = useState('');
-  const [justOpened, setJustOpened] = useState(false);
   const [openingActive, setOpeningActive] = useState(false);
   const [closingActive, setClosingActive] = useState(false);
-  const openingTimer = useRef(null);
-  const closingTimer = useRef(null);
+  const [ceremonyEnd, setCeremonyEnd] = useState(null);
+  const [ceremonyCountdown, setCeremonyCountdown] = useState('');
   const [connectedCount, setConnectedCount] = useState(0);
   const [brandText, setBrandText] = useState('');
   const [tickerTexts, setTickerTexts] = useState('');
@@ -422,20 +431,7 @@ export default function DisplayPage() {
 
     socket.on('event-status', ({ status, countdown_end }) => {
       setEvent(prev => {
-        const oldStatus = prev?.status;
-        if (status === 'active' && (oldStatus === 'countdown' || oldStatus === 'waiting')) {
-          setOpeningActive(true);
-          setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 12000);
-          if (openingTimer.current) clearTimeout(openingTimer.current);
-          openingTimer.current = setTimeout(() => setOpeningActive(false), 600000);
-        }
         if (status === 'ended') {
-          setClosingActive(true);
-          setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 12000);
-          if (closingTimer.current) clearTimeout(closingTimer.current);
-          closingTimer.current = setTimeout(() => setClosingActive(false), 600000);
           fetch(`${API}/api/events/${slug}/requests?all=true`)
             .then(r => r.json())
             .then(d => { if (d.requests) setAllRequests(d.requests); })
@@ -444,6 +440,20 @@ export default function DisplayPage() {
         return prev ? { ...prev, status } : prev;
       });
       if (countdown_end) setCountdownEnd(countdown_end);
+    });
+
+    socket.on('ceremony', ({ type, active, endTime }) => {
+      if (type === 'opening') {
+        setOpeningActive(active);
+        setCeremonyEnd(active && endTime ? endTime : null);
+        if (active) { setShowConfetti(true); setTimeout(() => setShowConfetti(false), 10000); }
+      }
+      if (type === 'closing') {
+        setClosingActive(active);
+        setCeremonyEnd(active && endTime ? endTime : null);
+        if (active) { setShowConfetti(true); setTimeout(() => setShowConfetti(false), 10000); }
+      }
+      if (!active) setCeremonyEnd(null);
     });
 
     socket.on('language-changed', ({ language }) => setLang(language));
@@ -458,7 +468,7 @@ export default function DisplayPage() {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
-      socket.off('theme-changed'); socket.off('animation-changed');
+      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('ceremony');
       socket.disconnect();
     };
   }, [slug]);
@@ -474,6 +484,25 @@ export default function DisplayPage() {
     }, 100);
     return () => clearInterval(interval);
   }, [countdownEnd, event?.status]);
+
+  useEffect(() => {
+    if (!ceremonyEnd) { setCeremonyCountdown(''); return; }
+    const interval = setInterval(() => {
+      const diff = ceremonyEnd - Date.now();
+      if (diff <= 0) {
+        setCeremonyCountdown('00:00');
+        setOpeningActive(false);
+        setClosingActive(false);
+        setCeremonyEnd(null);
+        clearInterval(interval);
+        return;
+      }
+      const m = Math.floor(diff / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setCeremonyCountdown(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [ceremonyEnd]);
 
   const goFullscreen = () => {
     setShowFullscreenHint(false);
@@ -575,8 +604,8 @@ export default function DisplayPage() {
 
         {/* ─── OPENING OVERLAY ─── */}
         <AnimatePresence>
-          {openingActive && event.status === 'active' && (
-            <OpeningOverlay lang={lang} brandText={displayName} onDismiss={() => setOpeningActive(false)} />
+          {openingActive && (
+            <OpeningOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} />
           )}
         </AnimatePresence>
 
@@ -658,8 +687,8 @@ export default function DisplayPage() {
 
         {/* ─── CLOSING OVERLAY ─── */}
         <AnimatePresence>
-          {closingActive && event.status === 'ended' && (
-            <ClosingOverlay lang={lang} brandText={displayName} onDismiss={() => setClosingActive(false)} />
+          {closingActive && (
+            <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} />
           )}
         </AnimatePresence>
 

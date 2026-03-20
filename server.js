@@ -291,6 +291,18 @@ app.put('/api/events/:slug/animation', djAuth, (req, res) => {
   }
 });
 
+app.post('/api/events/:slug/ceremony', djAuth, (req, res) => {
+  try {
+    const { type, active, minutes } = req.body;
+    if (!['opening', 'closing'].includes(type)) return res.status(400).json({ error: 'Invalid type' });
+    const endTime = active && minutes ? Date.now() + minutes * 60 * 1000 : null;
+    io.to(req.params.slug).emit('ceremony', { type, active: !!active, endTime });
+    res.json({ ok: true, type, active: !!active, endTime });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get('/api/events/:slug/genres', (req, res) => {
   try {
     const event = db.getEventBySlug(req.params.slug);

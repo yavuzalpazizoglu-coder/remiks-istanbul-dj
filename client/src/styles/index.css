@@ -1937,6 +1937,80 @@ input, textarea { font-family: inherit; }
   100% { opacity: 0.2; transform: scale(0.9); box-shadow: 0 0 4px rgba(255,0,128,0.3); }
 }
 
+/* ─── Ceremony Controls (DJ Panel) ─── */
+
+.djc-ceremony-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+
+.djc-ceremony-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.djc-ceremony-btn {
+  font-size: 13px !important;
+  padding: 8px 14px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s;
+}
+
+.djc-ceremony-btn.opening {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--neon-cyan);
+}
+
+.djc-ceremony-btn.opening.active {
+  background: rgba(0, 212, 255, 0.25);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+}
+
+.djc-ceremony-btn.closing {
+  background: rgba(184, 41, 221, 0.1);
+  border: 1px solid rgba(184, 41, 221, 0.3);
+  color: var(--neon-purple);
+}
+
+.djc-ceremony-btn.closing.active {
+  background: rgba(184, 41, 221, 0.25);
+  border-color: var(--neon-purple);
+  box-shadow: 0 0 12px rgba(184, 41, 221, 0.3);
+}
+
+.djc-ceremony-timer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+/* ─── Ceremony Timer on Display ─── */
+
+.ceremony-timer {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--theme-primary, #00d4ff);
+  margin: 16px 0;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px var(--theme-glow, rgba(0,212,255,0.3));
+}
+
+.closing-timer-text {
+  color: #b829dd;
+  text-shadow: 0 0 20px rgba(184, 41, 221, 0.3);
+}
+
 /* ─── Played Animation ─── */
 
 .dtable-played {
