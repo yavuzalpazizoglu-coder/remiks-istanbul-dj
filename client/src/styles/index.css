@@ -2528,6 +2528,46 @@ input, textarea { font-family: inherit; }
   }
 }
 
+.mm-dj-live-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(220, 20, 20, 0.85);
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.3);
+  animation: liveBadgePulse 2s ease-in-out infinite;
+  z-index: 2;
+}
+
+.mm-dj-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3333;
+  box-shadow: 0 0 6px #ff0000, 0 0 12px #ff0000;
+  animation: liveDotBlink 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes liveDotBlink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #ff0000, 0 0 12px #ff0000; }
+  50% { opacity: 0.2; box-shadow: 0 0 2px #ff0000; }
+}
+
+@keyframes liveBadgePulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.4); }
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 600px) {
