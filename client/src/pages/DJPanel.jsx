@@ -432,7 +432,6 @@ export default function DJPanel() {
       {/* ─── Row 1: Header + Status + Lang ─── */}
       <div className="djc-row1">
         <div className="djc-brand-block">
-          <img src="/logos/logo-white.png" alt="" style={{ height: 28 }} />
           <span className="djc-remiksbox">RemiksBox</span>
         </div>
         <div className="djc-row1-divider" />
