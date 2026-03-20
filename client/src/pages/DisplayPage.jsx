@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
@@ -7,22 +7,68 @@ import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
 
+function DiscoParticles() {
+  const particles = useMemo(() =>
+    Array.from({ length: 35 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      size: 2 + Math.random() * 4,
+      duration: 8 + Math.random() * 12,
+      delay: Math.random() * 10,
+      color: ['rgba(0,212,255,0.6)', 'rgba(184,41,221,0.5)', 'rgba(255,0,128,0.4)', 'rgba(255,255,255,0.3)', 'rgba(0,255,136,0.3)'][Math.floor(Math.random() * 5)],
+    })), []);
+
+  return (
+    <div className="disco-particles">
+      {particles.map(p => (
+        <div key={p.id} className="disco-particle" style={{
+          left: `${p.left}%`, width: p.size, height: p.size,
+          background: p.color,
+          boxShadow: `0 0 ${p.size * 3}px ${p.color}`,
+          animationDuration: `${p.duration}s`,
+          animationDelay: `${p.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function LightBeams() {
+  const beams = useMemo(() => [
+    { left: '15%', delay: '0s', color: 'var(--neon-cyan)' },
+    { left: '40%', delay: '2s', color: 'var(--neon-purple)' },
+    { left: '65%', delay: '4s', color: 'var(--neon-pink)' },
+    { left: '85%', delay: '1s', color: 'var(--neon-cyan)' },
+  ], []);
+
+  return (
+    <div className="light-beams">
+      {beams.map((b, i) => (
+        <div key={i} className="light-beam" style={{
+          left: b.left,
+          background: `linear-gradient(180deg, transparent, ${b.color}, transparent)`,
+          animationDelay: b.delay,
+          animationDuration: `${6 + i * 2}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 function Confetti() {
-  const pieces = Array.from({ length: 50 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    delay: Math.random() * 2,
-    duration: 2 + Math.random() * 3,
-    color: ['#00d4ff', '#b829dd', '#ff0080', '#ff6b35', '#00ff88'][Math.floor(Math.random() * 5)],
-    size: 6 + Math.random() * 10,
-  }));
+  const pieces = useMemo(() =>
+    Array.from({ length: 50 }, (_, i) => ({
+      id: i, left: Math.random() * 100,
+      delay: Math.random() * 2, duration: 2 + Math.random() * 3,
+      color: ['#00d4ff', '#b829dd', '#ff0080', '#ff6b35', '#00ff88'][Math.floor(Math.random() * 5)],
+      size: 6 + Math.random() * 10,
+    })), []);
   return (
     <div className="confetti-container">
       {pieces.map(p => (
         <div key={p.id} className="confetti-piece" style={{
           left: `${p.left}%`, width: p.size, height: p.size,
-          background: p.color,
-          borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+          background: p.color, borderRadius: Math.random() > 0.5 ? '50%' : '2px',
           animationDuration: `${p.duration}s`, animationDelay: `${p.delay}s`,
         }} />
       ))}
@@ -54,29 +100,20 @@ function VoteFloat({ count }) {
 function PodiumCard({ req, rank, lang }) {
   const [shaking, setShaking] = useState(false);
   const prevVotes = useRef(req.votes);
-
   useEffect(() => {
-    if (req.votes > prevVotes.current) {
-      setShaking(true);
-      setTimeout(() => setShaking(false), 500);
-    }
+    if (req.votes > prevVotes.current) { setShaking(true); setTimeout(() => setShaking(false), 500); }
     prevVotes.current = req.votes;
   }, [req.votes]);
 
   return (
     <motion.div
-      className={`podium-card rank-${rank} glass ${shaking ? 'animate-shake' : ''}`}
-      layout
-      transition={{ type: 'spring', stiffness: 280, damping: 26 }}
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
+      className={`podium-card rank-${rank} ${shaking ? 'animate-shake' : ''}`}
+      layout transition={{ type: 'spring', stiffness: 280, damping: 26 }}
+      initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
       style={{ order: rank === 1 ? 1 : rank === 2 ? 0 : 2 }}
     >
       <div className="podium-rank">#{rank}</div>
-      {req.album_art
-        ? <img src={req.album_art} alt="" className="podium-art" />
-        : <div className="podium-art-placeholder">🎵</div>
-      }
+      {req.album_art ? <img src={req.album_art} alt="" className="podium-art" /> : <div className="podium-art-placeholder">🎵</div>}
       <div className="podium-song">{req.song_name}</div>
       {req.artist && <div className="podium-artist">{req.artist}</div>}
       <div className="podium-votes" style={{ position: 'relative' }}>
@@ -87,7 +124,7 @@ function PodiumCard({ req, rank, lang }) {
       </div>
       <div className="podium-vote-label">{t(lang, 'request.votes')}</div>
       {rank === 1 && req.votes >= 5 && (
-        <div style={{ position: 'absolute', top: 8, right: 10 }}>
+        <div style={{ position: 'absolute', top: 6, right: 8 }}>
           <span className="badge badge-hot"><span className="fire-icon">🔥</span> HOT</span>
         </div>
       )}
@@ -95,31 +132,20 @@ function PodiumCard({ req, rank, lang }) {
   );
 }
 
-function RestItem({ req, rank, lang }) {
+function RestItem({ req, rank }) {
   const [shaking, setShaking] = useState(false);
   const prevVotes = useRef(req.votes);
-
   useEffect(() => {
-    if (req.votes > prevVotes.current) {
-      setShaking(true);
-      setTimeout(() => setShaking(false), 500);
-    }
+    if (req.votes > prevVotes.current) { setShaking(true); setTimeout(() => setShaking(false), 500); }
     prevVotes.current = req.votes;
   }, [req.votes]);
 
   return (
-    <motion.div
-      className={`display-rest-item ${shaking ? 'animate-shake' : ''}`}
-      layout
-      transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-      initial={{ opacity: 0, x: 60 }}
-      animate={{ opacity: 1, x: 0 }}
-    >
+    <motion.div className={`display-rest-item ${shaking ? 'animate-shake' : ''}`}
+      layout transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+      initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }}>
       <span className="song-rank">{rank}</span>
-      {req.album_art
-        ? <img src={req.album_art} alt="" className="song-album-art" />
-        : <div className="song-album-art-placeholder">🎵</div>
-      }
+      {req.album_art ? <img src={req.album_art} alt="" className="song-album-art" /> : <div className="song-album-art-placeholder">🎵</div>}
       <div className="song-info">
         <div className="song-name">{req.song_name}</div>
         {req.artist && <div className="song-artist">{req.artist}</div>}
@@ -128,8 +154,31 @@ function RestItem({ req, rank, lang }) {
         <VoteFloat count={req.votes} />
         <div className="display-rest-vote">{req.votes}</div>
       </div>
-      {req.votes >= 10 && <span className="fire-icon" style={{ fontSize: 18 }}>🔥</span>}
+      {req.votes >= 10 && <span className="fire-icon" style={{ fontSize: 16 }}>🔥</span>}
     </motion.div>
+  );
+}
+
+function Ticker({ requests, lang }) {
+  if (requests.length === 0) return null;
+  const items = requests.slice(0, 12);
+  const doubled = [...items, ...items];
+  const duration = Math.max(20, items.length * 4);
+
+  return (
+    <div className="display-ticker">
+      <div className="ticker-track" style={{ '--ticker-duration': `${duration}s` }}>
+        {doubled.map((req, i) => (
+          <div key={`${req.id}-${i}`} className="ticker-item">
+            <span className="ticker-emoji">🎵</span>
+            <span className="ticker-song">{req.song_name}</span>
+            {req.artist && <span>- {req.artist}</span>}
+            <span style={{ color: 'var(--neon-cyan)', fontWeight: 700 }}>({req.votes} {t(lang, 'request.votes')})</span>
+            <span className="ticker-dot">●</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -143,6 +192,7 @@ export default function DisplayPage() {
   const [countdownEnd, setCountdownEnd] = useState(null);
   const [countdownDisplay, setCountdownDisplay] = useState('');
   const [justOpened, setJustOpened] = useState(false);
+  const [connectedCount, setConnectedCount] = useState(0);
 
   const T = useCallback((key) => t(lang, key), [lang]);
   const requestUrl = `${window.location.origin}/request/${slug}`;
@@ -178,8 +228,7 @@ export default function DisplayPage() {
 
     socket.on('vote-updated', ({ requestId, votes }) => {
       setRequests(prev =>
-        prev.map(r => r.id === requestId ? { ...r, votes } : r)
-            .sort((a, b) => b.votes - a.votes)
+        prev.map(r => r.id === requestId ? { ...r, votes } : r).sort((a, b) => b.votes - a.votes)
       );
     });
 
@@ -191,14 +240,10 @@ export default function DisplayPage() {
       setEvent(prev => {
         const oldStatus = prev?.status;
         if (status === 'active' && oldStatus === 'countdown') {
-          setJustOpened(true);
-          setShowConfetti(true);
+          setJustOpened(true); setShowConfetti(true);
           setTimeout(() => { setShowConfetti(false); setJustOpened(false); }, 4000);
         }
-        if (status === 'ended') {
-          setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 6000);
-        }
+        if (status === 'ended') { setShowConfetti(true); setTimeout(() => setShowConfetti(false), 6000); }
         return prev ? { ...prev, status } : prev;
       });
       if (countdown_end) setCountdownEnd(countdown_end);
@@ -206,15 +251,17 @@ export default function DisplayPage() {
 
     socket.on('language-changed', ({ language }) => setLang(language));
 
+    const countInterval = setInterval(() => {
+      setConnectedCount(Math.max(1, Math.floor(Math.random() * 3) + (requests.length * 2)));
+    }, 5000);
+
     return () => {
-      socket.off('request-added');
-      socket.off('vote-updated');
-      socket.off('list-updated');
-      socket.off('event-status');
-      socket.off('language-changed');
+      socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
+      socket.off('event-status'); socket.off('language-changed');
       socket.disconnect();
+      clearInterval(countInterval);
     };
-  }, [slug]);
+  }, [slug, requests.length]);
 
   useEffect(() => {
     if (!countdownEnd || event?.status !== 'countdown') { setCountdownDisplay(''); return; }
@@ -241,6 +288,8 @@ export default function DisplayPage() {
   return (
     <div className="display-page">
       <div className="display-bg" />
+      <DiscoParticles />
+      <LightBeams />
       {showConfetti && <Confetti />}
 
       {showFullscreenHint && (
@@ -250,10 +299,19 @@ export default function DisplayPage() {
       )}
 
       <div className="display-content">
-
-        {/* Header: Logo centered */}
+        {/* Header */}
         <div className="display-header">
-          <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="logo logo-display" />
+          <div className="display-header-left">
+            <div className="display-logo-area">
+              <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="logo" style={{ height: 52 }} />
+              <div className="display-tagline">Request · Vote · Dance</div>
+            </div>
+          </div>
+          <div className="display-live-badge">
+            <span className="live-dot" />
+            <span style={{ color: '#ff4444' }}>LIVE</span>
+            <span className="live-count">{connectedCount} {lang === 'tr' ? 'kişi' : 'people'}</span>
+          </div>
         </div>
 
         {/* ─── WAITING ─── */}
@@ -290,7 +348,7 @@ export default function DisplayPage() {
             {justOpened && (
               <motion.div className="display-state-center"
                 initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}
-                style={{ position: 'absolute', inset: 0, zIndex: 50, background: 'rgba(7,7,26,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                style={{ position: 'absolute', inset: 0, zIndex: 50, background: 'rgba(5,5,16,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <motion.h2
                   style={{ fontFamily: 'var(--font-display)', fontSize: 56, fontWeight: 900, background: 'var(--gradient-main)', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
                   initial={{ scale: 0.3 }} animate={{ scale: [0.3, 1.1, 1] }} transition={{ duration: 0.8, times: [0, 0.7, 1] }}>
@@ -299,36 +357,51 @@ export default function DisplayPage() {
               </motion.div>
             )}
 
-            {requests.length === 0 ? (
-              <div className="display-state-center">
-                <div style={{ fontSize: 48, marginBottom: 16 }}>🎵</div>
-                <p style={{ color: 'var(--text-muted)', fontSize: 18 }}>{T('display.no_requests')}</p>
-              </div>
-            ) : (
-              <>
-                {/* Podium: Top 3 */}
-                <LayoutGroup>
-                  {top3.length > 0 && (
-                    <div className="display-podium">
-                      {top3.map((req, idx) => (
-                        <PodiumCard key={req.id} req={req} rank={idx + 1} lang={lang} />
-                      ))}
-                      {top3.length === 1 && <><div /><div /></>}
-                      {top3.length === 2 && <div />}
+            <div className="display-main">
+              <div className="display-list-col">
+                {requests.length === 0 ? (
+                  <div className="display-state-center">
+                    <div style={{ fontSize: 44, marginBottom: 14 }}>🎵</div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: 16 }}>{T('display.no_requests')}</p>
+                  </div>
+                ) : (
+                  <LayoutGroup>
+                    <div className="display-list-title">
+                      <span className="fire-icon">🔥</span> {T('display.hot_requests')}
                     </div>
-                  )}
 
-                  {/* Rest of list */}
-                  {rest.length > 0 && (
-                    <div className="display-rest-list">
-                      {rest.map((req, idx) => (
-                        <RestItem key={req.id} req={req} rank={idx + 4} lang={lang} />
-                      ))}
-                    </div>
-                  )}
-                </LayoutGroup>
-              </>
-            )}
+                    {top3.length > 0 && (
+                      <div className="display-podium">
+                        {top3.map((req, idx) => (
+                          <PodiumCard key={req.id} req={req} rank={idx + 1} lang={lang} />
+                        ))}
+                        {top3.length === 1 && <><div /><div /></>}
+                        {top3.length === 2 && <div />}
+                      </div>
+                    )}
+
+                    {rest.length > 0 && (
+                      <div className="display-rest-list">
+                        {rest.map((req, idx) => (
+                          <RestItem key={req.id} req={req} rank={idx + 4} />
+                        ))}
+                      </div>
+                    )}
+                  </LayoutGroup>
+                )}
+              </div>
+
+              {/* QR Right Side */}
+              <div className="display-qr-col">
+                <div className="display-qr-arrow">👆</div>
+                <div className="display-qr-box">
+                  <QRCodeSVG value={requestUrl} size={150} bgColor="#ffffff" fgColor="#000000" level="M" />
+                </div>
+                <div className="display-qr-text">
+                  {lang === 'tr' ? 'QR Kodu Tara\nİsteğini Gönder!' : 'Scan QR Code\nSend Your Request!'}
+                </div>
+              </div>
+            </div>
           </>
         )}
 
@@ -350,14 +423,8 @@ export default function DisplayPage() {
           </div>
         )}
 
-        {/* QR Code - Bottom Center */}
-        <div className="display-qr-bottom">
-          <div className="qr-box">
-            <QRCodeSVG value={requestUrl} size={64} bgColor="#ffffff" fgColor="#000000" level="M" />
-          </div>
-          <div className="qr-text">{T('display.scan_to_request')}</div>
-        </div>
-
+        {/* Ticker */}
+        {event.status === 'active' && <Ticker requests={requests} lang={lang} />}
       </div>
     </div>
   );
