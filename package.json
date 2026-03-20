@@ -7,7 +7,8 @@
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "server:dev": "node --watch server.js",
     "client:dev": "npm run dev --prefix client",
-    "build": "npm run build --prefix client",
+    "postinstall": "cd client && npm install",
+    "build": "cd client && npm run build",
     "start": "NODE_ENV=production node server.js",
     "setup": "npm install && cd client && npm install"
   },
