@@ -211,7 +211,7 @@ const MUSIC_MODE_CONFIG = {
     icon: '🎻',
     bg: 'radial-gradient(ellipse at center, rgba(40, 15, 5, 0.96) 0%, rgba(10, 3, 0, 0.98) 100%)',
     color1: '#d4a017', color2: '#8b4513', color3: '#ff6b35',
-    sparkColor: '#d4a017', image: '/modes/mode-arabesk.png',
+    image: '/modes/mode-arabesk.png', imgClass: 'mm-img-arabesk',
   },
   rock: {
     title: { tr: 'ROCK MODE', en: 'ROCK MODE' },
@@ -219,7 +219,7 @@ const MUSIC_MODE_CONFIG = {
     icon: '🎸',
     bg: 'radial-gradient(ellipse at center, rgba(30, 5, 5, 0.96) 0%, rgba(5, 0, 0, 0.98) 100%)',
     color1: '#ff4444', color2: '#ff0000', color3: '#ff6b35',
-    sparkColor: '#ff4444', image: '/modes/mode-rock.png',
+    image: '/modes/mode-rock.png', imgClass: 'mm-img-rock',
   },
   '90s-pop': {
     title: { tr: "90'LAR POP", en: "90S TURKISH POP" },
@@ -227,7 +227,7 @@ const MUSIC_MODE_CONFIG = {
     icon: '💿',
     bg: 'radial-gradient(ellipse at center, rgba(20, 5, 30, 0.96) 0%, rgba(5, 0, 10, 0.98) 100%)',
     color1: '#ff0080', color2: '#00d4ff', color3: '#b829dd',
-    sparkColor: '#ff0080', image: '/modes/mode-90s-pop.png',
+    image: '/modes/mode-90s-pop.png', imgClass: 'mm-img-90s',
   },
   'turkish-delight': {
     title: { tr: 'TURKISH DELIGHT', en: 'TURKISH DELIGHT' },
@@ -235,7 +235,7 @@ const MUSIC_MODE_CONFIG = {
     icon: '🌹',
     bg: 'radial-gradient(ellipse at center, rgba(25, 5, 15, 0.96) 0%, rgba(5, 0, 5, 0.98) 100%)',
     color1: '#e8a0bf', color2: '#d4a017', color3: '#ff6b9d',
-    sparkColor: '#e8a0bf', image: '/modes/mode-turkish-delight.png',
+    image: '/modes/mode-turkish-delight.png', imgClass: 'mm-img-delight',
   },
   tech: {
     title: { tr: 'TECH MODE', en: 'TECH MODE' },
@@ -243,7 +243,7 @@ const MUSIC_MODE_CONFIG = {
     icon: '🎧',
     bg: 'radial-gradient(ellipse at center, rgba(0, 5, 20, 0.96) 0%, rgba(0, 2, 8, 0.98) 100%)',
     color1: '#0088ff', color2: '#00ff88', color3: '#00d4ff',
-    sparkColor: '#0088ff', image: '/modes/mode-tech.png',
+    image: '/modes/mode-tech.png', imgClass: 'mm-img-tech',
   },
   latino: {
     title: { tr: 'LATINO MODE', en: 'LATINO MODE' },
@@ -251,7 +251,7 @@ const MUSIC_MODE_CONFIG = {
     icon: '💃',
     bg: 'radial-gradient(ellipse at center, rgba(30, 8, 0, 0.96) 0%, rgba(8, 2, 0, 0.98) 100%)',
     color1: '#e63946', color2: '#f4a261', color3: '#ff6b35',
-    sparkColor: '#e63946', image: '/modes/mode-latino.png',
+    image: '/modes/mode-latino.png', imgClass: 'mm-img-latino',
   },
   rap: {
     title: { tr: 'RAP MODE', en: 'RAP MODE' },
@@ -259,7 +259,7 @@ const MUSIC_MODE_CONFIG = {
     icon: '🎤',
     bg: 'radial-gradient(ellipse at center, rgba(20, 0, 0, 0.96) 0%, rgba(5, 0, 0, 0.98) 100%)',
     color1: '#cc0000', color2: '#444444', color3: '#8b0000',
-    sparkColor: '#cc0000', image: '/modes/mode-rap.png',
+    image: '/modes/mode-rap.png', imgClass: 'mm-img-rap',
   },
 };
 
@@ -272,10 +272,10 @@ function MusicModeOverlay({ mode, lang }) {
       style={{ background: cfg.bg }}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1 } }}>
       <div className="mm-border-frame" style={{ '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }} />
-      {cfg.image && <motion.img src={cfg.image} alt="" className="mm-bg-image"
-        initial={{ opacity: 0, scale: 1.1 }}
+      {cfg.image && <motion.img src={cfg.image} alt="" className={`mm-bg-image ${cfg.imgClass}`}
+        initial={{ opacity: 0, scale: 1.15 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 2 }}
+        transition={{ duration: 1.5 }}
       />}
       <div className="ceremony-content">
         <motion.div style={{ fontSize: 80, marginBottom: 12 }}
