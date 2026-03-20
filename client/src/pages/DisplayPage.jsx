@@ -422,11 +422,7 @@ export default function DisplayPage() {
 
               {/* CENTER: Logo + Motto */}
               <div className="dsp-center-brand">
-                <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul"
-                  className="dsp-center-logo"
-                  animate={{ scale: [1, 1.03, 1] }}
-                  transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-                />
+                <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="dsp-center-logo" />
                 <div className="dsp-center-motto">Request · Vote · Dance</div>
               </div>
 

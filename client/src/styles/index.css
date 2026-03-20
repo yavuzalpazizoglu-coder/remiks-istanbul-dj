@@ -791,27 +791,26 @@ input, textarea { font-family: inherit; }
 }
 
 .dsp-card {
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(16px);
   display: flex; flex-direction: column;
   overflow: hidden;
 }
 
 .dsp-list-card {
   flex: 1; min-width: 0;
-  padding: 12px 14px;
+  padding: 10px 12px;
 }
 
 .dsp-card-title {
   font-family: var(--font-display);
-  font-size: 15px; font-weight: 700;
-  padding: 0 0 8px;
+  font-size: 14px; font-weight: 700;
+  padding: 0 0 6px;
   color: var(--text-secondary);
   flex-shrink: 0;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 4px;
 }
 
 .dsp-table-empty {
@@ -824,125 +823,123 @@ input, textarea { font-family: inherit; }
 
 /* CENTER: Logo + Motto */
 .dsp-center-brand {
-  width: 180px; flex-shrink: 0;
+  width: 200px; flex-shrink: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 14px;
+  gap: 16px;
 }
 .dsp-center-logo {
-  height: 80px; width: auto;
-  filter: drop-shadow(0 0 20px rgba(0,212,255,0.2));
+  height: 90px; width: auto;
+  filter: drop-shadow(0 0 24px rgba(0,212,255,0.35))
+         drop-shadow(0 0 50px rgba(184,41,221,0.2));
+  animation: logoBreathe 3s ease-in-out infinite;
+}
+@keyframes logoBreathe {
+  0%, 100% { filter: drop-shadow(0 0 24px rgba(0,212,255,0.35)) drop-shadow(0 0 50px rgba(184,41,221,0.2)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 36px rgba(0,212,255,0.5)) drop-shadow(0 0 70px rgba(184,41,221,0.35)); transform: scale(1.03); }
 }
 .dsp-center-motto {
   font-family: var(--font-display);
-  font-size: 12px; font-weight: 600;
-  letter-spacing: 3px; text-transform: uppercase;
-  color: var(--text-muted);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+  background-clip: text; -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-align: center;
 }
 
 .dsp-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 3px;
+  border-spacing: 0 2px;
 }
 
 .dtable-row {
-  background: var(--bg-glass);
-  backdrop-filter: blur(10px);
+  background: transparent;
   transition: all var(--transition-fast);
 }
-.dtable-row:hover { background: var(--bg-glass-strong); }
-.dtable-top3 {
-  background: rgba(0,212,255,0.04);
-  border-left: 2px solid transparent;
-}
-.dtable-first {
-  background: rgba(255,0,128,0.06);
-}
+.dtable-row:hover { background: rgba(255,255,255,0.02); }
+.dtable-top3 { background: rgba(0,212,255,0.03); }
+.dtable-first { background: rgba(255,0,128,0.04); }
 
 .dtable-row td {
-  padding: 6px 8px;
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
   vertical-align: middle;
 }
+.dtable-top3 td { padding: 5px 6px; }
 .dtable-row td:first-child {
-  border-left: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-  width: 36px; text-align: center;
+  width: 28px; text-align: center;
+  border-left: 2px solid transparent;
+  border-radius: 4px 0 0 4px;
 }
-.dtable-top3 td:first-child { border-left: 2px solid var(--neon-cyan); }
-.dtable-first td:first-child { border-left: 2px solid var(--neon-pink); }
-.dtable-row td:last-child {
-  border-right: 1px solid var(--border-subtle);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
+.dtable-top3 td:first-child { border-left-color: var(--neon-cyan); }
+.dtable-first td:first-child { border-left-color: var(--neon-pink); }
 
 .dtable-rank {
   font-family: var(--font-display);
-  font-weight: 800; font-size: 14px;
+  font-weight: 800; font-size: 12px;
   color: var(--text-muted);
 }
 .dtable-rank.rank-1 { color: var(--neon-pink); }
 .dtable-rank.rank-2 { color: var(--neon-cyan); }
 .dtable-rank.rank-3 { color: var(--neon-purple); }
-.dtable-medal { font-size: 18px; }
+.dtable-medal { font-size: 14px; }
 
-.dtable-art-cell { width: 40px; padding: 4px 6px !important; }
+.dtable-art-cell { width: 32px; padding: 3px 4px !important; }
 .dtable-art {
-  width: 36px; height: 36px; border-radius: 6px;
+  width: 28px; height: 28px; border-radius: 4px;
   object-fit: cover; display: block;
 }
 .dtable-art-ph {
-  width: 36px; height: 36px; border-radius: 6px;
-  background: var(--bg-glass-strong);
+  width: 28px; height: 28px; border-radius: 4px;
+  background: rgba(255,255,255,0.04);
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
+  font-size: 12px;
 }
 .dtable-top3 .dtable-art, .dtable-top3 .dtable-art-ph {
-  width: 44px; height: 44px;
+  width: 34px; height: 34px;
 }
 
 .dtable-info-cell { min-width: 0; }
 .dtable-song {
-  font-weight: 600; font-size: 14px;
+  font-weight: 600; font-size: 12px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  max-width: 50vw;
+  max-width: 30vw;
 }
-.dtable-song-lg { font-size: 17px; font-weight: 700; }
+.dtable-song-lg { font-size: 14px; font-weight: 700; }
 .dtable-artist {
-  font-size: 11px; color: var(--text-secondary);
+  font-size: 10px; color: var(--text-secondary);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.dtable-top3 .dtable-artist { font-size: 12px; }
+.dtable-top3 .dtable-artist { font-size: 11px; }
 
 .dtable-votes-cell {
-  text-align: center; width: 60px;
+  text-align: center; width: 44px;
 }
 .dtable-votes {
   font-family: var(--font-display);
-  font-weight: 800; font-size: 16px;
+  font-weight: 800; font-size: 14px;
   color: var(--neon-cyan);
   display: block;
 }
-.dtable-votes-lg { font-size: 20px; }
+.dtable-votes-lg { font-size: 17px; }
 .dtable-vote-label {
-  font-size: 9px; color: var(--text-muted);
+  font-size: 8px; color: var(--text-muted);
   text-transform: uppercase; letter-spacing: 0.5px;
 }
-.dtable-badge-cell { width: 30px; text-align: center; }
+.dtable-badge-cell { width: 24px; text-align: center; }
 
 /* RIGHT: QR Card */
 .dsp-qr-card {
   width: 220px; flex-shrink: 0;
   align-items: center; justify-content: center;
-  gap: 12px; padding: 20px 16px;
+  gap: 12px; padding: 16px;
 }
 .dsp-qr-box {
-  padding: 10px; background: #fff;
+  padding: 8px; background: #fff;
   border-radius: var(--radius-md);
-  box-shadow: 0 0 30px rgba(0,212,255,0.15);
+  box-shadow: 0 0 24px rgba(0,212,255,0.12);
 }
 .dsp-qr-label {
   font-family: var(--font-display);
