@@ -286,8 +286,8 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
               transition={{ delay: 0.5 + i * 0.3, duration: 0.8, type: 'spring' }}>
               <div className="mm-dj-img-wrap">
                 <img src={dj.src} alt={dj.name} className="mm-dj-img" />
-                <span className="mm-dj-live-badge"><span className="mm-dj-live-dot" />LIVE</span>
               </div>
+              <span className="mm-dj-live-badge"><span className="mm-dj-live-dot" />LIVE</span>
               <span className="mm-dj-name">{dj.name}</span>
             </motion.div>
           ))}
