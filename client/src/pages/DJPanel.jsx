@@ -222,9 +222,8 @@ export default function DJPanel() {
 
   // ─── Main DJ Panel ───
 
-  const nowPlaying = requests.find(r => r.status === 'playing');
   const pendingRequests = requests.filter(r => r.status === 'pending' || r.status === 'approved');
-  const playedRequests = requests.filter(r => r.status === 'played');
+  const rejectedCount = requests.filter(r => r.status === 'rejected').length;
   const totalVotes = requests.reduce((sum, r) => sum + r.votes, 0);
 
   return (
@@ -279,22 +278,22 @@ export default function DJPanel() {
 
       {/* Stats */}
       <div className="dj-stats">
-        <div className="stat-card">
-          <div className="stat-value">{requests.length}</div>
+        <div className="stat-card glass">
+          <div className="stat-value">{pendingRequests.length}</div>
           <div className="stat-label">{T('dj.total_requests')}</div>
         </div>
-        <div className="stat-card">
+        <div className="stat-card glass">
           <div className="stat-value">{totalVotes}</div>
           <div className="stat-label">{T('dj.total_votes')}</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-value">{playedRequests.length}</div>
-          <div className="stat-label">{T('dj.mark_played')}</div>
+        <div className="stat-card glass">
+          <div className="stat-value">{rejectedCount}</div>
+          <div className="stat-label">{T('dj.reject')}</div>
         </div>
       </div>
 
       {/* QR Code + Links */}
-      <div className="dj-qr-section">
+      <div className="dj-qr-section glass">
         <QRCodeSVG value={requestUrl} size={100} bgColor="#ffffff" fgColor="#000000" level="M" />
         <div className="dj-qr-info">
           <div style={{ fontWeight: 600, fontSize: 14 }}>{T('dj.qr_code')}</div>
@@ -316,23 +315,6 @@ export default function DJPanel() {
         </div>
       </div>
 
-      {/* Now Playing */}
-      {nowPlaying && (
-        <motion.div className="card" style={{ marginBottom: 20, borderColor: 'rgba(0,255,136,0.2)' }} initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-          <div className="now-playing-label">♫ {T('request.now_playing')}</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
-            {nowPlaying.album_art ? <img src={nowPlaying.album_art} alt="" className="song-album-art" /> : <div className="song-album-art-placeholder">🎵</div>}
-            <div style={{ flex: 1 }}>
-              <div className="song-name">{nowPlaying.song_name}</div>
-              {nowPlaying.artist && <div className="song-artist">{nowPlaying.artist}</div>}
-            </div>
-            <button className="btn btn-small btn-ghost" onClick={() => updateRequestStatus(nowPlaying.id, 'played')}>
-              ✓ {T('dj.mark_played')}
-            </button>
-          </div>
-        </motion.div>
-      )}
-
       {/* Request List */}
       <div className="section-title">
         <span>🎵</span> {T('dj.requests_list')} ({pendingRequests.length})
@@ -349,7 +331,7 @@ export default function DJPanel() {
             {pendingRequests.map((req, idx) => (
               <motion.div
                 key={req.id}
-                className="dj-song-card"
+                className="dj-song-card glass"
                 layout
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -371,12 +353,9 @@ export default function DJPanel() {
                 <div className="dj-card-actions">
                   {req.status === 'pending' && (
                     <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')}>
-                      {T('dj.approve')}
+                      ✓ {T('dj.approve')}
                     </button>
                   )}
-                  <button className="btn btn-small btn-primary" onClick={() => updateRequestStatus(req.id, 'playing')}>
-                    🎵 {T('dj.play_now')}
-                  </button>
                   <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ fontSize: 14, padding: '6px 10px' }}>
                     ✕
                   </button>

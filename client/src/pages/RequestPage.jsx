@@ -206,8 +206,7 @@ export default function RequestPage() {
   if (loading) return <div className="status-overlay"><div className="icon">🎧</div></div>;
   if (error) return <div className="status-overlay"><div className="icon">😕</div><h2>Oops</h2><p>{error}</p></div>;
 
-  const nowPlaying = requests.find(r => r.status === 'playing');
-  const visibleRequests = requests.filter(r => r.status !== 'playing');
+  const visibleRequests = requests.filter(r => r.status !== 'rejected' && r.status !== 'played');
   const remaining = 3 - requestCount;
   const canRequest = remaining > 0 && ['active', 'countdown'].includes(event.status);
 
@@ -329,23 +328,6 @@ export default function RequestPage() {
             >
               {submitting ? T('request.sending') : T('request.send')}
             </motion.button>
-          </div>
-        </div>
-      )}
-
-      {nowPlaying && (
-        <div className="now-playing-mobile">
-          <div className="now-playing-label">♫ {T('request.now_playing')}</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {nowPlaying.album_art ? (
-              <img src={nowPlaying.album_art} alt="" className="song-album-art" />
-            ) : (
-              <div className="song-album-art-placeholder">🎵</div>
-            )}
-            <div>
-              <div className="song-name">{nowPlaying.song_name}</div>
-              {nowPlaying.artist && <div className="song-artist">{nowPlaying.artist}</div>}
-            </div>
           </div>
         </div>
       )}
