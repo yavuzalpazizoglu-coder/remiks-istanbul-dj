@@ -628,8 +628,6 @@ export default function DisplayPage() {
   };
   const tc = themeColors[theme] || themeColors.cyan;
 
-  const totalGenre = genreStats.reduce((s, g) => s + g.count, 0);
-
   return (
     <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
       <div className="display-bg" />
