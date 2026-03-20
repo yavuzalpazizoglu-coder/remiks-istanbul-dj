@@ -772,7 +772,7 @@ input, textarea { font-family: inherit; }
 .dsp-topbar-right { flex-shrink: 0; position: absolute; right: 28px; top: 16px; }
 
 .dsp-brand-logo {
-  height: 60px; width: auto;
+  height: 80px; width: auto;
 }
 .dsp-brand-motto {
   font-family: var(--font-display);
