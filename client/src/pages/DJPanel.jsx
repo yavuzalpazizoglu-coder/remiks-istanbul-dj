@@ -431,7 +431,11 @@ export default function DJPanel() {
       )}
       {/* ─── Row 1: Header + Status + Lang ─── */}
       <div className="djc-row1">
-        <img src="/logos/logo-white.png" alt="" style={{ height: 32 }} />
+        <div className="djc-brand-block">
+          <img src="/logos/logo-white.png" alt="" style={{ height: 28 }} />
+          <span className="djc-remiksbox">RemiksBox</span>
+        </div>
+        <div className="djc-row1-divider" />
         <span className="djc-event-name">{event.name}</span>
         <span className="djc-slug">/{slug}</span>
         <div style={{ flex: 1 }} />
@@ -507,7 +511,7 @@ export default function DJPanel() {
       </div>
 
       {/* ─── Music Mode Controls ─── */}
-      <div className="djc-ceremony-bar" style={{ marginTop: 4 }}>
+      <div className="djc-ceremony-bar">
         <span className="djc-limit-label">{lang === 'tr' ? '🎵 Müzik Modu:' : '🎵 Music Mode:'}</span>
         <div className="djc-dj-photos-row">
           <span className="djc-djphoto-label">{lang === 'tr' ? '📸 DJ Fotoğrafları:' : '📸 DJ Photos:'}</span>
