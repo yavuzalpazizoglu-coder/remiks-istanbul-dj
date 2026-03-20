@@ -239,7 +239,7 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
         setTimeout(() => {
           const requests = db.getRequests(event.id);
           io.to(event.slug).emit('list-updated', requests);
-        }, 10000);
+        }, 40000);
       } else {
         if (status === 'playing') {
           io.to(event.slug).emit('now-playing', updated);

@@ -318,11 +318,11 @@ function SongRow({ req, rank, lang, isPlayed }) {
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       initial={{ opacity: 0, x: -30 }}
-      animate={isPlayed ? { opacity: [1, 1, 0], x: 0, scale: [1, 1.02, 0.95] } : { opacity: 1, x: 0 }}
-      {...(isPlayed ? { transition: { duration: 10, times: [0, 0.85, 1] } } : {})}
+      animate={isPlayed ? { opacity: [1, 1, 1, 0], x: 0, scale: [1, 1.02, 1.02, 0.8] } : { opacity: 1, x: 0 }}
+      {...(isPlayed ? { transition: { duration: 40, times: [0, 0.1, 0.85, 1] } } : {})}
     >
       <td className={`dtable-rank rank-${rank}`}>
-        {isPlayed ? <span className="dtable-medal">🎶</span> : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
+        {isPlayed ? <span className="dtable-medal">🔥</span> : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
       </td>
       <td className="dtable-art-cell">
         {req.album_art
@@ -333,7 +333,7 @@ function SongRow({ req, rank, lang, isPlayed }) {
       <td className="dtable-info-cell">
         <div className={`dtable-song ${isTop3 ? 'dtable-song-lg' : ''}`}>{req.song_name}</div>
         {req.artist && <div className="dtable-artist">{req.artist}</div>}
-        {isPlayed && <div className="dtable-played-label">{lang === 'tr' ? '🎶 Çalınıyor!' : '🎶 Now Playing!'}</div>}
+        {isPlayed && <div className="dtable-played-label">{lang === 'tr' ? '🔥 Çalınıyor!' : '🔥 Now Playing!'}</div>}
       </td>
       <td className="dtable-votes-cell">
         <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -508,7 +508,7 @@ export default function DisplayPage() {
 
     socket.on('request-played', (req) => {
       setPlayedId(req.id);
-      setTimeout(() => setPlayedId(null), 10000);
+      setTimeout(() => setPlayedId(null), 40000);
     });
 
     socket.on('event-status', ({ status, countdown_end }) => {

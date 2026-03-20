@@ -2051,38 +2051,116 @@ input, textarea { font-family: inherit; }
   text-shadow: 0 0 20px rgba(184, 41, 221, 0.3);
 }
 
-/* ─── Played Animation ─── */
+/* ─── Played Animation: Fire Effect ─── */
 
 .dtable-played {
   position: relative;
-  background: rgba(0, 255, 136, 0.1) !important;
-  border: 1px solid rgba(0, 255, 136, 0.4) !important;
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(0, 255, 136, 0.1), inset 0 0 20px rgba(0, 255, 136, 0.05);
-  animation: playedGlow 1.5s ease-in-out infinite;
+  overflow: visible;
+  background: rgba(255, 100, 0, 0.08) !important;
+  border: 2px solid rgba(255, 80, 0, 0.6) !important;
+  animation: fireGlow 1s ease-in-out infinite, fireBurnAway 40s ease-in forwards;
 }
 
-@keyframes playedGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(0, 255, 136, 0.1); }
-  50% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.5), 0 0 60px rgba(0, 255, 136, 0.2), 0 0 80px rgba(0, 212, 255, 0.1); }
+.dtable-played::before,
+.dtable-played::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dtable-played::before {
+  background: linear-gradient(90deg,
+    rgba(255, 60, 0, 0.5),
+    rgba(255, 160, 0, 0.6),
+    rgba(255, 60, 0, 0.5),
+    rgba(255, 200, 0, 0.5),
+    rgba(255, 60, 0, 0.5));
+  background-size: 300% 100%;
+  animation: fireFlames 1.5s ease-in-out infinite;
+  filter: blur(4px);
+}
+
+.dtable-played::after {
+  background: linear-gradient(0deg,
+    rgba(255, 60, 0, 0.4),
+    rgba(255, 120, 0, 0.2),
+    transparent 60%);
+  animation: fireRise 2s ease-in-out infinite alternate;
+  filter: blur(6px);
+}
+
+@keyframes fireGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 10px rgba(255, 80, 0, 0.4),
+      0 0 25px rgba(255, 120, 0, 0.2),
+      inset 0 0 10px rgba(255, 60, 0, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(255, 80, 0, 0.6),
+      0 0 45px rgba(255, 120, 0, 0.3),
+      0 0 60px rgba(255, 200, 0, 0.15),
+      inset 0 0 15px rgba(255, 60, 0, 0.15);
+  }
+}
+
+@keyframes fireFlames {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fireRise {
+  0% { opacity: 0.4; transform: scaleY(0.8); }
+  100% { opacity: 0.8; transform: scaleY(1.2); }
+}
+
+@keyframes fireBurnAway {
+  0% { filter: brightness(1); }
+  75% { filter: brightness(1); transform: scale(1); }
+  85% {
+    filter: brightness(1.5) saturate(2);
+    box-shadow: 0 0 40px rgba(255, 80, 0, 0.8), 0 0 80px rgba(255, 120, 0, 0.5);
+  }
+  92% {
+    filter: brightness(2) saturate(3);
+    transform: scale(1.03);
+    box-shadow: 0 0 60px rgba(255, 80, 0, 1), 0 0 100px rgba(255, 160, 0, 0.7);
+  }
+  100% {
+    filter: brightness(3) saturate(0);
+    transform: scale(0.9);
+    opacity: 0;
+  }
 }
 
 .dtable-played .dtable-song {
-  color: #00ff88 !important;
+  color: #ff8800 !important;
+  text-shadow: 0 0 8px rgba(255, 120, 0, 0.5);
+}
+
+.dtable-played .dtable-votes {
+  color: #ff6600 !important;
 }
 
 .dtable-played-label {
   font-size: 13px;
   font-weight: 800;
-  color: #00ff88;
+  color: #ff6600;
   margin-top: 2px;
   letter-spacing: 1px;
   text-transform: uppercase;
-  animation: playedTextPulse 0.8s ease-in-out infinite;
+  animation: fireTextPulse 0.6s ease-in-out infinite;
+  text-shadow: 0 0 10px rgba(255, 100, 0, 0.6);
 }
 
-@keyframes playedTextPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+@keyframes fireTextPulse {
+  0%, 100% { opacity: 1; color: #ff6600; }
+  50% { opacity: 0.8; color: #ffaa00; }
 }
 
 /* ─── Socket Warning ─── */
