@@ -263,7 +263,7 @@ const MUSIC_MODE_CONFIG = {
   },
 };
 
-function MusicModeOverlay({ mode, lang }) {
+function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
   const cfg = MUSIC_MODE_CONFIG[mode];
   if (!cfg) return null;
 
@@ -277,6 +277,21 @@ function MusicModeOverlay({ mode, lang }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.5 }}
       />}
+      {djPhotos.length > 0 && (
+        <div className="mm-dj-photos">
+          {djPhotos.map((dj, i) => (
+            <motion.div key={dj.id} className={`mm-dj-card mm-dj-${i === 0 ? 'left' : 'right'}`}
+              initial={{ opacity: 0, y: 40, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.5 + i * 0.3, duration: 0.8, type: 'spring' }}>
+              <div className="mm-dj-img-wrap">
+                <img src={dj.src} alt={dj.name} className="mm-dj-img" />
+              </div>
+              <span className="mm-dj-name">{dj.name}</span>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -456,6 +471,7 @@ export default function DisplayPage() {
   const [animLevel, setAnimLevel] = useState('high');
   const [genreStats, setGenreStats] = useState([]);
   const [activeMusicMode, setActiveMusicMode] = useState(null);
+  const [modeDJPhotos, setModeDJPhotos] = useState([]);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -546,8 +562,9 @@ export default function DisplayPage() {
     socket.on('theme-changed', ({ theme }) => setTheme(theme));
     socket.on('animation-changed', ({ level }) => setAnimLevel(level));
 
-    socket.on('music-mode', ({ mode, active }) => {
+    socket.on('music-mode', ({ mode, active, djPhotos }) => {
       setActiveMusicMode(active ? mode : null);
+      setModeDJPhotos(active && Array.isArray(djPhotos) ? djPhotos : []);
     });
 
     socket.on('room-count', ({ count }) => setConnectedCount(count));
@@ -783,7 +800,7 @@ export default function DisplayPage() {
         {/* ─── MUSIC MODE OVERLAY ─── */}
         <AnimatePresence>
           {activeMusicMode && !openingActive && !closingActive && (
-            <MusicModeOverlay mode={activeMusicMode} lang={lang} />
+            <MusicModeOverlay mode={activeMusicMode} lang={lang} djPhotos={modeDJPhotos} />
           )}
         </AnimatePresence>
 

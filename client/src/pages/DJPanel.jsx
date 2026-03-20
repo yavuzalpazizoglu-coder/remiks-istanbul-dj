@@ -36,6 +36,7 @@ export default function DJPanel() {
   const [closingOn, setClosingOn] = useState(false);
   const [ceremonyMinutes, setCeremonyMinutes] = useState(10);
   const [activeMusicMode, setActiveMusicMode] = useState(null);
+  const [selectedDJs, setSelectedDJs] = useState([]);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
 
@@ -284,15 +285,25 @@ export default function DJPanel() {
     { id: 'rap', icon: '🎤', tr: 'Remiks Rap', en: 'Remiks Rap' },
   ];
 
+  const DJ_PHOTOS = [
+    { id: 'derin', name: 'DJ Derin', src: '/logos/dj-derin.png' },
+    { id: 'alp', name: 'DJ Alp', src: '/logos/dj-alp.png' },
+  ];
+
+  const toggleDJPhoto = (djId) => {
+    setSelectedDJs(prev => prev.includes(djId) ? prev.filter(d => d !== djId) : [...prev, djId]);
+  };
+
   const toggleMusicMode = async (modeId) => {
     const isActive = activeMusicMode === modeId;
     const newMode = isActive ? null : modeId;
     setActiveMusicMode(newMode);
+    const djPhotos = selectedDJs.map(id => DJ_PHOTOS.find(d => d.id === id)).filter(Boolean);
     try {
       await fetch(`${API}/api/events/${slug}/music-mode`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
-        body: JSON.stringify({ mode: modeId, active: !isActive }),
+        body: JSON.stringify({ mode: modeId, active: !isActive, djPhotos: !isActive ? djPhotos : [] }),
       });
     } catch (err) { console.warn('toggleMusicMode failed:', err); }
   };
@@ -498,6 +509,17 @@ export default function DJPanel() {
       {/* ─── Music Mode Controls ─── */}
       <div className="djc-ceremony-bar" style={{ marginTop: 4 }}>
         <span className="djc-limit-label">{lang === 'tr' ? '🎵 Müzik Modu:' : '🎵 Music Mode:'}</span>
+        <div className="djc-dj-photos-row">
+          <span className="djc-djphoto-label">{lang === 'tr' ? '📸 DJ Fotoğrafları:' : '📸 DJ Photos:'}</span>
+          {DJ_PHOTOS.map(dj => (
+            <button key={dj.id}
+              className={`btn djc-djphoto-btn ${selectedDJs.includes(dj.id) ? 'active' : ''}`}
+              onClick={() => toggleDJPhoto(dj.id)}>
+              <img src={dj.src} alt={dj.name} className="djc-djphoto-thumb" />
+              <span>{dj.name}</span>
+            </button>
+          ))}
+        </div>
         <div className="djc-ceremony-btns" style={{ flexWrap: 'wrap' }}>
           {MUSIC_MODES.map(m => (
             <button key={m.id}

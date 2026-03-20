@@ -312,10 +312,11 @@ app.post('/api/events/:slug/ceremony', djAuth, (req, res) => {
 
 app.post('/api/events/:slug/music-mode', djAuth, (req, res) => {
   try {
-    const { mode, active } = req.body;
+    const { mode, active, djPhotos } = req.body;
     const validModes = ['arabesk', 'rock', '90s-pop', 'turkish-delight', 'tech', 'latino', 'rap'];
     if (!validModes.includes(mode)) return res.status(400).json({ error: 'Invalid mode' });
     const payload = { mode, active: !!active };
+    if (Array.isArray(djPhotos)) payload.djPhotos = djPhotos;
     if (active) {
       activeMusicModes.set(req.params.slug, payload);
     } else {
