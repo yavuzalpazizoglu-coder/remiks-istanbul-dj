@@ -75,6 +75,12 @@
     "ended": "Thank You!",
     "ended_sub": "Thanks for being with us tonight",
     "no_requests": "Send the first request!",
-    "click_fullscreen": "Click for fullscreen"
+    "click_fullscreen": "Click for fullscreen",
+    "summary_title": "Tonight's Recap",
+    "summary_total_requests": "Total Requests",
+    "summary_total_votes": "Total Votes",
+    "summary_most_requested": "Most Requested",
+    "summary_most_voted": "Most Voted",
+    "summary_thanks": "Thank you for being part of tonight!"
   }
 }

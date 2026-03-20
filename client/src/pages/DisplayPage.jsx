@@ -132,7 +132,7 @@ function PodiumCard({ req, rank, lang }) {
   );
 }
 
-function RestItem({ req, rank }) {
+function GridItem({ req, rank }) {
   const [shaking, setShaking] = useState(false);
   const prevVotes = useRef(req.votes);
   useEffect(() => {
@@ -141,21 +141,66 @@ function RestItem({ req, rank }) {
   }, [req.votes]);
 
   return (
-    <motion.div className={`display-rest-item ${shaking ? 'animate-shake' : ''}`}
+    <motion.div className={`display-grid-item ${shaking ? 'animate-shake' : ''}`}
       layout transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-      initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }}>
-      <span className="song-rank">{rank}</span>
-      {req.album_art ? <img src={req.album_art} alt="" className="song-album-art" /> : <div className="song-album-art-placeholder">🎵</div>}
-      <div className="song-info">
-        <div className="song-name">{req.song_name}</div>
-        {req.artist && <div className="song-artist">{req.artist}</div>}
+      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      style={{ animationDelay: `${(rank - 4) * 0.05}s` }}
+    >
+      <span className="display-grid-rank">{rank}</span>
+      {req.album_art
+        ? <img src={req.album_art} alt="" className="display-grid-art" />
+        : <div className="display-grid-art-ph">🎵</div>
+      }
+      <div className="display-grid-info">
+        <div className="display-grid-song">{req.song_name}</div>
+        {req.artist && <div className="display-grid-artist">{req.artist}</div>}
       </div>
       <div style={{ position: 'relative' }}>
         <VoteFloat count={req.votes} />
-        <div className="display-rest-vote">{req.votes}</div>
+        <span className="display-grid-votes">{req.votes}</span>
       </div>
-      {req.votes >= 10 && <span className="fire-icon" style={{ fontSize: 16 }}>🔥</span>}
     </motion.div>
+  );
+}
+
+function EventSummary({ requests, lang }) {
+  const totalRequests = requests.length;
+  const totalVotes = requests.reduce((sum, r) => sum + r.votes, 0);
+  const sorted = [...requests].sort((a, b) => b.votes - a.votes);
+  const topVoted = sorted[0];
+
+  return (
+    <div className="summary-overlay">
+      <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+        <div className="summary-title">{t(lang, 'display.summary_title')}</div>
+      </motion.div>
+
+      <div className="summary-cards">
+        <div className="summary-card">
+          <div className="summary-card-label">{t(lang, 'display.summary_total_requests')}</div>
+          <div className="summary-stat-big">{totalRequests}</div>
+        </div>
+        <div className="summary-card">
+          <div className="summary-card-label">{t(lang, 'display.summary_total_votes')}</div>
+          <div className="summary-stat-big">{totalVotes}</div>
+        </div>
+        {topVoted && (
+          <div className="summary-card">
+            <div className="summary-card-label">{t(lang, 'display.summary_most_voted')}</div>
+            <div className="summary-card-value">{topVoted.song_name}</div>
+            {topVoted.artist && <div className="summary-card-sub">{topVoted.artist}</div>}
+            <div style={{ marginTop: 8, color: 'var(--neon-cyan)', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 20 }}>
+              {topVoted.votes} {t(lang, 'request.votes')}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
+        style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 10 }}>
+        {t(lang, 'display.summary_thanks')}
+      </motion.div>
+    </div>
   );
 }
 
@@ -283,7 +328,7 @@ export default function DisplayPage() {
   if (!event) return <div className="display-page"><div className="display-bg" /></div>;
 
   const top3 = requests.slice(0, 3);
-  const rest = requests.slice(3, 8);
+  const rest = requests.slice(3);
 
   return (
     <div className="display-page">
@@ -382,9 +427,9 @@ export default function DisplayPage() {
                     )}
 
                     {rest.length > 0 && (
-                      <div className="display-rest-list">
+                      <div className="display-grid-list">
                         {rest.map((req, idx) => (
-                          <RestItem key={req.id} req={req} rank={idx + 4} />
+                          <GridItem key={req.id} req={req} rank={idx + 4} />
                         ))}
                       </div>
                     )}
@@ -417,11 +462,7 @@ export default function DisplayPage() {
 
         {/* ─── ENDED ─── */}
         {event.status === 'ended' && (
-          <div className="display-state-center display-ended">
-            <motion.div style={{ fontSize: 72, marginBottom: 16 }} initial={{ scale: 0 }} animate={{ scale: 1, rotate: [0, 10, -10, 0] }} transition={{ duration: 0.8 }}>🎉</motion.div>
-            <h2>{T('display.ended')}</h2>
-            <p>{T('display.ended_sub')}</p>
-          </div>
+          <EventSummary requests={requests} lang={lang} />
         )}
 
         {/* Ticker */}

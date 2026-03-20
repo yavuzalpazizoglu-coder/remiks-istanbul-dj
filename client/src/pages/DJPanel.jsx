@@ -252,10 +252,16 @@ export default function DJPanel() {
         {event.status === 'waiting' && (
           <>
             <button className="btn btn-primary" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <input type="number" className="input" style={{ width: 70, textAlign: 'center' }} value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={60} />
-              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{T('dj.countdown_minutes')}</span>
-              <button className="btn btn-ghost" onClick={startCountdown}>⏱ {T('dj.start_countdown')}</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+              <div className="countdown-presets">
+                {[5, 10, 15, 30].map(m => (
+                  <button key={m} className={`preset-btn ${countdownMinutes === m ? 'active' : ''}`} onClick={() => setCountdownMinutes(m)}>
+                    {m} {T('dj.countdown_minutes')}
+                  </button>
+                ))}
+                <input type="number" className="input" style={{ width: 56, textAlign: 'center', padding: '8px 4px', fontSize: 13 }} value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={120} />
+              </div>
+              <button className="btn btn-ghost" onClick={startCountdown} style={{ width: '100%' }}>⏱ {T('dj.start_countdown')}</button>
             </div>
           </>
         )}
@@ -326,43 +332,50 @@ export default function DJPanel() {
           <p>{T('dj.no_requests')}</p>
         </div>
       ) : (
-        <div className="dj-request-list">
-          <AnimatePresence>
-            {pendingRequests.map((req, idx) => (
-              <motion.div
-                key={req.id}
-                className="dj-song-card glass"
-                layout
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -30 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-              >
-                <span className={`song-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>
-                  {idx + 1}
-                </span>
-                {req.album_art ? <img src={req.album_art} alt="" className="song-album-art" /> : <div className="song-album-art-placeholder">🎵</div>}
-                <div className="song-info">
-                  <div className="song-name">{req.song_name}</div>
-                  {req.artist && <div className="song-artist">{req.artist}</div>}
-                </div>
-                <div className="vote-area">
-                  <span className={`vote-count ${req.votes >= 10 ? 'is-hot' : ''}`} style={{ fontSize: 18, fontWeight: 800 }}>{req.votes}</span>
-                  <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>oy</span>
-                </div>
-                <div className="dj-card-actions">
-                  {req.status === 'pending' && (
-                    <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')}>
-                      ✓ {T('dj.approve')}
-                    </button>
-                  )}
-                  <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ fontSize: 14, padding: '6px 10px' }}>
-                    ✕
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+        <div className="dj-list-scroll">
+          <table className="dj-table">
+            <AnimatePresence>
+              <tbody>
+                {pendingRequests.map((req, idx) => (
+                  <motion.tr
+                    key={req.id}
+                    className="dj-table-row"
+                    layout
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                  >
+                    <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>
+                      {idx + 1}
+                    </td>
+                    <td style={{ width: 40, padding: '6px' }}>
+                      {req.album_art
+                        ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
+                        : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
+                      }
+                    </td>
+                    <td>
+                      <div className="dj-table-song">{req.song_name}</div>
+                      {req.artist && <div className="dj-table-artist">{req.artist}</div>}
+                    </td>
+                    <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>
+                      {req.votes}
+                    </td>
+                    <td className="dj-table-actions">
+                      {req.status === 'pending' && (
+                        <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')}>✓</button>
+                      )}
+                      {req.status === 'approved' && (
+                        <span style={{ fontSize: 10, color: 'var(--neon-cyan)', fontWeight: 600 }}>✓</span>
+                      )}
+                      <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }}>✕</button>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </AnimatePresence>
+          </table>
         </div>
       )}
 

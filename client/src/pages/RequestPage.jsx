@@ -184,7 +184,10 @@ export default function RequestPage() {
     }
   };
 
-  const handleVote = async (requestId) => {
+  const [votedAnimation, setVotedAnimation] = useState(null);
+  const [confettiPos, setConfettiPos] = useState(null);
+
+  const handleVote = async (requestId, e) => {
     if (votedIds.includes(requestId)) return;
     try {
       const res = await fetch(`${API}/api/requests/${requestId}/vote`, {
@@ -194,6 +197,14 @@ export default function RequestPage() {
       });
       if (res.ok) {
         setVotedIds(prev => [...prev, requestId]);
+        setVotedAnimation(requestId);
+        setTimeout(() => setVotedAnimation(null), 600);
+
+        if (e?.currentTarget) {
+          const rect = e.currentTarget.getBoundingClientRect();
+          setConfettiPos({ x: rect.left + rect.width / 2, y: rect.top });
+          setTimeout(() => setConfettiPos(null), 700);
+        }
       }
     } catch {}
   };
@@ -353,7 +364,7 @@ export default function RequestPage() {
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                   initial={{ opacity: 0, x: 40 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className={`song-card ${idx === 0 ? 'is-top-1' : ''}`}
+                  className={`song-card ${idx === 0 ? 'is-top-1' : ''} ${votedAnimation === req.id ? 'song-card-voted' : ''}`}
                 >
                   <span className={`song-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>
                     {idx + 1}
@@ -370,7 +381,7 @@ export default function RequestPage() {
                   <div className="vote-area">
                     <motion.button
                       className={`vote-btn ${votedIds.includes(req.id) ? 'voted' : ''}`}
-                      onClick={() => handleVote(req.id)}
+                      onClick={(e) => handleVote(req.id, e)}
                       whileTap={{ scale: 0.85 }}
                     >
                       ▲
@@ -385,6 +396,25 @@ export default function RequestPage() {
           </LayoutGroup>
         )}
       </div>
+
+      {confettiPos && (
+        <div className="vote-confetti" style={{ left: confettiPos.x, top: confettiPos.y }}>
+          {Array.from({ length: 12 }, (_, i) => {
+            const angle = (i / 12) * 360;
+            const dist = 30 + Math.random() * 40;
+            const dx = Math.cos(angle * Math.PI / 180) * dist;
+            const dy = Math.sin(angle * Math.PI / 180) * dist;
+            const colors = ['#00d4ff', '#b829dd', '#ff0080', '#00ff88', '#ff6b35'];
+            return (
+              <div key={i} className="vote-particle" style={{
+                background: colors[i % colors.length],
+                transform: `translate(${dx}px, ${dy}px)`,
+                animationDelay: `${i * 0.03}s`,
+              }} />
+            );
+          })}
+        </div>
+      )}
 
       <AnimatePresence>
         {toast && (

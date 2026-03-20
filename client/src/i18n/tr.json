@@ -75,6 +75,12 @@
     "ended": "Teşekkürler!",
     "ended_sub": "Bu gece bizimle olduğunuz için teşekkürler",
     "no_requests": "İlk isteği gönder!",
-    "click_fullscreen": "Tam ekran için tıklayın"
+    "click_fullscreen": "Tam ekran için tıklayın",
+    "summary_title": "Gece Özeti",
+    "summary_total_requests": "Toplam İstek",
+    "summary_total_votes": "Toplam Oy",
+    "summary_most_requested": "En Çok İstenen",
+    "summary_most_voted": "En Çok Oylanan",
+    "summary_thanks": "Bu geceyi bizimle paylaştığınız için teşekkürler!"
   }
 }
