@@ -340,7 +340,14 @@ export default function DisplayPage() {
   return (
     <div className="display-page">
       <div className="display-bg" />
-      <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
+      {['active', 'paused'].includes(event.status) && (
+        <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
+      )}
+      {!['active', 'paused'].includes(event.status) && (
+        <div className="dsp-center-hero">
+          <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="dsp-hero-logo" />
+        </div>
+      )}
       <DiscoParticles />
       <LightBeams />
       {showConfetti && <Confetti />}
