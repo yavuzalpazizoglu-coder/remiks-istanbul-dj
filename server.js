@@ -296,8 +296,14 @@ app.post('/api/events/:slug/ceremony', djAuth, (req, res) => {
     const { type, active, minutes } = req.body;
     if (!['opening', 'closing'].includes(type)) return res.status(400).json({ error: 'Invalid type' });
     const endTime = active && minutes ? Date.now() + minutes * 60 * 1000 : null;
-    io.to(req.params.slug).emit('ceremony', { type, active: !!active, endTime });
-    res.json({ ok: true, type, active: !!active, endTime });
+    const payload = { type, active: !!active, endTime };
+    if (active) {
+      activeCeremonies.set(req.params.slug, payload);
+    } else {
+      activeCeremonies.delete(req.params.slug);
+    }
+    io.to(req.params.slug).emit('ceremony', payload);
+    res.json({ ok: true, ...payload });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -338,6 +344,8 @@ app.get('/api/spotify/search', async (req, res) => {
 
 // ─── Socket.io ───
 
+const activeCeremonies = new Map();
+
 function emitRoomCount(eventSlug) {
   const room = io.sockets.adapter.rooms.get(eventSlug);
   const count = room ? room.size : 0;
@@ -350,6 +358,11 @@ io.on('connection', (socket) => {
     socket.data.role = role;
     socket.data.eventSlug = eventSlug;
     emitRoomCount(eventSlug);
+
+    const ceremony = activeCeremonies.get(eventSlug);
+    if (ceremony && ceremony.endTime > Date.now()) {
+      socket.emit('ceremony', ceremony);
+    }
   });
 
   socket.on('disconnect', () => {

@@ -25,7 +25,9 @@
     "or_type_manually": "veya elle yazın",
     "search_spotify": "Spotify'da Ara",
     "countdown_title": "İstekler Başlıyor",
-    "scan_qr": "QR Kodu Tara"
+    "scan_qr": "QR Kodu Tara",
+    "vote_error": "Oy verilemedi",
+    "search_failed": "Arama başarısız"
   },
   "dj": {
     "title": "DJ Kontrol Paneli",

@@ -48,7 +48,7 @@ export default function DJPanel() {
       const res = await fetch(`${API}/api/events/${eventSlug}/requests?all=true`);
       const data = await res.json();
       setRequests(data.requests || []);
-    } catch {}
+    } catch (err) { console.warn('fetchRequests failed:', err); }
   }, []);
 
   const loadEvent = useCallback(async (eventSlug) => {
@@ -171,7 +171,7 @@ export default function DJPanel() {
         body: JSON.stringify({ language: newLang }),
       });
       if (res.ok) setLang(newLang);
-    } catch {}
+    } catch (err) { console.warn('changeLang failed:', err); }
   };
 
   const updateRequestStatus = async (requestId, status) => {
@@ -181,7 +181,7 @@ export default function DJPanel() {
         body: JSON.stringify({ status }),
       });
       if (res.ok) await fetchRequests(slug);
-    } catch {}
+    } catch (err) { showToast(lang === 'tr' ? 'İşlem başarısız' : 'Action failed'); }
   };
 
   const saveBrandText = useCallback(async (text) => {
@@ -211,7 +211,7 @@ export default function DJPanel() {
         headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
         body: JSON.stringify({ tickerTexts: text }),
       });
-    } catch {} finally {
+    } catch (err) { console.warn('saveTickerTexts failed:', err); } finally {
       setTickerSaving(false);
     }
   }, [slug, password]);
@@ -224,7 +224,7 @@ export default function DJPanel() {
         headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
         body: JSON.stringify({ requestLimit: limit }),
       });
-    } catch {}
+    } catch (err) { console.warn('updateRequestLimit failed:', err); }
   };
 
   const changeTheme = async (newTheme) => {
@@ -235,7 +235,7 @@ export default function DJPanel() {
         headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
         body: JSON.stringify({ theme: newTheme }),
       });
-    } catch {}
+    } catch (err) { console.warn('changeTheme failed:', err); }
   };
 
   const sendCeremony = async (type, active, minutes) => {
@@ -245,7 +245,7 @@ export default function DJPanel() {
         headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
         body: JSON.stringify({ type, active, minutes: active ? minutes : 0 }),
       });
-    } catch {}
+    } catch (err) { console.warn('sendCeremony failed:', err); }
   };
 
   const toggleCeremony = async (type) => {
@@ -270,7 +270,7 @@ export default function DJPanel() {
         headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
         body: JSON.stringify({ level }),
       });
-    } catch {}
+    } catch (err) { console.warn('changeAnimationLevel failed:', err); }
   };
 
   const handleTickerChange = (val) => {
@@ -298,7 +298,7 @@ export default function DJPanel() {
         const data = await res.json();
         setEventHistory(data);
       }
-    } catch {}
+    } catch (err) { console.warn('fetchHistory failed:', err); }
   }, [password]);
 
   // ─── Create / Connect Form ───
@@ -337,7 +337,7 @@ export default function DJPanel() {
           <div className="connect-section">
             <div className="connect-row">
               <input className="input" placeholder={T('dj.enter_slug')} value={connectSlug} onChange={(e) => setConnectSlug(e.target.value)} />
-              <button className="btn btn-ghost" onClick={() => loadEvent(connectSlug)}>{T('dj.connect')}</button>
+              <button className="btn btn-ghost" onClick={() => { if (connectSlug.trim()) loadEvent(connectSlug.trim()); }}>{T('dj.connect')}</button>
             </div>
           </div>
 

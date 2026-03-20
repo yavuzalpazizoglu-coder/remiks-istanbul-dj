@@ -397,7 +397,7 @@ export default function DisplayPage() {
       setRequests((reqData.requests || []).filter(r => r.status !== 'rejected' && r.status !== 'played'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
       fetch(`${API}/api/events/${slug}/genres`).then(r => r.json()).then(d => setGenreStats(d)).catch(() => {});
-    } catch {}
+    } catch (err) { console.warn('DisplayPage fetchData failed:', err); }
   }, [slug]);
 
   useEffect(() => { fetchData(); }, [fetchData]);

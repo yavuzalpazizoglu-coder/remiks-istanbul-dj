@@ -25,7 +25,9 @@
     "or_type_manually": "or type manually",
     "search_spotify": "Search on Spotify",
     "countdown_title": "Requests Starting",
-    "scan_qr": "Scan QR Code"
+    "scan_qr": "Scan QR Code",
+    "vote_error": "Could not vote",
+    "search_failed": "Search failed"
   },
   "dj": {
     "title": "DJ Control Panel",
