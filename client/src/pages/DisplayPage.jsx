@@ -118,6 +118,8 @@ function OpeningOverlay({ lang, brandText, countdown }) {
         <div className="ceremony-spot spot-right" />
         <div className="ceremony-spot spot-center" />
       </div>
+      <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul" className="ceremony-logo"
+        initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} />
       <div className="ceremony-content">
         <motion.div className="ceremony-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, delay: 0.3 }} />
         <motion.div className="ceremony-pre" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
@@ -172,6 +174,8 @@ function ClosingOverlay({ lang, brandText, countdown }) {
           }} />
         ))}
       </div>
+      <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul" className="ceremony-logo"
+        initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} />
       <div className="ceremony-content">
         <motion.div className="ceremony-line closing-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.5, delay: 0.3 }} />
         <motion.div className="ceremony-pre closing-pre" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
@@ -268,11 +272,11 @@ function MusicModeOverlay({ mode, lang }) {
       style={{ background: cfg.bg }}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1 } }}>
       <div className="mm-border-frame" style={{ '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }} />
-      {cfg.image && <img src={cfg.image} alt="" className="mm-bg-image" />}
-      <div className="ceremony-spotlights">
-        <div className="ceremony-spot spot-left" style={{ background: `linear-gradient(180deg, ${cfg.color1}, transparent 80%)` }} />
-        <div className="ceremony-spot spot-right" style={{ background: `linear-gradient(180deg, ${cfg.color3}, transparent 80%)` }} />
-      </div>
+      {cfg.image && <motion.img src={cfg.image} alt="" className="mm-bg-image"
+        initial={{ opacity: 0, scale: 1.1 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 2 }}
+      />}
       <div className="ceremony-content">
         <motion.div style={{ fontSize: 80, marginBottom: 12 }}
           initial={{ scale: 0 }} animate={{ scale: [0, 1.3, 1] }}
@@ -291,17 +295,6 @@ function MusicModeOverlay({ mode, lang }) {
         </motion.div>
         <motion.div className="mm-line" style={{ background: `linear-gradient(90deg, transparent, ${cfg.color1}, transparent)` }}
           initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 1.5 }} />
-      </div>
-      <div className="ceremony-particles">
-        {Array.from({ length: 25 }, (_, i) => (
-          <div key={i} className="ceremony-spark" style={{
-            left: `${Math.random() * 100}%`,
-            background: cfg.sparkColor,
-            boxShadow: `0 0 6px ${cfg.sparkColor}`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${3 + Math.random() * 4}s`,
-          }} />
-        ))}
       </div>
     </motion.div>
   );
