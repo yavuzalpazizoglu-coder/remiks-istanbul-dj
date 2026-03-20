@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import socket from '../socket.js';
 import useSocketStatus from '../useSocketStatus.js';
@@ -546,11 +546,13 @@ export default function DisplayPage() {
     socket.on('ceremony', ({ type, active, endTime }) => {
       if (type === 'opening') {
         setOpeningActive(active);
+        if (active) setClosingActive(false);
         setCeremonyEnd(active && endTime ? endTime : null);
         if (active) { setShowConfetti(true); setTimeout(() => setShowConfetti(false), 10000); }
       }
       if (type === 'closing') {
         setClosingActive(active);
+        if (active) setOpeningActive(false);
         setCeremonyEnd(active && endTime ? endTime : null);
         if (active) { setShowConfetti(true); setTimeout(() => setShowConfetti(false), 10000); }
       }

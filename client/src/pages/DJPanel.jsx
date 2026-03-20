@@ -93,11 +93,22 @@ export default function DJPanel() {
       setEvent(prev => prev ? { ...prev, status } : prev);
     });
 
+    socket.on('ceremony', ({ type, active }) => {
+      if (type === 'opening') { setOpeningOn(active); if (active) setClosingOn(false); }
+      if (type === 'closing') { setClosingOn(active); if (active) setOpeningOn(false); }
+    });
+
+    socket.on('music-mode', ({ mode, active }) => {
+      setActiveMusicMode(active ? mode : null);
+    });
+
     return () => {
       socket.off('request-added');
       socket.off('vote-updated');
       socket.off('list-updated');
       socket.off('event-status');
+      socket.off('ceremony');
+      socket.off('music-mode');
       socket.disconnect();
     };
   }, [slug, fetchRequests]);
@@ -193,7 +204,7 @@ export default function DJPanel() {
         headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
         body: JSON.stringify({ brandText: text }),
       });
-    } catch {} finally {
+    } catch (err) { console.warn('saveBrandText failed:', err); } finally {
       setBrandSaving(false);
     }
   }, [slug, password]);
