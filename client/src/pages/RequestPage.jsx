@@ -189,6 +189,7 @@ export default function RequestPage() {
     }
   };
 
+  const [activeTab, setActiveTab] = useState('request');
   const [votedAnimation, setVotedAnimation] = useState(null);
   const [confettiPos, setConfettiPos] = useState(null);
 
@@ -274,10 +275,9 @@ export default function RequestPage() {
         <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi, yeniden bağlanılıyor...' : '⚠ Disconnected, reconnecting...'}</div>
       )}
       <div className="request-header">
-        <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="logo" />
         <h1>{T('request.title')}</h1>
         {event.status === 'countdown' && countdownDisplay && (
-          <div style={{ marginTop: 12, fontSize: 28, fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--neon-cyan)' }}>
+          <div style={{ marginTop: 8, fontSize: 28, fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--neon-cyan)' }}>
             {countdownDisplay}
           </div>
         )}
@@ -289,7 +289,16 @@ export default function RequestPage() {
         </div>
       </div>
 
-      {canRequest && (
+      <div className="req-tab-bar">
+        <button className={`req-tab ${activeTab === 'request' ? 'active' : ''}`} onClick={() => setActiveTab('request')}>
+          🎵 {lang === 'tr' ? 'İstek Gönder' : 'Request'}
+        </button>
+        <button className={`req-tab ${activeTab === 'vote' ? 'active' : ''}`} onClick={() => setActiveTab('vote')}>
+          🔥 {lang === 'tr' ? `Oylama (${visibleRequests.length})` : `Vote (${visibleRequests.length})`}
+        </button>
+      </div>
+
+      {activeTab === 'request' && canRequest && (
         <div className="search-section">
           {spotifyEnabled && (
             <input
@@ -357,59 +366,63 @@ export default function RequestPage() {
         </div>
       )}
 
-      <div className="request-list-section">
-        <div className="section-title">
-          <span className="fire-icon">🔥</span>
-          {T('request.hot_requests')}
+      {activeTab === 'request' && !canRequest && (
+        <div className="empty-state" style={{ marginTop: 24 }}>
+          <div className="icon">🚫</div>
+          <p>{remaining <= 0 ? T('request.limit_reached') : T('request.not_open')}</p>
         </div>
+      )}
 
-        {visibleRequests.length === 0 ? (
-          <div className="empty-state">
-            <div className="icon">🎵</div>
-            <p>{T('request.no_requests')}</p>
-          </div>
-        ) : (
-          <LayoutGroup>
-            <div className="request-list">
-              {visibleRequests.map((req, idx) => (
-                <motion.div
-                  key={req.id}
-                  layout
-                  transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                  initial={{ opacity: 0, x: 40 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className={`song-card ${idx === 0 ? 'is-top-1' : ''} ${votedAnimation === req.id ? 'song-card-voted' : ''}`}
-                >
-                  <span className={`song-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>
-                    {idx + 1}
-                  </span>
-                  {req.album_art ? (
-                    <img src={req.album_art} alt="" className="song-album-art" />
-                  ) : (
-                    <div className="song-album-art-placeholder">🎵</div>
-                  )}
-                  <div className="song-info">
-                    <div className="song-name">{req.song_name}</div>
-                    {req.artist && <div className="song-artist">{req.artist}</div>}
-                  </div>
-                  <div className="vote-area">
-                    <motion.button
-                      className={`vote-btn ${votedIds.includes(req.id) ? 'voted' : ''}`}
-                      onClick={(e) => handleVote(req.id, e)}
-                      whileTap={{ scale: 0.85 }}
-                    >
-                      ▲
-                    </motion.button>
-                    <span className={`vote-count ${req.votes >= 10 ? 'is-hot' : ''}`}>
-                      {req.votes}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
+      {activeTab === 'vote' && (
+        <div className="request-list-section" style={{ marginTop: 12 }}>
+          {visibleRequests.length === 0 ? (
+            <div className="empty-state">
+              <div className="icon">🎵</div>
+              <p>{T('request.no_requests')}</p>
             </div>
-          </LayoutGroup>
-        )}
-      </div>
+          ) : (
+            <LayoutGroup>
+              <div className="request-list">
+                {visibleRequests.map((req, idx) => (
+                  <motion.div
+                    key={req.id}
+                    layout
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className={`song-card ${idx === 0 ? 'is-top-1' : ''} ${votedAnimation === req.id ? 'song-card-voted' : ''}`}
+                  >
+                    <span className={`song-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>
+                      {idx + 1}
+                    </span>
+                    {req.album_art ? (
+                      <img src={req.album_art} alt="" className="song-album-art" />
+                    ) : (
+                      <div className="song-album-art-placeholder">🎵</div>
+                    )}
+                    <div className="song-info">
+                      <div className="song-name">{req.song_name}</div>
+                      {req.artist && <div className="song-artist">{req.artist}</div>}
+                    </div>
+                    <div className="vote-area">
+                      <motion.button
+                        className={`vote-btn ${votedIds.includes(req.id) ? 'voted' : ''}`}
+                        onClick={(e) => handleVote(req.id, e)}
+                        whileTap={{ scale: 0.85 }}
+                      >
+                        ▲
+                      </motion.button>
+                      <span className={`vote-count ${req.votes >= 10 ? 'is-hot' : ''}`}>
+                        {req.votes}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </LayoutGroup>
+          )}
+        </div>
+      )}
 
       {confettiPos && (
         <div className="vote-confetti" style={{ left: confettiPos.x, top: confettiPos.y }}>

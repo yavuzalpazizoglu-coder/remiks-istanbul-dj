@@ -362,13 +362,49 @@ input, textarea { font-family: inherit; }
 
 .request-header {
   text-align: center;
-  padding: 24px 0 16px;
+  padding: 16px 0 10px;
   animation: fadeIn 0.4s ease;
 }
 .request-header .logo { height: 32px; margin-bottom: 14px; }
 .request-header h1 {
   font-family: var(--font-display);
   font-size: 20px; font-weight: 700;
+}
+
+.req-tab-bar {
+  display: flex;
+  gap: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-glass);
+  background: var(--bg-glass);
+  margin-bottom: 16px;
+}
+.req-tab {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.req-tab:first-child { border-right: 1px solid var(--border-glass); }
+.req-tab.active {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--neon-cyan);
+}
+.req-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 10%; right: 10%;
+  height: 2px;
+  background: var(--neon-cyan);
+  border-radius: 2px;
 }
 
 .request-remaining {
@@ -771,16 +807,32 @@ input, textarea { font-family: inherit; }
   text-align: center; animation: fadeInUp 0.5s ease;
 }
 .create-event-form .logo { height: 44px; margin-bottom: 20px; }
-.create-event-form h2 { font-family: var(--font-display); margin-bottom: 20px; font-size: 20px; }
+.create-event-form h2 { font-family: var(--font-display); margin-bottom: 20px; font-size: 20px; color: #c8c8d0; }
+
+.login-remiksbox {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  background-clip: text; -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dj-panel:not(.dj-compact) {
+  background: #111116;
+}
 
 .form-group { margin-bottom: 14px; text-align: left; }
-.form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: #6b6b78; margin-bottom: 5px; }
 
 .form-divider {
   display: flex; align-items: center; gap: 14px;
-  margin: 20px 0; color: var(--text-muted); font-size: 12px;
+  margin: 20px 0; color: #6b6b78; font-size: 12px;
 }
-.form-divider::before, .form-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+.form-divider::before, .form-divider::after { content: ''; flex: 1; height: 1px; background: #2a2a32; }
 
 .connect-row { display: flex; gap: 8px; }
 .connect-row .input { flex: 1; }

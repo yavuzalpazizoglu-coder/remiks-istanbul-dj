@@ -353,7 +353,7 @@ export default function DJPanel() {
     return (
       <div className="dj-panel">
         <div className="create-event-form">
-          <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="logo" />
+          <span className="login-remiksbox">RemiksBox</span>
           <h2>{T('dj.create_event')}</h2>
 
           <form onSubmit={(e) => { e.preventDefault(); createEvent(); }}>
