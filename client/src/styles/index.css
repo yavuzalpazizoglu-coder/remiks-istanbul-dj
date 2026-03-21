@@ -1064,9 +1064,11 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 
 /* ═══ Stage Preview ═══ */
 .stage-preview-section {
-  flex-shrink: 0;
-  max-height: 180px;
+  flex: 0 0 25%;
+  max-height: 25%;
   padding: 0 14px 12px 14px;
+  display: flex;
+  flex-direction: column;
 }
 .stage-preview-divider {
   height: 1px;
@@ -1114,8 +1116,8 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 .stage-preview-monitor {
   position: relative;
   width: 100%;
-  max-height: 130px;
-  aspect-ratio: 16 / 9;
+  flex: 1;
+  min-height: 0;
   border-radius: 6px;
   border: 1px solid var(--djt-accent-border, rgba(0,212,255,0.15));
   overflow: hidden;

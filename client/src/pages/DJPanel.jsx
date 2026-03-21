@@ -63,14 +63,16 @@ export default function DJPanel() {
       const monitor = previewMonitorRef.current;
       const iframe = previewIframeRef.current;
       if (monitor && iframe) {
-        const scale = monitor.offsetWidth / 1920;
+        const scaleX = monitor.offsetWidth / 1920;
+        const scaleY = monitor.offsetHeight / 1080;
+        const scale = Math.min(scaleX, scaleY);
         iframe.style.transform = `scale(${scale})`;
-        monitor.style.height = `${1080 * scale}px`;
       }
     }
     updatePreviewScale();
+    const timer = setTimeout(updatePreviewScale, 300);
     window.addEventListener('resize', updatePreviewScale);
-    return () => window.removeEventListener('resize', updatePreviewScale);
+    return () => { window.removeEventListener('resize', updatePreviewScale); clearTimeout(timer); };
   }, [event]);
 
   const socketConnected = useSocketStatus();
