@@ -764,7 +764,7 @@ export default function DJPanel() {
               <div className="djc-field">
                 <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
                 <div className="djc-field-input-wrap">
-                  <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={2} />
+                  <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
                   {tickerSaving && <span className="djc-field-status">...</span>}
                 </div>
               </div>
