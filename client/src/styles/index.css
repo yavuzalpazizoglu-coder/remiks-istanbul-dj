@@ -674,6 +674,232 @@ body.theme-pioneer-gold .status-chip.active {
   border-color: #FFCC00;
   color: #FFCC00;
 }
+
+/* Pioneer Gold — FULL left menu & right panel coverage */
+
+/* Ceremony opening button → gold when active */
+body.theme-pioneer-gold .djc-ceremony-btn.opening.active {
+  background: rgba(255, 204, 0, 0.15);
+  border-color: #FFCC00;
+  color: #FFCC00;
+  animation: btnActiveBlink 1.2s ease-in-out infinite;
+}
+
+/* Ceremony closing button → amber-gold variant */
+body.theme-pioneer-gold .djc-ceremony-btn.closing.active {
+  background: rgba(255, 170, 0, 0.15);
+  border-color: #FFA500;
+  color: #FFA500;
+  animation: btnActiveBlink 1.2s ease-in-out infinite;
+}
+
+/* Ceremony inactive buttons */
+body.theme-pioneer-gold .djc-ceremony-btn.opening,
+body.theme-pioneer-gold .djc-ceremony-btn.closing {
+  border-color: rgba(255, 204, 0, 0.1);
+  color: rgba(255, 255, 255, 0.55);
+}
+body.theme-pioneer-gold .djc-ceremony-btn.opening:hover,
+body.theme-pioneer-gold .djc-ceremony-btn.closing:hover {
+  border-color: rgba(255, 204, 0, 0.3);
+  color: #FFCC00;
+}
+
+/* Music mode tag hover → gold tint */
+body.theme-pioneer-gold .djc-mmode-tag:hover {
+  border-color: rgba(255, 204, 0, 0.25);
+  background: rgba(255, 204, 0, 0.04);
+}
+
+/* Share cards → gold accent */
+body.theme-pioneer-gold .djc-share-card:hover {
+  border-color: rgba(255, 204, 0, 0.3);
+  background: rgba(255, 204, 0, 0.04);
+}
+
+/* DJ card hover */
+body.theme-pioneer-gold .djc-dj-card:hover {
+  border-color: rgba(255, 204, 0, 0.25);
+  background: rgba(255, 204, 0, 0.04);
+}
+
+/* Inputs, textareas → gold border on focus already set, add idle border */
+body.theme-pioneer-gold .input,
+body.theme-pioneer-gold .djc-field-input,
+body.theme-pioneer-gold .djc-field-textarea,
+body.theme-pioneer-gold .djc-preset-input {
+  border-color: rgba(255, 204, 0, 0.08);
+  background: rgba(255, 204, 0, 0.02);
+}
+
+/* QR inline block */
+body.theme-pioneer-gold .djc-qr-inline {
+  border-color: rgba(255, 204, 0, 0.08);
+  background: rgba(255, 204, 0, 0.02);
+}
+
+/* Copy button */
+body.theme-pioneer-gold .copy-btn {
+  border-color: rgba(255, 204, 0, 0.12);
+  color: rgba(255, 255, 255, 0.6);
+}
+body.theme-pioneer-gold .copy-btn:hover {
+  border-color: #FFCC00;
+  color: #FFCC00;
+}
+
+/* Btn-danger stays red in both themes, but lighter red in gold */
+body.theme-pioneer-gold .btn-danger {
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+  box-shadow: 0 4px 16px rgba(255, 68, 68, 0.2);
+}
+
+/* Btn-played → gold theme */
+body.theme-pioneer-gold .btn-played {
+  background: rgba(255, 204, 0, 0.15) !important;
+  border-color: #FFCC00 !important;
+  color: #FFCC00 !important;
+}
+body.theme-pioneer-gold .btn-played:hover {
+  background: rgba(255, 204, 0, 0.3) !important;
+}
+
+/* Status chips: waiting/countdown/paused → gold-based tints */
+body.theme-pioneer-gold .status-chip.waiting {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 204, 0, 0.1);
+}
+body.theme-pioneer-gold .status-chip.countdown {
+  background: rgba(255, 204, 0, 0.1);
+  color: #FFCC00;
+  border-color: rgba(255, 204, 0, 0.2);
+}
+body.theme-pioneer-gold .status-chip.paused {
+  background: rgba(255, 170, 0, 0.1);
+  color: #FFA500;
+  border-color: rgba(255, 170, 0, 0.2);
+}
+body.theme-pioneer-gold .status-chip.ended {
+  background: rgba(255, 68, 68, 0.08);
+  color: #ff5555;
+  border-color: rgba(255, 68, 68, 0.15);
+}
+
+/* DJ table right panel — row hover gold */
+body.theme-pioneer-gold .dj-table-row:hover {
+  background: rgba(255, 204, 0, 0.04);
+}
+body.theme-pioneer-gold .dj-table-row td {
+  border-color: rgba(255, 204, 0, 0.04);
+}
+body.theme-pioneer-gold .dj-table-votes {
+  color: #FFCC00;
+}
+body.theme-pioneer-gold .dj-table-votes.is-hot {
+  color: #FFA500;
+}
+body.theme-pioneer-gold .dj-table-rank.top-1 { color: #FFA500; }
+body.theme-pioneer-gold .dj-table-rank.top-2 { color: #FFCC00; }
+body.theme-pioneer-gold .dj-table-rank.top-3 { color: #E5A800; }
+body.theme-pioneer-gold .dj-table-row-pending td:first-child {
+  border-left-color: #FFA500 !important;
+}
+body.theme-pioneer-gold .dj-table-row-pending .dj-table-song {
+  color: #FFA500;
+}
+body.theme-pioneer-gold .djc-stat-pending {
+  color: #FFA500 !important;
+}
+
+/* Preset-btn hover → gold */
+body.theme-pioneer-gold .preset-btn:hover,
+body.theme-pioneer-gold .djc-preset:hover {
+  border-color: rgba(255, 204, 0, 0.35);
+  color: #FFCC00;
+}
+
+/* FX toggle buttons hover → gold */
+body.theme-pioneer-gold .djc-fx-btn:hover {
+  background: rgba(255, 204, 0, 0.04);
+  color: #FFCC00;
+}
+
+/* DJC label text subtle gold */
+body.theme-pioneer-gold .djc-row-label,
+body.theme-pioneer-gold .djc-limit-label,
+body.theme-pioneer-gold .djc-field-label {
+  color: rgba(255, 204, 0, 0.5);
+}
+
+/* Theme dot active border → gold ring */
+body.theme-pioneer-gold .djc-theme-dot.active {
+  border-color: #FFCC00;
+  box-shadow: 0 0 8px #FFCC00;
+}
+
+/* DJ photo thumb border in gold theme */
+body.theme-pioneer-gold .djc-dj-card .djc-djphoto-thumb {
+  border-color: rgba(255, 204, 0, 0.15);
+}
+
+/* Scrollbar — right panel too */
+body.theme-pioneer-gold .dj-list-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 204, 0, 0.2);
+  border-radius: 3px;
+}
+body.theme-pioneer-gold .dj-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 204, 0, 0.35);
+}
+
+/* Ceremony bar border */
+body.theme-pioneer-gold .djc-ceremony-bar {
+  border-bottom-color: rgba(255, 204, 0, 0.06);
+}
+
+/* Section borders → gold subtle */
+body.theme-pioneer-gold .djc-sec {
+  border-bottom-color: rgba(255, 204, 0, 0.06);
+}
+
+/* Field status text (e.g. "canlı" label) */
+body.theme-pioneer-gold .djc-field-status {
+  color: #FFCC00;
+}
+
+/* QR URL text */
+body.theme-pioneer-gold .djc-qr-url {
+  color: rgba(255, 204, 0, 0.5);
+}
+
+/* Pioneer Gold — Stronger phosphor overrides for extra glow */
+body.theme-pioneer-gold .preset-btn.active,
+body.theme-pioneer-gold .djc-preset.active {
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.4),
+              0 0 20px rgba(255, 204, 0, 0.2),
+              0 0 40px rgba(255, 204, 0, 0.08);
+}
+body.theme-pioneer-gold .djc-mmode-tag.active {
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.4),
+              0 0 20px rgba(255, 204, 0, 0.2);
+}
+body.theme-pioneer-gold .djc-dj-card.active {
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.35),
+              0 0 20px rgba(255, 204, 0, 0.18);
+}
+body.theme-pioneer-gold .djc-fx-btn.active {
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.4),
+              0 0 20px rgba(255, 204, 0, 0.2);
+}
+body.theme-pioneer-gold .btn-primary {
+  background: linear-gradient(135deg, #FFCC00, #E5A800);
+  color: #000;
+  box-shadow: 0 4px 20px rgba(255, 204, 0, 0.3);
+}
+body.theme-pioneer-gold .btn-primary:hover {
+  box-shadow: 0 6px 30px rgba(255, 204, 0, 0.5);
+  filter: brightness(1.1);
+}
 body.theme-pioneer-gold .djc-field-input:focus,
 body.theme-pioneer-gold .djc-field-textarea:focus {
   border-color: rgba(255, 204, 0, 0.35) !important;
@@ -1186,7 +1412,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   transition: all var(--transition-fast);
   backdrop-filter: blur(8px);
 }
-.copy-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+.copy-btn:hover { border-color: var(--djt-accent, var(--neon-cyan)); color: var(--djt-accent, var(--neon-cyan)); }
 
 .dj-request-list { display: flex; flex-direction: column; gap: 8px; }
 
@@ -1217,7 +1443,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   backdrop-filter: blur(8px);
   transition: all var(--transition-fast);
 }
-.preset-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+.preset-btn:hover { border-color: var(--djt-accent, var(--neon-cyan)); color: var(--djt-accent, var(--neon-cyan)); }
 .preset-btn.active {
   background: rgba(var(--djt-accent-rgb), 0.12);
   border-color: var(--djt-accent);
@@ -2967,36 +3193,42 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 
 @keyframes btnActiveBlink {
   0%, 100% {
-    box-shadow: 0 0 12px currentColor, 0 0 24px currentColor, 0 0 48px currentColor;
+    box-shadow: 0 0 14px currentColor, 0 0 28px currentColor, 0 0 56px currentColor;
     opacity: 1;
+    filter: brightness(1.1);
   }
   50% {
-    box-shadow: 0 0 24px currentColor, 0 0 48px currentColor, 0 0 72px currentColor;
-    opacity: 0.8;
+    box-shadow: 0 0 28px currentColor, 0 0 56px currentColor, 0 0 84px currentColor;
+    opacity: 0.75;
+    filter: brightness(1.3);
   }
 }
 
 /* ═══ Phosphor Glow — Active state for all interactive elements ═══ */
 @keyframes phosphorPulse {
   0%, 100% {
-    box-shadow: 0 0 6px rgba(var(--djt-accent-rgb), 0.4),
-                0 0 14px rgba(var(--djt-accent-rgb), 0.2),
-                0 0 28px rgba(var(--djt-accent-rgb), 0.1);
+    box-shadow: 0 0 8px rgba(var(--djt-accent-rgb), 0.5),
+                0 0 18px rgba(var(--djt-accent-rgb), 0.25),
+                0 0 36px rgba(var(--djt-accent-rgb), 0.12);
+    filter: brightness(1);
   }
   50% {
-    box-shadow: 0 0 10px rgba(var(--djt-accent-rgb), 0.6),
-                0 0 22px rgba(var(--djt-accent-rgb), 0.35),
-                0 0 44px rgba(var(--djt-accent-rgb), 0.15);
+    box-shadow: 0 0 14px rgba(var(--djt-accent-rgb), 0.7),
+                0 0 30px rgba(var(--djt-accent-rgb), 0.4),
+                0 0 56px rgba(var(--djt-accent-rgb), 0.18);
+    filter: brightness(1.15);
   }
 }
 @keyframes phosphorGreen {
   0%, 100% {
-    box-shadow: 0 0 6px rgba(var(--djt-accent-rgb), 0.35),
-                0 0 14px rgba(var(--djt-accent-rgb), 0.18);
+    box-shadow: 0 0 8px rgba(var(--djt-accent-rgb), 0.45),
+                0 0 18px rgba(var(--djt-accent-rgb), 0.22);
+    filter: brightness(1);
   }
   50% {
-    box-shadow: 0 0 10px rgba(var(--djt-accent-rgb), 0.55),
-                0 0 22px rgba(var(--djt-accent-rgb), 0.3);
+    box-shadow: 0 0 14px rgba(var(--djt-accent-rgb), 0.65),
+                0 0 30px rgba(var(--djt-accent-rgb), 0.35);
+    filter: brightness(1.15);
   }
 }
 
