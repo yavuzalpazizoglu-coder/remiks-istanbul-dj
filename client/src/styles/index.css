@@ -1938,6 +1938,44 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   background: #050510;
 }
 
+/* ═══ LIVE Indicator — top-right of display ═══ */
+.live-indicator {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px 6px 12px;
+  border: 1px solid rgba(255, 60, 60, 0.5);
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1.5px;
+  pointer-events: none;
+  animation: liveGlow 2s ease-in-out infinite;
+  backdrop-filter: blur(6px);
+}
+.live-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff3333;
+  animation: livePulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(255, 50, 50, 0.6);
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px rgba(255, 50, 50, 0.6); }
+  50% { opacity: 0.3; transform: scale(0.85); box-shadow: 0 0 2px rgba(255, 50, 50, 0.3); }
+}
+@keyframes liveGlow {
+  0%, 100% { border-color: rgba(255, 60, 60, 0.5); }
+  50% { border-color: rgba(255, 60, 60, 0.25); }
+}
+
 /* Atmosphere — stage light effect */
 .display-page::before {
   content: '';
@@ -2105,27 +2143,10 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   position: relative;
 }
 
-/* Corner bracket — top-left */
-.dsp-card::before {
-  content: '';
-  position: absolute;
-  top: 8px; left: 8px;
-  width: 16px; height: 16px;
-  border-top: 2px solid rgba(0, 220, 240, 0.5);
-  border-left: 2px solid rgba(0, 220, 240, 0.5);
-  pointer-events: none;
-  z-index: 3;
-}
-/* Corner bracket — bottom-right */
+/* Corner bracket — REMOVED */
+.dsp-card::before,
 .dsp-card::after {
-  content: '';
-  position: absolute;
-  bottom: 8px; right: 8px;
-  width: 16px; height: 16px;
-  border-bottom: 2px solid rgba(0, 220, 240, 0.5);
-  border-right: 2px solid rgba(0, 220, 240, 0.5);
-  pointer-events: none;
-  z-index: 3;
+  display: none;
 }
 
 .dsp-list-card {
@@ -3529,37 +3550,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 }
 
 .mm-border-frame {
-  position: absolute;
-  inset: 12px;
-  border: 3px solid var(--mm-c1, #fff);
-  border-radius: 12px;
-  pointer-events: none;
-  z-index: 3;
-  animation: mmBorderBlink 1.5s ease-in-out infinite;
-  box-shadow:
-    0 0 15px var(--mm-c1, #fff),
-    0 0 30px var(--mm-c2, #fff),
-    inset 0 0 15px var(--mm-c1, #fff),
-    inset 0 0 30px var(--mm-c2, #fff);
-}
-
-@keyframes mmBorderBlink {
-  0%, 100% {
-    opacity: 1;
-    box-shadow:
-      0 0 15px var(--mm-c1),
-      0 0 30px var(--mm-c2),
-      inset 0 0 15px var(--mm-c1),
-      inset 0 0 30px var(--mm-c2);
-  }
-  50% {
-    opacity: 0.5;
-    box-shadow:
-      0 0 25px var(--mm-c1),
-      0 0 50px var(--mm-c3),
-      inset 0 0 25px var(--mm-c1),
-      inset 0 0 50px var(--mm-c3);
-  }
+  display: none;
 }
 
 .mm-line {

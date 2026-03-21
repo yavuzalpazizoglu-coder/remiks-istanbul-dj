@@ -630,6 +630,10 @@ export default function DisplayPage() {
 
   return (
     <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
+      <div className="live-indicator" aria-hidden="true">
+        <span className="live-indicator-dot" />
+        LIVE
+      </div>
       <div className="display-bg" />
       <div className="floating-particles" aria-hidden="true" />
       <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
