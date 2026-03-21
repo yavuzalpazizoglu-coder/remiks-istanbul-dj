@@ -45,6 +45,8 @@ export default function DJPanel() {
   const [panelTheme, setPanelTheme] = useState(() => localStorage.getItem('remiks_panel_theme') || 'classic');
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
+  const previewMonitorRef = useRef(null);
+  const previewIframeRef = useRef(null);
 
   useEffect(() => {
     if (panelTheme === 'pioneer') {
@@ -55,6 +57,21 @@ export default function DJPanel() {
     localStorage.setItem('remiks_panel_theme', panelTheme);
     return () => document.body.classList.remove('theme-pioneer-gold');
   }, [panelTheme]);
+
+  useEffect(() => {
+    function updatePreviewScale() {
+      const monitor = previewMonitorRef.current;
+      const iframe = previewIframeRef.current;
+      if (monitor && iframe) {
+        const scale = monitor.offsetWidth / 1920;
+        iframe.style.transform = `scale(${scale})`;
+        monitor.style.height = `${1080 * scale}px`;
+      }
+    }
+    updatePreviewScale();
+    window.addEventListener('resize', updatePreviewScale);
+    return () => window.removeEventListener('resize', updatePreviewScale);
+  }, [event]);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -874,6 +891,29 @@ export default function DJPanel() {
                   </tbody>
                 </AnimatePresence>
               </table>
+            </div>
+          )}
+
+          {/* ═══ Stage Preview ═══ */}
+          {slug && event && (
+            <div className="stage-preview-container">
+              <div className="stage-preview-header">
+                <span className="stage-preview-title">{lang === 'tr' ? 'SAHNE ÖNİZLEME' : 'STAGE PREVIEW'}</span>
+                <span className="stage-preview-live">
+                  <span className="live-dot-mini" />
+                  {lang === 'tr' ? 'CANLI' : 'LIVE'}
+                </span>
+              </div>
+              <div className="stage-preview-monitor" ref={previewMonitorRef}>
+                <iframe
+                  ref={previewIframeRef}
+                  src={`/display/${slug}`}
+                  title="Stage Preview"
+                  className="stage-preview-iframe"
+                  scrolling="no"
+                  frameBorder="0"
+                />
+              </div>
             </div>
           )}
         </div>
