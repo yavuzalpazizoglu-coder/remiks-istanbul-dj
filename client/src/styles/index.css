@@ -941,6 +941,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   border-color: var(--djt-green);
   color: var(--djt-green);
   background: var(--djt-green-bg);
+  animation: phosphorGreen 2.5s ease-in-out infinite;
 }
 .djc-dj-card .djc-djphoto-thumb {
   width: 28px; height: 28px;
@@ -1002,6 +1003,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   border-color: var(--djt-green);
   color: var(--djt-green);
   font-weight: 700;
+  animation: phosphorGreen 2s ease-in-out infinite;
 }
 
 /* ═══ Limit Toggle ═══ */
@@ -1085,6 +1087,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 .djc-fx-btn.active {
   background: var(--djt-accent-active-bg);
   color: var(--djt-accent);
+  animation: phosphorPulse 2.5s ease-in-out infinite;
 }
 
 /* ─── Stats Strip (in header) ─── */
@@ -1216,9 +1219,10 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 }
 .preset-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
 .preset-btn.active {
-  background: rgba(0,212,255,0.12);
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
+  background: rgba(var(--djt-accent-rgb), 0.12);
+  border-color: var(--djt-accent);
+  color: var(--djt-accent);
+  animation: phosphorPulse 2s ease-in-out infinite;
 }
 
 /* ─── DJ Table List ─── */
@@ -2963,13 +2967,48 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 
 @keyframes btnActiveBlink {
   0%, 100% {
-    box-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
+    box-shadow: 0 0 12px currentColor, 0 0 24px currentColor, 0 0 48px currentColor;
     opacity: 1;
   }
   50% {
-    box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
-    opacity: 0.85;
+    box-shadow: 0 0 24px currentColor, 0 0 48px currentColor, 0 0 72px currentColor;
+    opacity: 0.8;
   }
+}
+
+/* ═══ Phosphor Glow — Active state for all interactive elements ═══ */
+@keyframes phosphorPulse {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(var(--djt-accent-rgb), 0.4),
+                0 0 14px rgba(var(--djt-accent-rgb), 0.2),
+                0 0 28px rgba(var(--djt-accent-rgb), 0.1);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(var(--djt-accent-rgb), 0.6),
+                0 0 22px rgba(var(--djt-accent-rgb), 0.35),
+                0 0 44px rgba(var(--djt-accent-rgb), 0.15);
+  }
+}
+@keyframes phosphorGreen {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(var(--djt-accent-rgb), 0.35),
+                0 0 14px rgba(var(--djt-accent-rgb), 0.18);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(var(--djt-accent-rgb), 0.55),
+                0 0 22px rgba(var(--djt-accent-rgb), 0.3);
+  }
+}
+
+.djc-theme-toggle-btn.active {
+  background: var(--djt-accent-active-bg);
+  color: var(--djt-accent);
+  box-shadow: 0 0 12px rgba(var(--djt-accent-rgb), 0.15);
+  animation: phosphorPulse 3s ease-in-out infinite;
+}
+
+.djc-limit-toggle .djc-preset.active {
+  animation: phosphorPulse 2s ease-in-out infinite;
 }
 
 .djc-ceremony-timer {
