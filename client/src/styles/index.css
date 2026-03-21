@@ -368,6 +368,95 @@ input, textarea { font-family: inherit; }
   padding-bottom: 100px;
   max-width: 440px;
   margin: 0 auto;
+  position: relative;
+}
+
+/* Guest theme toggle — tiny circle top-right */
+.guest-theme-btn {
+  position: absolute;
+  top: 12px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 10;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.guest-theme-btn:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
+.guest-theme-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+.guest-theme-dot.cyan {
+  background: #00d4ff;
+  box-shadow: 0 0 6px rgba(0, 212, 255, 0.5);
+}
+.guest-theme-dot.gold {
+  background: #FFCC00;
+  box-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
+}
+body.theme-pioneer-gold .guest-theme-btn {
+  border-color: rgba(255, 204, 0, 0.15);
+}
+
+/* Pioneer Gold — Request page overrides */
+body.theme-pioneer-gold .req-tab.active {
+  background: rgba(255, 204, 0, 0.1);
+  color: #FFCC00;
+}
+body.theme-pioneer-gold .req-tab.active::after {
+  background: #FFCC00;
+}
+body.theme-pioneer-gold .vote-btn:hover:not(.voted) {
+  border-color: #FFCC00;
+  color: #FFCC00;
+  background: rgba(255, 204, 0, 0.08);
+}
+body.theme-pioneer-gold .vote-btn.voted {
+  border-color: #FFCC00;
+  background: rgba(255, 204, 0, 0.12);
+  color: #FFCC00;
+}
+body.theme-pioneer-gold .search-result-item.selected {
+  background: rgba(255, 204, 0, 0.06);
+  border-color: rgba(255, 204, 0, 0.2);
+}
+body.theme-pioneer-gold .song-rank.top-1 { color: #FFA500; }
+body.theme-pioneer-gold .song-rank.top-2 { color: #FFCC00; }
+body.theme-pioneer-gold .song-rank.top-3 { color: #E5A800; }
+body.theme-pioneer-gold .vote-count.is-hot { color: #FFA500; }
+body.theme-pioneer-gold .request-header h1 {
+  background: linear-gradient(135deg, #FFCC00, #E5A800, #FFCC00);
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+body.theme-pioneer-gold .success-toast {
+  background: #FFCC00;
+  color: #000;
+  box-shadow: 0 4px 24px rgba(255, 204, 0, 0.35);
+}
+body.theme-pioneer-gold .request-remaining strong {
+  color: #FFCC00;
+}
+body.theme-pioneer-gold .req-tab-bar {
+  border-color: rgba(255, 204, 0, 0.12);
+}
+body.theme-pioneer-gold .req-tab:first-child {
+  border-right-color: rgba(255, 204, 0, 0.12);
 }
 
 .request-header {

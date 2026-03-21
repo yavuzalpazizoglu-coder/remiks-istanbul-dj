@@ -40,6 +40,7 @@ export default function RequestPage() {
   const [searching, setSearching] = useState(false);
   const [countdownEnd, setCountdownEnd] = useState(null);
   const [countdownDisplay, setCountdownDisplay] = useState('');
+  const [guestTheme, setGuestTheme] = useState(() => localStorage.getItem('remiks_guest_theme') || 'classic');
 
   const searchTimer = useRef(null);
   const socketConnected = useSocketStatus();
@@ -72,6 +73,16 @@ export default function RequestPage() {
   }, [slug, deviceId]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
+
+  useEffect(() => {
+    if (guestTheme === 'pioneer') {
+      document.body.classList.add('theme-pioneer-gold');
+    } else {
+      document.body.classList.remove('theme-pioneer-gold');
+    }
+    localStorage.setItem('remiks_guest_theme', guestTheme);
+    return () => document.body.classList.remove('theme-pioneer-gold');
+  }, [guestTheme]);
 
   useEffect(() => {
     socket.connect();
@@ -272,6 +283,13 @@ export default function RequestPage() {
 
   return (
     <div className="request-page">
+      <button
+        className="guest-theme-btn"
+        aria-label="Toggle theme"
+        onClick={() => setGuestTheme(prev => prev === 'classic' ? 'pioneer' : 'classic')}
+      >
+        <span className={`guest-theme-dot ${guestTheme === 'classic' ? 'cyan' : 'gold'}`} />
+      </button>
       {!socketConnected && (
         <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi, yeniden bağlanılıyor...' : '⚠ Disconnected, reconnecting...'}</div>
       )}
