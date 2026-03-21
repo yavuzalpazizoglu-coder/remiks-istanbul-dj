@@ -757,18 +757,18 @@ export default function DJPanel() {
             </div>
           </div>
 
-          {/* Request Limit */}
-          <div className="djc-sec">
-            <div className="djc-sec-head">
-              <span className="djc-sec-title">{lang === 'tr' ? 'İstek Limiti' : 'Request Limit'}</span>
-            </div>
+          {/* Request Limit — single row */}
+          <div className="djc-sec djc-sec-compact">
             <div className="djc-sec-body djc-sec-between">
-              <span className="djc-row-label">{lang === 'tr' ? 'Kişi başı:' : 'Per person:'}</span>
-              <div className="djc-limit-toggle">
-                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
-                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
-                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
-                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
+              <span className="djc-sec-title">{lang === 'tr' ? 'İstek Limiti' : 'Req. Limit'}</span>
+              <div className="djc-limit-row">
+                <span className="djc-row-label">{lang === 'tr' ? 'Kişi başı:' : 'Per person:'}</span>
+                <div className="djc-limit-toggle">
+                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
+                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
+                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
+                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
+                </div>
               </div>
             </div>
           </div>
