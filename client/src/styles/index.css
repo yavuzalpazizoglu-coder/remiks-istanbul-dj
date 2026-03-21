@@ -3038,6 +3038,113 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 .display-paused h2 { font-family: var(--font-display); font-size: 32px; font-weight: 700; margin-bottom: 10px; }
 .display-paused p, .display-ended p { color: var(--text-secondary); font-size: 16px; }
 
+/* ═══ Paused: Live Performance Mode ═══ */
+.performance-mode {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.neon-performance-text {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  text-align: center;
+  color: #ffffff;
+  text-shadow:
+    0 0 4px #ffffff,
+    0 0 8px #ffffff,
+    0 0 16px var(--theme-primary, #00d4ff),
+    0 0 32px var(--theme-primary, #00d4ff),
+    0 0 48px var(--theme-primary, #00d4ff),
+    0 0 72px var(--theme-primary, #00d4ff);
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow:
+      0 0 4px #ffffff,
+      0 0 8px #ffffff,
+      0 0 16px var(--theme-primary, #00d4ff),
+      0 0 32px var(--theme-primary, #00d4ff),
+      0 0 48px var(--theme-primary, #00d4ff),
+      0 0 72px var(--theme-primary, #00d4ff);
+    opacity: 1;
+  }
+  50% {
+    text-shadow:
+      0 0 2px #ffffff,
+      0 0 4px #ffffff,
+      0 0 8px var(--theme-primary, #00d4ff),
+      0 0 16px var(--theme-primary, #00d4ff),
+      0 0 24px var(--theme-primary, #00d4ff);
+    opacity: 0.85;
+  }
+}
+
+.performance-equalizer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 50px;
+  margin-top: 28px;
+}
+.performance-equalizer span {
+  width: 4px;
+  border-radius: 2px;
+  background: var(--theme-primary, #00d4ff);
+  opacity: 0.7;
+  animation: eqBar 1.2s ease-in-out infinite;
+}
+.performance-equalizer span:nth-child(1)  { animation-duration: 0.8s;  height: 20px; }
+.performance-equalizer span:nth-child(2)  { animation-duration: 1.1s;  height: 35px; }
+.performance-equalizer span:nth-child(3)  { animation-duration: 0.9s;  height: 25px; }
+.performance-equalizer span:nth-child(4)  { animation-duration: 1.3s;  height: 40px; }
+.performance-equalizer span:nth-child(5)  { animation-duration: 0.7s;  height: 15px; }
+.performance-equalizer span:nth-child(6)  { animation-duration: 1.0s;  height: 30px; }
+.performance-equalizer span:nth-child(7)  { animation-duration: 1.4s;  height: 45px; }
+.performance-equalizer span:nth-child(8)  { animation-duration: 0.6s;  height: 20px; }
+.performance-equalizer span:nth-child(9)  { animation-duration: 1.2s;  height: 38px; }
+.performance-equalizer span:nth-child(10) { animation-duration: 0.8s;  height: 28px; }
+.performance-equalizer span:nth-child(11) { animation-duration: 1.1s;  height: 42px; }
+.performance-equalizer span:nth-child(12) { animation-duration: 0.9s;  height: 18px; }
+.performance-equalizer span:nth-child(13) { animation-duration: 1.3s;  height: 35px; }
+.performance-equalizer span:nth-child(14) { animation-duration: 0.7s;  height: 22px; }
+.performance-equalizer span:nth-child(15) { animation-duration: 1.0s;  height: 40px; }
+.performance-equalizer span:nth-child(16) { animation-duration: 1.5s;  height: 30px; }
+.performance-equalizer span:nth-child(17) { animation-duration: 0.8s;  height: 48px; }
+.performance-equalizer span:nth-child(18) { animation-duration: 1.2s;  height: 25px; }
+.performance-equalizer span:nth-child(19) { animation-duration: 0.9s;  height: 38px; }
+.performance-equalizer span:nth-child(20) { animation-duration: 1.1s;  height: 15px; }
+
+@keyframes eqBar {
+  0%, 100% { transform: scaleY(0.3); }
+  50%      { transform: scaleY(1.0); }
+}
+
+.panel-pause-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 80px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+
 .display-fullscreen-hint {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.9);

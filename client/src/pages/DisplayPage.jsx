@@ -763,13 +763,43 @@ export default function DisplayPage() {
           </>
         )}
 
-        {/* ─── PAUSED ─── */}
+        {/* ─── PAUSED: Live Performance Screen ─── */}
         {event.status === 'paused' && (
-          <div className="display-state-center display-paused">
-            <motion.div style={{ fontSize: 72, marginBottom: 16 }} animate={{ scale: [1, 1.05, 1] }} transition={{ repeat: Infinity, duration: 3 }}>🎧</motion.div>
-            <h2>{T('display.paused')}</h2>
-            <p>{T('display.paused_sub')}</p>
-          </div>
+          <>
+            <div className="dsp-3col">
+              {/* LEFT: Pause message instead of song list */}
+              <div className="dsp-card dsp-list-card">
+                <div className="dsp-card-title">
+                  <span className="fire-icon">🔥</span> {T('display.hot_requests')}
+                </div>
+                <div className="panel-pause-message">
+                  {lang === 'tr' ? 'İstekler yakında açılacak' : 'Requests opening soon'}
+                </div>
+              </div>
+
+              {/* RIGHT: Pause message instead of QR */}
+              <div className="dsp-card dsp-qr-card">
+                <div className="panel-pause-message">
+                  {lang === 'tr' ? 'İstekler yakında açılacak' : 'Requests opening soon'}
+                </div>
+              </div>
+            </div>
+
+            <div className="performance-mode">
+              <motion.div className="neon-performance-text"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}>
+                {lang === 'tr' ? 'CANLI PERFORMANS' : 'LIVE PERFORMANCE'}
+              </motion.div>
+              <div className="performance-equalizer">
+                <span /><span /><span /><span /><span />
+                <span /><span /><span /><span /><span />
+                <span /><span /><span /><span /><span />
+                <span /><span /><span /><span /><span />
+              </div>
+            </div>
+          </>
         )}
 
         {/* ─── CLOSING OVERLAY ─── */}
