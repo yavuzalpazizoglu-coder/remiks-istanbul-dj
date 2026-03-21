@@ -43,6 +43,7 @@ export default function DJPanel() {
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [selectedDJs, setSelectedDJs] = useState([]);
   const [panelTheme, setPanelTheme] = useState(() => localStorage.getItem('remiks_panel_theme') || 'classic');
+  const [connectedCount, setConnectedCount] = useState(0);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
   const previewMonitorRef = useRef(null);
@@ -138,6 +139,8 @@ export default function DJPanel() {
       setActiveMusicMode(active ? mode : null);
     });
 
+    socket.on('room-count', ({ count }) => setConnectedCount(count));
+
     return () => {
       socket.off('request-added');
       socket.off('vote-updated');
@@ -145,6 +148,7 @@ export default function DJPanel() {
       socket.off('event-status');
       socket.off('ceremony');
       socket.off('music-mode');
+      socket.off('room-count');
       socket.disconnect();
     };
   }, [slug, fetchRequests]);
@@ -907,15 +911,46 @@ export default function DJPanel() {
                   {lang === 'tr' ? 'CANLI' : 'LIVE'}
                 </span>
               </div>
-              <div className="stage-preview-monitor" ref={previewMonitorRef}>
-                <iframe
-                  ref={previewIframeRef}
-                  src={`/display/${slug}?preview=true`}
-                  title="Stage Preview"
-                  className="stage-preview-iframe"
-                  scrolling="no"
-                  frameBorder="0"
-                />
+              <div className="stage-preview-body">
+                <div className="stage-preview-monitor" ref={previewMonitorRef}>
+                  <iframe
+                    ref={previewIframeRef}
+                    src={`/display/${slug}?preview=true`}
+                    title="Stage Preview"
+                    className="stage-preview-iframe"
+                    scrolling="no"
+                    frameBorder="0"
+                  />
+                </div>
+                <div className="stage-preview-sidebar">
+                  <div className="sp-stats">
+                    <div className="sp-stat">
+                      <span className="sp-stat-val">{connectedCount}</span>
+                      <span className="sp-stat-lbl">{lang === 'tr' ? 'Bağlı' : 'Online'}</span>
+                    </div>
+                    <div className="sp-stat">
+                      <span className="sp-stat-val">{approvedRequests.length}</span>
+                      <span className="sp-stat-lbl">{lang === 'tr' ? 'İstek' : 'Req'}</span>
+                    </div>
+                    <div className="sp-stat">
+                      <span className="sp-stat-val">{totalVotes}</span>
+                      <span className="sp-stat-lbl">{lang === 'tr' ? 'Oy' : 'Vote'}</span>
+                    </div>
+                  </div>
+                  <div className="sp-top3">
+                    <div className="sp-top3-title">{lang === 'tr' ? 'TOP 3' : 'TOP 3'}</div>
+                    {approvedRequests.sort((a, b) => b.votes - a.votes).slice(0, 3).map((req, i) => (
+                      <div key={req.id} className={`sp-top3-row sp-top3-r${i + 1}`}>
+                        <span className="sp-top3-rank">{i + 1}</span>
+                        <span className="sp-top3-name">{req.song_name}</span>
+                        <span className="sp-top3-votes">{req.votes}</span>
+                      </div>
+                    ))}
+                    {approvedRequests.length === 0 && (
+                      <div className="sp-top3-empty">{lang === 'tr' ? 'Henüz istek yok' : 'No requests yet'}</div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}
