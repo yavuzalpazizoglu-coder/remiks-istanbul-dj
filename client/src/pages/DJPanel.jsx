@@ -42,8 +42,19 @@ export default function DJPanel() {
   const [ceremonyMinutes, setCeremonyMinutes] = useState(10);
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [selectedDJs, setSelectedDJs] = useState([]);
+  const [panelTheme, setPanelTheme] = useState(() => localStorage.getItem('remiks_panel_theme') || 'classic');
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
+
+  useEffect(() => {
+    if (panelTheme === 'pioneer') {
+      document.body.classList.add('theme-pioneer-gold');
+    } else {
+      document.body.classList.remove('theme-pioneer-gold');
+    }
+    localStorage.setItem('remiks_panel_theme', panelTheme);
+    return () => document.body.classList.remove('theme-pioneer-gold');
+  }, [panelTheme]);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -612,6 +623,20 @@ export default function DJPanel() {
 
         {/* ═══ LEFT: Controls ═══ */}
         <div className="djc-left">
+
+          {/* Theme Toggle */}
+          <div className="djc-theme-toggle">
+            <button
+              className={`djc-theme-toggle-btn ${panelTheme === 'classic' ? 'active' : ''}`}
+              onClick={() => setPanelTheme('classic')}>
+              Klasik
+            </button>
+            <button
+              className={`djc-theme-toggle-btn ${panelTheme === 'pioneer' ? 'active' : ''}`}
+              onClick={() => setPanelTheme('pioneer')}>
+              Pioneer Gold
+            </button>
+          </div>
 
           {/* Status & Control */}
           <div className="djc-sec">
