@@ -635,6 +635,45 @@ body.theme-pioneer-gold .preset-btn.active,
 body.theme-pioneer-gold .djc-preset.active {
   box-shadow: 0 0 8px rgba(255, 204, 0, 0.2);
 }
+
+/* Pioneer Gold — button overrides */
+body.theme-pioneer-gold .btn-primary {
+  background: linear-gradient(135deg, #FFCC00, #E5A800);
+  color: #000;
+  box-shadow: 0 4px 20px rgba(255, 204, 0, 0.25);
+}
+body.theme-pioneer-gold .btn-primary:hover {
+  box-shadow: 0 6px 30px rgba(255, 204, 0, 0.4);
+}
+body.theme-pioneer-gold .btn-ghost {
+  border-color: rgba(255, 204, 0, 0.12);
+}
+body.theme-pioneer-gold .btn-ghost:hover {
+  border-color: rgba(255, 204, 0, 0.25);
+  background: rgba(255, 204, 0, 0.06);
+}
+body.theme-pioneer-gold .btn-success {
+  background: linear-gradient(135deg, #FFCC00, #E5A800);
+  color: #000;
+}
+body.theme-pioneer-gold .preset-btn:hover {
+  border-color: var(--djt-accent);
+  color: var(--djt-accent);
+}
+body.theme-pioneer-gold .preset-btn.active {
+  background: rgba(255, 204, 0, 0.12);
+  border-color: #FFCC00;
+  color: #FFCC00;
+}
+body.theme-pioneer-gold .lang-toggle button.active {
+  background: var(--djt-lang-active-bg);
+  color: #000;
+}
+body.theme-pioneer-gold .status-chip.active {
+  background: rgba(255, 204, 0, 0.15);
+  border-color: #FFCC00;
+  color: #FFCC00;
+}
 body.theme-pioneer-gold .djc-field-input:focus,
 body.theme-pioneer-gold .djc-field-textarea:focus {
   border-color: rgba(255, 204, 0, 0.35) !important;
