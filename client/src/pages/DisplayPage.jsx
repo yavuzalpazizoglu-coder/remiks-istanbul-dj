@@ -750,7 +750,7 @@ export default function DisplayPage() {
               {/* RIGHT: QR Card */}
               <div className="dsp-card dsp-qr-card">
                 <div className="dsp-qr-box">
-                  <QRCodeSVG value={requestUrl} size={160} bgColor="#ffffff" fgColor="#000000" level="M" />
+                  <QRCodeSVG value={requestUrl} size={300} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
                 <div className="dsp-qr-label">
                   {lang === 'tr' ? 'QR Kodu Tara' : 'Scan QR Code'}
@@ -765,41 +765,20 @@ export default function DisplayPage() {
 
         {/* ─── PAUSED: Live Performance Screen ─── */}
         {event.status === 'paused' && (
-          <>
-            <div className="dsp-3col">
-              {/* LEFT: Pause message instead of song list */}
-              <div className="dsp-card dsp-list-card">
-                <div className="dsp-card-title">
-                  <span className="fire-icon">🔥</span> {T('display.hot_requests')}
-                </div>
-                <div className="panel-pause-message">
-                  {lang === 'tr' ? 'İstekler yakında açılacak' : 'Requests opening soon'}
-                </div>
-              </div>
-
-              {/* RIGHT: Pause message instead of QR */}
-              <div className="dsp-card dsp-qr-card">
-                <div className="panel-pause-message">
-                  {lang === 'tr' ? 'İstekler yakında açılacak' : 'Requests opening soon'}
-                </div>
-              </div>
+          <div className="performance-mode">
+            <motion.div className="neon-performance-text"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}>
+              {lang === 'tr' ? 'CANLI PERFORMANS' : 'LIVE PERFORMANCE'}
+            </motion.div>
+            <div className="performance-equalizer">
+              <span /><span /><span /><span /><span />
+              <span /><span /><span /><span /><span />
+              <span /><span /><span /><span /><span />
+              <span /><span /><span /><span /><span />
             </div>
-
-            <div className="performance-mode">
-              <motion.div className="neon-performance-text"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}>
-                {lang === 'tr' ? 'CANLI PERFORMANS' : 'LIVE PERFORMANCE'}
-              </motion.div>
-              <div className="performance-equalizer">
-                <span /><span /><span /><span /><span />
-                <span /><span /><span /><span /><span />
-                <span /><span /><span /><span /><span />
-                <span /><span /><span /><span /><span />
-              </div>
-            </div>
-          </>
+          </div>
         )}
 
         {/* ─── CLOSING OVERLAY ─── */}
