@@ -616,61 +616,57 @@ export default function DJPanel() {
           {/* Status & Control */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-icon">⚡</span>
               <span className="djc-sec-title">{lang === 'tr' ? 'Durum & Kontrol' : 'Status & Control'}</span>
             </div>
             <div className="djc-sec-body">
-              <div className="djc-actions">
-                {event.status === 'waiting' && (
-                  <>
-                    <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
-                    <div className="djc-countdown-group">
-                      {[5, 10, 15, 30].map(m => (
-                        <button key={m} className={`preset-btn djc-preset ${countdownMinutes === m ? 'active' : ''}`} onClick={() => setCountdownMinutes(m)}>{m}′</button>
-                      ))}
-                      <input type="number" className="input" style={{ width: 44, textAlign: 'center', padding: '4px 2px', fontSize: 12 }} value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={120} />
-                      <button className="btn btn-ghost djc-btn" onClick={startCountdown}>⏱ {lang === 'tr' ? 'Başlat' : 'Start'}</button>
-                    </div>
-                  </>
-                )}
-                {event.status === 'countdown' && (
-                  <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>▶ {T('dj.start_requests')}</button>
-                )}
-                {event.status === 'active' && (
-                  <>
-                    <button className="btn btn-ghost djc-btn" onClick={() => updateStatus('paused')}>⏸ {T('dj.pause')}</button>
-                    <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
-                  </>
-                )}
-                {event.status === 'paused' && (
-                  <>
-                    <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>▶ {T('dj.resume')}</button>
-                    <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>⏹ {T('dj.end_event')}</button>
-                  </>
-                )}
-              </div>
+              {event.status === 'waiting' && (
+                <div className="djc-ctrl-stack">
+                  <button className="btn btn-primary djc-btn djc-btn-full" onClick={() => updateStatus('active')}>{T('dj.start_requests')}</button>
+                  <div className="djc-preset-row">
+                    {[5, 10, 15, 30].map(m => (
+                      <button key={m} className={`preset-btn djc-preset djc-preset-eq ${countdownMinutes === m ? 'active' : ''}`} onClick={() => setCountdownMinutes(m)}>{m}′</button>
+                    ))}
+                    <input type="number" className="input djc-preset-input" value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={120} />
+                  </div>
+                  <button className="btn btn-ghost djc-btn djc-btn-full" onClick={startCountdown}>{lang === 'tr' ? 'Geri Sayım Başlat' : 'Start Countdown'}</button>
+                </div>
+              )}
+              {event.status === 'countdown' && (
+                <button className="btn btn-primary djc-btn djc-btn-full" onClick={() => updateStatus('active')}>{T('dj.start_requests')}</button>
+              )}
+              {event.status === 'active' && (
+                <div className="djc-btn-pair">
+                  <button className="btn btn-ghost djc-btn" onClick={() => updateStatus('paused')}>{T('dj.pause')}</button>
+                  <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>{T('dj.end_event')}</button>
+                </div>
+              )}
+              {event.status === 'paused' && (
+                <div className="djc-btn-pair">
+                  <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>{T('dj.resume')}</button>
+                  <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>{T('dj.end_event')}</button>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Share & Display */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-icon">📡</span>
               <span className="djc-sec-title">{lang === 'tr' ? 'Paylaşım & Ekran' : 'Share & Display'}</span>
             </div>
             <div className="djc-sec-body">
-              <div className="djc-big-links">
-                <a href={`/display/${slug}`} target="_blank" rel="noopener noreferrer" className="djc-big-link-btn djc-big-display">
-                  <span className="djc-big-link-icon">🖥️</span>
-                  <span className="djc-big-link-text">{lang === 'tr' ? 'Display' : 'Display'}</span>
+              <div className="djc-share-grid">
+                <a href={`/display/${slug}`} target="_blank" rel="noopener noreferrer" className="djc-share-card">
+                  <span className="djc-share-icon">DISPLAY</span>
+                  <span className="djc-share-label">{lang === 'tr' ? 'Ekran' : 'Screen'}</span>
                 </a>
-                <button className="djc-big-link-btn djc-big-qr" onClick={() => setShowQr(!showQr)}>
-                  <span className="djc-big-link-icon">📱</span>
-                  <span className="djc-big-link-text">{lang === 'tr' ? 'QR Kod' : 'QR Code'}</span>
+                <button className="djc-share-card" onClick={() => setShowQr(!showQr)}>
+                  <span className="djc-share-icon">QR</span>
+                  <span className="djc-share-label">{lang === 'tr' ? 'QR Kod' : 'QR Code'}</span>
                 </button>
-                <button className="djc-big-link-btn djc-big-copy" onClick={copyLink}>
-                  <span className="djc-big-link-icon">{copied ? '✅' : '🔗'}</span>
-                  <span className="djc-big-link-text">{copied ? '✓' : 'Link'}</span>
+                <button className="djc-share-card" onClick={copyLink}>
+                  <span className="djc-share-icon">{copied ? '✓' : 'LINK'}</span>
+                  <span className="djc-share-label">{copied ? (lang === 'tr' ? 'Kopyalandı' : 'Copied') : (lang === 'tr' ? 'Kopyala' : 'Copy')}</span>
                 </button>
               </div>
               <AnimatePresence>
@@ -687,24 +683,23 @@ export default function DJPanel() {
           {/* Ceremony */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-icon">🎉</span>
               <span className="djc-sec-title">{lang === 'tr' ? 'Tören & Açılış' : 'Ceremony'}</span>
             </div>
-            <div className="djc-sec-body djc-sec-inline">
-              <div className="djc-ceremony-btns">
+            <div className="djc-sec-body">
+              <div className="djc-btn-pair">
                 <button className={`btn djc-ceremony-btn opening ${openingOn ? 'active' : ''}`} onClick={() => toggleCeremony('opening')}>
-                  {openingOn ? '⏹' : '🎉'} {lang === 'tr' ? 'Açılış' : 'Opening'}
+                  {lang === 'tr' ? 'Açılış' : 'Opening'}
                 </button>
                 <button className={`btn djc-ceremony-btn closing ${closingOn ? 'active' : ''}`} onClick={() => toggleCeremony('closing')}>
-                  {closingOn ? '⏹' : '✨'} {lang === 'tr' ? 'Kapanış' : 'Closing'}
+                  {lang === 'tr' ? 'Kapanış' : 'Closing'}
                 </button>
               </div>
-              <div className="djc-ceremony-timer">
-                <span className="djc-limit-label">{lang === 'tr' ? 'Süre:' : 'Dur:'}</span>
+              <div className="djc-preset-row" style={{ marginTop: 8 }}>
+                <span className="djc-row-label">{lang === 'tr' ? 'Süre' : 'Duration'}</span>
                 {[5, 10, 15, 30].map(m => (
-                  <button key={m} className={`preset-btn djc-preset ${ceremonyMinutes === m ? 'active' : ''}`} onClick={() => updateCeremonyMinutes(m)}>{m}′</button>
+                  <button key={m} className={`preset-btn djc-preset djc-preset-eq ${ceremonyMinutes === m ? 'active' : ''}`} onClick={() => updateCeremonyMinutes(m)}>{m}′</button>
                 ))}
-                <input type="number" className="input" style={{ width: 42, textAlign: 'center', padding: '4px 2px', fontSize: 12 }} value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
+                <input type="number" className="input djc-preset-input" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
               </div>
             </div>
           </div>
@@ -712,15 +707,13 @@ export default function DJPanel() {
           {/* Music Mode & DJ */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-icon">🎵</span>
               <span className="djc-sec-title">{lang === 'tr' ? 'Müzik Modu & DJ' : 'Music Mode & DJ'}</span>
             </div>
             <div className="djc-sec-body">
-              <div className="djc-dj-photos-row">
-                <span className="djc-djphoto-label">{lang === 'tr' ? '📸 DJ:' : '📸 DJ:'}</span>
+              <div className="djc-dj-grid">
                 {DJ_PHOTOS.map(dj => (
                   <button key={dj.id}
-                    className={`btn djc-djphoto-btn ${selectedDJs.includes(dj.id) ? 'active' : ''}`}
+                    className={`djc-dj-card ${selectedDJs.includes(dj.id) ? 'active' : ''}`}
                     onClick={() => toggleDJPhoto(dj.id)}>
                     <img src={dj.src} alt={dj.name} className="djc-djphoto-thumb" />
                     <span>{dj.name}</span>
@@ -730,9 +723,9 @@ export default function DJPanel() {
               <div className="djc-mmode-grid">
                 {MUSIC_MODES.map(m => (
                   <button key={m.id}
-                    className={`btn djc-ceremony-btn djc-mmode-btn mm-${m.id} ${activeMusicMode === m.id ? 'active' : ''}`}
+                    className={`djc-mmode-tag mm-${m.id} ${activeMusicMode === m.id ? 'active' : ''}`}
                     onClick={() => toggleMusicMode(m.id)}>
-                    {activeMusicMode === m.id ? '⏹' : m.icon} {lang === 'tr' ? m.tr : m.en}
+                    {lang === 'tr' ? m.tr : m.en}
                   </button>
                 ))}
               </div>
@@ -742,16 +735,15 @@ export default function DJPanel() {
           {/* Request Limit */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-icon">🎫</span>
               <span className="djc-sec-title">{lang === 'tr' ? 'İstek Limiti' : 'Request Limit'}</span>
             </div>
-            <div className="djc-sec-body djc-sec-inline">
-              <span className="djc-limit-desc">{lang === 'tr' ? 'Kişi başı:' : 'Per person:'}</span>
+            <div className="djc-sec-body djc-sec-between">
+              <span className="djc-row-label">{lang === 'tr' ? 'Kişi başı:' : 'Per person:'}</span>
               <div className="djc-limit-toggle">
-                <button className={`preset-btn djc-preset ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
-                <button className={`preset-btn djc-preset ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
-                <button className={`preset-btn djc-preset ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
-                <button className={`preset-btn djc-preset ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
+                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
+                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
+                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
+                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
               </div>
             </div>
           </div>
@@ -759,62 +751,57 @@ export default function DJPanel() {
           {/* Settings & Appearance */}
           <div className="djc-sec djc-sec-grow">
             <div className="djc-sec-head">
-              <span className="djc-sec-icon">⚙️</span>
               <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings'}</span>
             </div>
             <div className="djc-sec-body djc-settings-grid">
-              <div className="djc-setting-row">
-                <span className="djc-setting-label">📺 {lang === 'tr' ? 'Ekran Yazısı' : 'Screen'}</span>
-                <div className="djc-setting-control">
-                  <input className="input djc-brand-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
-                  {brandSaving && <span className="djc-brand-saving">⏳</span>}
+              <div className="djc-field">
+                <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
+                <div className="djc-field-input-wrap">
+                  <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
+                  {brandSaving && <span className="djc-field-status">...</span>}
                 </div>
               </div>
-              <div className="djc-setting-row">
-                <span className="djc-setting-label">📜 {lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</span>
-                <div className="djc-setting-control">
-                  <textarea className="input djc-ticker-input" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={2} />
-                  {tickerSaving && <span className="djc-brand-saving">⏳</span>}
+              <div className="djc-field">
+                <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
+                <div className="djc-field-input-wrap">
+                  <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={2} />
+                  {tickerSaving && <span className="djc-field-status">...</span>}
                 </div>
               </div>
-              <div className="djc-setting-row">
-                <span className="djc-setting-label">🎨 {lang === 'tr' ? 'Tema' : 'Theme'}</span>
-                <div className="djc-setting-control">
-                  <div className="djc-theme-picker">
-                    {[
-                      { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
-                      { id: 'purple', color: '#b829dd', label: 'Mor' },
-                      { id: 'pink', color: '#ff0080', label: 'Pembe' },
-                      { id: 'green', color: '#00ff88', label: 'Yeşil' },
-                      { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
-                      { id: 'red', color: '#ff4444', label: 'Kırmızı' },
-                    ].map(t => (
-                      <button key={t.id}
-                        className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
-                        style={{ background: t.color }}
-                        onClick={() => changeTheme(t.id)}
-                        title={t.label}
-                      />
-                    ))}
-                  </div>
+              <div className="djc-field djc-field-inline">
+                <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
+                <div className="djc-theme-picker">
+                  {[
+                    { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
+                    { id: 'purple', color: '#b829dd', label: 'Mor' },
+                    { id: 'pink', color: '#ff0080', label: 'Pembe' },
+                    { id: 'green', color: '#00ff88', label: 'Yeşil' },
+                    { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
+                    { id: 'red', color: '#ff4444', label: 'Kırmızı' },
+                  ].map(t => (
+                    <button key={t.id}
+                      className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
+                      style={{ background: t.color }}
+                      onClick={() => changeTheme(t.id)}
+                      title={t.label}
+                    />
+                  ))}
                 </div>
               </div>
-              <div className="djc-setting-row">
-                <span className="djc-setting-label">✨ {lang === 'tr' ? 'Efekt' : 'FX'}</span>
-                <div className="djc-setting-control">
-                  <div className="djc-limit-toggle">
-                    {[
-                      { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
-                      { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
-                      { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
-                    ].map(l => (
-                      <button key={l.id}
-                        className={`preset-btn djc-preset ${animationLevel === l.id ? 'active' : ''}`}
-                        onClick={() => changeAnimationLevel(l.id)}>
-                        {l.label}
-                      </button>
-                    ))}
-                  </div>
+              <div className="djc-field djc-field-inline">
+                <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
+                <div className="djc-fx-toggle">
+                  {[
+                    { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
+                    { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
+                    { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
+                  ].map(l => (
+                    <button key={l.id}
+                      className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
+                      onClick={() => changeAnimationLevel(l.id)}>
+                      {l.label}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
