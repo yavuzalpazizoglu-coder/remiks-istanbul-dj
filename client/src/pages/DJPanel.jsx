@@ -580,50 +580,51 @@ export default function DJPanel() {
     <div className="djc-bg-art" aria-hidden="true">
       {/* Vinyl record - bottom right */}
       <svg className="djc-bg-vinyl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="100" r="96" fill="none" stroke="currentColor" strokeWidth="0.5"/>
-        <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="0.3"/>
-        <circle cx="100" cy="100" r="64" fill="none" stroke="currentColor" strokeWidth="0.3"/>
-        <circle cx="100" cy="100" r="48" fill="none" stroke="currentColor" strokeWidth="0.3"/>
-        <circle cx="100" cy="100" r="32" fill="none" stroke="currentColor" strokeWidth="0.5"/>
-        <circle cx="100" cy="100" r="14" fill="currentColor" opacity="0.15"/>
-        <circle cx="100" cy="100" r="4" fill="currentColor" opacity="0.3"/>
-        {/* grooves */}
-        <circle cx="100" cy="100" r="88" fill="none" stroke="currentColor" strokeWidth="0.15" strokeDasharray="3 5"/>
-        <circle cx="100" cy="100" r="72" fill="none" stroke="currentColor" strokeWidth="0.15" strokeDasharray="2 4"/>
-        <circle cx="100" cy="100" r="56" fill="none" stroke="currentColor" strokeWidth="0.15" strokeDasharray="4 3"/>
+        <circle cx="100" cy="100" r="96" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.1"/>
+        <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.08"/>
+        <circle cx="100" cy="100" r="64" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.08"/>
+        <circle cx="100" cy="100" r="48" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.08"/>
+        <circle cx="100" cy="100" r="32" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.1"/>
+        <circle cx="100" cy="100" r="14" fill="currentColor" opacity="0.08"/>
+        <circle cx="100" cy="100" r="4" fill="currentColor" opacity="0.15"/>
+        <circle cx="100" cy="100" r="88" fill="none" stroke="currentColor" strokeWidth="0.3" strokeDasharray="3 5" opacity="0.06"/>
+        <circle cx="100" cy="100" r="72" fill="none" stroke="currentColor" strokeWidth="0.3" strokeDasharray="2 4" opacity="0.06"/>
+        <circle cx="100" cy="100" r="56" fill="none" stroke="currentColor" strokeWidth="0.3" strokeDasharray="4 3" opacity="0.06"/>
       </svg>
 
-      {/* Equalizer bars - left side */}
+      {/* Equalizer bars - left bottom */}
       <svg className="djc-bg-eq" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
         {[0,1,2,3,4,5,6,7,8,9,10,11].map(i => (
-          <rect key={i} x={i * 10} y={80 - (20 + Math.sin(i * 0.8) * 30 + Math.cos(i * 1.2) * 20)} width="6" rx="2" height={20 + Math.sin(i * 0.8) * 30 + Math.cos(i * 1.2) * 20} fill="currentColor" opacity={0.12 + (i % 3) * 0.04}/>
+          <rect key={i} x={i * 10} y={80 - (20 + Math.sin(i * 0.8) * 30 + Math.cos(i * 1.2) * 20)} width="6" rx="2" height={20 + Math.sin(i * 0.8) * 30 + Math.cos(i * 1.2) * 20} fill="currentColor" opacity={0.07 + (i % 3) * 0.02}/>
         ))}
       </svg>
 
       {/* Musical notes scattered */}
       <svg className="djc-bg-notes" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
-        <text x="30" y="40" fontSize="28" fill="currentColor" opacity="0.06">&#9835;</text>
-        <text x="140" y="70" fontSize="20" fill="currentColor" opacity="0.04">&#9834;</text>
-        <text x="250" y="30" fontSize="24" fill="currentColor" opacity="0.05">&#9833;</text>
-        <text x="80" y="130" fontSize="32" fill="currentColor" opacity="0.04">&#9839;</text>
-        <text x="200" y="160" fontSize="22" fill="currentColor" opacity="0.06">&#9835;</text>
-        <text x="260" y="100" fontSize="18" fill="currentColor" opacity="0.03">&#9834;</text>
+        <text x="20" y="40" fontSize="36" fill="#3b82f6" opacity="0.07">&#9835;</text>
+        <text x="130" y="65" fontSize="28" fill="#06b6d4" opacity="0.06">&#9834;</text>
+        <text x="240" y="35" fontSize="32" fill="#8b5cf6" opacity="0.06">&#9833;</text>
+        <text x="70" y="140" fontSize="40" fill="#3b82f6" opacity="0.05">&#9839;</text>
+        <text x="190" y="170" fontSize="30" fill="#06b6d4" opacity="0.07">&#9835;</text>
+        <text x="260" y="110" fontSize="24" fill="#8b5cf6" opacity="0.05">&#9834;</text>
+        <text x="40" y="100" fontSize="20" fill="#06b6d4" opacity="0.04">&#9833;</text>
+        <text x="170" y="100" fontSize="26" fill="#3b82f6" opacity="0.05">&#9839;</text>
       </svg>
 
-      {/* Waveform - top */}
+      {/* Waveform across middle */}
       <svg className="djc-bg-wave" viewBox="0 0 400 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <path d="M0 30 Q10 10,20 30 Q30 50,40 30 Q50 12,60 30 Q70 48,80 30 Q90 8,100 30 Q110 52,120 30 Q130 14,140 30 Q150 46,160 30 Q170 10,180 30 Q190 50,200 30 Q210 15,220 30 Q230 45,240 30 Q250 12,260 30 Q270 48,280 30 Q290 16,300 30 Q310 44,320 30 Q330 10,340 30 Q350 50,360 30 Q370 14,380 30 Q390 46,400 30" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.06"/>
-        <path d="M0 30 Q15 18,30 30 Q45 42,60 30 Q75 16,90 30 Q105 44,120 30 Q135 20,150 30 Q165 40,180 30 Q195 18,210 30 Q225 42,240 30 Q255 22,270 30 Q285 38,300 30 Q315 20,330 30 Q345 40,360 30 Q375 22,390 30 L400 30" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.04"/>
+        <path d="M0 30 Q10 10,20 30 Q30 50,40 30 Q50 12,60 30 Q70 48,80 30 Q90 8,100 30 Q110 52,120 30 Q130 14,140 30 Q150 46,160 30 Q170 10,180 30 Q190 50,200 30 Q210 15,220 30 Q230 45,240 30 Q250 12,260 30 Q270 48,280 30 Q290 16,300 30 Q310 44,320 30 Q330 10,340 30 Q350 50,360 30 Q370 14,380 30 Q390 46,400 30" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.06"/>
+        <path d="M0 30 Q15 18,30 30 Q45 42,60 30 Q75 16,90 30 Q105 44,120 30 Q135 20,150 30 Q165 40,180 30 Q195 18,210 30 Q225 42,240 30 Q255 22,270 30 Q285 38,300 30 Q315 20,330 30 Q345 40,360 30 Q375 22,390 30 L400 30" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.04"/>
       </svg>
 
-      {/* Headphones icon - top left */}
+      {/* Headphones icon */}
       <svg className="djc-bg-headphones" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 38 C12 24,20 14,32 14 C44 14,52 24,52 38" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-        <rect x="8" y="36" width="8" height="16" rx="4" fill="currentColor" opacity="0.15"/>
-        <rect x="48" y="36" width="8" height="16" rx="4" fill="currentColor" opacity="0.15"/>
+        <path d="M12 38 C12 24,20 14,32 14 C44 14,52 24,52 38" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" opacity="0.08"/>
+        <rect x="6" y="34" width="10" height="18" rx="5" fill="currentColor" opacity="0.07"/>
+        <rect x="48" y="34" width="10" height="18" rx="5" fill="currentColor" opacity="0.07"/>
       </svg>
 
-      {/* Remiks İstanbul watermark */}
+      {/* Large center watermark */}
       <div className="djc-bg-watermark">REMIKS ISTANBUL</div>
     </div>
   );
