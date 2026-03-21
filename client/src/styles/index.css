@@ -1064,8 +1064,8 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 
 /* ═══ Stage Preview ═══ */
 .stage-preview-section {
-  flex: 0 0 25%;
-  max-height: 25%;
+  flex: 0 0 30%;
+  max-height: 30%;
   padding: 0 14px 12px 14px;
   display: flex;
   flex-direction: column;
@@ -1147,32 +1147,36 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   min-width: 0;
 }
 .stage-preview-sidebar {
-  width: 180px;
+  width: 220px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  overflow: hidden;
 }
 
-/* Stats row */
+/* Stats 2x2 grid */
 .sp-stats {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 4px;
 }
 .sp-stat {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6px 4px;
+  padding: 5px 4px;
   border-radius: 6px;
   background: var(--djt-card-bg, rgba(255,255,255,0.02));
   border: 1px solid var(--djt-card-border, rgba(255,255,255,0.04));
   transition: background 0.3s ease, border-color 0.3s ease;
 }
+.sp-stat-warn .sp-stat-val {
+  color: #f59e0b;
+}
 .sp-stat-val {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
   color: var(--djt-accent, #00d4ff);
   line-height: 1.1;
@@ -1184,32 +1188,62 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   color: var(--rb-text-dim, #6b6b78);
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
-/* Top 3 */
+/* Active music mode badge */
+.sp-mode-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: rgba(var(--djt-accent-rgb, 0,212,255), 0.06);
+  border: 1px solid rgba(var(--djt-accent-rgb, 0,212,255), 0.15);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--djt-accent, #00d4ff);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.3s ease;
+  animation: phosphorPulse 3s ease-in-out infinite;
+}
+.sp-mode-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--djt-accent, #00d4ff);
+  flex-shrink: 0;
+  animation: stagePreviewDotPulse 1.5s ease-in-out infinite;
+}
+
+/* Top voted list */
 .sp-top3 {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 3px;
+  overflow-y: auto;
 }
+.sp-top3::-webkit-scrollbar { width: 2px; }
+.sp-top3::-webkit-scrollbar-thumb { background: var(--djt-scrollbar-thumb, rgba(0,212,255,0.15)); border-radius: 2px; }
 .sp-top3-title {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--djt-accent-dim, rgba(0,212,255,0.7));
   letter-spacing: 1px;
   text-transform: uppercase;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
   transition: color 0.3s ease;
 }
 .sp-top3-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 6px;
+  gap: 5px;
+  padding: 3px 5px;
   border-radius: 4px;
   background: var(--djt-card-bg, rgba(255,255,255,0.02));
   border: 1px solid var(--djt-card-border, rgba(255,255,255,0.04));
@@ -1221,21 +1255,42 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 }
 .sp-top3-rank {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   color: var(--djt-accent, #00d4ff);
-  min-width: 14px;
+  min-width: 12px;
   text-align: center;
   transition: color 0.3s ease;
 }
-.sp-top3-name {
+.sp-top3-art {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.sp-top3-info {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.sp-top3-name {
   font-size: 10px;
   font-weight: 600;
   color: var(--rb-text, #d0d0d8);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.sp-top3-artist {
+  font-size: 8px;
+  color: var(--rb-text-dim, #6b6b78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 .sp-top3-votes {
   font-family: var(--font-display);
@@ -1265,6 +1320,17 @@ body.theme-pioneer-gold .stage-preview-divider {
 body.theme-pioneer-gold .sp-top3-r1 {
   border-color: rgba(255, 204, 0, 0.2);
   background: rgba(255, 204, 0, 0.04);
+}
+body.theme-pioneer-gold .sp-mode-badge {
+  background: rgba(255, 204, 0, 0.06);
+  border-color: rgba(255, 204, 0, 0.15);
+  color: #ffcc00;
+}
+body.theme-pioneer-gold .sp-mode-dot {
+  background: #ffcc00;
+}
+body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
+  color: #f59e0b;
 }
 
 /* ═══ Section System ═══ */

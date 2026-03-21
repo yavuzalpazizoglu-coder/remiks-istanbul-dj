@@ -936,13 +936,27 @@ export default function DJPanel() {
                       <span className="sp-stat-val">{totalVotes}</span>
                       <span className="sp-stat-lbl">{lang === 'tr' ? 'Oy' : 'Vote'}</span>
                     </div>
+                    <div className="sp-stat sp-stat-warn">
+                      <span className="sp-stat-val">{waitingRequests.length}</span>
+                      <span className="sp-stat-lbl">{lang === 'tr' ? 'Bekleyen' : 'Pending'}</span>
+                    </div>
                   </div>
+                  {activeMusicMode && (
+                    <div className="sp-mode-badge">
+                      <span className="sp-mode-dot" />
+                      {MUSIC_MODES.find(m => m.id === activeMusicMode)?.[lang] || activeMusicMode}
+                    </div>
+                  )}
                   <div className="sp-top3">
-                    <div className="sp-top3-title">{lang === 'tr' ? 'TOP 3' : 'TOP 3'}</div>
-                    {approvedRequests.sort((a, b) => b.votes - a.votes).slice(0, 3).map((req, i) => (
+                    <div className="sp-top3-title">{lang === 'tr' ? 'EN ÇOK OY' : 'TOP VOTED'}</div>
+                    {[...approvedRequests].sort((a, b) => b.votes - a.votes).slice(0, 5).map((req, i) => (
                       <div key={req.id} className={`sp-top3-row sp-top3-r${i + 1}`}>
                         <span className="sp-top3-rank">{i + 1}</span>
-                        <span className="sp-top3-name">{req.song_name}</span>
+                        {req.album_art && <img src={req.album_art} alt="" className="sp-top3-art" />}
+                        <div className="sp-top3-info">
+                          <span className="sp-top3-name">{req.song_name}</span>
+                          {req.artist && <span className="sp-top3-artist">{req.artist}</span>}
+                        </div>
                         <span className="sp-top3-votes">{req.votes}</span>
                       </div>
                     ))}
