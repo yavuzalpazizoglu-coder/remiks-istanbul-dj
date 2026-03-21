@@ -896,18 +896,19 @@ export default function DJPanel() {
 
           {/* ═══ Stage Preview ═══ */}
           {slug && event && (
-            <div className="stage-preview-container">
+            <div className="stage-preview-section">
+              <div className="stage-preview-divider" />
               <div className="stage-preview-header">
                 <span className="stage-preview-title">{lang === 'tr' ? 'SAHNE ÖNİZLEME' : 'STAGE PREVIEW'}</span>
-                <span className="stage-preview-live">
-                  <span className="live-dot-mini" />
+                <span className="stage-preview-live-badge">
+                  <span className="stage-preview-live-dot" />
                   {lang === 'tr' ? 'CANLI' : 'LIVE'}
                 </span>
               </div>
               <div className="stage-preview-monitor" ref={previewMonitorRef}>
                 <iframe
                   ref={previewIframeRef}
-                  src={`/display/${slug}`}
+                  src={`/display/${slug}?preview=true`}
                   title="Stage Preview"
                   className="stage-preview-iframe"
                   scrolling="no"

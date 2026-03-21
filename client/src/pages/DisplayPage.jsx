@@ -456,6 +456,7 @@ export default function DisplayPage() {
   const [lang, setLang] = useState('tr');
   const [requests, setRequests] = useState([]);
   const [showFullscreenHint, setShowFullscreenHint] = useState(true);
+  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
   const [showConfetti, setShowConfetti] = useState(false);
   const [countdownEnd, setCountdownEnd] = useState(null);
   const [countdownDisplay, setCountdownDisplay] = useState('');
@@ -630,10 +631,12 @@ export default function DisplayPage() {
 
   return (
     <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
-      <div className="live-indicator" aria-hidden="true">
-        <span className="live-indicator-dot" />
-        LIVE
-      </div>
+      {!isPreview && (
+        <div className="live-indicator" aria-hidden="true">
+          <span className="live-indicator-dot" />
+          LIVE
+        </div>
+      )}
       <div className="display-bg" />
       <div className="floating-particles" aria-hidden="true" />
       <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
@@ -646,7 +649,7 @@ export default function DisplayPage() {
         <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi' : '⚠ Disconnected'}</div>
       )}
 
-      {showFullscreenHint && (
+      {showFullscreenHint && !isPreview && (
         <div className="display-fullscreen-hint" onClick={goFullscreen}>
           <span>{T('display.click_fullscreen')}</span>
         </div>
