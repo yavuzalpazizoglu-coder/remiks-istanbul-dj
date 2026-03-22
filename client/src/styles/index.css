@@ -800,12 +800,13 @@ body.theme-pioneer-gold .djc-mmode-tag:hover {
   background: rgba(255, 204, 0, 0.06);
 }
 body.theme-pioneer-gold .djc-mmode-tag::before {
-  background: #ffcc00;
-  color: #0a0a0a;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 204, 0, 0.15);
 }
 body.theme-pioneer-gold .djc-mmode-tag.active::before {
-  background: var(--djt-green, #39ff14);
-  box-shadow: 0 0 8px rgba(57, 255, 20, 0.35);
+  background: #ff2222;
+  border-color: #ff2222;
+  box-shadow: 0 0 6px rgba(255, 34, 34, 0.7), 0 0 12px rgba(255, 34, 34, 0.4);
 }
 
 /* Share cards → gold accent */
@@ -1739,10 +1740,11 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
   width: 100%;
 }
 .djc-mmode-tag {
-  padding: 5px 8px 5px 6px;
+  padding: 5px 8px 5px 8px;
   border-radius: 7px;
   font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.3px;
   border: 1px solid var(--djt-fx-border);
   background: var(--djt-card-bg);
   color: var(--rb-text);
@@ -1753,42 +1755,18 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
   min-height: 32px;
 }
 .djc-mmode-tag::before {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--rb-bg-primary, #0a0a0a);
-  background: var(--djt-accent, #00d4ff);
   flex-shrink: 0;
   margin-right: 8px;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
 }
-.djc-mmode-tag:nth-child(1)::before { content: '1'; }
-.djc-mmode-tag:nth-child(2)::before { content: '2'; }
-.djc-mmode-tag:nth-child(3)::before { content: '3'; }
-.djc-mmode-tag:nth-child(4)::before { content: '4'; }
-.djc-mmode-tag:nth-child(5)::before { content: '5'; }
-.djc-mmode-tag:nth-child(6)::before { content: '6'; }
-.djc-mmode-tag:nth-child(7)::before { content: '7'; }
-.djc-mmode-tag:nth-child(8)::before { content: '8'; }
-.djc-mmode-tag:nth-child(9)::before { content: '9'; }
 
-/* Typography differentiation per mode */
-.djc-mmode-tag:nth-child(1) { font-style: italic; font-weight: 700; }
-.djc-mmode-tag:nth-child(2) { font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; font-size: 10px; }
-.djc-mmode-tag:nth-child(3) { font-weight: 400; font-style: italic; }
-.djc-mmode-tag:nth-child(4) { font-weight: 700; letter-spacing: 0.5px; }
-.djc-mmode-tag:nth-child(5) { font-weight: 400; text-transform: uppercase; letter-spacing: 1.8px; font-size: 10px; }
-.djc-mmode-tag:nth-child(6) { font-style: italic; font-weight: 500; }
-.djc-mmode-tag:nth-child(7) { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; }
-.djc-mmode-tag:nth-child(8) { font-weight: 800; letter-spacing: 0.8px; font-style: normal; }
-.djc-mmode-tag:nth-child(9) { font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 10px; }
-
-/* Last odd tag stays half-width (no span 2) */
 .djc-mmode-tag:hover {
   border-color: rgba(var(--djt-accent-rgb, 0,212,255), 0.3);
   background: rgba(var(--djt-accent-rgb, 0,212,255), 0.06);
@@ -1801,8 +1779,14 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
   animation: phosphorGreen 2s ease-in-out infinite;
 }
 .djc-mmode-tag.active::before {
-  background: var(--djt-green, #39ff14);
-  box-shadow: 0 0 8px rgba(57, 255, 20, 0.35);
+  background: #ff2222;
+  border-color: #ff2222;
+  box-shadow: 0 0 6px rgba(255, 34, 34, 0.7), 0 0 12px rgba(255, 34, 34, 0.4);
+  animation: mmodeLightPulse 1.2s ease-in-out infinite;
+}
+@keyframes mmodeLightPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(255, 34, 34, 0.7), 0 0 12px rgba(255, 34, 34, 0.4); }
+  50% { opacity: 0.4; box-shadow: 0 0 3px rgba(255, 34, 34, 0.3); }
 }
 
 /* ═══ Limit Toggle ═══ */
