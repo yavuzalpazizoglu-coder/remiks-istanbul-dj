@@ -1043,7 +1043,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   flex-shrink: 0;
 }
 .djc-remiksbox-logo {
-  height: 22px;
+  height: 32px;
   width: auto;
   display: block;
   filter: drop-shadow(0 0 6px var(--djt-accent-glow1)) drop-shadow(0 0 12px var(--djt-accent-glow2));
@@ -2232,7 +2232,7 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 }
 .login-remiksbox-logo {
   display: block;
-  height: 56px;
+  height: 90px;
   width: auto;
   margin: 0 auto 12px;
   filter: drop-shadow(0 0 20px rgba(59,130,246,0.35));
