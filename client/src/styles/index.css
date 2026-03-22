@@ -3087,10 +3087,30 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 }
 .login-remiksbox-logo {
   display: block;
-  height: 90px;
+  height: 160px;
   width: auto;
   margin: 0 auto 12px;
-  filter: drop-shadow(0 0 20px rgba(0,204,0,0.35));
+  filter:
+    drop-shadow(0 0 12px rgba(0,204,0,0.5))
+    drop-shadow(0 0 30px rgba(0,204,0,0.3))
+    drop-shadow(0 0 60px rgba(0,204,0,0.15));
+  animation: loginLogoGlow 3s ease-in-out infinite;
+}
+@keyframes loginLogoGlow {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 12px rgba(0,204,0,0.5))
+      drop-shadow(0 0 30px rgba(0,204,0,0.3))
+      drop-shadow(0 0 60px rgba(0,204,0,0.15));
+    transform: scale(1);
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 20px rgba(0,255,0,0.7))
+      drop-shadow(0 0 50px rgba(0,204,0,0.45))
+      drop-shadow(0 0 90px rgba(0,204,0,0.25));
+    transform: scale(1.02);
+  }
 }
 @keyframes loginGradientShift {
   0%, 100% { background-position: 0% 50%; }
