@@ -195,7 +195,7 @@ function useCountUp(target, duration = 2000, active = false) {
   return val;
 }
 
-function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eventName }) {
+function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eventName, nightState }) {
   const name = brandText || eventName || 'Remiks İstanbul';
   const [phase, setPhase] = useState(1);
 
@@ -249,11 +249,23 @@ function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eve
           {topSong && (
             <div className="closing-stat-card closing-stat-wide">
               <div className="closing-stat-icon">🔥</div>
-              <div className="closing-stat-song">{topSong.title}</div>
+              <div className="closing-stat-song">{topSong.song_name}</div>
               <div className="closing-stat-artist">{topSong.artist}</div>
-              <div className="closing-stat-label">{lang === 'tr' ? 'gecenin şarkısı' : 'song of the night'}</div>
+              <div className="closing-stat-label">{lang === 'tr' ? 'en çok oy alan istek' : 'most voted request'}</div>
             </div>
           )}
+          {nightState?.rounds?.filter(r => r.winnerId).map(r => {
+            const w = r.finalists.find(f => f.id === r.winnerId);
+            if (!w) return null;
+            return (
+              <div key={r.roundNumber} className="closing-stat-card closing-stat-wide">
+                <div className="closing-stat-icon">🏆</div>
+                <div className="closing-stat-song">{w.title}</div>
+                <div className="closing-stat-artist">{w.artist} — {w.votes} {lang === 'tr' ? 'oy' : 'votes'}</div>
+                <div className="closing-stat-label">{r.djName}{lang === 'tr' ? "'ın Gecenin Şarkısı" : "'s Song of the Night"}</div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -1022,7 +1034,7 @@ export default function DisplayPage() {
         {/* ─── CLOSING OVERLAY ─── */}
         <AnimatePresence>
           {closingActive && (
-            <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} ceremonyEnd={ceremonyEnd} requests={requests} eventName={event?.name} />
+            <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} ceremonyEnd={ceremonyEnd} requests={requests} eventName={event?.name} nightState={nightState} />
           )}
         </AnimatePresence>
 
