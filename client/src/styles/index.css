@@ -1276,6 +1276,8 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   background: var(--djt-header-bg);
   border-bottom: 1px solid var(--djt-accent-border);
   flex-shrink: 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   transition: background 0.4s ease, border-color 0.4s ease;
 }
 .djc-brand-block {
@@ -2688,10 +2690,11 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 
 /* ─── Stats Strip (in header) ─── */
 .djc-stats-strip {
-  display: flex; flex-direction: row; flex-wrap: nowrap; gap: 16px; align-items: center;
+  display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 16px; align-items: center;
+  min-width: 0;
 }
 .djc-stat {
-  display: flex; flex-direction: row; align-items: center; gap: 6px; flex-shrink: 0;
+  display: inline-flex !important; flex-direction: row !important; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap;
 }
 .djc-stat-val {
   font-family: var(--font-display);
@@ -2699,8 +2702,9 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   color: var(--djt-stat-color);
   transition: color 0.3s ease;
   line-height: 1;
+  display: inline;
 }
-.djc-stat-lbl { font-size: 11px; font-weight: 600; color: var(--rb-text-dim); line-height: 1; white-space: nowrap; }
+.djc-stat-lbl { font-size: 11px; font-weight: 600; color: var(--rb-text-dim); line-height: 1; white-space: nowrap; display: inline; }
 
 /* ─── Request List Header (right side) ─── */
 .djc-list-header {
