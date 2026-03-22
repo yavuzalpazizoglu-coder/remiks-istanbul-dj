@@ -705,16 +705,25 @@ export default function DJPanel() {
             <div className="djc-sec-body">
               <div className="djc-share-grid">
                 <a href={`/display/${slug}`} target="_blank" rel="noopener noreferrer" className="djc-share-card">
-                  <span className="djc-share-icon">DISPLAY</span>
-                  <span className="djc-share-label">{lang === 'tr' ? 'Ekran' : 'Screen'}</span>
+                  <span className="djc-share-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>
+                  </span>
+                  <span className="djc-share-label">{lang === 'tr' ? 'Görüntü Gönder' : 'Display'}</span>
                 </a>
                 <button className="djc-share-card" onClick={() => setShowQr(!showQr)}>
-                  <span className="djc-share-icon">QR</span>
+                  <span className="djc-share-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><line x1="21" y1="14" x2="21" y2="17" /><line x1="14" y1="21" x2="17" y2="21" /><line x1="21" y1="21" x2="21" y2="21" /></svg>
+                  </span>
                   <span className="djc-share-label">{lang === 'tr' ? 'QR Kod' : 'QR Code'}</span>
                 </button>
                 <button className="djc-share-card" onClick={copyLink}>
-                  <span className="djc-share-icon">{copied ? '✓' : 'LINK'}</span>
-                  <span className="djc-share-label">{copied ? (lang === 'tr' ? 'Kopyalandı' : 'Copied') : (lang === 'tr' ? 'Kopyala' : 'Copy')}</span>
+                  <span className="djc-share-icon djc-share-icon-ok">
+                    {copied
+                      ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                      : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+                    }
+                  </span>
+                  <span className="djc-share-label">{copied ? (lang === 'tr' ? 'Kopyalandı!' : 'Copied!') : (lang === 'tr' ? 'Link Kopyala' : 'Copy Link')}</span>
                 </button>
               </div>
               <AnimatePresence>

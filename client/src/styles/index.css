@@ -810,8 +810,17 @@ body.theme-pioneer-gold .djc-mmode-tag.active::before {
 
 /* Share cards → gold accent */
 body.theme-pioneer-gold .djc-share-card:hover {
-  border-color: rgba(255, 204, 0, 0.3);
-  background: rgba(255, 204, 0, 0.04);
+  border-color: rgba(255, 204, 0, 0.35);
+  background: rgba(255, 204, 0, 0.06);
+  box-shadow: 0 4px 16px rgba(255, 204, 0, 0.12);
+}
+body.theme-pioneer-gold .djc-share-card:hover .djc-share-icon {
+  background: rgba(255, 204, 0, 0.15);
+  border-color: rgba(255, 204, 0, 0.4);
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.2);
+}
+body.theme-pioneer-gold .djc-share-card:active {
+  box-shadow: 0 0 18px rgba(255, 204, 0, 0.25);
 }
 
 /* DJ card hover */
@@ -1586,46 +1595,74 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 }
 .djc-share-card {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 8px;
-  border-radius: 8px;
+  padding: 10px 6px 8px;
+  border-radius: 10px;
   border: 1px solid var(--djt-card-border);
   background: var(--djt-card-bg);
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
   color: inherit;
+  position: relative;
 }
 .djc-share-card:hover {
   background: var(--djt-accent-bg-subtle);
   border-color: var(--djt-accent-border-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(var(--djt-accent-rgb, 0,212,255), 0.12);
+}
+.djc-share-card:active {
+  transform: translateY(0);
+  box-shadow: 0 0 12px rgba(var(--djt-accent-rgb, 0,212,255), 0.25);
+  animation: shareCardPulse 0.4s ease;
+}
+@keyframes shareCardPulse {
+  0% { box-shadow: 0 0 0 rgba(var(--djt-accent-rgb, 0,212,255), 0); }
+  50% { box-shadow: 0 0 18px rgba(var(--djt-accent-rgb, 0,212,255), 0.3); }
+  100% { box-shadow: 0 0 12px rgba(var(--djt-accent-rgb, 0,212,255), 0.15); }
 }
 .djc-share-icon {
-  font-family: var(--font-display);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: var(--djt-accent);
-  padding: 5px 8px;
-  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   background: var(--djt-accent-bg);
   border: 1px solid var(--djt-accent-border);
-  text-align: center;
-  white-space: nowrap;
-  flex-shrink: 0;
+  color: var(--djt-accent);
   transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+.djc-share-icon svg {
+  width: 18px;
+  height: 18px;
+}
+.djc-share-card:hover .djc-share-icon {
+  background: rgba(var(--djt-accent-rgb, 0,212,255), 0.15);
+  border-color: rgba(var(--djt-accent-rgb, 0,212,255), 0.4);
+  box-shadow: 0 0 10px rgba(var(--djt-accent-rgb, 0,212,255), 0.2);
+  filter: brightness(1.15);
+}
+.djc-share-icon-ok svg {
+  width: 16px;
+  height: 16px;
 }
 .djc-share-label {
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 9px;
+  font-weight: 700;
   color: var(--rb-text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   white-space: nowrap;
+  text-align: center;
+}
+.djc-share-card:hover .djc-share-label {
+  color: var(--djt-accent);
 }
 
 /* QR inline */
