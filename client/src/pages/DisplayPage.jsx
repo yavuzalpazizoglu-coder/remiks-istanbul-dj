@@ -280,17 +280,19 @@ function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eve
       {/* Phase 3: Logo + Instagram */}
       <div className="closing-phase-block closing-final-block">
         <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="closing-final-logo" />
-        <div className="closing-instagram">
-          <svg className="closing-ig-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="5" />
-            <circle cx="12" cy="12" r="5" />
-            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-          </svg>
-          <div className="closing-ig-handle">@remiks.istanbul</div>
+        <div className="closing-social-row">
+          <div className="closing-social-info">
+            <svg className="closing-ig-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" />
+              <circle cx="12" cy="12" r="5" />
+              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+            </svg>
+            <div className="closing-ig-handle">@remiks.istanbul</div>
+            <div className="closing-ig-cta">{lang === 'tr' ? 'Bizi Takip Edin' : 'Follow Us'}</div>
+          </div>
           <div className="closing-ig-qr">
             <QRCodeSVG value="https://instagram.com/remiks.istanbul" size={200} bgColor="transparent" fgColor="#ffffff" />
           </div>
-          <div className="closing-ig-cta">{lang === 'tr' ? 'Bizi Takip Edin' : 'Follow Us'}</div>
         </div>
         {countdown && <div className="closing-countdown">{countdown}</div>}
       </div>

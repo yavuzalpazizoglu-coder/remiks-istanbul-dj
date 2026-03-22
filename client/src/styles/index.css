@@ -3749,18 +3749,28 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 }
 
 /* Final: Logo + Instagram */
-.closing-final-block { z-index: 3; }
+.closing-final-block {
+  z-index: 3;
+  justify-content: flex-start;
+  padding-top: clamp(40px, 8vh, 140px);
+}
 .closing-final-logo {
   height: clamp(60px, 10vh, 200px);
   width: auto;
   filter: drop-shadow(0 0 clamp(15px, 3vw, 60px) rgba(255,255,255,0.4));
   margin-bottom: clamp(24px, 4vh, 60px);
 }
-.closing-instagram {
+.closing-social-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 4vw, 80px);
+}
+.closing-social-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(8px, 1.2vh, 20px);
+  gap: clamp(6px, 1vh, 16px);
 }
 .closing-ig-icon {
   width: clamp(28px, 4vw, 72px);
