@@ -742,12 +742,15 @@ export default function DJPanel() {
                   {lang === 'tr' ? 'Kapanış' : 'Closing'}
                 </button>
               </div>
-              <div className="djc-preset-row" style={{ marginTop: 8 }}>
+              <div className="djc-preset-row djc-preset-row-compact" style={{ marginTop: 8 }}>
                 <span className="djc-row-label">{lang === 'tr' ? 'Süre' : 'Duration'}</span>
                 {[5, 10, 15, 30].map(m => (
                   <button key={m} className={`preset-btn djc-preset djc-preset-eq ${ceremonyMinutes === m ? 'active' : ''}`} onClick={() => updateCeremonyMinutes(m)}>{m}′</button>
                 ))}
-                <input type="number" className="input djc-preset-input" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
+                <div className="djc-custom-min">
+                  <input type="number" className="input djc-preset-input" value={ceremonyMinutes} onChange={(e) => setCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
+                  <button className="preset-btn djc-preset djc-preset-ok" onClick={() => updateCeremonyMinutes(ceremonyMinutes)}>OK</button>
+                </div>
               </div>
             </div>
           </div>

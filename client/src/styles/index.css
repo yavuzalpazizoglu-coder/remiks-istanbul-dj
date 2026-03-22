@@ -1405,10 +1405,32 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
   font-size: 13px !important;
 }
 .djc-preset-input {
-  width: 48px !important;
+  width: 42px !important;
   flex: none !important;
   text-align: center;
-  padding: 6px 4px !important;
+  padding: 5px 2px !important;
+  font-size: 11px !important;
+}
+.djc-custom-min {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  margin-left: 2px;
+}
+.djc-preset-ok {
+  flex: none !important;
+  padding: 5px 7px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  min-width: 0 !important;
+}
+.djc-preset-row-compact {
+  gap: 4px;
+}
+.djc-preset-row-compact .djc-preset-eq {
+  padding: 5px 0 !important;
   font-size: 12px !important;
 }
 .djc-row-label {
