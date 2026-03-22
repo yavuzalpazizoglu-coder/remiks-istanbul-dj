@@ -357,6 +357,24 @@ const MUSIC_MODE_CONFIG = {
     color1: '#cc0000', color2: '#444444', color3: '#8b0000',
     image: '/modes/mode-rap.png', imgClass: 'mm-img-rap',
   },
+  winamp: {
+    title: { tr: 'WINAMP MODE', en: 'WINAMP MODE' },
+    subtitle: { tr: 'Winamp Mode', en: 'Winamp Mode' },
+    icon: '📟',
+    bg: 'radial-gradient(ellipse at center, rgba(20, 22, 16, 0.6) 0%, rgba(8, 10, 6, 0.75) 100%)',
+    color1: '#00c800', color2: '#c8c800', color3: '#dc9600',
+    image: '/modes/winamp_mode.png', imgClass: 'mm-img-winamp',
+    modeClass: 'display-mode-winamp',
+  },
+  pioneer: {
+    title: { tr: 'PIONEER MODE', en: 'PIONEER MODE' },
+    subtitle: { tr: 'Pioneer Mode', en: 'Pioneer Mode' },
+    icon: '🎛️',
+    bg: 'radial-gradient(ellipse at center, rgba(8, 12, 24, 0.6) 0%, rgba(4, 6, 12, 0.75) 100%)',
+    color1: '#00b4dc', color2: '#dc9628', color3: '#0064c8',
+    image: '/modes/pioneer_mode.png', imgClass: 'mm-img-pioneer',
+    modeClass: 'display-mode-pioneer',
+  },
 };
 
 function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
@@ -364,7 +382,7 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
   if (!cfg) return null;
 
   return (
-    <motion.div className={`music-mode-overlay mm-overlay-${mode}`}
+    <motion.div className={`music-mode-overlay mm-overlay-${mode} ${cfg.modeClass || ''}`}
       style={{ background: cfg.bg }}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1 } }}>
       <div className="mm-border-frame" style={{ '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }} />
@@ -373,6 +391,48 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.5 }}
       />}
+
+      {mode === 'winamp' && (
+        <>
+          <div className="winamp-scanlines" />
+          <div className="winamp-grid" />
+          <div className="winamp-eq-bg">
+            {Array.from({ length: 40 }, (_, i) => (
+              <div key={i} className="winamp-eq-bar" style={{
+                '--eq-speed': `${(0.5 + Math.random() * 1.2).toFixed(2)}s`,
+                '--eq-min': (0.15 + Math.random() * 0.35).toFixed(2),
+                height: `${30 + Math.random() * 70}%`,
+              }} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {mode === 'pioneer' && (
+        <>
+          <div className="pioneer-grid" />
+          <div className="pioneer-jog-glow" />
+          <div className="pioneer-jog-ring" />
+          <div className="pioneer-bpm-pulse" />
+          <div className="pioneer-waveform-bg">
+            {Array.from({ length: 200 }, (_, i) => (
+              <div key={i} className="pioneer-wave-bar" style={{
+                height: `${10 + Math.random() * 90}%`,
+                opacity: (0.4 + Math.random() * 0.6).toFixed(2),
+              }} />
+            ))}
+            <div className="pioneer-playhead" />
+          </div>
+          {Array.from({ length: 8 }, (_, i) => (
+            <div key={i} className="pioneer-particle" style={{
+              left: `${Math.random() * 100}%`,
+              '--p-dur': `${8 + Math.random() * 12}s`,
+              '--p-delay': `${Math.random() * 10}s`,
+            }} />
+          ))}
+        </>
+      )}
+
       {djPhotos.length > 0 && (
         <div className="mm-dj-photos">
           {djPhotos.map((dj, i) => (

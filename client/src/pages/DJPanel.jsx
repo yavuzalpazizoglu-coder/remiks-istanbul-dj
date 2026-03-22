@@ -359,6 +359,8 @@ export default function DJPanel() {
     { id: 'tech', icon: '🎧', tr: 'Remiks Tech', en: 'Remiks Tech' },
     { id: 'latino', icon: '💃', tr: 'Remiks Latino', en: 'Remiks Latino' },
     { id: 'rap', icon: '🎤', tr: 'Remiks Rap', en: 'Remiks Rap' },
+    { id: 'winamp', icon: '📟', tr: 'Winamp Mode', en: 'Winamp Mode' },
+    { id: 'pioneer', icon: '🎛️', tr: 'Pioneer Mode', en: 'Pioneer Mode' },
   ];
 
   const DJ_PHOTOS = [

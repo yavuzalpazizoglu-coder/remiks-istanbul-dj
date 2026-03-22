@@ -1774,6 +1774,8 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 .djc-mmode-tag:nth-child(5)::before { content: '5'; }
 .djc-mmode-tag:nth-child(6)::before { content: '6'; }
 .djc-mmode-tag:nth-child(7)::before { content: '7'; }
+.djc-mmode-tag:nth-child(8)::before { content: '8'; }
+.djc-mmode-tag:nth-child(9)::before { content: '9'; }
 
 /* Typography differentiation per mode */
 .djc-mmode-tag:nth-child(1) { font-style: italic; font-weight: 700; }
@@ -1783,6 +1785,8 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 .djc-mmode-tag:nth-child(5) { font-weight: 400; text-transform: uppercase; letter-spacing: 1.8px; font-size: 10px; }
 .djc-mmode-tag:nth-child(6) { font-style: italic; font-weight: 500; }
 .djc-mmode-tag:nth-child(7) { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; }
+.djc-mmode-tag:nth-child(8) { font-weight: 800; letter-spacing: 0.8px; font-style: normal; }
+.djc-mmode-tag:nth-child(9) { font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: 10px; }
 
 /* Last odd tag stays half-width (no span 2) */
 .djc-mmode-tag:hover {
@@ -4637,6 +4641,370 @@ body.theme-pioneer-gold .closing-stat-number {
   40% { transform: scale(1.03) translateX(0.5%); opacity: 0.85; }
   60% { transform: scale(1.08) translateX(-0.3%); opacity: 0.9; }
   80% { transform: scale(1.04) translateX(0.3%); opacity: 0.85; }
+}
+
+.mm-img-winamp {
+  opacity: 0.80;
+  filter: brightness(1.05) saturate(1.2);
+  animation: mmWinamp 6s ease-in-out infinite;
+}
+@keyframes mmWinamp {
+  0%, 100% { transform: scale(1); opacity: 0.75; }
+  50% { transform: scale(1.02); opacity: 0.85; }
+}
+
+.mm-img-pioneer {
+  opacity: 0.80;
+  filter: brightness(1.05);
+  animation: mmPioneer 8s ease-in-out infinite;
+}
+@keyframes mmPioneer {
+  0%, 100% { transform: scale(1); opacity: 0.75; }
+  50% { transform: scale(1.03); opacity: 0.85; }
+}
+
+/* ═══ WINAMP MODE — Display Screen ═══ */
+.display-mode-winamp {
+  --wmp-green: #00c800;
+  --wmp-yellow: #c8c800;
+  --wmp-orange: #dc9600;
+  --wmp-red: #c83c00;
+  --wmp-bg: #1c1e18;
+  --wmp-surface: #2c2e26;
+  --wmp-border-light: #6e7064;
+  --wmp-border-dark: #181a14;
+  --wmp-text: #00c800;
+  --wmp-text-dim: #648c32;
+}
+.display-mode-winamp::before {
+  content: '';
+  position: absolute;
+  inset: clamp(8px, 1vw, 20px);
+  border-top: clamp(3px, 0.4vw, 8px) solid #6e7064;
+  border-left: clamp(3px, 0.4vw, 8px) solid #6e7064;
+  border-bottom: clamp(3px, 0.4vw, 8px) solid #181a14;
+  border-right: clamp(3px, 0.4vw, 8px) solid #181a14;
+  pointer-events: none;
+  z-index: 2;
+}
+.display-mode-winamp::after {
+  content: '';
+  position: absolute;
+  inset: clamp(16px, 1.8vw, 36px);
+  border-top: clamp(2px, 0.3vw, 5px) solid #181a14;
+  border-left: clamp(2px, 0.3vw, 5px) solid #181a14;
+  border-bottom: clamp(2px, 0.3vw, 5px) solid #4e5046;
+  border-right: clamp(2px, 0.3vw, 5px) solid #4e5046;
+  pointer-events: none;
+  z-index: 2;
+}
+.winamp-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px, rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+.winamp-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 200, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 200, 0, 0.03) 1px, transparent 1px);
+  background-size: clamp(30px, 4vw, 80px) clamp(30px, 4vw, 80px);
+  animation: wmpGridPulse 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes wmpGridPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+.winamp-eq-bg {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 40%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(2px, 0.3vw, 6px);
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+.winamp-eq-bar {
+  width: clamp(4px, 0.5vw, 12px);
+  background: linear-gradient(to top, #00c800, #c8c800 60%, #dc9600 80%, #c83c00);
+  border-radius: clamp(1px, 0.1vw, 2px) clamp(1px, 0.1vw, 2px) 0 0;
+  animation: wmpEqBounce var(--eq-speed, 1.2s) ease-in-out infinite alternate;
+}
+@keyframes wmpEqBounce {
+  0% { transform: scaleY(var(--eq-min, 0.3)); }
+  100% { transform: scaleY(1); }
+}
+
+/* Winamp text overrides */
+.display-mode-winamp .dsp-card-title { color: var(--wmp-yellow); text-shadow: 0 0 8px rgba(200, 200, 0, 0.3); }
+.display-mode-winamp .dsp-song-name { color: var(--wmp-green); }
+.display-mode-winamp .dsp-artist { color: var(--wmp-text-dim); }
+.display-mode-winamp .dsp-votes { color: var(--wmp-yellow); }
+.display-mode-winamp .dsp-event-name { color: var(--wmp-green); }
+.display-mode-winamp .ticker-item { color: var(--wmp-green); }
+.display-mode-winamp .dsp-card {
+  background: rgba(28, 30, 24, 0.85);
+  backdrop-filter: blur(10px);
+  border: none;
+  box-shadow:
+    inset clamp(2px, 0.3vw, 5px) clamp(2px, 0.3vw, 5px) 0 rgba(110, 112, 100, 0.3),
+    inset clamp(-2px, -0.3vw, -5px) clamp(-2px, -0.3vw, -5px) 0 rgba(24, 26, 20, 0.5);
+  border-radius: 0;
+}
+.display-mode-winamp .dsp-card::before,
+.display-mode-winamp .dsp-card::after { display: none; }
+.display-mode-winamp .dsp-ticker-wrap {
+  background: rgba(28, 30, 24, 0.5);
+  border-top: 1px solid rgba(0, 200, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 200, 0, 0.15);
+}
+.display-mode-winamp .live-indicator { border-color: rgba(0, 200, 0, 0.3); }
+.display-mode-winamp .dsp-rank.top-1,
+.display-mode-winamp .dsp-rank.top-2,
+.display-mode-winamp .dsp-rank.top-3 {
+  background: rgba(0, 0, 180, 0.3);
+}
+
+/* ═══ PIONEER MODE — Display Screen ═══ */
+.display-mode-pioneer {
+  --pio-cyan: #00b4dc;
+  --pio-blue: #0064c8;
+  --pio-orange: #dc9628;
+  --pio-green: #00c878;
+  --pio-red: #c82850;
+  --pio-bg: #0a0c12;
+  --pio-surface: #0e1018;
+  --pio-border: #283040;
+  --pio-text: #e6ebf0;
+  --pio-text-dim: #8c96a0;
+}
+.pioneer-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 180, 220, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 180, 220, 0.02) 1px, transparent 1px);
+  background-size: clamp(40px, 5vw, 100px) clamp(40px, 5vw, 100px);
+  pointer-events: none;
+  z-index: 1;
+}
+.pioneer-jog-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(200px, 30vw, 600px);
+  height: clamp(200px, 30vw, 600px);
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(0, 180, 220, 0.06) 0%,
+    rgba(0, 180, 220, 0.02) 40%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: pioJogPulse 6s ease-in-out infinite;
+}
+@keyframes pioJogPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+.pioneer-jog-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: clamp(180px, 28vw, 540px);
+  height: clamp(180px, 28vw, 540px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: clamp(1px, 0.15vw, 3px) solid rgba(0, 180, 220, 0.1);
+  pointer-events: none;
+  z-index: 0;
+  animation: pioJogSpin 30s linear infinite;
+}
+@keyframes pioJogSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.pioneer-jog-ring::before {
+  content: '';
+  position: absolute;
+  inset: -clamp(3px, 0.3vw, 6px);
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 180, 220, 0.3) 0deg, transparent 10deg,
+    transparent 30deg, rgba(0, 180, 220, 0.3) 30deg,
+    transparent 40deg, transparent 60deg,
+    rgba(0, 180, 220, 0.3) 60deg, transparent 70deg,
+    transparent 90deg, rgba(0, 180, 220, 0.3) 90deg,
+    transparent 100deg, transparent 120deg,
+    rgba(0, 180, 220, 0.3) 120deg, transparent 130deg,
+    transparent 150deg, rgba(0, 180, 220, 0.3) 150deg,
+    transparent 160deg, transparent 180deg,
+    rgba(0, 180, 220, 0.3) 180deg, transparent 190deg,
+    transparent 210deg, rgba(0, 180, 220, 0.3) 210deg,
+    transparent 220deg, transparent 240deg,
+    rgba(0, 180, 220, 0.3) 240deg, transparent 250deg,
+    transparent 270deg, rgba(0, 180, 220, 0.3) 270deg,
+    transparent 280deg, transparent 300deg,
+    rgba(0, 180, 220, 0.3) 300deg, transparent 310deg,
+    transparent 330deg, rgba(0, 180, 220, 0.3) 330deg,
+    transparent 340deg, transparent 360deg
+  );
+  mask: radial-gradient(circle,
+    transparent calc(50% - clamp(4px, 0.4vw, 8px)),
+    black calc(50% - clamp(4px, 0.4vw, 8px)),
+    black calc(50% + clamp(4px, 0.4vw, 8px)),
+    transparent calc(50% + clamp(4px, 0.4vw, 8px))
+  );
+  -webkit-mask: radial-gradient(circle,
+    transparent calc(50% - clamp(4px, 0.4vw, 8px)),
+    black calc(50% - clamp(4px, 0.4vw, 8px)),
+    black calc(50% + clamp(4px, 0.4vw, 8px)),
+    transparent calc(50% + clamp(4px, 0.4vw, 8px))
+  );
+}
+.pioneer-bpm-pulse {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(100px, 15vw, 300px);
+  height: clamp(100px, 15vw, 300px);
+  border-radius: 50%;
+  border: clamp(2px, 0.3vw, 5px) solid rgba(0, 180, 220, 0.15);
+  pointer-events: none;
+  animation: pioBpmPulse 1.5s ease-out infinite;
+  z-index: 0;
+}
+@keyframes pioBpmPulse {
+  0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+.pioneer-waveform-bg {
+  position: absolute;
+  top: 8%; left: 0; right: 0;
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.pioneer-wave-bar {
+  display: inline-block;
+  width: clamp(2px, 0.3vw, 6px);
+  margin: 0 clamp(0.5px, 0.05vw, 1px);
+  background: linear-gradient(to top, #dc9628, #e8b040);
+  border-radius: clamp(1px, 0.1vw, 2px);
+  flex-shrink: 0;
+}
+.pioneer-playhead {
+  position: absolute;
+  top: 0;
+  width: clamp(2px, 0.2vw, 4px);
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 clamp(4px, 0.5vw, 10px) rgba(255, 255, 255, 0.3);
+  animation: pioPlayheadMove 20s linear infinite;
+  z-index: 1;
+}
+@keyframes pioPlayheadMove {
+  0% { left: 0%; }
+  100% { left: 100%; }
+}
+.pioneer-particle {
+  position: absolute;
+  width: clamp(2px, 0.3vw, 5px);
+  height: clamp(2px, 0.3vw, 5px);
+  background: var(--pio-cyan, #00b4dc);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  animation: pioParticleFloat var(--p-dur, 12s) var(--p-delay, 0s) linear infinite;
+}
+@keyframes pioParticleFloat {
+  0% { opacity: 0; transform: translateY(100vh); }
+  10% { opacity: 0.4; }
+  90% { opacity: 0.2; }
+  100% { opacity: 0; transform: translateY(-10vh); }
+}
+
+/* Pioneer text overrides */
+.display-mode-pioneer .dsp-card-title {
+  color: var(--pio-cyan);
+  text-shadow: 0 0 clamp(6px, 0.8vw, 15px) rgba(0, 180, 220, 0.3);
+}
+.display-mode-pioneer .dsp-song-name { color: var(--pio-text); }
+.display-mode-pioneer .dsp-artist { color: var(--pio-text-dim); }
+.display-mode-pioneer .dsp-votes { color: var(--pio-cyan); }
+.display-mode-pioneer .dsp-event-name { color: var(--pio-text); }
+.display-mode-pioneer .ticker-item { color: var(--pio-cyan); }
+.display-mode-pioneer .dsp-card {
+  background: rgba(10, 14, 24, 0.7);
+  backdrop-filter: blur(20px);
+  border: clamp(1px, 0.1vw, 2px) solid rgba(0, 180, 220, 0.15);
+  border-radius: clamp(8px, 1vw, 16px);
+  box-shadow: inset 0 0 clamp(20px, 2vw, 40px) rgba(0, 180, 220, 0.03);
+}
+.display-mode-pioneer .dsp-card::before { border-color: var(--pio-cyan); }
+.display-mode-pioneer .dsp-ticker-wrap {
+  background: rgba(10, 14, 24, 0.4);
+  border-top: 1px solid rgba(0, 180, 220, 0.1);
+  border-bottom: 1px solid rgba(0, 180, 220, 0.1);
+}
+.display-mode-pioneer .dsp-rank.top-1,
+.display-mode-pioneer .dsp-rank.top-2,
+.display-mode-pioneer .dsp-rank.top-3 {
+  background: rgba(0, 180, 220, 0.08);
+  border-left: clamp(2px, 0.3vw, 4px) solid var(--pio-cyan);
+}
+
+/* Pioneer Gold overrides */
+body.theme-pioneer-gold .display-mode-winamp {
+  --wmp-green: #FFCC00;
+  --wmp-yellow: #E5A800;
+  --wmp-orange: #CC8800;
+  --wmp-text: #FFCC00;
+  --wmp-text-dim: #998200;
+}
+body.theme-pioneer-gold .display-mode-pioneer {
+  --pio-cyan: #FFCC00;
+  --pio-blue: #CC9900;
+  --pio-orange: #E5A800;
+  --pio-text: #ffffff;
+  --pio-text-dim: #999999;
+}
+
+/* Smooth transition between modes */
+.music-mode-overlay,
+.music-mode-overlay .dsp-card,
+.music-mode-overlay .dsp-card-title,
+.music-mode-overlay .dsp-song-name,
+.music-mode-overlay .dsp-votes {
+  transition: color 0.6s ease, background-color 0.6s ease, border-color 0.6s ease, box-shadow 0.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .winamp-eq-bar,
+  .pioneer-playhead,
+  .pioneer-jog-ring,
+  .pioneer-bpm-pulse,
+  .pioneer-particle {
+    animation: none !important;
+  }
+  .winamp-eq-bar { transform: scaleY(0.7); }
+  .pioneer-playhead { left: 45%; }
 }
 
 /* DJ Panel Music Mode Buttons */
