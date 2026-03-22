@@ -737,7 +737,7 @@ export default function DJPanel() {
           {/* Status & Control */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-title"><strong>BOOTH</strong> · {lang === 'tr' ? 'Kumanda' : 'Command'}</span>
+              <span className="djc-sec-title"><strong>{lang === 'tr' ? 'KUMANDA' : 'BOOTH'}</strong> · {lang === 'tr' ? 'Kontrol' : 'Command'}</span>
             </div>
             <div className="djc-sec-body">
               <div className="djc-booth-top">
@@ -786,7 +786,7 @@ export default function DJPanel() {
           {/* Share & Display */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-title"><strong>OUTPUT</strong> · {lang === 'tr' ? 'Çıkış' : 'Output'}</span>
+              <span className="djc-sec-title"><strong>{lang === 'tr' ? 'ÇIKIŞ' : 'OUTPUT'}</strong> · {lang === 'tr' ? 'Ekran' : 'Display'}</span>
             </div>
             <div className="djc-sec-body">
               <div className="djc-share-grid">
@@ -826,7 +826,7 @@ export default function DJPanel() {
           {/* Ceremony */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-title"><strong>SHOW</strong> · {lang === 'tr' ? 'Gösteri' : 'Show'}</span>
+              <span className="djc-sec-title"><strong>{lang === 'tr' ? 'GÖSTERİ' : 'SHOW'}</strong> · {lang === 'tr' ? 'Sahne' : 'Ceremony'}</span>
             </div>
             <div className="djc-sec-body">
               <div className="djc-btn-pair">
@@ -888,7 +888,7 @@ export default function DJPanel() {
           {/* Request Limit */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-title"><strong>LIMIT</strong> · Limit</span>
+              <span className="djc-sec-title"><strong>{lang === 'tr' ? 'LİMİT' : 'LIMIT'}</strong> · {lang === 'tr' ? 'Sınır' : 'Limit'}</span>
             </div>
             <div className="djc-sec-body">
               <div className="djc-limit-toggle">
@@ -904,7 +904,7 @@ export default function DJPanel() {
           {slug && event && (
             <div className="djc-sec djc-sec-grow">
               <div className="djc-sec-head djc-sec-head-between">
-                <span className="djc-sec-title"><strong>PREVIEW</strong> · {lang === 'tr' ? 'Önizleme' : 'Preview'}</span>
+                <span className="djc-sec-title"><strong>{lang === 'tr' ? 'ÖNİZLEME' : 'PREVIEW'}</strong> · {lang === 'tr' ? 'Canlı' : 'Live'}</span>
                 <span className="stage-preview-live-badge">
                   <span className="stage-preview-live-dot" />
                   {lang === 'tr' ? 'CANLI' : 'LIVE'}
@@ -926,7 +926,7 @@ export default function DJPanel() {
           )}
 
           <div className="djc-left-footer">
-            <span className="djc-left-footer-powered">POWERED BY</span>
+            <span className="djc-left-footer-powered">{lang === 'tr' ? 'SUNAN' : 'POWERED BY'}</span>
             <span className="djc-left-footer-brand">REMİKS İSTANBUL</span>
           </div>
 
