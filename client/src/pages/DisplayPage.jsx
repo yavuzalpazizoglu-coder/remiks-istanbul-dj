@@ -1016,12 +1016,6 @@ export default function DisplayPage() {
         {/* ─── PAUSED: Live Performance Screen ─── */}
         {event.status === 'paused' && (
           <div className="performance-mode">
-            <motion.div className="neon-performance-text"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}>
-              {lang === 'tr' ? 'CANLI PERFORMANS' : 'LIVE PERFORMANCE'}
-            </motion.div>
             <div className="performance-equalizer">
               <span /><span /><span /><span /><span />
               <span /><span /><span /><span /><span />
