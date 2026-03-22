@@ -1271,8 +1271,8 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 
 /* ─── Compact Row 1: header ─── */
 .djc-row1 {
-  display: flex; align-items: center; gap: 10px;
-  padding: 5px 14px;
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 20px;
   background: var(--djt-header-bg);
   border-bottom: 1px solid var(--djt-accent-border);
   flex-shrink: 0;
@@ -1283,7 +1283,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   flex-shrink: 0;
 }
 .djc-remiksbox-logo {
-  height: 44px;
+  height: 80px;
   width: auto;
   display: block;
   filter: drop-shadow(0 0 6px var(--djt-accent-glow1)) drop-shadow(0 0 12px var(--djt-accent-glow2));
@@ -1293,12 +1293,12 @@ body.theme-pioneer-gold .djc-remiksbox-logo {
   filter: drop-shadow(0 0 6px rgba(255, 204, 0, 0.3)) drop-shadow(0 0 12px rgba(255, 170, 0, 0.15));
 }
 .djc-row1-divider {
-  width: 1px; height: 18px;
+  width: 1px; height: 36px;
   background: var(--border-glass);
   flex-shrink: 0;
 }
-.djc-event-name { font-weight: 600; font-size: 14px; color: #ffffff; }
-.djc-slug { font-size: 11px; color: var(--rb-text-dim); }
+.djc-event-name { font-weight: 700; font-size: 28px; color: #ffffff; letter-spacing: 0.5px; }
+.djc-slug { font-size: 18px; color: var(--rb-text-dim); font-weight: 500; }
 
 /* ─── 2-Column Body ─── */
 .djc-body {
@@ -2689,18 +2689,18 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 
 /* ─── Stats Strip (in header) ─── */
 .djc-stats-strip {
-  display: flex; gap: 10px; align-items: center;
+  display: flex; gap: 16px; align-items: center;
 }
 .djc-stat {
-  display: flex; align-items: baseline; gap: 3px;
+  display: flex; align-items: center; gap: 6px;
 }
 .djc-stat-val {
   font-family: var(--font-display);
-  font-weight: 800; font-size: 16px;
+  font-weight: 800; font-size: 22px;
   color: var(--djt-stat-color);
   transition: color 0.3s ease;
 }
-.djc-stat-lbl { font-size: 9px; color: var(--rb-text-dim); }
+.djc-stat-lbl { font-size: 12px; font-weight: 600; color: var(--rb-text-dim); }
 
 /* ─── Request List Header (right side) ─── */
 .djc-list-header {
