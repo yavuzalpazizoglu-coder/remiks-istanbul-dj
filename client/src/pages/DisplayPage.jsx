@@ -409,10 +409,10 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
           <div className="winamp-scanlines" />
           <div className="winamp-grid" />
           <div className="winamp-eq-bg">
-            {Array.from({ length: 40 }, (_, i) => (
+            {Array.from({ length: 20 }, (_, i) => (
               <div key={i} className="winamp-eq-bar" style={{
-                '--eq-speed': `${(0.5 + Math.random() * 1.2).toFixed(2)}s`,
-                '--eq-min': (0.15 + Math.random() * 0.35).toFixed(2),
+                '--eq-speed': `${(0.6 + Math.random() * 1.0).toFixed(2)}s`,
+                '--eq-min': (0.2 + Math.random() * 0.3).toFixed(2),
                 height: `${30 + Math.random() * 70}%`,
               }} />
             ))}
@@ -425,20 +425,10 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
           <div className="pioneer-grid" />
           <div className="pioneer-jog-glow" />
           <div className="pioneer-jog-ring" />
-          <div className="pioneer-bpm-pulse" />
-          <div className="pioneer-waveform-bg">
-            {Array.from({ length: 200 }, (_, i) => (
-              <div key={i} className="pioneer-wave-bar" style={{
-                height: `${10 + Math.random() * 90}%`,
-                opacity: (0.4 + Math.random() * 0.6).toFixed(2),
-              }} />
-            ))}
-            <div className="pioneer-playhead" />
-          </div>
-          {Array.from({ length: 8 }, (_, i) => (
+          {Array.from({ length: 4 }, (_, i) => (
             <div key={i} className="pioneer-particle" style={{
               left: `${Math.random() * 100}%`,
-              '--p-dur': `${8 + Math.random() * 12}s`,
+              '--p-dur': `${10 + Math.random() * 15}s`,
               '--p-delay': `${Math.random() * 10}s`,
             }} />
           ))}
