@@ -1088,17 +1088,17 @@ body.theme-pioneer-gold .djc-remiksbox-logo {
   overflow: hidden;
 }
 
-/* ═══ Stage Preview (now in left menu) ═══ */
+/* ═══ Stage Preview (now in left menu) — LOCKED: DO NOT MODIFY ═══ */
 .stage-preview-monitor-left {
   position: relative;
   width: 100%;
-  flex: 1;
-  min-height: 0;
+  aspect-ratio: 16 / 9;
   border-radius: 6px;
   border: 1px solid var(--djt-accent-border, rgba(0,212,255,0.15));
   overflow: hidden;
   background: #080a10;
   transition: border-color 0.4s ease;
+  flex-shrink: 0;
 }
 .stage-preview-iframe {
   width: 1920px;
