@@ -1914,6 +1914,38 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   50% { opacity: 0.4; box-shadow: 0 0 3px rgba(255, 34, 34, 0.3); }
 }
 
+/* Winamp & Pioneer — distinctive button styles */
+.djc-mmode-tag.mm-winamp {
+  background: rgba(34, 139, 34, 0.25);
+  border-color: rgba(34, 180, 34, 0.4);
+  color: #44dd44;
+  font-weight: 700;
+}
+.djc-mmode-tag.mm-winamp:hover {
+  background: rgba(34, 139, 34, 0.35);
+  border-color: rgba(34, 180, 34, 0.55);
+}
+.djc-mmode-tag.mm-pioneer {
+  background: rgba(34, 139, 34, 0.25);
+  border-color: rgba(34, 180, 34, 0.4);
+  color: #44dd44;
+  font-weight: 700;
+}
+.djc-mmode-tag.mm-pioneer:hover {
+  background: rgba(34, 139, 34, 0.35);
+  border-color: rgba(34, 180, 34, 0.55);
+}
+body.theme-pioneer-gold .djc-mmode-tag.mm-winamp {
+  background: rgba(34, 139, 34, 0.25);
+  border-color: rgba(34, 180, 34, 0.4);
+  color: #44dd44;
+}
+body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
+  background: rgba(34, 139, 34, 0.25);
+  border-color: rgba(34, 180, 34, 0.4);
+  color: #44dd44;
+}
+
 /* ═══ Limit Toggle ═══ */
 .djc-limit-toggle {
   display: flex; align-items: center; gap: 4px;
