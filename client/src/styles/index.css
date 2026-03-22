@@ -804,20 +804,7 @@ body.theme-pioneer-gold .djc-ceremony-btn.closing:hover {
   color: #FFCC00;
 }
 
-/* Music mode tag hover → gold tint */
-body.theme-pioneer-gold .djc-mmode-tag:hover {
-  border-color: rgba(255, 204, 0, 0.3);
-  background: rgba(255, 204, 0, 0.06);
-}
-body.theme-pioneer-gold .djc-mmode-tag::before {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 204, 0, 0.15);
-}
-body.theme-pioneer-gold .djc-mmode-tag.active::before {
-  background: #ff2222;
-  border-color: #ff2222;
-  box-shadow: 0 0 6px rgba(255, 34, 34, 0.7), 0 0 12px rgba(255, 34, 34, 0.4);
-}
+/* Music mode tag hover → handled in main section */
 
 /* Share cards → gold accent */
 body.theme-pioneer-gold .djc-share-card:hover {
@@ -1867,41 +1854,120 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.2px;
-  border: 1px solid var(--djt-fx-border);
-  background: var(--djt-card-bg);
-  color: var(--rb-text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   min-height: 28px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 1px 3px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  position: relative;
 }
 .djc-mmode-tag::before {
   content: '';
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   flex-shrink: 0;
-  margin-right: 8px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-right: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
 }
 
 .djc-mmode-tag:hover {
-  border-color: rgba(var(--djt-accent-rgb, 0,212,255), 0.3);
-  background: rgba(var(--djt-accent-rgb, 0,212,255), 0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 2px 8px rgba(0,0,0,0.4);
+  transform: translateY(-1px);
 }
+
+/* ── Standard modes — subtle metallic sheen ── */
+.djc-mmode-tag.mm-arabesk { border-left: 2px solid rgba(212, 160, 23, 0.5); }
+.djc-mmode-tag.mm-rock { border-left: 2px solid rgba(220, 50, 50, 0.5); }
+.djc-mmode-tag.mm-90s-pop { border-left: 2px solid rgba(180, 80, 220, 0.5); }
+.djc-mmode-tag.mm-turkish-delight { border-left: 2px solid rgba(220, 120, 160, 0.5); }
+.djc-mmode-tag.mm-tech { border-left: 2px solid rgba(0, 180, 255, 0.5); }
+.djc-mmode-tag.mm-latino { border-left: 2px solid rgba(255, 140, 0, 0.5); }
+.djc-mmode-tag.mm-rap { border-left: 2px solid rgba(160, 160, 160, 0.5); }
+
+/* ── WINAMP — Classic retro green LCD ── */
+.djc-mmode-tag.mm-winamp {
+  background: linear-gradient(180deg, #1a2a10 0%, #0d1a06 60%, #0a1204 100%);
+  border: 1px solid rgba(0, 200, 0, 0.3);
+  border-left: 2px solid #00cc00;
+  color: #00ee00;
+  font-weight: 700;
+  text-shadow: 0 0 6px rgba(0, 238, 0, 0.6), 0 0 12px rgba(0, 238, 0, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(0, 255, 0, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.djc-mmode-tag.mm-winamp::before {
+  background: #00cc00;
+  border-color: #00aa00;
+  box-shadow: 0 0 4px rgba(0, 204, 0, 0.6);
+}
+.djc-mmode-tag.mm-winamp:hover {
+  background: linear-gradient(180deg, #223a14 0%, #142208 60%, #0d1a06 100%);
+  border-color: rgba(0, 220, 0, 0.5);
+  color: #33ff33;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.7), 0 0 16px rgba(0, 255, 0, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(0, 255, 0, 0.1),
+    0 0 12px rgba(0, 200, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ── PIONEER — Professional DJ blue LED ── */
+.djc-mmode-tag.mm-pioneer {
+  background: linear-gradient(180deg, #0a1628 0%, #06102a 60%, #040a1e 100%);
+  border: 1px solid rgba(0, 140, 255, 0.3);
+  border-left: 2px solid #0088ff;
+  color: #44aaff;
+  font-weight: 700;
+  text-shadow: 0 0 6px rgba(0, 140, 255, 0.5), 0 0 12px rgba(0, 140, 255, 0.2);
+  box-shadow:
+    inset 0 1px 0 rgba(0, 150, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.djc-mmode-tag.mm-pioneer::before {
+  background: #0088ff;
+  border-color: #0066cc;
+  box-shadow: 0 0 4px rgba(0, 136, 255, 0.6);
+}
+.djc-mmode-tag.mm-pioneer:hover {
+  background: linear-gradient(180deg, #0e1e38 0%, #081636 60%, #061028 100%);
+  border-color: rgba(0, 160, 255, 0.5);
+  color: #66bbff;
+  text-shadow: 0 0 8px rgba(0, 160, 255, 0.6), 0 0 16px rgba(0, 160, 255, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(0, 180, 255, 0.1),
+    0 0 12px rgba(0, 140, 255, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Active state — all modes ── */
 .djc-mmode-tag.active {
   background: var(--djt-green-active-bg);
   border-color: var(--djt-green);
   color: var(--djt-green);
   font-weight: 700;
   animation: phosphorGreen 2s ease-in-out infinite;
+  box-shadow:
+    0 0 8px rgba(0, 255, 100, 0.15),
+    inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .djc-mmode-tag.active::before {
   background: #ff2222;
@@ -1909,41 +1975,65 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   box-shadow: 0 0 6px rgba(255, 34, 34, 0.7), 0 0 12px rgba(255, 34, 34, 0.4);
   animation: mmodeLightPulse 1.2s ease-in-out infinite;
 }
+
+/* Winamp active override */
+.djc-mmode-tag.mm-winamp.active {
+  background: linear-gradient(180deg, #1a3a10 0%, #0d2206 100%);
+  border-color: #00ee00;
+  color: #33ff33;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.3);
+  box-shadow: 0 0 12px rgba(0, 220, 0, 0.25), inset 0 1px 0 rgba(0, 255, 0, 0.1);
+}
+/* Pioneer active override */
+.djc-mmode-tag.mm-pioneer.active {
+  background: linear-gradient(180deg, #0e2040 0%, #081636 100%);
+  border-color: #44aaff;
+  color: #66ccff;
+  text-shadow: 0 0 10px rgba(0, 170, 255, 0.7), 0 0 20px rgba(0, 170, 255, 0.3);
+  box-shadow: 0 0 12px rgba(0, 140, 255, 0.25), inset 0 1px 0 rgba(0, 180, 255, 0.1);
+}
+
 @keyframes mmodeLightPulse {
   0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(255, 34, 34, 0.7), 0 0 12px rgba(255, 34, 34, 0.4); }
   50% { opacity: 0.4; box-shadow: 0 0 3px rgba(255, 34, 34, 0.3); }
 }
 
-/* Winamp & Pioneer — distinctive button styles */
-.djc-mmode-tag.mm-winamp {
-  background: rgba(34, 139, 34, 0.25);
-  border-color: rgba(34, 180, 34, 0.4);
-  color: #44dd44;
-  font-weight: 700;
+/* ── Pioneer Gold theme overrides ── */
+body.theme-pioneer-gold .djc-mmode-tag {
+  border-color: rgba(255, 204, 0, 0.1);
+  background: linear-gradient(180deg, rgba(255,204,0,0.06) 0%, rgba(255,204,0,0.02) 100%);
 }
-.djc-mmode-tag.mm-winamp:hover {
-  background: rgba(34, 139, 34, 0.35);
-  border-color: rgba(34, 180, 34, 0.55);
+body.theme-pioneer-gold .djc-mmode-tag:hover {
+  border-color: rgba(255, 204, 0, 0.25);
+  background: linear-gradient(180deg, rgba(255,204,0,0.1) 0%, rgba(255,204,0,0.04) 100%);
 }
-.djc-mmode-tag.mm-pioneer {
-  background: rgba(34, 139, 34, 0.25);
-  border-color: rgba(34, 180, 34, 0.4);
-  color: #44dd44;
-  font-weight: 700;
+body.theme-pioneer-gold .djc-mmode-tag::before {
+  background: rgba(255, 204, 0, 0.1);
+  border-color: rgba(255, 204, 0, 0.15);
 }
-.djc-mmode-tag.mm-pioneer:hover {
-  background: rgba(34, 139, 34, 0.35);
-  border-color: rgba(34, 180, 34, 0.55);
+body.theme-pioneer-gold .djc-mmode-tag.active::before {
+  background: #ff2222;
+  border-color: #ff2222;
+  box-shadow: 0 0 6px rgba(255, 34, 34, 0.7), 0 0 12px rgba(255, 34, 34, 0.4);
 }
+body.theme-pioneer-gold .djc-mmode-tag.mm-arabesk { border-left-color: rgba(212, 160, 23, 0.6); }
+body.theme-pioneer-gold .djc-mmode-tag.mm-rock { border-left-color: rgba(220, 50, 50, 0.6); }
+body.theme-pioneer-gold .djc-mmode-tag.mm-90s-pop { border-left-color: rgba(180, 80, 220, 0.6); }
+body.theme-pioneer-gold .djc-mmode-tag.mm-turkish-delight { border-left-color: rgba(220, 120, 160, 0.6); }
+body.theme-pioneer-gold .djc-mmode-tag.mm-tech { border-left-color: rgba(0, 180, 255, 0.6); }
+body.theme-pioneer-gold .djc-mmode-tag.mm-latino { border-left-color: rgba(255, 140, 0, 0.6); }
+body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: rgba(160, 160, 160, 0.6); }
 body.theme-pioneer-gold .djc-mmode-tag.mm-winamp {
-  background: rgba(34, 139, 34, 0.25);
-  border-color: rgba(34, 180, 34, 0.4);
-  color: #44dd44;
+  background: linear-gradient(180deg, #1a2a10 0%, #0d1a06 100%);
+  border-color: rgba(0, 200, 0, 0.3);
+  border-left-color: #00cc00;
+  color: #00ee00;
 }
 body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
-  background: rgba(34, 139, 34, 0.25);
-  border-color: rgba(34, 180, 34, 0.4);
-  color: #44dd44;
+  background: linear-gradient(180deg, #0a1628 0%, #06102a 100%);
+  border-color: rgba(0, 140, 255, 0.3);
+  border-left-color: #0088ff;
+  color: #44aaff;
 }
 
 /* ═══ Limit Toggle ═══ */
