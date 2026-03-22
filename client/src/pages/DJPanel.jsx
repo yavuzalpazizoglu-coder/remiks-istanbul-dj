@@ -820,47 +820,6 @@ export default function DJPanel() {
                     frameBorder="0"
                   />
                 </div>
-                <div className="sp-stats sp-stats-left">
-                  <div className="sp-stat">
-                    <span className="sp-stat-val">{connectedCount}</span>
-                    <span className="sp-stat-lbl">{lang === 'tr' ? 'Bağlı' : 'Online'}</span>
-                  </div>
-                  <div className="sp-stat">
-                    <span className="sp-stat-val">{approvedRequests.length}</span>
-                    <span className="sp-stat-lbl">{lang === 'tr' ? 'İstek' : 'Req'}</span>
-                  </div>
-                  <div className="sp-stat">
-                    <span className="sp-stat-val">{totalVotes}</span>
-                    <span className="sp-stat-lbl">{lang === 'tr' ? 'Oy' : 'Vote'}</span>
-                  </div>
-                  <div className="sp-stat sp-stat-warn">
-                    <span className="sp-stat-val">{waitingRequests.length}</span>
-                    <span className="sp-stat-lbl">{lang === 'tr' ? 'Bekleyen' : 'Pending'}</span>
-                  </div>
-                </div>
-                {activeMusicMode && (
-                  <div className="sp-mode-badge">
-                    <span className="sp-mode-dot" />
-                    {MUSIC_MODES.find(m => m.id === activeMusicMode)?.[lang] || activeMusicMode}
-                  </div>
-                )}
-                <div className="sp-top3">
-                  <div className="sp-top3-title">{lang === 'tr' ? 'EN ÇOK OY' : 'TOP VOTED'}</div>
-                  {[...approvedRequests].sort((a, b) => b.votes - a.votes).slice(0, 5).map((req, i) => (
-                    <div key={req.id} className={`sp-top3-row sp-top3-r${i + 1}`}>
-                      <span className="sp-top3-rank">{i + 1}</span>
-                      {req.album_art && <img src={req.album_art} alt="" className="sp-top3-art" />}
-                      <div className="sp-top3-info">
-                        <span className="sp-top3-name">{req.song_name}</span>
-                        {req.artist && <span className="sp-top3-artist">{req.artist}</span>}
-                      </div>
-                      <span className="sp-top3-votes">{req.votes}</span>
-                    </div>
-                  ))}
-                  {approvedRequests.length === 0 && (
-                    <div className="sp-top3-empty">{lang === 'tr' ? 'Henüz istek yok' : 'No requests yet'}</div>
-                  )}
-                </div>
               </div>
             </div>
           )}
@@ -913,58 +872,96 @@ export default function DJPanel() {
           {/* ═══ Settings & Appearance (in right panel) ═══ */}
           <div className="djc-settings-bottom">
             <div className="djc-settings-bottom-divider" />
-            <div className="djc-sec-head">
-              <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings'}</span>
-            </div>
-            <div className="djc-settings-grid">
-              <div className="djc-field">
-                <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
-                <div className="djc-field-input-wrap">
-                  <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
-                  {brandSaving && <span className="djc-field-status">...</span>}
+            <div className="djc-settings-split">
+              <div className="djc-settings-main">
+                <div className="djc-sec-head">
+                  <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings'}</span>
+                </div>
+                <div className="djc-settings-grid">
+                  <div className="djc-field">
+                    <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
+                    <div className="djc-field-input-wrap">
+                      <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
+                      {brandSaving && <span className="djc-field-status">...</span>}
+                    </div>
+                  </div>
+                  <div className="djc-field">
+                    <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
+                    <div className="djc-field-input-wrap">
+                      <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
+                      {tickerSaving && <span className="djc-field-status">...</span>}
+                    </div>
+                  </div>
+                  <div className="djc-field djc-field-inline">
+                    <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
+                    <div className="djc-theme-picker">
+                      {[
+                        { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
+                        { id: 'purple', color: '#b829dd', label: 'Mor' },
+                        { id: 'pink', color: '#ff0080', label: 'Pembe' },
+                        { id: 'green', color: '#00ff88', label: 'Yeşil' },
+                        { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
+                        { id: 'red', color: '#ff4444', label: 'Kırmızı' },
+                      ].map(t => (
+                        <button key={t.id}
+                          className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
+                          style={{ background: t.color }}
+                          onClick={() => changeTheme(t.id)}
+                          title={t.label}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="djc-field djc-field-inline">
+                    <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
+                    <div className="djc-fx-toggle">
+                      {[
+                        { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
+                        { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
+                        { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
+                      ].map(l => (
+                        <button key={l.id}
+                          className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
+                          onClick={() => changeAnimationLevel(l.id)}>
+                          {l.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="djc-field">
-                <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
-                <div className="djc-field-input-wrap">
-                  <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
-                  {tickerSaving && <span className="djc-field-status">...</span>}
+              <div className="djc-live-stats-side">
+                <div className="djc-ls-title">{lang === 'tr' ? 'CANLI' : 'LIVE'}</div>
+                <div className="djc-ls-grid">
+                  <div className="djc-ls-item">
+                    <span className="djc-ls-val">{connectedCount}</span>
+                    <span className="djc-ls-lbl">{lang === 'tr' ? 'Bağlı' : 'Online'}</span>
+                  </div>
+                  <div className="djc-ls-item">
+                    <span className="djc-ls-val">{approvedRequests.length}</span>
+                    <span className="djc-ls-lbl">{lang === 'tr' ? 'İstek' : 'Req'}</span>
+                  </div>
+                  <div className="djc-ls-item">
+                    <span className="djc-ls-val">{totalVotes}</span>
+                    <span className="djc-ls-lbl">{lang === 'tr' ? 'Oy' : 'Vote'}</span>
+                  </div>
+                  <div className="djc-ls-item djc-ls-warn">
+                    <span className="djc-ls-val">{waitingRequests.length}</span>
+                    <span className="djc-ls-lbl">{lang === 'tr' ? 'Bekleyen' : 'Pend.'}</span>
+                  </div>
                 </div>
-              </div>
-              <div className="djc-field djc-field-inline">
-                <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
-                <div className="djc-theme-picker">
-                  {[
-                    { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
-                    { id: 'purple', color: '#b829dd', label: 'Mor' },
-                    { id: 'pink', color: '#ff0080', label: 'Pembe' },
-                    { id: 'green', color: '#00ff88', label: 'Yeşil' },
-                    { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
-                    { id: 'red', color: '#ff4444', label: 'Kırmızı' },
-                  ].map(t => (
-                    <button key={t.id}
-                      className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
-                      style={{ background: t.color }}
-                      onClick={() => changeTheme(t.id)}
-                      title={t.label}
-                    />
+                <div className="djc-ls-top">
+                  <div className="djc-ls-top-title">{lang === 'tr' ? 'EN ÇOK OY' : 'TOP'}</div>
+                  {[...approvedRequests].sort((a, b) => b.votes - a.votes).slice(0, 3).map((req, i) => (
+                    <div key={req.id} className="djc-ls-top-row">
+                      <span className="djc-ls-top-rank">{i + 1}</span>
+                      <span className="djc-ls-top-name">{req.song_name}</span>
+                      <span className="djc-ls-top-votes">{req.votes}</span>
+                    </div>
                   ))}
-                </div>
-              </div>
-              <div className="djc-field djc-field-inline">
-                <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
-                <div className="djc-fx-toggle">
-                  {[
-                    { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
-                    { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
-                    { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
-                  ].map(l => (
-                    <button key={l.id}
-                      className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
-                      onClick={() => changeAnimationLevel(l.id)}>
-                      {l.label}
-                    </button>
-                  ))}
+                  {approvedRequests.length === 0 && (
+                    <div className="djc-ls-top-empty">{lang === 'tr' ? 'Henüz istek yok' : 'No requests'}</div>
+                  )}
                 </div>
               </div>
             </div>
