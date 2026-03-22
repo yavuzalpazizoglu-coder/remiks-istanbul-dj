@@ -622,39 +622,39 @@ body.theme-pioneer-gold .request-brand-logo {
   --djt-accent-glow1: rgba(0, 204, 0, 0.4);
   --djt-accent-glow2: rgba(0, 204, 0, 0.2);
   --djt-accent-border: rgba(0, 204, 0, 0.15);
-  --djt-accent-bg: #0D1A0D;
-  --djt-accent-bg-subtle: #0A150A;
+  --djt-accent-bg: #0A140A;
+  --djt-accent-bg-subtle: #080F08;
   --djt-accent-border-hover: rgba(0, 204, 0, 0.25);
-  --djt-accent-active-bg: #1A2E1A;
+  --djt-accent-active-bg: #101E10;
   --djt-green: #00ff88;
-  --djt-green-bg: #0A1A0F;
-  --djt-green-active-bg: #0F1F14;
+  --djt-green-bg: #081208;
+  --djt-green-active-bg: #0C180C;
   --djt-stat-color: #00e05a;
-  --djt-panel-bg: linear-gradient(160deg, #0A0A0A 0%, #111111 50%, #0E0E0E 100%);
+  --djt-panel-bg: linear-gradient(160deg, #080808 0%, #0E0E0E 50%, #0B0B0B 100%);
   --djt-header-bg: linear-gradient(180deg, rgba(0,204,0,0.06) 0%, rgba(0,153,0,0.03) 100%);
   --djt-logo-gradient: linear-gradient(135deg, #00CC00, #00FF00, #00CC00);
-  --djt-list-header-bg: #0D120D;
-  --djt-scrollbar-thumb: #3A3A3A;
-  --djt-card-bg: #1E1E1E;
-  --djt-card-border: #2F2F2F;
-  --djt-card-hover-bg: #2E2E2E;
-  --djt-card-hover-border: #3F3F3F;
-  --djt-sec-border: #2F2F2F;
-  --djt-fx-border: #2F2F2F;
-  --djt-fx-divider: #2A2A2A;
+  --djt-list-header-bg: #0A0F0A;
+  --djt-scrollbar-thumb: #2A2A2A;
+  --djt-card-bg: #141414;
+  --djt-card-border: #222222;
+  --djt-card-hover-bg: #1E1E1E;
+  --djt-card-hover-border: #2A2A2A;
+  --djt-sec-border: #222222;
+  --djt-fx-border: #222222;
+  --djt-fx-divider: #1A1A1A;
   --djt-lang-border: rgba(0, 204, 0, 0.2);
   --djt-lang-active-bg: linear-gradient(135deg, #00CC00, #00FF00);
 
   background: var(--djt-panel-bg);
 
   /* Solid glass overrides for DJ panel depth */
-  --bg-glass: #1E1E1E;
-  --bg-glass-strong: #232323;
-  --border-glass: #2F2F2F;
+  --bg-glass: #141414;
+  --bg-glass-strong: #181818;
+  --border-glass: #222222;
 
   /* Legacy aliases */
   --rb-bg: #0A0A0A;
-  --rb-bg-row: #1C1C1C;
+  --rb-bg-row: #121212;
   --rb-border: var(--djt-card-border);
   --rb-green: var(--djt-stat-color);
   --rb-blue: #00CC00;
@@ -727,8 +727,8 @@ body.theme-pioneer-gold .dj-panel.dj-compact {
   cursor: pointer;
   transition: all 150ms ease;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
-    linear-gradient(180deg, #444444 0%, #383838 40%, #2E2E2E 60%, #252525 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
+    linear-gradient(180deg, #383838 0%, #303030 50%, #282828 100%);
   color: #CCCCCC;
   letter-spacing: 0.3px;
   font-family: var(--font-display);
@@ -746,14 +746,14 @@ body.theme-pioneer-gold .dj-panel.dj-compact {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 45%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
   pointer-events: none;
   border-radius: inherit;
 }
 .djc-theme-toggle-btn.active {
   background:
     linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.04) 40%, rgba(255,255,255,0.0) 60%, rgba(255,255,255,0.04) 100%),
-    linear-gradient(180deg, #2E2E2E 0%, #383838 50%, #3E3E3E 100%);
+    linear-gradient(180deg, #2A2A2A 0%, #303030 50%, #282828 100%);
   border-top-color: #1A1A1A;
   border-left-color: #222222;
   border-right-color: #5A5A5A;
@@ -768,8 +768,8 @@ body.theme-pioneer-gold .dj-panel.dj-compact {
 .djc-theme-toggle-btn:hover:not(.active) {
   color: #CCCCCC;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
-    linear-gradient(180deg, #555555 0%, #484848 40%, #3E3E3E 60%, #333333 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   border-top-color: #7A7A7A;
   border-left-color: #6A6A6A;
   box-shadow:
@@ -791,7 +791,7 @@ body.theme-pioneer-gold .djc-theme-toggle {
 }
 body.theme-pioneer-gold .djc-theme-toggle-btn {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.06) 85%, rgba(0,0,0,0.12) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #2E2A26 0%, #222018 40%, #1A1612 60%, #141210 100%);
   border-top-color: #3A3430;
   border-left-color: #2E2A26;
@@ -897,7 +897,7 @@ body.theme-pioneer-gold .djc-ceremony-btn.closing.active {
 body.theme-pioneer-gold .djc-ceremony-btn.opening,
 body.theme-pioneer-gold .djc-ceremony-btn.closing {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #3A3430 0%, #2A2420 40%, #1E1A16 60%, #181412 100%);
   border: 2px solid #1A1612;
   border-top-color: #4A4438;
@@ -909,7 +909,7 @@ body.theme-pioneer-gold .djc-ceremony-btn.closing {
 body.theme-pioneer-gold .djc-ceremony-btn.opening:hover,
 body.theme-pioneer-gold .djc-ceremony-btn.closing:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
     linear-gradient(180deg, #44403A 0%, #34302A 40%, #282420 60%, #201C18 100%);
   border-top-color: #554E44;
   color: #FFCC00;
@@ -920,7 +920,7 @@ body.theme-pioneer-gold .djc-ceremony-btn.closing:hover {
 /* Share cards → gold accent */
 body.theme-pioneer-gold .djc-share-card {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #3A3430 0%, #2A2420 40%, #1E1A16 60%, #181412 100%);
   border-top-color: #4A4438;
   border-left-color: #3A3430;
@@ -936,7 +936,7 @@ body.theme-pioneer-gold .djc-share-card {
 }
 body.theme-pioneer-gold .djc-share-card:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
     linear-gradient(180deg, #44403A 0%, #34302A 40%, #282420 60%, #201C18 100%);
   border-top-color: #554E44;
   border-left-color: #4A4438;
@@ -948,7 +948,7 @@ body.theme-pioneer-gold .djc-share-card:hover {
 }
 body.theme-pioneer-gold .djc-share-icon {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.06) 85%, rgba(0,0,0,0.12) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #3A3430 0%, #2A2420 40%, #1E1A16 60%, #181412 100%);
   border-top-color: #4A4438;
   border-left-color: #3A3430;
@@ -984,7 +984,7 @@ body.theme-pioneer-gold .djc-share-card:active {
 /* DJ card hover */
 body.theme-pioneer-gold .djc-dj-card {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #3A3430 0%, #2A2420 40%, #1E1A16 60%, #181412 100%);
   border-top-color: #4A4438;
   border-left-color: #3A3430;
@@ -998,7 +998,7 @@ body.theme-pioneer-gold .djc-dj-card {
 }
 body.theme-pioneer-gold .djc-dj-card:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
     linear-gradient(180deg, #44403A 0%, #34302A 40%, #282420 60%, #201C18 100%);
   border-top-color: #554E44;
   color: #FFCC00;
@@ -1105,7 +1105,7 @@ body.theme-pioneer-gold .djc-stat-pending {
 /* Preset-btn hover → gold */
 body.theme-pioneer-gold .preset-btn {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #3A3430 0%, #2A2420 40%, #1E1A16 60%, #181412 100%);
   border-top-color: #4A4438;
   border-left-color: #3A3430;
@@ -1121,7 +1121,7 @@ body.theme-pioneer-gold .preset-btn {
 body.theme-pioneer-gold .preset-btn:hover,
 body.theme-pioneer-gold .djc-preset:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
     linear-gradient(180deg, #44403A 0%, #34302A 40%, #282420 60%, #201C18 100%);
   border-top-color: #554E44;
   color: #FFCC00;
@@ -1148,7 +1148,7 @@ body.theme-pioneer-gold .preset-btn.active {
 /* FX toggle buttons → gold */
 body.theme-pioneer-gold .djc-fx-btn {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #3A3430 0%, #2A2420 40%, #1E1A16 60%, #181412 100%);
   border-top-color: #4A4438;
   border-left-color: #3A3430;
@@ -1162,7 +1162,7 @@ body.theme-pioneer-gold .djc-fx-btn {
 }
 body.theme-pioneer-gold .djc-fx-btn:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.05) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
     linear-gradient(180deg, #44403A 0%, #34302A 40%, #282420 60%, #201C18 100%);
   color: #FFCC00;
   box-shadow:
@@ -1790,8 +1790,8 @@ body.theme-pioneer-gold .djc-sec-title strong {
 }
 .djc-booth-select {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #4A4A4A 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   color: #D0D0D0;
   border-top: 1px solid #7A7A7A;
   border-left: 1px solid #6A6A6A;
@@ -1815,7 +1815,7 @@ body.theme-pioneer-gold .djc-sec-title strong {
 }
 body.theme-pioneer-gold .djc-booth-select {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.06) 85%, rgba(0,0,0,0.12) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #3A3430 0%, #2A2420 40%, #1E1A16 60%, #181412 100%);
   border-top-color: #4A4438;
   border-left-color: #3A3430;
@@ -1992,8 +1992,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-right: 1px solid #2A2A2A;
   border-bottom: 1px solid #1A1A1A;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.20) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #4A4A4A 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   cursor: pointer;
   transition: all 150ms ease;
   text-decoration: none;
@@ -2012,14 +2012,14 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 45%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
   pointer-events: none;
   border-radius: inherit;
 }
 .djc-share-card:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.20) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #5A5A5A 40%, #4A4A4A 60%, #3E3E3E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   border-top-color: #9A9A9A;
   border-left-color: #8A8A8A;
   transform: translateY(-2px);
@@ -2032,13 +2032,13 @@ body.theme-pioneer-gold .djc-booth-select:focus {
     0 3px 8px rgba(0,0,0,0.30);
 }
 .djc-share-card:hover::after {
-  background: linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.08) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.14) 40%, rgba(255,255,255,0.0) 100%);
 }
 .djc-share-card:active {
   transform: translateY(0);
   background:
     linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 40%, rgba(255,255,255,0.0) 60%, rgba(255,255,255,0.05) 100%),
-    linear-gradient(180deg, #2E2E2E 0%, #353535 50%, #3A3A3A 100%);
+    linear-gradient(180deg, #282828 0%, #2E2E2E 50%, #262626 100%);
   border-top-color: #1A1A1A;
   border-left-color: #222222;
   border-right-color: #5E5E5E;
@@ -2061,8 +2061,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   height: 30px;
   border-radius: 7px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #484848 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   border-top: 1px solid #7A7A7A;
   border-left: 1px solid #6A6A6A;
   border-right: 1px solid #2A2A2A;
@@ -2082,8 +2082,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 }
 .djc-share-card:hover .djc-share-icon {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #555555 40%, #454545 60%, #3A3A3A 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   border-top-color: #8A8A8A;
   border-left-color: #7A7A7A;
   box-shadow:
@@ -2116,12 +2116,12 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   padding: 8px; margin-top: 6px;
   border-radius: 8px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
-    linear-gradient(180deg, #3A3A3A 0%, #2E2E2E 40%, #252525 60%, #1E1E1E 100%);
-  border-top: 1px solid #555555;
-  border-left: 1px solid #4A4A4A;
-  border-right: 1px solid #1A1A1A;
-  border-bottom: 1px solid #111111;
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
+    linear-gradient(180deg, #222222 0%, #1A1A1A 50%, #141414 100%);
+  border-top: 1px solid #444444;
+  border-left: 1px solid #3A3A3A;
+  border-right: 1px solid #141414;
+  border-bottom: 1px solid #0E0E0E;
   overflow: hidden;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.15),
@@ -2168,8 +2168,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-right: 1px solid #2A2A2A;
   border-bottom: 1px solid #1A1A1A;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.20) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #4A4A4A 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   cursor: pointer;
   transition: all 150ms ease;
   font-size: 12px;
@@ -2189,7 +2189,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 45%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
   pointer-events: none;
   border-radius: inherit;
 }
@@ -2197,8 +2197,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-top-color: #9A9A9A;
   border-left-color: #8A8A8A;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.20) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #5A5A5A 40%, #4A4A4A 60%, #3E3E3E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   color: #FFFFFF;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.30),
@@ -2251,8 +2251,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-right: 1px solid #2A2A2A;
   border-bottom: 1px solid #1A1A1A;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.20) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #4A4A4A 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   color: #D0D0D0;
   cursor: pointer;
   transition: all 150ms ease;
@@ -2277,7 +2277,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 45%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
   pointer-events: none;
   border-radius: inherit;
 }
@@ -2299,8 +2299,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 
 .djc-mmode-tag:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.20) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #5A5A5A 40%, #4A4A4A 60%, #3E3E3E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   border-top-color: #9A9A9A;
   border-left-color: #8A8A8A;
   color: #FFFFFF;
@@ -2314,7 +2314,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   transform: translateY(-1px);
 }
 .djc-mmode-tag:hover::after {
-  background: linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.08) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.14) 40%, rgba(255,255,255,0.0) 100%);
 }
 
 /* ── Standard modes — colored left accent ── */
@@ -2329,8 +2329,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 /* ── WINAMP — Brushed Silver Metallic (Bento 5.9.2) ── */
 .djc-mmode-tag.mm-winamp {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.10) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.12) 85%, rgba(0,0,0,0.22) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #555555 35%, #3D3D3D 65%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #484848 0%, #3E3E3E 50%, #363636 100%);
   border-top: 1px solid #8A8A8A;
   border-left: 2px solid #00CC00;
   border-right: 1px solid #2A2A2A;
@@ -2347,7 +2347,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
     0 2px 6px rgba(0,0,0,0.28);
 }
 .djc-mmode-tag.mm-winamp::after {
-  background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
 }
 .djc-mmode-tag.mm-winamp::before {
   background: #00CC00;
@@ -2356,8 +2356,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 }
 .djc-mmode-tag.mm-winamp:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.12) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.12) 85%, rgba(0,0,0,0.22) 100%),
-    linear-gradient(180deg, #7A7A7A 0%, #656565 35%, #4D4D4D 65%, #3E3E3E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   border-top-color: #9A9A9A;
   border-right-color: #3A3A3A;
   border-bottom-color: #2A2A2A;
@@ -2375,8 +2375,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 /* ── PIONEER — XDJ-RX3 Mat Black Hardware ── */
 .djc-mmode-tag.mm-pioneer {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0.25) 100%),
-    linear-gradient(180deg, #252525 0%, #1A1A1A 40%, #111111 60%, #0C0C0C 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #1A1A1A 0%, #131313 50%, #0E0E0E 100%);
   border-top: 1px solid #444444;
   border-left: 2px solid #0099ff;
   border-right: 1px solid #0A0A0A;
@@ -2393,7 +2393,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
     0 2px 8px rgba(0,0,0,0.35);
 }
 .djc-mmode-tag.mm-pioneer::after {
-  background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
 }
 .djc-mmode-tag.mm-pioneer::before {
   background: #0099ff;
@@ -2402,8 +2402,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 }
 .djc-mmode-tag.mm-pioneer:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.05) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0.25) 100%),
-    linear-gradient(180deg, #303030 0%, #222222 40%, #181818 60%, #111111 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #222222 0%, #1A1A1A 50%, #151515 100%);
   border-top-color: #555555;
   color: #55CCFF;
   text-shadow: 0 0 8px rgba(0,170,255,0.5);
@@ -2447,7 +2447,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 .djc-mmode-tag.mm-winamp.active {
   background:
     linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.06) 40%, rgba(255,255,255,0.0) 60%, rgba(255,255,255,0.03) 100%),
-    linear-gradient(180deg, #2E2E2E 0%, #383838 45%, #3A3A3A 55%, #444444 100%);
+    linear-gradient(180deg, #282828 0%, #2E2E2E 50%, #262626 100%);
   border-top: 1px solid #1A1A1A;
   border-left: 2px solid #00CC00;
   border-right: 1px solid #5E5E5E;
@@ -2486,7 +2486,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 /* ── Pioneer Gold theme overrides ── */
 body.theme-pioneer-gold .djc-mmode-tag {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
     linear-gradient(180deg, #3A3430 0%, #2A2420 40%, #1E1A16 60%, #181412 100%);
   border-top-color: #4A4438;
   border-left-color: #3A3430;
@@ -2501,11 +2501,11 @@ body.theme-pioneer-gold .djc-mmode-tag {
     0 2px 6px rgba(0,0,0,0.25);
 }
 body.theme-pioneer-gold .djc-mmode-tag::after {
-  background: linear-gradient(180deg, rgba(255,220,150,0.12) 0%, rgba(255,220,150,0.04) 60%, rgba(255,220,150,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,220,150,0.20) 0%, rgba(255,220,150,0.08) 40%, rgba(255,220,150,0.0) 100%);
 }
 body.theme-pioneer-gold .djc-mmode-tag:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.08) 85%, rgba(0,0,0,0.15) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
     linear-gradient(180deg, #44403A 0%, #34302A 40%, #282420 60%, #201C18 100%);
   border-top-color: #554E44;
   box-shadow:
@@ -2532,8 +2532,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-latino { border-left-color: #ff8c00; }
 body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 body.theme-pioneer-gold .djc-mmode-tag.mm-winamp {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.10) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.12) 85%, rgba(0,0,0,0.22) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #555555 35%, #3D3D3D 65%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #484848 0%, #3E3E3E 50%, #363636 100%);
   border-top-color: #8A8A8A;
   border-left-color: #00CC00;
   border-right-color: #2A2A2A;
@@ -2548,8 +2548,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-winamp {
 }
 body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0.25) 100%),
-    linear-gradient(180deg, #252525 0%, #1A1A1A 40%, #111111 60%, #0C0C0C 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #1A1A1A 0%, #131313 50%, #0E0E0E 100%);
   border-top-color: #444444;
   border-left-color: #0099ff;
   border-right-color: #0A0A0A;
@@ -2633,8 +2633,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   font-size: 11px;
   font-weight: 600;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.18) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #4A4A4A 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   border-top: 1px solid #7A7A7A;
   border-left: 1px solid #6A6A6A;
   border-right: 1px solid #2A2A2A;
@@ -2653,15 +2653,15 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 45%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
   pointer-events: none;
   border-radius: inherit;
 }
 .djc-fx-btn:last-child { border-right: 1px solid #2A2A2A; }
 .djc-fx-btn:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.18) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #5A5A5A 40%, #4A4A4A 60%, #3E3E3E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   border-top-color: #8A8A8A;
   color: #FFFFFF;
   box-shadow:
@@ -2810,8 +2810,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   font-family: var(--font-display);
   font-size: 13px; font-weight: 700;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.20) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #4A4A4A 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   border-top: 1px solid #8A8A8A;
   border-left: 1px solid #7A7A7A;
   border-right: 1px solid #2A2A2A;
@@ -2833,7 +2833,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 45%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
   pointer-events: none;
   border-radius: inherit;
 }
@@ -2842,8 +2842,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   border-left-color: #8A8A8A;
   color: #FFFFFF;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.20) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #5A5A5A 40%, #4A4A4A 60%, #3E3E3E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.30),
     inset 0 -1px 0 rgba(0,0,0,0.30),
@@ -5075,15 +5075,15 @@ body.theme-pioneer-gold .closing-stat-number {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 45%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.0) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 40%, rgba(255,255,255,0.0) 100%);
   pointer-events: none;
   border-radius: inherit;
 }
 
 .djc-ceremony-btn.opening {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.18) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #4A4A4A 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   border: 2px solid #2A2A2A;
   border-top-color: #7A7A7A;
   border-left-color: #6A6A6A;
@@ -5095,8 +5095,8 @@ body.theme-pioneer-gold .closing-stat-number {
 
 .djc-ceremony-btn.opening:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.18) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #5A5A5A 40%, #4A4A4A 60%, #3E3E3E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   border-top-color: #8A8A8A;
   color: #FFFFFF;
 }
@@ -5122,8 +5122,8 @@ body.theme-pioneer-gold .closing-stat-number {
 
 .djc-ceremony-btn.closing {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.18) 100%),
-    linear-gradient(180deg, #5A5A5A 0%, #4A4A4A 40%, #3A3A3A 60%, #2E2E2E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #404040 0%, #383838 50%, #303030 100%);
   border: 2px solid #2A2A2A;
   border-top-color: #7A7A7A;
   border-left-color: #6A6A6A;
@@ -5135,8 +5135,8 @@ body.theme-pioneer-gold .closing-stat-number {
 
 .djc-ceremony-btn.closing:hover {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.10) 85%, rgba(0,0,0,0.18) 100%),
-    linear-gradient(180deg, #6A6A6A 0%, #5A5A5A 40%, #4A4A4A 60%, #3E3E3E 100%);
+    linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
+    linear-gradient(180deg, #4E4E4E 0%, #454545 50%, #3E3E3E 100%);
   border-top-color: #8A8A8A;
   color: #FFFFFF;
 }
@@ -5556,11 +5556,11 @@ body.theme-pioneer-gold .closing-stat-number {
   --wmp-accent: #00CC00;
   --wmp-accent-light: #00FF00;
   --wmp-accent-dark: #009900;
-  --wmp-bg: #232323;
-  --wmp-surface: #2A2A2A;
-  --wmp-surface-alt: #1E1E1E;
-  --wmp-border: #2F2F2F;
-  --wmp-border-light: #3A3A3A;
+  --wmp-bg: #181818;
+  --wmp-surface: #1E1E1E;
+  --wmp-surface-alt: #141414;
+  --wmp-border: #222222;
+  --wmp-border-light: #2A2A2A;
   --wmp-text: #D4D4D4;
   --wmp-text-dim: #888888;
   --wmp-text-bright: #FFFFFF;
