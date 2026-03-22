@@ -374,7 +374,7 @@ const MUSIC_MODE_CONFIG = {
     subtitle: { tr: 'Winamp Mode', en: 'Winamp Mode' },
     icon: '📟',
     bg: 'radial-gradient(ellipse at center, rgba(35, 35, 35, 0.96) 0%, rgba(26, 26, 26, 0.98) 100%)',
-    color1: '#4A90D9', color2: '#5BA0E6', color3: '#3A7BD5',
+    color1: '#00CC00', color2: '#00FF00', color3: '#009900',
     image: '/modes/winamp_mode.png', imgClass: 'mm-img-winamp',
     modeClass: 'display-mode-winamp',
   },

@@ -725,7 +725,7 @@ export default function DJPanel() {
             <button
               className={`djc-theme-toggle-btn ${panelTheme === 'classic' ? 'active' : ''}`}
               onClick={() => setPanelTheme('classic')}>
-              Klasik
+              Winamp
             </button>
             <button
               className={`djc-theme-toggle-btn ${panelTheme === 'pioneer' ? 'active' : ''}`}
