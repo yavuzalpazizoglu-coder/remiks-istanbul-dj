@@ -374,15 +374,15 @@ export default function DJPanel() {
   };
 
   const MUSIC_MODES = [
-    { id: 'arabesk', icon: '🎻', tr: 'Remiks Arabesk Mode', en: 'Arabesk Mode' },
-    { id: 'rock', icon: '🎸', tr: 'Remiks Rock', en: 'Remiks Rock' },
-    { id: '90s-pop', icon: '💿', tr: "90'lar Türkçe Pop", en: "90s Turkish Pop" },
-    { id: 'turkish-delight', icon: '🌹', tr: 'Remiks Turkish Delight', en: 'Turkish Delight' },
-    { id: 'tech', icon: '🎧', tr: 'Remiks Tech', en: 'Remiks Tech' },
-    { id: 'latino', icon: '💃', tr: 'Remiks Latino', en: 'Remiks Latino' },
-    { id: 'rap', icon: '🎤', tr: 'Remiks Rap', en: 'Remiks Rap' },
-    { id: 'winamp', icon: '📟', tr: 'Winamp Mode', en: 'Winamp Mode' },
-    { id: 'pioneer', icon: '🎛️', tr: 'Pioneer Mode', en: 'Pioneer Mode' },
+    { id: 'arabesk', icon: '🎻', tr: 'Arabesk', en: 'Arabesk' },
+    { id: 'rock', icon: '🎸', tr: 'Rock', en: 'Rock' },
+    { id: '90s-pop', icon: '💿', tr: "90'lar", en: "90's" },
+    { id: 'turkish-delight', icon: '🌹', tr: 'Turkish D.', en: 'Turkish D.' },
+    { id: 'tech', icon: '🎧', tr: 'Tech', en: 'Tech' },
+    { id: 'latino', icon: '💃', tr: 'Latino', en: 'Latino' },
+    { id: 'rap', icon: '🎤', tr: 'Rap', en: 'Rap' },
+    { id: 'winamp', icon: '📟', tr: 'Winamp', en: 'Winamp' },
+    { id: 'pioneer', icon: '🎛️', tr: 'Pioneer', en: 'Pioneer' },
   ];
 
   const DJ_PHOTOS = [
@@ -737,43 +737,56 @@ export default function DJPanel() {
           {/* Status & Control */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-title">{lang === 'tr' ? 'Durum & Kontrol' : 'Status & Control'}</span>
+              <span className="djc-sec-title"><strong>BOOTH</strong> · {lang === 'tr' ? 'Kumanda' : 'Command'}</span>
             </div>
             <div className="djc-sec-body">
-              {event.status === 'waiting' && (
-                <div className="djc-ctrl-stack">
-                  <button className="btn btn-primary djc-btn djc-btn-full" onClick={() => updateStatus('active')}>{T('dj.start_requests')}</button>
-                  <div className="djc-preset-row">
-                    {[5, 10, 15, 30].map(m => (
-                      <button key={m} className={`preset-btn djc-preset djc-preset-eq ${countdownMinutes === m ? 'active' : ''}`} onClick={() => setCountdownMinutes(m)}>{m}′</button>
-                    ))}
-                    <input type="number" className="input djc-preset-input" value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))} min={1} max={120} />
-                  </div>
-                  <button className="btn btn-ghost djc-btn djc-btn-full" onClick={startCountdown}>{lang === 'tr' ? 'Geri Sayım Başlat' : 'Start Countdown'}</button>
+              <div className="djc-booth-top">
+                <div className="djc-booth-buttons">
+                  {event.status === 'waiting' && (
+                    <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>{T('dj.start_requests')}</button>
+                  )}
+                  {event.status === 'countdown' && (
+                    <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>{T('dj.start_requests')}</button>
+                  )}
+                  {(event.status === 'active' || event.status === 'paused') && (
+                    <>
+                      <button className="btn btn-ghost djc-btn" onClick={() => updateStatus(event.status === 'paused' ? 'active' : 'paused')}>
+                        {event.status === 'paused' ? T('dj.resume') : T('dj.pause')}
+                      </button>
+                      <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>{T('dj.end_event')}</button>
+                    </>
+                  )}
                 </div>
-              )}
-              {event.status === 'countdown' && (
-                <button className="btn btn-primary djc-btn djc-btn-full" onClick={() => updateStatus('active')}>{T('dj.start_requests')}</button>
-              )}
-              {event.status === 'active' && (
-                <div className="djc-btn-pair">
-                  <button className="btn btn-ghost djc-btn" onClick={() => updateStatus('paused')}>{T('dj.pause')}</button>
-                  <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>{T('dj.end_event')}</button>
+                <div className="djc-booth-stats">
+                  <span>{lang === 'tr' ? 'Bekleyen' : 'Pending'} <strong>{waitingRequests.length}</strong></span>
+                  <span>{lang === 'tr' ? 'Onaylı' : 'OK'} <strong>{approvedRequests.length}</strong></span>
+                  <span>{T('dj.total_votes')} <strong>{totalVotes}</strong></span>
                 </div>
-              )}
-              {event.status === 'paused' && (
-                <div className="djc-btn-pair">
-                  <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>{T('dj.resume')}</button>
-                  <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>{T('dj.end_event')}</button>
-                </div>
-              )}
+              </div>
+              <div className="djc-booth-selects">
+                <label className="djc-booth-select-label">
+                  {lang === 'tr' ? 'Süre' : 'Duration'}
+                  <select className="djc-booth-select" value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))}>
+                    {[5, 10, 15, 30, 60].map(m => <option key={m} value={m}>{m} dk</option>)}
+                  </select>
+                </label>
+                <label className="djc-booth-select-label">
+                  {lang === 'tr' ? 'G.Sayım' : 'Countdown'}
+                  <select className="djc-booth-select" value={countdownMinutes} onChange={(e) => { setCountdownMinutes(Number(e.target.value)); }}>
+                    {[3, 5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
+                  </select>
+                </label>
+                {event.status === 'waiting' && (
+                  <button className="btn btn-ghost djc-btn djc-btn-sm" onClick={startCountdown}>{lang === 'tr' ? 'Başlat' : 'Start'}</button>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Share & Display */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-title">{lang === 'tr' ? 'Paylaşım & Ekran' : 'Share & Display'}</span>
+              <span className="djc-sec-title"><strong>OUTPUT</strong> · {lang === 'tr' ? 'Çıkış' : 'Output'}</span>
             </div>
             <div className="djc-sec-body">
               <div className="djc-share-grid">
@@ -813,7 +826,7 @@ export default function DJPanel() {
           {/* Ceremony */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-title">{lang === 'tr' ? 'Tören & Açılış' : 'Ceremony'}</span>
+              <span className="djc-sec-title"><strong>SHOW</strong> · {lang === 'tr' ? 'Gösteri' : 'Show'}</span>
             </div>
             <div className="djc-sec-body">
               <div className="djc-btn-pair">
@@ -824,15 +837,19 @@ export default function DJPanel() {
                   {lang === 'tr' ? 'Kapanış' : 'Closing'}
                 </button>
               </div>
-              <div className="djc-preset-row djc-preset-row-compact" style={{ marginTop: 8 }}>
-                <span className="djc-row-label">{lang === 'tr' ? 'Süre' : 'Duration'}</span>
-                {[5, 10, 15, 30].map(m => (
-                  <button key={m} className={`preset-btn djc-preset djc-preset-eq ${ceremonyMinutes === m ? 'active' : ''}`} onClick={() => updateCeremonyMinutes(m)}>{m}′</button>
-                ))}
-                <div className="djc-custom-min">
-                  <input type="number" className="input djc-preset-input" value={ceremonyMinutes} onChange={(e) => setCeremonyMinutes(Number(e.target.value))} min={1} max={120} />
-                  <button className="preset-btn djc-preset djc-preset-ok" onClick={() => updateCeremonyMinutes(ceremonyMinutes)}>OK</button>
-                </div>
+              <div className="djc-booth-selects" style={{ marginTop: 8 }}>
+                <label className="djc-booth-select-label">
+                  {lang === 'tr' ? 'Açılış' : 'Opening'}
+                  <select className="djc-booth-select" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))}>
+                    {[5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
+                  </select>
+                </label>
+                <label className="djc-booth-select-label">
+                  {lang === 'tr' ? 'Kapanış' : 'Closing'}
+                  <select className="djc-booth-select" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))}>
+                    {[5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
+                  </select>
+                </label>
               </div>
             </div>
           </div>
@@ -840,10 +857,12 @@ export default function DJPanel() {
           {/* Music Mode & DJ */}
           <div className="djc-sec">
             <div className="djc-sec-head">
-              <span className="djc-sec-title">{lang === 'tr' ? 'Müzik Modu & DJ' : 'Music Mode & DJ'}</span>
+              <span className="djc-sec-title"><strong>MOD & DJ</strong> · {lang === 'tr' ? 'Modlar' : 'Modes'}</span>
             </div>
             <div className="djc-sec-body">
-              <div className="djc-dj-grid">
+              <div className="djc-dj-row">
+                <span className="djc-dj-label">DJ</span>
+                <div className="djc-dj-grid">
                 {DJ_PHOTOS.map(dj => (
                   <button key={dj.id}
                     className={`djc-dj-card ${selectedDJs.includes(dj.id) ? 'active' : ''}`}
@@ -852,6 +871,7 @@ export default function DJPanel() {
                     <span>{dj.name}</span>
                   </button>
                 ))}
+                </div>
               </div>
               <div className="djc-mmode-grid">
                 {MUSIC_MODES.map(m => (
@@ -865,18 +885,17 @@ export default function DJPanel() {
             </div>
           </div>
 
-          {/* Request Limit — single row */}
-          <div className="djc-sec djc-sec-compact">
-            <div className="djc-sec-body djc-sec-between">
-              <span className="djc-sec-title">{lang === 'tr' ? 'İstek Limiti' : 'Req. Limit'}</span>
-              <div className="djc-limit-row">
-                <span className="djc-row-label">{lang === 'tr' ? 'Kişi başı:' : 'Per person:'}</span>
-                <div className="djc-limit-toggle">
-                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
-                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
-                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
-                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
-                </div>
+          {/* Request Limit */}
+          <div className="djc-sec">
+            <div className="djc-sec-head">
+              <span className="djc-sec-title"><strong>LIMIT</strong> · Limit</span>
+            </div>
+            <div className="djc-sec-body">
+              <div className="djc-limit-toggle">
+                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
+                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
+                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
+                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
               </div>
             </div>
           </div>
@@ -885,7 +904,7 @@ export default function DJPanel() {
           {slug && event && (
             <div className="djc-sec djc-sec-grow">
               <div className="djc-sec-head djc-sec-head-between">
-                <span className="djc-sec-title">{lang === 'tr' ? 'Sahne Önizleme' : 'Stage Preview'}</span>
+                <span className="djc-sec-title"><strong>PREVIEW</strong> · {lang === 'tr' ? 'Önizleme' : 'Preview'}</span>
                 <span className="stage-preview-live-badge">
                   <span className="stage-preview-live-dot" />
                   {lang === 'tr' ? 'CANLI' : 'LIVE'}
@@ -905,6 +924,11 @@ export default function DJPanel() {
               </div>
             </div>
           )}
+
+          <div className="djc-left-footer">
+            <span className="djc-left-footer-powered">POWERED BY</span>
+            <span className="djc-left-footer-brand">REMİKS İSTANBUL</span>
+          </div>
 
         </div>
 
