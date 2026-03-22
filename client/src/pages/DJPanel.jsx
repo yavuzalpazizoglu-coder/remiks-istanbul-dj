@@ -837,7 +837,7 @@ export default function DJPanel() {
                   {lang === 'tr' ? 'Kapanış' : 'Closing'}
                 </button>
               </div>
-              <div className="djc-booth-selects" style={{ marginTop: 8 }}>
+              <div className="djc-booth-selects" style={{ marginTop: 4 }}>
                 <label className="djc-booth-select-label">
                   {lang === 'tr' ? 'Açılış' : 'Opening'}
                   <select className="djc-booth-select" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))}>

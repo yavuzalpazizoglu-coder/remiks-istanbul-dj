@@ -705,7 +705,7 @@ body.theme-pioneer-gold .dj-panel.dj-compact {
 .djc-theme-toggle {
   display: flex;
   gap: 0;
-  margin: 8px 14px;
+  margin: 4px 12px;
   background: linear-gradient(180deg, #2A2A2A 0%, #1E1E1E 100%);
   border-radius: 7px;
   padding: 2px;
@@ -716,7 +716,7 @@ body.theme-pioneer-gold .dj-panel.dj-compact {
 }
 .djc-theme-toggle-btn {
   flex: 1;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-top: 1px solid #6A6A6A;
   border-left: 1px solid #5A5A5A;
   border-right: 1px solid #1A1A1A;
@@ -1311,8 +1311,7 @@ body.theme-pioneer-gold .djc-remiksbox-logo {
   width: 440px;
   min-width: 340px;
   flex-shrink: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   border-right: 1px solid var(--djt-card-border);
   display: flex;
   flex-direction: column;
@@ -1716,7 +1715,7 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 /* ═══ Section System ═══ */
 .djc-sec {
   border-bottom: 1px solid var(--djt-sec-border);
-  padding: 8px 14px;
+  padding: 4px 12px;
   transition: border-color 0.4s ease;
 }
 .djc-sec-grow {
@@ -1727,7 +1726,7 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
   flex-direction: column;
 }
 .djc-sec-head {
-  padding: 3px 0 3px;
+  padding: 1px 0;
 }
 .djc-sec-title {
   font-family: var(--font-display);
@@ -1752,8 +1751,8 @@ body.theme-pioneer-gold .djc-sec-title strong {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 6px;
+  margin-bottom: 3px;
 }
 .djc-booth-buttons {
   display: flex;
@@ -1778,7 +1777,7 @@ body.theme-pioneer-gold .djc-sec-title strong {
 .djc-booth-selects {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 .djc-booth-select-label {
   display: flex;
@@ -1844,7 +1843,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 
 /* ═══ Left Footer ═══ */
 .djc-left-footer {
-  padding: 10px 14px;
+  padding: 4px 12px;
   text-align: left;
   flex-shrink: 0;
   border-top: 1px solid var(--djt-sec-border);
@@ -1866,7 +1865,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   color: rgba(255,255,255,0.5);
 }
 .djc-sec-body {
-  padding: 2px 0 4px;
+  padding: 1px 0 2px;
 }
 .djc-sec-grow > .djc-sec-body {
   flex: 1;
@@ -1882,7 +1881,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 
 /* Compact section (no separate header, single row) */
 .djc-sec-compact .djc-sec-body {
-  padding: 4px 0;
+  padding: 2px 0;
 }
 .djc-limit-row {
   display: flex;
@@ -1890,10 +1889,10 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   gap: 8px;
 }
 .djc-limit-toggle .djc-preset {
-  width: 36px !important;
-  height: 36px !important;
+  width: 32px !important;
+  height: 32px !important;
   padding: 0 !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
   display: inline-flex;
   align-items: center;
@@ -1977,15 +1976,15 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 .djc-share-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
+  gap: 4px;
 }
 .djc-share-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 8px 4px 6px;
+  gap: 3px;
+  padding: 6px 4px 5px;
   border-radius: 10px;
   border-top: 1px solid #8A8A8A;
   border-left: 1px solid #7A7A7A;
@@ -2057,8 +2056,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   border-radius: 7px;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.04) 85%, rgba(0,0,0,0.08) 100%),
@@ -2112,8 +2111,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 
 /* QR inline */
 .djc-qr-inline {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px; margin-top: 6px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px; margin-top: 4px;
   border-radius: 8px;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.03) 85%, rgba(0,0,0,0.06) 100%),
@@ -2138,8 +2137,8 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 .djc-dj-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 6px;
+  margin-bottom: 3px;
 }
 .djc-dj-label {
   font-family: var(--font-display);
@@ -2154,14 +2153,14 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 .djc-dj-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  margin-bottom: 4px;
+  gap: 3px;
+  margin-bottom: 3px;
 }
 .djc-dj-card {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
+  gap: 5px;
+  padding: 3px 6px;
   border-radius: 8px;
   border-top: 1px solid #8A8A8A;
   border-left: 1px solid #7A7A7A;
@@ -2237,13 +2236,13 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 .djc-mmode-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 4px;
+  gap: 3px;
   width: 100%;
 }
 .djc-mmode-tag {
-  padding: 4px 6px;
-  border-radius: 6px;
-  font-size: 9px;
+  padding: 3px 5px;
+  border-radius: 5px;
+  font-size: 8px;
   font-weight: 600;
   letter-spacing: 0.2px;
   border-top: 1px solid #8A8A8A;
