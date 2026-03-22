@@ -433,6 +433,7 @@ export default function RequestPage() {
       {!nightPage && (
         <>
           <div className="request-header">
+        <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="request-brand-logo" />
         <h1>{T('request.title')}</h1>
         {event.status === 'countdown' && countdownDisplay && (
           <div style={{ marginTop: 8, fontSize: 28, fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--neon-cyan)' }}>

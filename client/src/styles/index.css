@@ -464,6 +464,16 @@ body.theme-pioneer-gold .req-tab:first-child {
   padding: 16px 0 10px;
   animation: fadeIn 0.4s ease;
 }
+.request-brand-logo {
+  height: 28px;
+  width: auto;
+  display: block;
+  margin: 0 auto 10px;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.2));
+}
+body.theme-pioneer-gold .request-brand-logo {
+  filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.2));
+}
 .request-header .logo { height: 32px; margin-bottom: 14px; }
 .request-header h1 {
   font-family: var(--font-display);
@@ -1032,18 +1042,15 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   display: flex; align-items: center; gap: 6px;
   flex-shrink: 0;
 }
-.djc-remiksbox {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  background: var(--djt-logo-gradient);
-  background-size: 200% 200%;
-  background-clip: text; -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: loginGradientShift 4s ease infinite;
-  filter: drop-shadow(0 0 8px var(--djt-accent-glow1)) drop-shadow(0 0 16px var(--djt-accent-glow2));
+.djc-remiksbox-logo {
+  height: 22px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 0 6px var(--djt-accent-glow1)) drop-shadow(0 0 12px var(--djt-accent-glow2));
   transition: filter 0.4s ease;
+}
+body.theme-pioneer-gold .djc-remiksbox-logo {
+  filter: drop-shadow(0 0 6px rgba(255, 204, 0, 0.3)) drop-shadow(0 0 12px rgba(255, 170, 0, 0.15));
 }
 .djc-row1-divider {
   width: 1px; height: 18px;
@@ -2223,19 +2230,12 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 .login-hero {
   text-align: center; margin-bottom: 32px;
 }
-.login-remiksbox {
+.login-remiksbox-logo {
   display: block;
-  font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, #3b82f6, #06b6d4, #3b82f6);
-  background-size: 200% 200%;
-  background-clip: text; -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: loginGradientShift 4s ease infinite;
-  text-shadow: 0 0 40px rgba(59,130,246,0.3);
+  height: 56px;
+  width: auto;
+  margin: 0 auto 12px;
+  filter: drop-shadow(0 0 20px rgba(59,130,246,0.35));
 }
 @keyframes loginGradientShift {
   0%, 100% { background-position: 0% 50%; }
@@ -2369,12 +2369,11 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   margin-bottom: 10px;
 }
-.login-footer-logo {
-  font-family: var(--font-display);
-  font-size: 16px; font-weight: 900;
-  background: linear-gradient(135deg, #3b82f6, #06b6d4);
-  background-clip: text; -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.login-footer-logo-img {
+  height: 18px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 0 6px rgba(59,130,246,0.2));
 }
 .login-footer-by {
   font-size: 12px; color: #555;

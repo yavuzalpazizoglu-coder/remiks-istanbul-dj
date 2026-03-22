@@ -514,7 +514,7 @@ export default function DJPanel() {
     const loginFooter = (
       <footer className="login-footer">
         <div className="login-footer-brand">
-          <span className="login-footer-logo">RemiksBox</span>
+          <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="login-footer-logo-img" />
           <span className="login-footer-by">by Remiks İstanbul</span>
         </div>
         <div className="login-footer-links">
@@ -544,7 +544,7 @@ export default function DJPanel() {
           {loginBg}
           <div className="login-content">
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="login-remiksbox">RemiksBox</span>
+              <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="login-remiksbox-logo" />
               <p className="login-tagline">{lang === 'tr' ? 'DJ Etkinlik Yönetim Sistemi' : 'DJ Event Management System'}</p>
               <div className="login-badge-row">
                 <span className="login-badge">Real-Time</span>
@@ -600,7 +600,7 @@ export default function DJPanel() {
         {loginBg}
         <div className="login-content">
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <span className="login-remiksbox">RemiksBox</span>
+            <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="login-remiksbox-logo" />
             <div className="login-user-chip">
               <span className="login-user-avatar">{djUser.name?.charAt(0) || 'D'}</span>
               <span className="login-user-name">{djUser.name}</span>
@@ -693,7 +693,7 @@ export default function DJPanel() {
       {/* ─── Top Header Bar ─── */}
       <div className="djc-row1">
         <div className="djc-brand-block">
-          <span className="djc-remiksbox">RemiksBox</span>
+          <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="djc-remiksbox-logo" />
         </div>
         <div className="djc-row1-divider" />
         <span className="djc-event-name">{event.name}</span>
