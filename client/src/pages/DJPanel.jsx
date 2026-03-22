@@ -44,6 +44,11 @@ export default function DJPanel() {
   const [selectedDJs, setSelectedDJs] = useState([]);
   const [panelTheme, setPanelTheme] = useState(() => localStorage.getItem('remiks_panel_theme') || 'classic');
   const [connectedCount, setConnectedCount] = useState(0);
+  const [rightTab, setRightTab] = useState('settings');
+  const [nightState, setNightState] = useState(null);
+  const [nightInput, setNightInput] = useState('');
+  const [nightArtist, setNightArtist] = useState('');
+  const [nightDuration, setNightDuration] = useState(180);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
   const previewMonitorRef = useRef(null);
@@ -141,6 +146,21 @@ export default function DJPanel() {
 
     socket.on('room-count', ({ count }) => setConnectedCount(count));
 
+    socket.on('night-update', (data) => setNightState(data));
+    socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
+      setNightState(prev => {
+        if (!prev) return prev;
+        const rounds = prev.rounds.map(r => {
+          if (r.roundNumber !== roundNumber) return r;
+          return { ...r, finalists: r.finalists.map(f => {
+            const updated = finalists.find(u => u.id === f.id);
+            return updated ? { ...f, votes: updated.votes } : f;
+          }), totalVotes };
+        });
+        return { ...prev, rounds };
+      });
+    });
+
     return () => {
       socket.off('request-added');
       socket.off('vote-updated');
@@ -149,6 +169,8 @@ export default function DJPanel() {
       socket.off('ceremony');
       socket.off('music-mode');
       socket.off('room-count');
+      socket.off('night-update');
+      socket.off('night-vote');
       socket.disconnect();
     };
   }, [slug, fetchRequests]);
@@ -396,6 +418,55 @@ export default function DJPanel() {
       });
     } catch (err) { console.warn('changeAnimationLevel failed:', err); }
   };
+
+  const nightApi = useCallback(async (endpoint, body = {}) => {
+    try {
+      const res = await fetch(`${API}/api/events/${slug}/night/${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Error'); return null; }
+      return data;
+    } catch (err) { showToast(err.message); return null; }
+  }, [slug, password]);
+
+  const fetchNightStatus = useCallback(async () => {
+    if (!slug) return;
+    try {
+      const res = await fetch(`${API}/api/events/${slug}/night/status`);
+      if (res.ok) setNightState(await res.json());
+    } catch {}
+  }, [slug]);
+
+  useEffect(() => { if (slug && event) fetchNightStatus(); }, [slug, event, fetchNightStatus]);
+
+  useEffect(() => {
+    const round = nightState?.rounds?.[nightState.currentRound - 1];
+    if (round?.phase !== 'voting' || !round?.endTime) return;
+    const interval = setInterval(() => {
+      if (Date.now() >= round.endTime) { clearInterval(interval); nightStop(); }
+      setNightState(prev => ({ ...prev }));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [nightState?.rounds?.[nightState?.currentRound - 1]?.phase, nightState?.rounds?.[nightState?.currentRound - 1]?.endTime]);
+
+  const nightAddSong = async () => {
+    if (!nightInput.trim()) return;
+    const result = await nightApi('finalists', { action: 'add', title: nightInput.trim(), artist: nightArtist.trim() });
+    if (result) { setNightInput(''); setNightArtist(''); }
+  };
+
+  const nightRemoveSong = (songId) => nightApi('finalists', { action: 'remove', songId });
+  const nightStart = () => nightApi('start', { duration: nightDuration });
+  const nightStop = () => nightApi('stop');
+  const nightFullscreen = (show) => nightApi('fullscreen', { show });
+  const nightNewRound = () => {
+    const dj2Name = DJ_PHOTOS[1]?.name || 'DJ 2';
+    nightApi('new-round', { djName: dj2Name });
+  };
+  const nightReset = () => nightApi('reset');
 
   const handleTickerChange = (val) => {
     setTickerTexts(val);
@@ -880,102 +951,228 @@ export default function DJPanel() {
             </div>
           )}
 
-          {/* ═══ Settings & Appearance (in right panel) ═══ */}
+          {/* ═══ Settings & Appearance (in right panel) — TAB SYSTEM ═══ */}
           <div className="djc-settings-bottom">
             <div className="djc-settings-bottom-divider" />
-            <div className="djc-settings-split">
-              <div className="djc-settings-main">
-                <div className="djc-sec-head">
-                  <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings'}</span>
+            <div className="right-panel-tabs">
+              <button className={`right-panel-tab ${rightTab === 'settings' ? 'active' : ''}`} onClick={() => setRightTab('settings')}>
+                {lang === 'tr' ? 'Ayarlar' : 'Settings'}
+              </button>
+              <button className={`right-panel-tab night-tab ${rightTab === 'night' ? 'active' : ''} ${nightState?.rounds?.some(r => r.phase === 'voting') ? 'has-active-vote' : ''}`} onClick={() => setRightTab('night')}>
+                ★ {lang === 'tr' ? 'Gecenin Şarkısı' : 'Song of the Night'}
+              </button>
+            </div>
+
+            {/* ─── Settings Tab ─── */}
+            {rightTab === 'settings' && (
+              <div className="djc-settings-split">
+                <div className="djc-settings-main">
+                  <div className="djc-sec-head">
+                    <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings'}</span>
+                  </div>
+                  <div className="djc-settings-grid">
+                    <div className="djc-field">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
+                      <div className="djc-field-input-wrap">
+                        <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
+                        {brandSaving && <span className="djc-field-status">...</span>}
+                      </div>
+                    </div>
+                    <div className="djc-field">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
+                      <div className="djc-field-input-wrap">
+                        <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
+                        {tickerSaving && <span className="djc-field-status">...</span>}
+                      </div>
+                    </div>
+                    <div className="djc-field djc-field-inline">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
+                      <div className="djc-theme-picker">
+                        {[
+                          { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
+                          { id: 'purple', color: '#b829dd', label: 'Mor' },
+                          { id: 'pink', color: '#ff0080', label: 'Pembe' },
+                          { id: 'green', color: '#00ff88', label: 'Yeşil' },
+                          { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
+                          { id: 'red', color: '#ff4444', label: 'Kırmızı' },
+                        ].map(t => (
+                          <button key={t.id}
+                            className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
+                            style={{ background: t.color }}
+                            onClick={() => changeTheme(t.id)}
+                            title={t.label}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="djc-field djc-field-inline">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
+                      <div className="djc-fx-toggle">
+                        {[
+                          { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
+                          { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
+                          { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
+                        ].map(l => (
+                          <button key={l.id}
+                            className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
+                            onClick={() => changeAnimationLevel(l.id)}>
+                            {l.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="djc-settings-grid">
-                  <div className="djc-field">
-                    <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
-                    <div className="djc-field-input-wrap">
-                      <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
-                      {brandSaving && <span className="djc-field-status">...</span>}
+                <div className="djc-live-stats-side">
+                  <div className="djc-ls-title">{lang === 'tr' ? 'CANLI' : 'LIVE'}</div>
+                  <div className="djc-ls-grid">
+                    <div className="djc-ls-item">
+                      <span className="djc-ls-val">{connectedCount}</span>
+                      <span className="djc-ls-lbl">{lang === 'tr' ? 'Bağlı' : 'Online'}</span>
+                    </div>
+                    <div className="djc-ls-item">
+                      <span className="djc-ls-val">{approvedRequests.length}</span>
+                      <span className="djc-ls-lbl">{lang === 'tr' ? 'İstek' : 'Req'}</span>
+                    </div>
+                    <div className="djc-ls-item">
+                      <span className="djc-ls-val">{totalVotes}</span>
+                      <span className="djc-ls-lbl">{lang === 'tr' ? 'Oy' : 'Vote'}</span>
+                    </div>
+                    <div className="djc-ls-item djc-ls-warn">
+                      <span className="djc-ls-val">{waitingRequests.length}</span>
+                      <span className="djc-ls-lbl">{lang === 'tr' ? 'Bekleyen' : 'Pend.'}</span>
                     </div>
                   </div>
-                  <div className="djc-field">
-                    <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
-                    <div className="djc-field-input-wrap">
-                      <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
-                      {tickerSaving && <span className="djc-field-status">...</span>}
-                    </div>
-                  </div>
-                  <div className="djc-field djc-field-inline">
-                    <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
-                    <div className="djc-theme-picker">
-                      {[
-                        { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
-                        { id: 'purple', color: '#b829dd', label: 'Mor' },
-                        { id: 'pink', color: '#ff0080', label: 'Pembe' },
-                        { id: 'green', color: '#00ff88', label: 'Yeşil' },
-                        { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
-                        { id: 'red', color: '#ff4444', label: 'Kırmızı' },
-                      ].map(t => (
-                        <button key={t.id}
-                          className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
-                          style={{ background: t.color }}
-                          onClick={() => changeTheme(t.id)}
-                          title={t.label}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div className="djc-field djc-field-inline">
-                    <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
-                    <div className="djc-fx-toggle">
-                      {[
-                        { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
-                        { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
-                        { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
-                      ].map(l => (
-                        <button key={l.id}
-                          className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
-                          onClick={() => changeAnimationLevel(l.id)}>
-                          {l.label}
-                        </button>
-                      ))}
-                    </div>
+                  <div className="djc-ls-top">
+                    <div className="djc-ls-top-title">{lang === 'tr' ? 'EN ÇOK OY' : 'TOP'}</div>
+                    {[...approvedRequests].sort((a, b) => b.votes - a.votes).slice(0, 3).map((req, i) => (
+                      <div key={req.id} className="djc-ls-top-row">
+                        <span className="djc-ls-top-rank">{i + 1}</span>
+                        <span className="djc-ls-top-name">{req.song_name}</span>
+                        <span className="djc-ls-top-votes">{req.votes}</span>
+                      </div>
+                    ))}
+                    {approvedRequests.length === 0 && (
+                      <div className="djc-ls-top-empty">{lang === 'tr' ? 'Henüz istek yok' : 'No requests'}</div>
+                    )}
                   </div>
                 </div>
               </div>
-              <div className="djc-live-stats-side">
-                <div className="djc-ls-title">{lang === 'tr' ? 'CANLI' : 'LIVE'}</div>
-                <div className="djc-ls-grid">
-                  <div className="djc-ls-item">
-                    <span className="djc-ls-val">{connectedCount}</span>
-                    <span className="djc-ls-lbl">{lang === 'tr' ? 'Bağlı' : 'Online'}</span>
-                  </div>
-                  <div className="djc-ls-item">
-                    <span className="djc-ls-val">{approvedRequests.length}</span>
-                    <span className="djc-ls-lbl">{lang === 'tr' ? 'İstek' : 'Req'}</span>
-                  </div>
-                  <div className="djc-ls-item">
-                    <span className="djc-ls-val">{totalVotes}</span>
-                    <span className="djc-ls-lbl">{lang === 'tr' ? 'Oy' : 'Vote'}</span>
-                  </div>
-                  <div className="djc-ls-item djc-ls-warn">
-                    <span className="djc-ls-val">{waitingRequests.length}</span>
-                    <span className="djc-ls-lbl">{lang === 'tr' ? 'Bekleyen' : 'Pend.'}</span>
-                  </div>
-                </div>
-                <div className="djc-ls-top">
-                  <div className="djc-ls-top-title">{lang === 'tr' ? 'EN ÇOK OY' : 'TOP'}</div>
-                  {[...approvedRequests].sort((a, b) => b.votes - a.votes).slice(0, 3).map((req, i) => (
-                    <div key={req.id} className="djc-ls-top-row">
-                      <span className="djc-ls-top-rank">{i + 1}</span>
-                      <span className="djc-ls-top-name">{req.song_name}</span>
-                      <span className="djc-ls-top-votes">{req.votes}</span>
-                    </div>
-                  ))}
-                  {approvedRequests.length === 0 && (
-                    <div className="djc-ls-top-empty">{lang === 'tr' ? 'Henüz istek yok' : 'No requests'}</div>
+            )}
+
+            {/* ─── Song of the Night Tab ─── */}
+            {rightTab === 'night' && (() => {
+              const round = nightState?.rounds?.[nightState.currentRound - 1];
+              const phase = round?.phase || 'idle';
+              const finalists = round?.finalists || [];
+              const maxVotes = Math.max(...finalists.map(f => f.votes), 1);
+              const leaderId = finalists.length > 0 ? [...finalists].sort((a, b) => b.votes - a.votes)[0]?.id : null;
+              const winner = round?.winnerId ? finalists.find(f => f.id === round.winnerId) : null;
+              const elapsed = round?.startedAt ? (Date.now() - round.startedAt) / 1000 : 0;
+              const remaining = round?.endTime ? Math.max(0, (round.endTime - Date.now()) / 1000) : 0;
+              const progress = round?.duration ? Math.min(100, (elapsed / round.duration) * 100) : 0;
+              const mins = Math.floor(remaining / 60);
+              const secs = Math.floor(remaining % 60);
+              const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+              return (
+                <div className="night-panel">
+                  {phase === 'idle' && (
+                    <>
+                      <div className="night-round-label">
+                        {lang === 'tr' ? `Tur: ${round?.djName || 'DJ 1'}` : `Round: ${round?.djName || 'DJ 1'}`}
+                      </div>
+                      <div className="night-input-row">
+                        <input className="input night-input" placeholder={lang === 'tr' ? 'Şarkı adı' : 'Song title'} value={nightInput} onChange={e => setNightInput(e.target.value)} disabled={finalists.length >= 3} />
+                        <input className="input night-input night-input-sm" placeholder={lang === 'tr' ? 'Sanatçı' : 'Artist'} value={nightArtist} onChange={e => setNightArtist(e.target.value)} disabled={finalists.length >= 3} />
+                        <button className="night-add-btn" onClick={nightAddSong} disabled={finalists.length >= 3 || !nightInput.trim()}>+</button>
+                      </div>
+                      <ul className="night-finalist-list">
+                        {finalists.map((f, i) => (
+                          <li key={f.id} className="night-finalist-item">
+                            <span className="night-finalist-num">{i + 1}.</span>
+                            <span className="night-finalist-info">
+                              <span className="night-finalist-title">{f.title}</span>
+                              {f.artist && <span className="night-finalist-artist"> — {f.artist}</span>}
+                            </span>
+                            <button className="night-finalist-remove" onClick={() => nightRemoveSong(f.id)}>✕</button>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="night-duration-row">
+                        <span>{lang === 'tr' ? 'Süre:' : 'Duration:'}</span>
+                        <select className="night-duration-select" value={nightDuration} onChange={e => setNightDuration(Number(e.target.value))}>
+                          <option value={120}>2 dk</option>
+                          <option value={180}>3 dk</option>
+                          <option value={300}>5 dk</option>
+                          <option value={600}>10 dk</option>
+                        </select>
+                      </div>
+                      <button className="night-start-btn" onClick={nightStart} disabled={finalists.length !== 3}>
+                        ▶ {lang === 'tr' ? 'Oylamayı Başlat' : 'Start Voting'}
+                      </button>
+                    </>
+                  )}
+
+                  {phase === 'voting' && (
+                    <>
+                      <div className="night-active-header">
+                        <span className="night-active-badge">★ {lang === 'tr' ? 'AKTİF' : 'ACTIVE'}</span>
+                        <span className="night-active-round">{round?.djName} {lang === 'tr' ? 'Turu' : 'Round'}</span>
+                      </div>
+                      {finalists.map((f, i) => (
+                        <div key={f.id} className={`night-vote-item ${f.id === leaderId ? 'leading' : ''}`}>
+                          <span style={{ marginRight: 6, minWidth: 14 }}>{i + 1}.</span>
+                          {f.id === leaderId && <span className="night-leader-dot" />}
+                          <span className="night-vote-name">{f.title}</span>
+                          <span className="night-vote-count">{f.votes} {lang === 'tr' ? 'oy' : ''}</span>
+                        </div>
+                      ))}
+                      <div className="night-countdown-row">
+                        <span className={`night-countdown-time ${remaining < 30 ? 'urgent' : ''}`}>⏱ {timeStr}</span>
+                        <span>{lang === 'tr' ? 'Toplam' : 'Total'}: {round?.totalVotes || 0}</span>
+                      </div>
+                      <div className="night-progress">
+                        <div className={`night-progress-fill ${remaining < 30 ? 'urgent' : ''}`} style={{ width: `${progress}%` }} />
+                      </div>
+                      <div className="night-controls">
+                        <button className="night-stop-btn" onClick={nightStop}>⏹ {lang === 'tr' ? 'Bitir' : 'End'}</button>
+                      </div>
+                    </>
+                  )}
+
+                  {phase === 'finished' && (
+                    <>
+                      <div className="night-active-header">
+                        <span className="night-active-badge">★ {lang === 'tr' ? 'KAZANAN' : 'WINNER'}</span>
+                        <span className="night-active-round">{round?.djName} {lang === 'tr' ? 'Turu' : 'Round'}</span>
+                      </div>
+                      {winner && (
+                        <div className="night-winner-display">
+                          <div className="night-winner-icon">🏆</div>
+                          <div className="night-winner-name">{winner.title}</div>
+                          <div className="night-winner-artist">{winner.artist}</div>
+                          <div className="night-winner-votes">{winner.votes} {lang === 'tr' ? 'oy' : 'votes'}</div>
+                        </div>
+                      )}
+                      <div className="night-result-actions">
+                        <button className="night-result-btn primary" onClick={() => nightFullscreen(true)}>
+                          {lang === 'tr' ? 'Tam Ekran Göster' : 'Show Fullscreen'}
+                        </button>
+                        {nightState?.currentRound < 2 && (
+                          <button className="night-result-btn" onClick={nightNewRound}>
+                            {lang === 'tr' ? `Yeni Tur Başlat (${DJ_PHOTOS[1]?.name || 'DJ 2'})` : `New Round (${DJ_PHOTOS[1]?.name || 'DJ 2'})`}
+                          </button>
+                        )}
+                        <button className="night-result-btn" onClick={() => { nightFullscreen(false); nightReset(); }}>
+                          {lang === 'tr' ? 'Kapat' : 'Close'}
+                        </button>
+                      </div>
+                    </>
                   )}
                 </div>
-              </div>
-            </div>
+              );
+            })()}
           </div>
         </div>
 

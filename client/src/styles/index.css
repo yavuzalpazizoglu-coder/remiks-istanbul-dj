@@ -5350,3 +5350,290 @@ body.theme-pioneer-gold .display-mode-pioneer {
   .podium-card.rank-1 .podium-art,
   .podium-card.rank-1 .podium-art-placeholder { width: 120px; height: 120px; }
 }
+
+/* ═══════════════════════════════════════════════
+   SONG OF THE NIGHT — DJ PANEL TAB SYSTEM
+   ═══════════════════════════════════════════════ */
+
+.right-panel-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(var(--rb-accent-rgb, 0, 212, 255), 0.15);
+  margin-bottom: 8px;
+}
+
+.right-panel-tab {
+  flex: 1;
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  color: var(--rb-text-secondary, rgba(255,255,255,0.4));
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  transition: all 0.2s ease;
+}
+.right-panel-tab:hover { color: var(--rb-text-primary, #fff); }
+.right-panel-tab.active {
+  color: var(--rb-accent, #00d4ff);
+  border-bottom-color: var(--rb-accent, #00d4ff);
+}
+.right-panel-tab.night-tab.has-active-vote {
+  animation: nightTabPulse 2s ease-in-out infinite;
+}
+@keyframes nightTabPulse {
+  0%, 100% { color: var(--rb-accent, #00d4ff); }
+  50% { color: #ffffff; text-shadow: 0 0 8px var(--rb-accent, #00d4ff); }
+}
+
+body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-color: #FFCC00; }
+body.theme-pioneer-gold .right-panel-tab.night-tab.has-active-vote { animation-name: nightTabPulseGold; }
+@keyframes nightTabPulseGold {
+  0%, 100% { color: #FFCC00; }
+  50% { color: #ffffff; text-shadow: 0 0 8px #FFCC00; }
+}
+
+/* ═══ NIGHT PANEL (DJ Panel compact) ═══ */
+
+.night-panel { padding: 4px 0 0; }
+.night-round-label { font-size: 11px; color: var(--rb-text-secondary, rgba(255,255,255,0.5)); margin-bottom: 8px; font-weight: 600; }
+.night-input-row { display: flex; gap: 5px; margin-bottom: 8px; }
+.night-input {
+  flex: 1; padding: 5px 8px; font-size: 11px;
+  background: var(--rb-surface, rgba(255,255,255,0.04));
+  border: 1px solid rgba(var(--rb-accent-rgb, 0, 212, 255), 0.15);
+  border-radius: 5px; color: #fff; outline: none;
+}
+.night-input-sm { max-width: 100px; }
+.night-input:disabled { opacity: 0.3; }
+.night-input::placeholder { color: rgba(255,255,255,0.25); font-size: 10px; }
+.night-add-btn {
+  padding: 5px 10px; font-size: 14px; font-weight: 700;
+  background: var(--rb-accent, #00d4ff); border: none; border-radius: 5px;
+  color: #000; cursor: pointer; min-width: 30px;
+}
+.night-add-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.night-finalist-list { list-style: none; padding: 0; margin: 0 0 8px; }
+.night-finalist-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 6px; font-size: 11px;
+  border-bottom: 1px solid rgba(var(--rb-accent-rgb, 0, 212, 255), 0.06);
+}
+.night-finalist-num { font-weight: 700; color: var(--rb-accent, #00d4ff); margin-right: 6px; min-width: 16px; }
+.night-finalist-info { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.night-finalist-title { font-weight: 600; color: #fff; }
+.night-finalist-artist { color: rgba(255,255,255,0.4); font-size: 10px; }
+.night-finalist-remove {
+  background: none; border: none; color: rgba(200,60,60,0.6); cursor: pointer;
+  font-size: 13px; padding: 2px 5px; border-radius: 3px;
+}
+.night-finalist-remove:hover { background: rgba(200,60,60,0.1); color: rgba(200,60,60,1); }
+
+.night-duration-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px; font-size: 11px; color: var(--rb-text-secondary, rgba(255,255,255,0.5));
+}
+.night-duration-select {
+  padding: 3px 6px; font-size: 11px; background: var(--rb-surface, rgba(255,255,255,0.04));
+  border: 1px solid rgba(var(--rb-accent-rgb, 0, 212, 255), 0.15);
+  border-radius: 5px; color: #fff;
+}
+
+.night-start-btn {
+  width: 100%; padding: 8px; font-size: 12px; font-weight: 700;
+  background: var(--rb-accent, #00d4ff); border: none; border-radius: 6px;
+  color: #000; cursor: pointer; transition: all 0.2s;
+}
+.night-start-btn:hover { opacity: 0.9; }
+.night-start-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.night-active-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.night-active-badge { font-size: 11px; font-weight: 700; color: var(--rb-accent, #00d4ff); letter-spacing: 0.05em; }
+.night-active-round { font-size: 10px; color: var(--rb-text-secondary, rgba(255,255,255,0.4)); }
+
+.night-vote-item { display: flex; align-items: center; padding: 3px 0; font-size: 11px; color: rgba(255,255,255,0.7); }
+.night-vote-item.leading { color: var(--rb-accent, #00d4ff); }
+.night-vote-item.leading .night-vote-name { font-weight: 700; }
+.night-vote-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.night-vote-count { font-weight: 700; color: var(--rb-accent, #00d4ff); min-width: 40px; text-align: right; font-size: 11px; }
+.night-leader-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--rb-accent, #00d4ff);
+  margin-right: 5px; animation: leaderPulse 1.5s ease-in-out infinite;
+}
+@keyframes leaderPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.night-countdown-row { display: flex; align-items: center; justify-content: space-between; margin: 6px 0 3px; font-size: 11px; color: rgba(255,255,255,0.5); }
+.night-countdown-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+.night-countdown-time.urgent { color: #ff4444; }
+.night-progress { height: 3px; background: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.1); border-radius: 100px; overflow: hidden; margin-bottom: 8px; }
+.night-progress-fill { height: 100%; background: var(--rb-accent, #00d4ff); border-radius: 100px; transition: width 1s linear; }
+.night-progress-fill.urgent { background: #ff4444; }
+
+.night-controls { display: flex; gap: 5px; }
+.night-stop-btn {
+  flex: 1; padding: 6px; font-size: 11px; font-weight: 600; border-radius: 5px;
+  cursor: pointer; background: rgba(200,40,60,0.1); border: 1px solid rgba(200,40,60,0.3); color: #c8283c;
+}
+
+.night-winner-display { text-align: center; padding: 8px 0; }
+.night-winner-icon { font-size: 22px; margin-bottom: 2px; }
+.night-winner-name { font-size: 13px; font-weight: 700; color: var(--rb-accent, #00d4ff); }
+.night-winner-artist { font-size: 11px; color: var(--rb-text-secondary, rgba(255,255,255,0.4)); }
+.night-winner-votes { font-size: 10px; color: var(--rb-text-secondary, rgba(255,255,255,0.4)); margin-top: 2px; }
+
+.night-result-actions { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+.night-result-btn {
+  padding: 7px; font-size: 11px; font-weight: 600; border-radius: 5px;
+  cursor: pointer; text-align: center; border: 1px solid rgba(var(--rb-accent-rgb, 0, 212, 255), 0.2);
+  background: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.05); color: #fff; transition: all 0.2s;
+}
+.night-result-btn:hover { background: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.1); }
+.night-result-btn.primary { background: var(--rb-accent, #00d4ff); color: #000; border-color: var(--rb-accent, #00d4ff); }
+
+/* Pioneer Gold overrides */
+body.theme-pioneer-gold .night-start-btn,
+body.theme-pioneer-gold .night-add-btn,
+body.theme-pioneer-gold .night-result-btn.primary { background: #FFCC00; color: #000; }
+body.theme-pioneer-gold .night-finalist-num,
+body.theme-pioneer-gold .night-active-badge,
+body.theme-pioneer-gold .night-leader-dot,
+body.theme-pioneer-gold .night-vote-count,
+body.theme-pioneer-gold .night-winner-name { color: #FFCC00; }
+body.theme-pioneer-gold .night-leader-dot { background: #FFCC00; }
+
+/* ═══════════════════════════════════════════════
+   SONG OF THE NIGHT — DISPLAY VS CARD
+   ═══════════════════════════════════════════════ */
+
+.night-vs-card {
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(var(--rb-accent-rgb, 0, 212, 255), 0.25);
+  border-radius: clamp(6px, 0.8vw, 14px);
+  padding: clamp(8px, 1vw, 20px);
+  margin-bottom: clamp(6px, 0.8vw, 14px);
+  position: relative;
+  overflow: hidden;
+}
+.night-vs-card::before,
+.night-vs-card::after {
+  content: ''; position: absolute;
+  width: clamp(10px, 1.2vw, 20px); height: clamp(10px, 1.2vw, 20px);
+  border-color: var(--theme-primary, #00d4ff); border-style: solid;
+}
+.night-vs-card::before { top: clamp(3px, 0.4vw, 6px); left: clamp(3px, 0.4vw, 6px); border-width: 2px 0 0 2px; }
+.night-vs-card::after { bottom: clamp(3px, 0.4vw, 6px); right: clamp(3px, 0.4vw, 6px); border-width: 0 2px 2px 0; }
+
+.night-vs-title {
+  font-size: clamp(9px, 1vw, 18px); font-weight: 700;
+  color: var(--theme-primary, #00d4ff); text-transform: uppercase;
+  letter-spacing: 0.08em; text-align: center;
+}
+.night-vs-round-label {
+  font-size: clamp(7px, 0.8vw, 14px); color: rgba(255,255,255,0.4);
+  text-align: center; margin-bottom: clamp(4px, 0.5vw, 10px);
+}
+.night-vs-song { padding: clamp(3px, 0.4vw, 8px) 0; }
+.night-vs-song.leading {
+  border-left: 2px solid var(--theme-primary, #00d4ff);
+  padding-left: clamp(4px, 0.5vw, 10px);
+}
+.night-vs-song.leading .night-vs-song-title {
+  color: var(--theme-primary, #00d4ff);
+  text-shadow: 0 0 8px rgba(var(--rb-accent-rgb, 0, 212, 255), 0.3);
+}
+.night-vs-loser { opacity: 0.3; }
+.night-vs-song-title { font-size: clamp(9px, 1.1vw, 20px); font-weight: 700; color: #fff; }
+.night-vs-song-artist { font-size: clamp(7px, 0.8vw, 14px); color: rgba(255,255,255,0.4); }
+.night-vs-vote-count { font-size: clamp(9px, 1.1vw, 20px); font-weight: 800; color: var(--theme-primary, #00d4ff); }
+.night-vs-divider {
+  text-align: center; font-size: clamp(7px, 0.7vw, 12px);
+  color: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.3);
+  letter-spacing: 0.2em; padding: clamp(1px, 0.2vw, 4px) 0;
+}
+.night-vs-bar {
+  height: clamp(3px, 0.4vw, 8px); background: rgba(255,255,255,0.08);
+  border-radius: 100px; overflow: hidden; margin-top: clamp(2px, 0.3vw, 6px);
+}
+.night-vs-bar-fill {
+  height: 100%; background: var(--theme-primary, #00d4ff);
+  border-radius: 100px; transition: width 0.6s ease;
+}
+.night-vs-progress {
+  height: clamp(2px, 0.3vw, 5px); background: rgba(255,255,255,0.08);
+  border-radius: 100px; overflow: hidden; margin-top: clamp(2px, 0.3vw, 5px);
+}
+.night-vs-progress-fill {
+  height: 100%; background: var(--theme-primary, #00d4ff);
+  border-radius: 100px; transition: width 1s linear;
+}
+.night-vs-progress-fill.urgent { background: #ff4444; }
+.night-vs-countdown {
+  font-size: clamp(10px, 1.2vw, 24px); font-weight: 700;
+  color: #fff; text-align: center; font-variant-numeric: tabular-nums;
+}
+.night-vs-countdown .critical { color: #ff4444; animation: nightPulse 0.8s ease-in-out infinite; }
+@keyframes nightPulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* ═══ NIGHT FULLSCREEN WINNER (Display) ═══ */
+
+.night-winner-fullscreen {
+  position: absolute; inset: 0; z-index: 25;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.85);
+}
+.night-winner-dj-name { font-size: clamp(14px, 1.8vw, 40px); color: rgba(255,255,255,0.5); margin-bottom: clamp(4px, 0.5vw, 10px); }
+.night-winner-badge {
+  font-size: clamp(16px, 2vw, 48px); color: var(--theme-primary, #00d4ff);
+  letter-spacing: 0.15em; text-transform: uppercase; font-weight: 800;
+}
+.night-winner-song-name {
+  font-size: clamp(36px, 5.5vw, 160px); font-weight: 900; color: #fff;
+  text-shadow: 0 0 40px var(--theme-primary, #00d4ff);
+  margin: clamp(8px, 1vw, 24px) 0;
+}
+.night-winner-artist-name { font-size: clamp(18px, 2.5vw, 64px); color: rgba(255,255,255,0.6); }
+
+/* ═══════════════════════════════════════════════
+   SONG OF THE NIGHT — MOBILE
+   ═══════════════════════════════════════════════ */
+
+.night-mobile-banner {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.12);
+  border-bottom: 1px solid rgba(var(--rb-accent-rgb, 0, 212, 255), 0.25);
+  padding: 10px 16px; text-align: center; cursor: pointer;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  animation: bannerPulse 3s ease-in-out infinite;
+  color: #fff;
+}
+@keyframes bannerPulse {
+  0%,100% { background: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.1); }
+  50% { background: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.2); }
+}
+
+.night-mobile-page {
+  padding: 16px;
+}
+.night-mobile-back {
+  background: none; border: none; color: var(--neon-cyan, #00d4ff);
+  font-size: 14px; font-weight: 600; cursor: pointer; padding: 0; margin-bottom: 12px;
+}
+
+.night-mobile-card {
+  background: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.05);
+  border: 1px solid rgba(var(--rb-accent-rgb, 0, 212, 255), 0.15);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+  cursor: pointer; transition: all 0.3s ease; position: relative; color: #fff;
+}
+.night-mobile-card:active { transform: scale(0.98); }
+.night-mobile-card.leading { border-color: var(--neon-cyan, #00d4ff); background: rgba(var(--rb-accent-rgb, 0, 212, 255), 0.1); }
+.night-mobile-card.voted { border-color: #00cc66; background: rgba(0,204,102,0.1); cursor: default; }
+.night-mobile-card.disabled { opacity: 0.4; pointer-events: none; }
+
+body.theme-pioneer-gold .night-mobile-banner { background: rgba(255,204,0,0.1); border-bottom-color: rgba(255,204,0,0.25); }
+body.theme-pioneer-gold .night-mobile-card.leading { border-color: #FFCC00; background: rgba(255,204,0,0.1); }
+body.theme-pioneer-gold .night-mobile-back { color: #FFCC00; }

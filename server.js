@@ -283,7 +283,7 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
 app.put('/api/events/:slug/limit', djAuth, (req, res) => {
   try {
     const { requestLimit } = req.body;
-    if (![1, 2].includes(requestLimit)) return res.status(400).json({ error: 'Limit must be 1 or 2' });
+    if (![1, 2, 3, 5].includes(requestLimit)) return res.status(400).json({ error: 'Limit must be 1, 2, 3 or 5' });
     const event = db.updateRequestLimit(req.params.slug, requestLimit);
     res.json(event);
   } catch (err) {
@@ -338,7 +338,7 @@ app.post('/api/events/:slug/ceremony', djAuth, (req, res) => {
 app.post('/api/events/:slug/music-mode', djAuth, (req, res) => {
   try {
     const { mode, active, djPhotos } = req.body;
-    const validModes = ['arabesk', 'rock', '90s-pop', 'turkish-delight', 'tech', 'latino', 'rap'];
+    const validModes = ['arabesk', 'rock', '90s-pop', 'turkish-delight', 'tech', 'latino', 'rap', 'winamp', 'pioneer'];
     if (!validModes.includes(mode)) return res.status(400).json({ error: 'Invalid mode' });
     const payload = { mode, active: !!active };
     if (Array.isArray(djPhotos)) payload.djPhotos = djPhotos;
@@ -378,10 +378,194 @@ app.get('/api/spotify/search', async (req, res) => {
   }
 });
 
+// ─── Song of the Night ───
+
+function createNightRound(djName = 'DJ 1') {
+  return {
+    roundNumber: 1,
+    djName,
+    finalists: [],
+    phase: 'idle',
+    duration: 180,
+    startedAt: null,
+    endTime: null,
+    votedUsers: {},
+    totalVotes: 0,
+    winnerId: null,
+  };
+}
+
+function getNightState(slug) {
+  if (!activeNightVotes.has(slug)) {
+    activeNightVotes.set(slug, {
+      currentRound: 1,
+      rounds: [createNightRound('DJ 1')],
+      showFullscreen: false,
+    });
+  }
+  return activeNightVotes.get(slug);
+}
+
+function nightPayload(state) {
+  const rounds = state.rounds.map(r => ({
+    ...r,
+    votedUsers: undefined,
+    voterCount: Object.keys(r.votedUsers || {}).length,
+  }));
+  return { currentRound: state.currentRound, rounds, showFullscreen: state.showFullscreen };
+}
+
+app.get('/api/events/:slug/night/status', (req, res) => {
+  const state = getNightState(req.params.slug);
+  res.json(nightPayload(state));
+});
+
+app.post('/api/events/:slug/night/finalists', djAuth, (req, res) => {
+  try {
+    const { action, title, artist, songId } = req.body;
+    const state = getNightState(req.params.slug);
+    const round = state.rounds[state.currentRound - 1];
+    if (!round || round.phase !== 'idle') return res.status(400).json({ error: 'Cannot modify finalists now' });
+
+    if (action === 'add') {
+      if (!title) return res.status(400).json({ error: 'Title required' });
+      if (round.finalists.length >= 3) return res.status(400).json({ error: 'Max 3 finalists' });
+      const id = Math.random().toString(36).slice(2, 10);
+      round.finalists.push({ id, title: sanitize(title), artist: sanitize(artist || ''), votes: 0 });
+    } else if (action === 'remove') {
+      round.finalists = round.finalists.filter(f => f.id !== songId);
+    } else {
+      return res.status(400).json({ error: 'Invalid action' });
+    }
+
+    io.to(req.params.slug).emit('night-update', nightPayload(state));
+    res.json(nightPayload(state));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/events/:slug/night/start', djAuth, (req, res) => {
+  try {
+    const { duration } = req.body;
+    const state = getNightState(req.params.slug);
+    const round = state.rounds[state.currentRound - 1];
+    if (!round) return res.status(400).json({ error: 'No round found' });
+    if (round.finalists.length !== 3) return res.status(400).json({ error: 'Need exactly 3 finalists' });
+    if (round.phase === 'voting') return res.status(400).json({ error: 'Already voting' });
+
+    const dur = Math.min(Math.max(Number(duration) || 180, 60), 1800);
+    round.phase = 'voting';
+    round.duration = dur;
+    round.startedAt = Date.now();
+    round.endTime = Date.now() + dur * 1000;
+    round.votedUsers = {};
+    round.totalVotes = 0;
+    round.finalists.forEach(f => { f.votes = 0; });
+    state.showFullscreen = false;
+
+    io.to(req.params.slug).emit('night-update', nightPayload(state));
+    res.json(nightPayload(state));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/events/:slug/night/stop', djAuth, (req, res) => {
+  try {
+    const state = getNightState(req.params.slug);
+    const round = state.rounds[state.currentRound - 1];
+    if (!round) return res.status(400).json({ error: 'No round' });
+
+    round.phase = 'finished';
+    round.endTime = null;
+    const sorted = [...round.finalists].sort((a, b) => b.votes - a.votes);
+    if (sorted.length > 0) round.winnerId = sorted[0].id;
+
+    io.to(req.params.slug).emit('night-update', nightPayload(state));
+    res.json(nightPayload(state));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/events/:slug/night/vote', (req, res) => {
+  if (!rateLimit(req.ip, 60)) return res.status(429).json({ error: 'Too many votes' });
+  try {
+    const { songId, visitorId } = req.body;
+    if (!songId || !visitorId) return res.status(400).json({ error: 'songId and visitorId required' });
+
+    const state = getNightState(req.params.slug);
+    const round = state.rounds[state.currentRound - 1];
+    if (!round || round.phase !== 'voting') return res.status(400).json({ error: 'Voting not active' });
+    if (round.endTime && Date.now() > round.endTime) return res.status(400).json({ error: 'Voting ended' });
+    if (round.votedUsers[visitorId]) return res.status(400).json({ error: 'Already voted this round' });
+
+    const song = round.finalists.find(f => f.id === songId);
+    if (!song) return res.status(400).json({ error: 'Song not found' });
+
+    song.votes++;
+    round.totalVotes++;
+    round.votedUsers[visitorId] = songId;
+
+    io.to(req.params.slug).emit('night-vote', {
+      roundNumber: round.roundNumber,
+      finalists: round.finalists.map(f => ({ id: f.id, votes: f.votes })),
+      totalVotes: round.totalVotes,
+    });
+    res.json({ ok: true, votedFor: songId });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/events/:slug/night/fullscreen', djAuth, (req, res) => {
+  try {
+    const { show } = req.body;
+    const state = getNightState(req.params.slug);
+    state.showFullscreen = !!show;
+    io.to(req.params.slug).emit('night-update', nightPayload(state));
+    res.json(nightPayload(state));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/events/:slug/night/new-round', djAuth, (req, res) => {
+  try {
+    const { djName } = req.body;
+    const state = getNightState(req.params.slug);
+    if (state.currentRound >= 2) return res.status(400).json({ error: 'Max 2 rounds' });
+
+    const newRound = createNightRound(djName || 'DJ 2');
+    newRound.roundNumber = 2;
+    state.rounds.push(newRound);
+    state.currentRound = 2;
+    state.showFullscreen = false;
+
+    io.to(req.params.slug).emit('night-update', nightPayload(state));
+    res.json(nightPayload(state));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/events/:slug/night/reset', djAuth, (req, res) => {
+  try {
+    activeNightVotes.delete(req.params.slug);
+    const state = getNightState(req.params.slug);
+    io.to(req.params.slug).emit('night-update', nightPayload(state));
+    res.json(nightPayload(state));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ─── Socket.io ───
 
 const activeCeremonies = new Map();
 const activeMusicModes = new Map();
+const activeNightVotes = new Map();
 
 function emitRoomCount(eventSlug) {
   const room = io.sockets.adapter.rooms.get(eventSlug);
@@ -403,6 +587,10 @@ io.on('connection', (socket) => {
     const musicMode = activeMusicModes.get(eventSlug);
     if (musicMode && musicMode.active) {
       socket.emit('music-mode', musicMode);
+    }
+    const nightState = activeNightVotes.get(eventSlug);
+    if (nightState) {
+      socket.emit('night-update', nightPayload(nightState));
     }
   });
 

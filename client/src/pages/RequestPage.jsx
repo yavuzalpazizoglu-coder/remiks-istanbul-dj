@@ -113,6 +113,21 @@ export default function RequestPage() {
 
     socket.on('language-changed', ({ language }) => setLang(language));
 
+    socket.on('night-update', (data) => setNightState(data));
+    socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
+      setNightState(prev => {
+        if (!prev) return prev;
+        const rounds = prev.rounds.map(r => {
+          if (r.roundNumber !== roundNumber) return r;
+          return { ...r, finalists: r.finalists.map(f => {
+            const updated = finalists.find(u => u.id === f.id);
+            return updated ? { ...f, votes: updated.votes } : f;
+          }), totalVotes };
+        });
+        return { ...prev, rounds };
+      });
+    });
+
     return () => {
       socket.off('request-added');
       socket.off('vote-updated');
@@ -120,6 +135,8 @@ export default function RequestPage() {
       socket.off('now-playing');
       socket.off('event-status');
       socket.off('language-changed');
+      socket.off('night-update');
+      socket.off('night-vote');
       socket.disconnect();
     };
   }, [slug, fetchData]);
@@ -204,6 +221,9 @@ export default function RequestPage() {
   const [activeTab, setActiveTab] = useState('request');
   const [votedAnimation, setVotedAnimation] = useState(null);
   const [confettiPos, setConfettiPos] = useState(null);
+  const [nightState, setNightState] = useState(null);
+  const [nightPage, setNightPage] = useState(false);
+  const [nightVotedId, setNightVotedId] = useState(null);
 
   const handleVote = async (requestId, e) => {
     if (votedIds.includes(requestId)) return;
@@ -231,6 +251,38 @@ export default function RequestPage() {
       showToast(lang === 'tr' ? 'Bağlantı hatası' : 'Connection error');
     }
   };
+
+  const handleNightVote = async (songId) => {
+    if (nightVotedId) return;
+    try {
+      const res = await fetch(`${API}/api/events/${slug}/night/vote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ songId, visitorId: deviceId }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Error');
+        return;
+      }
+      setNightVotedId(songId);
+      showToast(lang === 'tr' ? 'Oyunuz alındı!' : 'Vote recorded!');
+    } catch {
+      showToast(lang === 'tr' ? 'Bağlantı hatası' : 'Connection error');
+    }
+  };
+
+  useEffect(() => {
+    const round = nightState?.rounds?.[nightState?.currentRound - 1];
+    if (round?.phase !== 'voting') return;
+    const interval = setInterval(() => setNightState(prev => ({ ...prev })), 1000);
+    return () => clearInterval(interval);
+  }, [nightState?.rounds?.[nightState?.currentRound - 1]?.phase]);
+
+  useEffect(() => {
+    const round = nightState?.rounds?.[nightState?.currentRound - 1];
+    if (round?.phase !== 'voting') { setNightVotedId(null); }
+  }, [nightState?.rounds?.[nightState?.currentRound - 1]?.phase]);
 
   const showToast = (msg) => {
     setToast(msg);
@@ -293,7 +345,94 @@ export default function RequestPage() {
       {!socketConnected && (
         <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi, yeniden bağlanılıyor...' : '⚠ Disconnected, reconnecting...'}</div>
       )}
-      <div className="request-header">
+
+      {/* ─── Night Voting Banner ─── */}
+      {(() => {
+        const nightRound = nightState?.rounds?.[nightState.currentRound - 1];
+        if (nightRound?.phase !== 'voting') return null;
+        const nr = nightRound.endTime ? Math.max(0, (nightRound.endTime - Date.now()) / 1000) : 0;
+        const nm = Math.floor(nr / 60);
+        const ns = Math.floor(nr % 60);
+        return (
+          <div className="night-mobile-banner" onClick={() => setNightPage(true)}>
+            <div style={{ fontWeight: 700, fontSize: 14 }}>★ {lang === 'tr' ? 'Gecenin Şarkısı oylaması başladı!' : 'Song of the Night voting started!'}</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 }}>
+              <span style={{ fontSize: 12 }}>{lang === 'tr' ? 'Şimdi oy ver →' : 'Vote now →'}</span>
+              <span style={{ fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>{String(nm).padStart(2, '0')}:{String(ns).padStart(2, '0')}</span>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ─── Night Voting Full Page ─── */}
+      {nightPage && (() => {
+        const nightRound = nightState?.rounds?.[nightState?.currentRound - 1];
+        if (!nightRound || nightRound.phase === 'idle') { setNightPage(false); return null; }
+        const finalists = nightRound.finalists || [];
+        const maxVotes = Math.max(...finalists.map(f => f.votes), 1);
+        const leaderId = finalists.length > 0 ? [...finalists].sort((a, b) => b.votes - a.votes)[0]?.id : null;
+        const nr = nightRound.endTime ? Math.max(0, (nightRound.endTime - Date.now()) / 1000) : 0;
+        const nm = Math.floor(nr / 60);
+        const ns = Math.floor(nr % 60);
+        const progress = nightRound.duration ? Math.min(100, ((Date.now() - (nightRound.startedAt || Date.now())) / (nightRound.duration * 1000)) * 100) : 0;
+
+        return (
+          <div className="night-mobile-page">
+            <button className="night-mobile-back" onClick={() => setNightPage(false)}>
+              ← {lang === 'tr' ? 'Geri' : 'Back'}
+            </button>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--neon-cyan)' }}>★ {lang === 'tr' ? 'GECENİN ŞARKISI' : 'SONG OF THE NIGHT'} ★</div>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>{nightRound.djName} {lang === 'tr' ? 'Turu — Favorini Seç!' : 'Round — Pick Your Favorite!'}</div>
+            </div>
+
+            {finalists.map((f, i) => (
+              <motion.div key={f.id}
+                className={`night-mobile-card ${f.id === leaderId ? 'leading' : ''} ${nightVotedId === f.id ? 'voted' : ''} ${nightVotedId && nightVotedId !== f.id ? 'disabled' : ''}`}
+                onClick={() => !nightVotedId && nightRound.phase === 'voting' && handleNightVote(f.id)}
+                whileTap={!nightVotedId ? { scale: 0.98 } : {}}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 15 }}>{i + 1}. {f.title}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{f.artist}</div>
+                  </div>
+                  <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--neon-cyan)' }}>{f.votes}</div>
+                </div>
+                <div className="night-vs-bar" style={{ height: 6 }}>
+                  <div className="night-vs-bar-fill" style={{ width: `${(f.votes / maxVotes) * 100}%` }} />
+                </div>
+                {nightVotedId === f.id && (
+                  <div style={{ textAlign: 'center', marginTop: 8, color: '#00cc66', fontWeight: 600, fontSize: 13 }}>
+                    ✓ {lang === 'tr' ? 'Oyunuz alındı!' : 'Vote recorded!'}
+                  </div>
+                )}
+              </motion.div>
+            ))}
+
+            {nightRound.phase === 'voting' && (
+              <div style={{ textAlign: 'center', marginTop: 16 }}>
+                <div style={{ fontSize: 20, fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>⏱ {String(nm).padStart(2, '0')}:{String(ns).padStart(2, '0')}</div>
+                <div className="night-vs-progress" style={{ marginTop: 8, height: 5 }}>
+                  <div className={`night-vs-progress-fill ${nr < 30 ? 'urgent' : ''}`} style={{ width: `${progress}%` }} />
+                </div>
+              </div>
+            )}
+
+            {nightRound.phase === 'finished' && (
+              <div style={{ textAlign: 'center', marginTop: 20, padding: 16 }}>
+                <div style={{ fontSize: 24 }}>🏆</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--neon-cyan)', marginTop: 4 }}>
+                  {lang === 'tr' ? 'Oylama Sona Erdi!' : 'Voting Ended!'}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
+      {!nightPage && (
+        <>
+          <div className="request-header">
         <h1>{T('request.title')}</h1>
         {event.status === 'countdown' && countdownDisplay && (
           <div style={{ marginTop: 8, fontSize: 28, fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--neon-cyan)' }}>
@@ -460,6 +599,8 @@ export default function RequestPage() {
             );
           })}
         </div>
+      )}
+        </>
       )}
 
       <AnimatePresence>

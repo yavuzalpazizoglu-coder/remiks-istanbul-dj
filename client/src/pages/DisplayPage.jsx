@@ -629,6 +629,7 @@ export default function DisplayPage() {
   const [animLevel, setAnimLevel] = useState('high');
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
+  const [nightState, setNightState] = useState(null);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -725,11 +726,27 @@ export default function DisplayPage() {
 
     socket.on('room-count', ({ count }) => setConnectedCount(count));
 
+    socket.on('night-update', (data) => setNightState(data));
+    socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
+      setNightState(prev => {
+        if (!prev) return prev;
+        const rounds = prev.rounds.map(r => {
+          if (r.roundNumber !== roundNumber) return r;
+          return { ...r, finalists: r.finalists.map(f => {
+            const updated = finalists.find(u => u.id === f.id);
+            return updated ? { ...f, votes: updated.votes } : f;
+          }), totalVotes };
+        });
+        return { ...prev, rounds };
+      });
+    });
+
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('ceremony'); socket.off('music-mode');
+      socket.off('night-update'); socket.off('night-vote');
       socket.disconnect();
     };
   }, [slug]);
@@ -764,6 +781,15 @@ export default function DisplayPage() {
     }, 1000);
     return () => clearInterval(interval);
   }, [ceremonyEnd]);
+
+  useEffect(() => {
+    const round = nightState?.rounds?.[nightState?.currentRound - 1];
+    if (round?.phase !== 'voting' || !round?.endTime) return;
+    const interval = setInterval(() => {
+      setNightState(prev => ({ ...prev }));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [nightState?.rounds?.[nightState?.currentRound - 1]?.phase]);
 
   const goFullscreen = () => {
     setShowFullscreenHint(false);
@@ -903,8 +929,64 @@ export default function DisplayPage() {
                 )}
               </div>
 
-              {/* RIGHT: QR Card */}
+              {/* RIGHT: VS Card + QR Card */}
               <div className="dsp-card dsp-qr-card">
+                {(() => {
+                  const nightRound = nightState?.rounds?.[nightState.currentRound - 1];
+                  const nightPhase = nightRound?.phase;
+                  const nightFinalists = nightRound?.finalists || [];
+                  const nightMaxVotes = Math.max(...nightFinalists.map(f => f.votes), 1);
+                  const nightLeader = nightFinalists.length > 0 ? [...nightFinalists].sort((a, b) => b.votes - a.votes)[0]?.id : null;
+                  const nightRemaining = nightRound?.endTime ? Math.max(0, (nightRound.endTime - Date.now()) / 1000) : 0;
+                  const nightProgress = nightRound?.duration ? Math.min(100, ((Date.now() - (nightRound.startedAt || Date.now())) / (nightRound.duration * 1000)) * 100) : 0;
+                  const nm = Math.floor(nightRemaining / 60);
+                  const ns = Math.floor(nightRemaining % 60);
+                  const nightWinner = nightRound?.winnerId ? nightFinalists.find(f => f.id === nightRound.winnerId) : null;
+
+                  if ((nightPhase === 'voting' || nightPhase === 'finished') && nightFinalists.length > 0) {
+                    return (
+                      <div className="night-vs-card">
+                        <div className="night-vs-title">★ {lang === 'tr' ? 'GECENİN ŞARKISI' : 'SONG OF THE NIGHT'}</div>
+                        <div className="night-vs-round-label">{nightRound?.djName} {lang === 'tr' ? 'Turu' : 'Round'}</div>
+                        {nightFinalists.map((f, i) => (
+                          <div key={f.id}>
+                            <div className={`night-vs-song ${f.id === nightLeader ? 'leading' : ''} ${nightPhase === 'finished' && f.id !== nightRound?.winnerId ? 'night-vs-loser' : ''}`}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div>
+                                  <div className="night-vs-song-title">{f.title}</div>
+                                  <div className="night-vs-song-artist">{f.artist}</div>
+                                </div>
+                                <div className="night-vs-vote-count">{f.votes}</div>
+                              </div>
+                              <div className="night-vs-bar">
+                                <div className="night-vs-bar-fill" style={{ width: `${(f.votes / nightMaxVotes) * 100}%` }} />
+                              </div>
+                            </div>
+                            {i < nightFinalists.length - 1 && (
+                              <div className="night-vs-divider">─── VS ───</div>
+                            )}
+                          </div>
+                        ))}
+                        {nightPhase === 'voting' && (
+                          <>
+                            <div className="night-vs-countdown" style={{ marginTop: 'clamp(4px,0.6vw,12px)' }}>
+                              <span className={nightRemaining < 30 ? 'critical' : ''}>⏱ {String(nm).padStart(2, '0')}:{String(ns).padStart(2, '0')}</span>
+                            </div>
+                            <div className="night-vs-progress">
+                              <div className={`night-vs-progress-fill ${nightRemaining < 30 ? 'urgent' : ''}`} style={{ width: `${nightProgress}%` }} />
+                            </div>
+                          </>
+                        )}
+                        {nightPhase === 'finished' && nightWinner && (
+                          <div style={{ textAlign: 'center', marginTop: 'clamp(4px,0.5vw,10px)' }}>
+                            <span className="night-vs-title" style={{ fontSize: 'clamp(9px,1.1vw,20px)' }}>🏆 {lang === 'tr' ? 'KAZANAN' : 'WINNER'}: {nightWinner.title}</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
                 <div className="dsp-qr-box">
                   <QRCodeSVG value={requestUrl} size={300} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
@@ -950,6 +1032,28 @@ export default function DisplayPage() {
             <MusicModeOverlay mode={activeMusicMode} lang={lang} djPhotos={modeDJPhotos} />
           )}
         </AnimatePresence>
+
+        {/* ─── NIGHT FULLSCREEN WINNER ─── */}
+        {nightState?.showFullscreen && (() => {
+          const round = nightState.rounds[nightState.currentRound - 1];
+          const winner = round?.winnerId ? round.finalists.find(f => f.id === round.winnerId) : null;
+          if (!winner) return null;
+          return (
+            <motion.div className="night-winner-fullscreen"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+              <div className="night-winner-dj-name">{round.djName}</div>
+              <div className="night-winner-badge">{lang === 'tr' ? 'GECENİN ŞARKISI' : 'SONG OF THE NIGHT'}</div>
+              <motion.div className="night-winner-song-name"
+                initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }}>
+                {winner.title}
+              </motion.div>
+              <div className="night-winner-artist-name">{winner.artist}</div>
+              <div style={{ marginTop: 'clamp(8px,1vw,20px)', fontSize: 'clamp(14px,1.8vw,40px)', color: 'var(--theme-primary,#00d4ff)' }}>
+                🏆 {winner.votes} {lang === 'tr' ? 'oy' : 'votes'}
+              </div>
+            </motion.div>
+          );
+        })()}
 
         {/* ─── ENDED (summary after closing) ─── */}
         {event.status === 'ended' && !closingActive && (
