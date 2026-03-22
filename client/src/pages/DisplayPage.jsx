@@ -108,97 +108,191 @@ function Confetti() {
   );
 }
 
-function OpeningOverlay({ lang, brandText, countdown }) {
+function OpeningOverlay({ lang, brandText, countdown, ceremonyEnd }) {
   const name = brandText || 'Remiks İstanbul';
+  const [phase, setPhase] = useState(1);
+
+  useEffect(() => {
+    if (!ceremonyEnd) return;
+    const totalMs = ceremonyEnd - Date.now();
+    if (totalMs <= 0) return;
+
+    const p2 = totalMs * 0.15;
+    const p3 = totalMs * 0.40;
+    const p4 = totalMs * 0.70;
+
+    const t2 = setTimeout(() => setPhase(2), p2);
+    const t3 = setTimeout(() => setPhase(3), p3);
+    const t4 = setTimeout(() => setPhase(4), p4);
+    return () => { clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
+  }, [ceremonyEnd]);
+
+  const letters = name.split('');
+
   return (
-    <motion.div className="ceremony-overlay opening-overlay"
+    <motion.div className={`ceremony-overlay opening-overlay opening-phase-${phase}`}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
-      <div className="ceremony-spotlights">
-        <div className="ceremony-spot spot-left" />
-        <div className="ceremony-spot spot-right" />
-        <div className="ceremony-spot spot-center" />
-      </div>
-      <div className="ceremony-content">
-        <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul" className="ceremony-logo"
-          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} />
-        <motion.div className="ceremony-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, delay: 0.3 }} />
-        <motion.div className="ceremony-pre" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-          {lang === 'tr' ? '🎉 HOŞGELDİNİZ' : '🎉 WELCOME'}
-        </motion.div>
-        <motion.h1 className="ceremony-title opening-title"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: [0, 1.15, 1], opacity: 1 }}
-          transition={{ duration: 1.2, delay: 0.8, times: [0, 0.7, 1] }}>
-          {lang === 'tr' ? 'AÇILIŞ' : 'OPENING'}
-        </motion.h1>
-        <motion.div className="ceremony-brand" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }}>
-          {name}
-        </motion.div>
-        <motion.div className="ceremony-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.2, delay: 2.2 }} />
-        {countdown && (
-          <motion.div className="ceremony-timer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }}>
-            {countdown}
-          </motion.div>
-        )}
-        <motion.div className="ceremony-sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3 }}>
-          {lang === 'tr' ? 'İsteklerinizi bekliyoruz • QR kodu tarayın' : 'Send your requests • Scan QR code'}
-        </motion.div>
-      </div>
-      <div className="ceremony-particles">
+
+      {/* Phase 1: Darkness + ambient */}
+      <div className="opening-ambient" />
+      <div className="opening-grid-overlay" />
+
+      {/* Phase 1 particles */}
+      <div className="opening-particles">
         {Array.from({ length: 30 }, (_, i) => (
-          <div key={i} className="ceremony-spark" style={{
+          <div key={i} className="opening-particle" style={{
             left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${3 + Math.random() * 4}s`,
+            animationDelay: `${Math.random() * 8}s`,
+            animationDuration: `${6 + Math.random() * 8}s`,
           }} />
         ))}
+      </div>
+
+      {/* Phase 2: Logo reveal */}
+      <div className="opening-logo-wrap">
+        <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="opening-logo" />
+        <div className="opening-powered">POWERED BY REMiKS iSTANBUL</div>
+      </div>
+
+      {/* Phase 3: Event name letter-by-letter */}
+      <div className="opening-event-block">
+        <div className="opening-event-name" aria-label={name}>
+          {letters.map((ch, i) => (
+            <span key={i} className="opening-letter" style={{ animationDelay: `${i * 0.06}s` }}>
+              {ch === ' ' ? '\u00A0' : ch}
+            </span>
+          ))}
+        </div>
+        <div className="opening-motto">REQUEST · VOTE · DANCE</div>
+      </div>
+
+      {/* Phase 4: Neon finale */}
+      <div className="opening-finale">
+        <div className="opening-neon-text">
+          {lang === 'tr' ? 'İYİ EĞLENCELER!' : 'ENJOY THE SHOW!'}
+        </div>
+        {countdown && <div className="opening-countdown">{countdown}</div>}
       </div>
     </motion.div>
   );
 }
 
-function ClosingOverlay({ lang, brandText, countdown }) {
-  const name = brandText || 'Remiks İstanbul';
+function useCountUp(target, duration = 2000, active = false) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!active || target <= 0) { setVal(0); return; }
+    const start = performance.now();
+    let raf;
+    const tick = (now) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setVal(Math.round(eased * target));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration, active]);
+  return val;
+}
+
+function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eventName }) {
+  const name = brandText || eventName || 'Remiks İstanbul';
+  const [phase, setPhase] = useState(1);
+
+  useEffect(() => {
+    if (!ceremonyEnd) return;
+    const totalMs = ceremonyEnd - Date.now();
+    if (totalMs <= 0) return;
+    const p2 = totalMs * 0.40;
+    const p3 = totalMs * 0.75;
+    const t2 = setTimeout(() => setPhase(2), p2);
+    const t3 = setTimeout(() => setPhase(3), p3);
+    return () => { clearTimeout(t2); clearTimeout(t3); };
+  }, [ceremonyEnd]);
+
+  const totalRequests = requests?.length || 0;
+  const totalVotes = (requests || []).reduce((sum, r) => sum + (r.votes || 0), 0);
+  const sorted = [...(requests || [])].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+  const topSong = sorted[0];
+  const today = new Date().toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const countReq = useCountUp(totalRequests, 2000, phase >= 1);
+  const countVotes = useCountUp(totalVotes, 2000, phase >= 1);
+
+  const confettiColors = ['var(--theme-primary, #00d4ff)', '#ffffff', '#FFD700', '#ff0080', '#00ff88'];
+
   return (
-    <motion.div className="ceremony-overlay closing-overlay"
+    <motion.div className={`ceremony-overlay closing-overlay closing-phase-${phase}`}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
+
       <div className="closing-stars">
         {Array.from({ length: 40 }, (_, i) => (
           <div key={i} className="closing-star" style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 6}s`,
-            animationDuration: `${4 + Math.random() * 4}s`,
-            width: 2 + Math.random() * 3,
-            height: 2 + Math.random() * 3,
+            left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 6}s`, animationDuration: `${4 + Math.random() * 4}s`,
+            width: 2 + Math.random() * 3, height: 2 + Math.random() * 3,
           }} />
         ))}
       </div>
-      <div className="ceremony-content">
-        <motion.img src="/logos/logo-white.png" alt="Remiks İstanbul" className="ceremony-logo"
-          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }} />
-        <motion.div className="ceremony-line closing-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.5, delay: 0.3 }} />
-        <motion.div className="ceremony-pre closing-pre" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }}>
-          {lang === 'tr' ? '✨ TEŞEKKÜRLER' : '✨ THANK YOU'}
-        </motion.div>
-        <motion.h1 className="ceremony-title closing-title"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, delay: 1.2 }}>
-          {lang === 'tr' ? 'KAPANIŞ' : 'CLOSING'}
-        </motion.h1>
-        <motion.div className="ceremony-brand" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }}>
-          {name}
-        </motion.div>
-        <motion.div className="ceremony-line closing-line" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1.5, delay: 3 }} />
-        {countdown && (
-          <motion.div className="ceremony-timer closing-timer-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.2 }}>
-            {countdown}
-          </motion.div>
-        )}
-        <motion.div className="ceremony-sub closing-sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.5 }}>
-          {lang === 'tr' ? 'Bu geceye renk kattınız • Tekrar görüşmek üzere!' : 'You made this night special • See you next time!'}
-        </motion.div>
+
+      {/* Phase 1: Statistics */}
+      <div className="closing-phase-block closing-stats-block">
+        <div className="closing-stats-grid">
+          <div className="closing-stat-card">
+            <div className="closing-stat-number">{countReq}</div>
+            <div className="closing-stat-label">{lang === 'tr' ? 'şarkı istendi' : 'songs requested'}</div>
+          </div>
+          <div className="closing-stat-card">
+            <div className="closing-stat-number">{countVotes}</div>
+            <div className="closing-stat-label">{lang === 'tr' ? 'oy kullanıldı' : 'votes cast'}</div>
+          </div>
+          {topSong && (
+            <div className="closing-stat-card closing-stat-wide">
+              <div className="closing-stat-icon">🔥</div>
+              <div className="closing-stat-song">{topSong.title}</div>
+              <div className="closing-stat-artist">{topSong.artist}</div>
+              <div className="closing-stat-label">{lang === 'tr' ? 'gecenin şarkısı' : 'song of the night'}</div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Phase 2: Thank you */}
+      <div className="closing-phase-block closing-thankyou-block">
+        <div className="closing-thankyou-text">
+          {lang === 'tr' ? 'TEŞEKKÜRLER!' : 'THANK YOU!'}
+        </div>
+        <div className="closing-event-name">{name}</div>
+        <div className="closing-event-date">{today}</div>
+        <div className="closing-confetti">
+          {Array.from({ length: 20 }, (_, i) => (
+            <div key={i} className="closing-confetti-piece" style={{
+              left: `${5 + Math.random() * 90}%`,
+              '--fall-duration': `${5 + Math.random() * 5}s`,
+              '--fall-delay': `${Math.random() * 4}s`,
+              background: confettiColors[i % confettiColors.length],
+              borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+            }} />
+          ))}
+        </div>
+      </div>
+
+      {/* Phase 3: Logo + Instagram */}
+      <div className="closing-phase-block closing-final-block">
+        <img src="/logos/logo-white.png" alt="Remiks İstanbul" className="closing-final-logo" />
+        <div className="closing-instagram">
+          <svg className="closing-ig-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="5" />
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+          </svg>
+          <div className="closing-ig-handle">@remiks.istanbul</div>
+          <div className="closing-ig-qr">
+            <QRCodeSVG value="https://instagram.com/remiks.istanbul" size={200} bgColor="transparent" fgColor="#ffffff" />
+          </div>
+          <div className="closing-ig-cta">{lang === 'tr' ? 'Bizi Takip Edin' : 'Follow Us'}</div>
+        </div>
+        {countdown && <div className="closing-countdown">{countdown}</div>}
       </div>
     </motion.div>
   );
@@ -715,7 +809,7 @@ export default function DisplayPage() {
         {/* ─── OPENING OVERLAY ─── */}
         <AnimatePresence>
           {openingActive && (
-            <OpeningOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} />
+            <OpeningOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} ceremonyEnd={ceremonyEnd} />
           )}
         </AnimatePresence>
 
@@ -784,7 +878,7 @@ export default function DisplayPage() {
         {/* ─── CLOSING OVERLAY ─── */}
         <AnimatePresence>
           {closingActive && (
-            <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} />
+            <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} ceremonyEnd={ceremonyEnd} requests={requests} eventName={event?.name} />
           )}
         </AnimatePresence>
 
