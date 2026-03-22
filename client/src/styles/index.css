@@ -1049,7 +1049,7 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   flex-shrink: 0;
 }
 .djc-remiksbox-logo {
-  height: 32px;
+  height: 44px;
   width: auto;
   display: block;
   filter: drop-shadow(0 0 6px var(--djt-accent-glow1)) drop-shadow(0 0 12px var(--djt-accent-glow2));
