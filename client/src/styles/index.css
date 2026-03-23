@@ -2960,8 +2960,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 }
 
 @keyframes loginGridPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.3; }
 }
 
 @keyframes loginScanLine {
@@ -2977,23 +2977,23 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   display: none;
 }
 .login-orb {
-  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4;
+  position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.1;
 }
 .login-orb-1 {
   width: 400px; height: 400px;
-  background: radial-gradient(circle, #00CC00 0%, transparent 70%);
+  background: radial-gradient(circle, #009966 0%, transparent 70%);
   top: -100px; left: -100px;
   animation: loginOrbFloat1 8s ease-in-out infinite;
 }
 .login-orb-2 {
   width: 350px; height: 350px;
-  background: radial-gradient(circle, #00FF00 0%, transparent 70%);
+  background: radial-gradient(circle, #33CC77 0%, transparent 70%);
   bottom: -80px; right: -80px;
   animation: loginOrbFloat2 10s ease-in-out infinite;
 }
 .login-orb-3 {
   width: 250px; height: 250px;
-  background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+  background: radial-gradient(circle, #6b4acd 0%, transparent 70%);
   top: 50%; left: 50%; transform: translate(-50%, -50%);
   animation: loginOrbFloat3 12s ease-in-out infinite;
 }
@@ -3012,7 +3012,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 .login-scanline {
   position: absolute; inset: 0;
   background: repeating-linear-gradient(
-    0deg, transparent, transparent 2px, rgba(0,204,0,0.015) 2px, rgba(0,204,0,0.015) 4px
+    0deg, transparent, transparent 2px, rgba(51,170,85,0.008) 2px, rgba(51,170,85,0.008) 4px
   );
   pointer-events: none;
 }
@@ -3034,25 +3034,22 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   width: auto;
   margin: 0 auto 12px;
   filter:
-    drop-shadow(0 0 12px rgba(0,204,0,0.5))
-    drop-shadow(0 0 30px rgba(0,204,0,0.3))
-    drop-shadow(0 0 60px rgba(0,204,0,0.15));
+    drop-shadow(0 0 4px rgba(0,160,0,0.1))
+    drop-shadow(0 0 10px rgba(0,160,0,0.06));
   animation: loginLogoGlow 3s ease-in-out infinite;
 }
 @keyframes loginLogoGlow {
   0%, 100% {
     filter:
-      drop-shadow(0 0 12px rgba(0,204,0,0.5))
-      drop-shadow(0 0 30px rgba(0,204,0,0.3))
-      drop-shadow(0 0 60px rgba(0,204,0,0.15));
+      drop-shadow(0 0 4px rgba(0,160,0,0.1))
+      drop-shadow(0 0 10px rgba(0,160,0,0.06));
     transform: scale(1);
   }
   50% {
     filter:
-      drop-shadow(0 0 20px rgba(0,255,0,0.7))
-      drop-shadow(0 0 50px rgba(0,204,0,0.45))
-      drop-shadow(0 0 90px rgba(0,204,0,0.25));
-    transform: scale(1.02);
+      drop-shadow(0 0 6px rgba(0,180,0,0.12))
+      drop-shadow(0 0 14px rgba(0,160,0,0.08));
+    transform: scale(1.01);
   }
 }
 @keyframes loginGradientShift {
@@ -3068,7 +3065,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 .login-badge {
   font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
   padding: 4px 12px; border-radius: 20px;
-  background: rgba(0,204,0,0.1); border: 1px solid rgba(0,204,0,0.25);
+  background: rgba(51,170,85,0.08); border: 1px solid rgba(51,170,85,0.18);
   color: #60a5fa;
 }
 
@@ -3101,8 +3098,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 .login-input-wrap .input:focus {
-  border-color: #00CC00;
-  box-shadow: 0 0 0 3px rgba(0,204,0,0.15), 0 0 20px rgba(0,204,0,0.1);
+  border-color: #33AA55;
+  box-shadow: 0 0 0 2px rgba(51,170,85,0.1), 0 0 10px rgba(51,170,85,0.06);
 }
 
 .login-error {
@@ -3114,7 +3111,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 
 .login-btn-primary {
   width: 100%; padding: 13px 20px;
-  background: linear-gradient(135deg, #00CC00, #00FF00);
+  background: linear-gradient(135deg, #00AA44, #33CC66);
   border: none; border-radius: 12px;
   color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
   cursor: pointer;
@@ -3122,7 +3119,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   box-shadow: 0 4px 20px rgba(0,204,0,0.3);
 }
 .login-btn-primary:hover {
-  box-shadow: 0 6px 30px rgba(0,204,0,0.5);
+  box-shadow: 0 4px 16px rgba(0,170,68,0.3);
 }
 .login-btn-ghost {
   padding: 10px 18px;
@@ -3149,13 +3146,13 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 /* User chip (logged-in state) */
 .login-user-chip {
   display: inline-flex; align-items: center; gap: 10px;
-  background: rgba(0,204,0,0.1); border: 1px solid rgba(0,204,0,0.2);
+  background: rgba(51,170,85,0.08); border: 1px solid rgba(51,170,85,0.15);
   border-radius: 30px; padding: 6px 14px 6px 6px;
   margin-top: 12px;
 }
 .login-user-avatar {
   width: 32px; height: 32px; border-radius: 50%;
-  background: linear-gradient(135deg, #00CC00, #00FF00);
+  background: linear-gradient(135deg, #00AA44, #33CC66);
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; font-weight: 800; color: #fff;
 }
@@ -3191,7 +3188,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   height: 18px;
   width: auto;
   display: block;
-  filter: drop-shadow(0 0 6px rgba(0,204,0,0.2));
+  filter: drop-shadow(0 0 4px rgba(51,170,85,0.1));
 }
 .login-footer-by {
   font-size: 12px; color: #555;
