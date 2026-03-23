@@ -591,7 +591,7 @@ export default function RequestPage() {
             const dist = 30 + Math.random() * 40;
             const dx = Math.cos(angle * Math.PI / 180) * dist;
             const dy = Math.sin(angle * Math.PI / 180) * dist;
-            const colors = ['#00d4ff', '#b829dd', '#ff0080', '#00ff88', '#ff6b35'];
+            const colors = ['#00d4ff', '#b829dd', '#ff0080', '#008044', '#ff6b35'];
             return (
               <div key={i} className="vote-particle" style={{
                 background: colors[i % colors.length],

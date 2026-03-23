@@ -1048,7 +1048,7 @@ export default function DJPanel() {
                           { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
                           { id: 'purple', color: '#b829dd', label: 'Mor' },
                           { id: 'pink', color: '#ff0080', label: 'Pembe' },
-                          { id: 'green', color: '#00ff88', label: 'Yeşil' },
+                          { id: 'green', color: '#008044', label: 'Yeşil' },
                           { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
                           { id: 'red', color: '#ff4444', label: 'Kırmızı' },
                         ].map(t => (
