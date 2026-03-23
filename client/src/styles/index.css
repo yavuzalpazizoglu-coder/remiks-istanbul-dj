@@ -1585,6 +1585,126 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   background: linear-gradient(135deg, #aa22ff, #7700ee);
 }
 
+/* ─── Guest Link Button ─── */
+.djc-guest-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #e0e0e0;
+  background: linear-gradient(135deg, #003320, #001a10);
+  border: 1px solid rgba(0, 180, 80, 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.djc-guest-link-btn:hover {
+  background: linear-gradient(135deg, #005530, #003320);
+  border-color: rgba(0, 220, 100, 0.6);
+  box-shadow: 0 0 10px rgba(0, 180, 80, 0.3);
+  color: #fff;
+}
+body.theme-pioneer-gold .djc-guest-link-btn {
+  background: linear-gradient(135deg, #1a1000, #0d0a00);
+  border-color: rgba(255, 170, 0, 0.3);
+}
+body.theme-pioneer-gold .djc-guest-link-btn:hover {
+  background: linear-gradient(135deg, #2a1800, #1a1000);
+  border-color: rgba(255, 204, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 170, 0, 0.25);
+}
+
+/* ─── Left Menu Live Stats ─── */
+.djc-left-stats {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+.djc-left-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: 4px 0;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.02);
+}
+.djc-left-stat-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--djt-accent, #007000);
+  line-height: 1.2;
+}
+.djc-left-stat-lbl {
+  font-size: 8px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.djc-left-stat-warn .djc-left-stat-val {
+  color: #ff6600;
+}
+.djc-left-top3 {
+  margin-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 5px;
+}
+.djc-left-top3-title {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+  margin-bottom: 3px;
+}
+.djc-left-top3-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 0;
+  font-size: 10px;
+}
+.djc-left-top3-rank {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--djt-accent, #007000);
+  color: #000;
+  font-size: 8px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.djc-left-top3-name {
+  flex: 1;
+  color: #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.djc-left-top3-votes {
+  color: var(--djt-accent, #007000);
+  font-weight: 700;
+  font-size: 10px;
+}
+body.theme-pioneer-gold .djc-left-stat-val {
+  color: #FFCC00;
+}
+body.theme-pioneer-gold .djc-left-top3-rank {
+  background: #FFCC00;
+}
+body.theme-pioneer-gold .djc-left-top3-votes {
+  color: #FFCC00;
+}
+
 /* ─── Reji Link Button in Header ─── */
 .djc-reji-link-btn {
   display: flex;
