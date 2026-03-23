@@ -5250,73 +5250,27 @@ body.theme-pioneer-gold .closing-stat-number {
 
 /* ─── Played Animation: Fire Effect ─── */
 
-/* ─── Played Card: 3D Ember Border Only ─── */
+/* ─── Played Card: Flickering Flame Border ─── */
 .dtable-played {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   background: transparent !important;
-  border: none !important;
-  z-index: 0;
-  animation: emberFade 40s ease-in forwards;
+  border: 2px solid #ff4500 !important;
+  animation: flameFlicker 0.15s steps(2) infinite, playedFadeOut 40s ease-in forwards;
 }
 
-.dtable-played::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: -1;
-  background: conic-gradient(
-    from 0deg,
-    #ff4500, #ff8c00, #ffb300, #ff6600, #ff2200,
-    #ff8c00, #ffcc00, #ff4500, #ff2200, #ff8c00, #ff4500
-  );
-  background-size: 200% 200%;
-  animation: emberRotate 3s linear infinite;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: xor;
-  padding: 2px;
-  filter: blur(0.5px);
+@keyframes flameFlicker {
+  0%   { border-color: #ff4500; }
+  25%  { border-color: #ff8c00; }
+  50%  { border-color: #ff6600; }
+  75%  { border-color: #cc3300; }
+  100% { border-color: #ffaa00; }
 }
 
-.dtable-played::after {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: -2;
-  animation: emberPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes emberRotate {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 200% 200%; }
-}
-
-@keyframes emberPulse {
-  0%, 100% {
-    box-shadow:
-      0 0 8px rgba(255, 80, 0, 0.25),
-      0 0 16px rgba(255, 120, 0, 0.12),
-      inset 0 0 6px rgba(255, 80, 0, 0.06);
-  }
-  50% {
-    box-shadow:
-      0 0 12px rgba(255, 80, 0, 0.4),
-      0 0 24px rgba(255, 120, 0, 0.2),
-      inset 0 0 10px rgba(255, 80, 0, 0.1);
-  }
-}
-
-@keyframes emberFade {
-  0% { opacity: 1; }
-  85% { opacity: 1; }
-  92% { opacity: 0.6; filter: saturate(0.5); }
-  100% { opacity: 0; filter: saturate(0); }
+@keyframes playedFadeOut {
+  0%   { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* ─── Socket Warning ─── */

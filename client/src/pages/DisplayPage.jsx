@@ -503,8 +503,7 @@ function SongRow({ req, rank, lang, isPlayed }) {
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       initial={{ opacity: 0, x: -30 }}
-      animate={isPlayed ? { opacity: [1, 1, 1, 0], x: 0 } : { opacity: 1, x: 0 }}
-      {...(isPlayed ? { transition: { duration: 40, times: [0, 0.1, 0.85, 1] } } : {})}
+      animate={{ opacity: 1, x: 0 }}
     >
       <td className={`dtable-rank rank-${rank}`}>
         {rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
