@@ -3026,6 +3026,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 .login-logo-box {
   color: #FFFFFF;
   font-weight: 900;
+  margin-left: 0.05em;
 }
 @keyframes loginLogoGlow {
   0%, 100% {
