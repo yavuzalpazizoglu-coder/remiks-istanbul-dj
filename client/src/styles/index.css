@@ -3036,6 +3036,22 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   filter: none;
   animation: none;
 }
+.login-logo-text {
+  margin: 0 0 12px;
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  text-align: center;
+  line-height: 1;
+}
+.login-logo-remiks {
+  color: #008D4B;
+  font-style: italic;
+}
+.login-logo-box {
+  color: #FFFFFF;
+  font-weight: 900;
+}
 @keyframes loginLogoGlow {
   0%, 100% {
     filter:

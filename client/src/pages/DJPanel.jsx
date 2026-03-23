@@ -581,7 +581,7 @@ export default function DJPanel() {
           {loginBg}
           <div className="login-content">
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="login-remiksbox-logo" />
+              <h1 className="login-logo-text"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></h1>
               <p className="login-tagline">{lang === 'tr' ? 'DJ Etkinlik Yönetim Sistemi' : 'DJ Event Management System'}</p>
               <div className="login-badge-row">
                 <span className="login-badge">Real-Time</span>
@@ -637,7 +637,7 @@ export default function DJPanel() {
         {loginBg}
         <div className="login-content">
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="login-remiksbox-logo" />
+            <h1 className="login-logo-text"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></h1>
             <div className="login-user-chip">
               <span className="login-user-avatar">{djUser.name?.charAt(0) || 'D'}</span>
               <span className="login-user-name">{djUser.name}</span>
