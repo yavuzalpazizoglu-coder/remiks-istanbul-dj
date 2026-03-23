@@ -506,7 +506,9 @@ function SongRow({ req, rank, lang, isPlayed }) {
       animate={{ opacity: 1, x: 0 }}
     >
       <td className={`dtable-rank rank-${rank}`}>
-        {rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
+        {isPlayed
+          ? <span className="played-badge">🔥 {lang === 'tr' ? 'ÇALINIYOR' : 'PLAYING'}</span>
+          : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
       </td>
       <td className="dtable-art-cell">
         {req.album_art
