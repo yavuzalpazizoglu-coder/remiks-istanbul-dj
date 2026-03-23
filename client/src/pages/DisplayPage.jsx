@@ -718,6 +718,7 @@ export default function DisplayPage({ rejiMode = false }) {
   const [rejiTicker, setRejiTicker] = useState('');
   const [rejiSpotInput, setRejiSpotInput] = useState('');
   const [rejiCeremonyMin, setRejiCeremonyMin] = useState(3);
+  const [rejiPanelOpen, setRejiPanelOpen] = useState(false);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -997,12 +998,18 @@ export default function DisplayPage({ rejiMode = false }) {
             <span className="reji-bar-label">/{slug}</span>
           </div>
         </div>
-        <div className="reji-panel">
-          <div className="reji-panel-header">
+        {!rejiPanelOpen && (
+          <button className="reji-panel-tab" onClick={() => setRejiPanelOpen(true)}>
+            ▲ REJİ KONTROL
+          </button>
+        )}
+        <div className={`reji-panel ${rejiPanelOpen ? 'open' : 'closed'}`}>
+          <div className="reji-panel-header" onClick={() => setRejiPanelOpen(!rejiPanelOpen)}>
             <span className="reji-panel-title"><strong>REJİ</strong> · Sahne Kontrol</span>
             <span className="reji-panel-event">{event?.name} <span className="reji-panel-slug">/{slug}</span></span>
+            <span className="reji-panel-toggle-arrow">{rejiPanelOpen ? '▼ Kapat' : '▲ Aç'}</span>
           </div>
-          <div className="reji-panel-body">
+          {rejiPanelOpen && <div className="reji-panel-body">
 
             <div className="reji-panel-col">
               <div className="reji-panel-sec-title"><strong>METİN</strong> · Ekran</div>
@@ -1089,7 +1096,7 @@ export default function DisplayPage({ rejiMode = false }) {
               </div>
             </div>
 
-          </div>
+          </div>}
         </div>
         </>
       )}

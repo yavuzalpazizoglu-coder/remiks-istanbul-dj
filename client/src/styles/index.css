@@ -1533,13 +1533,13 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   font-size: 10px;
 }
 .djc-crew-chat-messages .crew-chat-sender {
-  font-size: 8px;
-}
-.djc-crew-chat-messages .crew-chat-text {
   font-size: 10px;
 }
+.djc-crew-chat-messages .crew-chat-text {
+  font-size: 12px;
+}
 .djc-crew-chat-messages .crew-chat-empty {
-  font-size: 9px;
+  font-size: 11px;
   padding: 12px 0;
 }
 
@@ -4565,6 +4565,30 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 /* ─── Reji Panel (bottom control panel — DJ Panel style) ─── */
+.reji-panel-tab {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9998;
+  padding: 6px 28px;
+  background: linear-gradient(180deg, #1a1a1a, #111);
+  border: 1px solid #333;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: #cc66ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  pointer-events: all;
+  transition: all 0.2s;
+}
+.reji-panel-tab:hover {
+  background: linear-gradient(180deg, #222, #161616);
+  color: #dd88ff;
+  box-shadow: 0 -2px 12px rgba(170,68,255,0.2);
+}
 .reji-panel {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -4575,6 +4599,11 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-family: 'Inter', 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease;
+}
+.reji-panel.closed {
+  transform: translateY(100%);
+  pointer-events: none;
 }
 .reji-panel-header {
   display: flex;
@@ -4583,6 +4612,21 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   padding: 6px 20px;
   background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
   border-bottom: 1px solid #222;
+  cursor: pointer;
+  user-select: none;
+}
+.reji-panel-header:hover {
+  background: linear-gradient(180deg, #1e1e1e 0%, #181818 100%);
+}
+.reji-panel-toggle-arrow {
+  font-size: 10px;
+  font-weight: 600;
+  color: #777;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+.reji-panel-header:hover .reji-panel-toggle-arrow {
+  color: #cc66ff;
 }
 .reji-panel-title {
   font-size: 11px;
@@ -4805,7 +4849,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .reji-panel-chat-msgs::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 .reji-panel-chat-empty {
   color: #444;
-  font-size: 10px;
+  font-size: 12px;
   text-align: center;
   padding: 12px 0;
   font-style: italic;
@@ -4829,8 +4873,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border-left: 2px solid #aa44ff;
 }
 .reji-panel-chat-msg.crew-chat-reji .crew-chat-sender { color: #cc66ff; }
-.reji-panel-chat-msg .crew-chat-sender { font-size: 9px; font-weight: 700; }
-.reji-panel-chat-msg .crew-chat-text { font-size: 11px; color: #ccc; }
+.reji-panel-chat-msg .crew-chat-sender { font-size: 11px; font-weight: 700; }
+.reji-panel-chat-msg .crew-chat-text { font-size: 13px; color: #ccc; }
 .reji-panel-chat-input {
   display: flex;
   gap: 0;
@@ -5033,7 +5077,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 .crew-chat-empty {
   color: #555;
-  font-size: 11px;
+  font-size: 13px;
   text-align: center;
   padding: 24px 0;
   font-style: italic;
@@ -5076,13 +5120,13 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .crew-chat-sender {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 .crew-chat-text {
-  font-size: 12px;
+  font-size: 14px;
   color: #e0e0e0;
   line-height: 1.4;
   word-break: break-word;
