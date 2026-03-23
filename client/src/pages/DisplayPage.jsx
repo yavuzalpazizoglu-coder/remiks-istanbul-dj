@@ -706,6 +706,12 @@ export default function DisplayPage({ rejiMode = false }) {
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
   const [nightState, setNightState] = useState(null);
 
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatOpen, setChatOpen] = useState(true);
+  const [chatUnread, setChatUnread] = useState(0);
+  const chatEndRef = useRef(null);
+
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
   const requestUrl = `${window.location.origin}/request/${slug}`;
@@ -802,6 +808,10 @@ export default function DisplayPage({ rejiMode = false }) {
     socket.on('room-count', ({ count }) => setConnectedCount(count));
 
     socket.on('night-update', (data) => setNightState(data));
+
+    socket.on('crew-chat', (msg) => {
+      setChatMessages(prev => [...prev.slice(-50), msg]);
+    });
     socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
       setNightState(prev => {
         if (!prev) return prev;
@@ -821,7 +831,7 @@ export default function DisplayPage({ rejiMode = false }) {
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('ceremony'); socket.off('music-mode');
-      socket.off('night-update'); socket.off('night-vote');
+      socket.off('night-update'); socket.off('night-vote'); socket.off('crew-chat');
       socket.disconnect();
     };
   }, [slug]);
@@ -866,6 +876,17 @@ export default function DisplayPage({ rejiMode = false }) {
     return () => clearInterval(interval);
   }, [nightState?.rounds?.[nightState?.currentRound - 1]?.phase]);
 
+  useEffect(() => {
+    if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (!chatOpen && chatMessages.length > 0) setChatUnread(prev => prev + 1);
+  }, [chatMessages.length]);
+
+  const sendChat = (sender) => {
+    if (!chatInput.trim()) return;
+    socket.emit('crew-chat', { message: chatInput.trim(), sender });
+    setChatInput('');
+  };
+
   const goFullscreen = () => {
     setShowFullscreenHint(false);
     document.documentElement.requestFullscreen?.().catch(() => {});
@@ -895,6 +916,7 @@ export default function DisplayPage({ rejiMode = false }) {
   return (
     <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
       {rejiMode && (
+        <>
         <div className="reji-bar">
           <div className="reji-bar-item">
             <span className="reji-bar-label">REJİ</span>
@@ -927,6 +949,35 @@ export default function DisplayPage({ rejiMode = false }) {
             <span className="reji-bar-label">/{slug}</span>
           </div>
         </div>
+        <div className={`crew-chat-box ${chatOpen ? 'open' : 'collapsed'}`}>
+          <div className="crew-chat-header" onClick={() => { setChatOpen(!chatOpen); setChatUnread(0); }}>
+            <span className="crew-chat-title">💬 DJ ↔ REJİ</span>
+            {!chatOpen && chatUnread > 0 && <span className="crew-chat-badge">{chatUnread}</span>}
+            <span className="crew-chat-toggle">{chatOpen ? '▼' : '▲'}</span>
+          </div>
+          {chatOpen && (
+            <>
+              <div className="crew-chat-messages">
+                {chatMessages.length === 0 && <div className="crew-chat-empty">Henüz mesaj yok</div>}
+                {chatMessages.map(m => (
+                  <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
+                    <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
+                    <span className="crew-chat-text">{m.message}</span>
+                    <span className="crew-chat-time">{new Date(m.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                ))}
+                <div ref={chatEndRef} />
+              </div>
+              <div className="crew-chat-input-row">
+                <input className="crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendChat('reji')}
+                  placeholder="Mesaj yaz..." maxLength={200} />
+                <button className="crew-chat-send" onClick={() => sendChat('reji')}>↑</button>
+              </div>
+            </>
+          )}
+        </div>
+        </>
       )}
       {!isPreview && !rejiMode && (
         <div className="live-indicator" aria-hidden="true">

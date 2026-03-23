@@ -598,6 +598,18 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('crew-chat', ({ message, sender }) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug || !message) return;
+    const payload = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      message: message.slice(0, 200),
+      sender: sender || 'unknown',
+      timestamp: Date.now(),
+    };
+    io.to(eventSlug).emit('crew-chat', payload);
+  });
+
   socket.on('disconnect', () => {
     const { eventSlug } = socket.data;
     if (eventSlug) {

@@ -59,6 +59,11 @@ export default function DJPanel() {
   const tickerTimer = useRef(null);
   const previewMonitorRef = useRef(null);
   const previewIframeRef = useRef(null);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatUnread, setChatUnread] = useState(0);
+  const chatEndRef = useRef(null);
 
   useEffect(() => {
     if (panelTheme === 'pioneer') {
@@ -153,6 +158,9 @@ export default function DJPanel() {
     socket.on('room-count', ({ count }) => setConnectedCount(count));
 
     socket.on('night-update', (data) => setNightState(data));
+    socket.on('crew-chat', (msg) => {
+      setChatMessages(prev => [...prev.slice(-50), msg]);
+    });
     socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
       setNightState(prev => {
         if (!prev) return prev;
@@ -177,9 +185,21 @@ export default function DJPanel() {
       socket.off('room-count');
       socket.off('night-update');
       socket.off('night-vote');
+      socket.off('crew-chat');
       socket.disconnect();
     };
   }, [slug, fetchRequests]);
+
+  useEffect(() => {
+    if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (!chatOpen && chatMessages.length > 0) setChatUnread(prev => prev + 1);
+  }, [chatMessages.length]);
+
+  const sendChat = () => {
+    if (!chatInput.trim()) return;
+    socket.emit('crew-chat', { message: chatInput.trim(), sender: 'dj' });
+    setChatInput('');
+  };
 
   const showToast = (msg) => {
     setToast(msg);
@@ -1286,6 +1306,37 @@ export default function DJPanel() {
         </div>
 
       </div>
+
+      {event && (
+        <div className={`crew-chat-box crew-chat-dj ${chatOpen ? 'open' : 'collapsed'}`}>
+          <div className="crew-chat-header" onClick={() => { setChatOpen(!chatOpen); setChatUnread(0); }}>
+            <span className="crew-chat-title">💬 REJİ CHAT</span>
+            {!chatOpen && chatUnread > 0 && <span className="crew-chat-badge">{chatUnread}</span>}
+            <span className="crew-chat-toggle">{chatOpen ? '▼' : '▲'}</span>
+          </div>
+          {chatOpen && (
+            <>
+              <div className="crew-chat-messages">
+                {chatMessages.length === 0 && <div className="crew-chat-empty">Henüz mesaj yok</div>}
+                {chatMessages.map(m => (
+                  <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
+                    <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
+                    <span className="crew-chat-text">{m.message}</span>
+                    <span className="crew-chat-time">{new Date(m.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
+                  </div>
+                ))}
+                <div ref={chatEndRef} />
+              </div>
+              <div className="crew-chat-input-row">
+                <input className="crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendChat()}
+                  placeholder="Mesaj yaz..." maxLength={200} />
+                <button className="crew-chat-send" onClick={sendChat}>↑</button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       <AnimatePresence>
         {toast && <motion.div className="success-toast" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>{toast}</motion.div>}
