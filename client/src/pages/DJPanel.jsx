@@ -757,11 +757,6 @@ export default function DJPanel() {
                     </>
                   )}
                 </div>
-                <div className="djc-booth-stats">
-                  <span>{lang === 'tr' ? 'Bekleyen' : 'Pending'} <strong>{waitingRequests.length}</strong></span>
-                  <span>{lang === 'tr' ? 'Onaylı' : 'OK'} <strong>{approvedRequests.length}</strong></span>
-                  <span>{T('dj.total_votes')} <strong>{totalVotes}</strong></span>
-                </div>
               </div>
               <div className="djc-booth-selects">
                 <label className="djc-booth-select-label">
@@ -841,13 +836,13 @@ export default function DJPanel() {
                 <label className="djc-booth-select-label">
                   {lang === 'tr' ? 'Açılış' : 'Opening'}
                   <select className="djc-booth-select" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))}>
-                    {[5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
+                    {[1, 5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
                   </select>
                 </label>
                 <label className="djc-booth-select-label">
                   {lang === 'tr' ? 'Kapanış' : 'Closing'}
                   <select className="djc-booth-select" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))}>
-                    {[5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
+                    {[1, 5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
                   </select>
                 </label>
               </div>
@@ -1041,6 +1036,18 @@ export default function DJPanel() {
                             className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
                             onClick={() => changeAnimationLevel(l.id)}>
                             {l.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="djc-field djc-field-inline">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Tören Süresi' : 'Ceremony'}</label>
+                      <div className="djc-fx-toggle">
+                        {[1, 3, 5, 10, 15].map(m => (
+                          <button key={m}
+                            className={`djc-fx-btn ${ceremonyMinutes === m ? 'active' : ''}`}
+                            onClick={() => updateCeremonyMinutes(m)}>
+                            {m} dk
                           </button>
                         ))}
                       </div>

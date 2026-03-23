@@ -208,7 +208,6 @@ input, textarea { font-family: inherit; }
   white-space: nowrap;
   position: relative;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     0 1px 1px rgba(0,0,0,0.05),
     0 2px 6px rgba(0,0,0,0.20);
@@ -734,7 +733,6 @@ body.theme-pioneer-gold .dj-panel.dj-compact {
   font-family: var(--font-display);
   position: relative;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     inset 1px 0 0 rgba(255,255,255,0.06),
     inset -1px 0 0 rgba(0,0,0,0.06),
@@ -773,7 +771,6 @@ body.theme-pioneer-gold .dj-panel.dj-compact {
   border-top-color: #353535;
   border-left-color: #303030;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     0 1px 1px rgba(0,0,0,0.06),
     0 1px 1px rgba(0,0,0,0.03);
@@ -1806,7 +1803,6 @@ body.theme-pioneer-gold .djc-sec-title strong {
   outline: none;
   transition: border-color 150ms ease;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     0 1px 1px rgba(0,0,0,0.05),
     0 0 1px rgba(0,0,0,0.03);
@@ -1837,7 +1833,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   min-height: auto !important;
   position: relative;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     0 1px 1px rgba(0,0,0,0.05),
     0 0 1px rgba(0,0,0,0.03);
@@ -1914,6 +1909,25 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   grid-template-columns: 1fr 1fr;
   gap: 4px;
 }
+
+/* Global brightness hover for DJ panel buttons */
+.djc-share-card:hover,
+.djc-dj-card:hover,
+.djc-mmode-tag:hover,
+.djc-fx-btn:hover,
+.preset-btn:hover,
+.djc-ceremony-btn:hover,
+.djc-theme-toggle-btn:hover:not(.active) {
+  filter: brightness(1.2);
+}
+.djc-share-card:active,
+.djc-dj-card:active,
+.djc-mmode-tag:active,
+.djc-fx-btn:active,
+.preset-btn:active,
+.djc-ceremony-btn:active {
+  filter: brightness(0.9);
+}
 .djc-btn-full {
   width: 100% !important;
 }
@@ -1922,7 +1936,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   font-size: 11px !important;
   min-width: auto !important;
   border-radius: 7px !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.015), 0 1px 1px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.12);
+  box-shadow:  0 1px 1px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.12);
 }
 
 /* Preset row */
@@ -2001,7 +2015,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   color: inherit;
   position: relative;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.04),
     inset 1px 0 0 rgba(255,255,255,0.008),
     inset -1px 0 0 rgba(0,0,0,0.008),
@@ -2025,7 +2038,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-left-color: #343434;
   transform: translateY(-2px);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.04),
     inset 1px 0 0 rgba(255,255,255,0.01),
     inset -1px 0 0 rgba(0,0,0,0.008),
@@ -2072,7 +2084,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   transition: all 150ms ease;
   flex-shrink: 0;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     0 1px 1px rgba(0,0,0,0.05);
   position: relative;
@@ -2088,7 +2099,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-top-color: #8A8A8A;
   border-left-color: #7A7A7A;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     0 0 6px rgba(0,204,0,0.15),
     0 1px 1px rgba(0,0,0,0.06);
@@ -2125,7 +2135,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-bottom: 1px solid #0E0E0E;
   overflow: hidden;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.20),
     0 1px 1px rgba(0,0,0,0.05);
   position: relative;
@@ -2178,7 +2187,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   color: #D0D0D0;
   position: relative;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.04),
     inset 1px 0 0 rgba(255,255,255,0.008),
     inset -1px 0 0 rgba(0,0,0,0.008),
@@ -2202,7 +2210,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
     linear-gradient(180deg, #3E3E3E 0%, #363636 50%, #303030 100%);
   color: #FFFFFF;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.04),
     0 1px 1px rgba(0,0,0,0.07),
     0 1px 2px rgba(0,0,0,0.04);
@@ -2264,7 +2271,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   white-space: nowrap;
   text-overflow: ellipsis;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.04),
     inset 1px 0 0 rgba(255,255,255,0.008),
     inset -1px 0 0 rgba(0,0,0,0.008),
@@ -2306,7 +2312,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-left-color: #343434;
   color: #FFFFFF;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.04),
     inset 1px 0 0 rgba(255,255,255,0.01),
     inset -1px 0 0 rgba(0,0,0,0.008),
@@ -2340,7 +2345,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   font-weight: 700;
   text-shadow: 0 1px 1px rgba(0,0,0,0.6);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.05),
     inset 1px 0 0 rgba(255,255,255,0.01),
     inset -1px 0 0 rgba(0,0,0,0.01),
@@ -2364,7 +2368,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-bottom-color: #2A2A2A;
   color: #FFFFFF;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.05),
     inset 1px 0 0 rgba(255,255,255,0.12),
     inset -1px 0 0 rgba(0,0,0,0.01),
@@ -2386,7 +2389,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   font-weight: 700;
   text-shadow: 0 0 6px rgba(0,170,255,0.4);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.40),
     inset 1px 0 0 rgba(255,255,255,0.01),
     inset -1px 0 0 rgba(0,0,0,0.01),
@@ -2409,7 +2411,6 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   color: #55CCFF;
   text-shadow: 0 0 8px rgba(0,170,255,0.5);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.40),
     inset 1px 0 0 rgba(255,255,255,0.06),
     inset -1px 0 0 rgba(0,0,0,0.01),
@@ -2542,7 +2543,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-winamp {
   color: #D0D0D0;
   text-shadow: 0 1px 1px rgba(0,0,0,0.6);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.05),
     0 1px 1px rgba(0,0,0,0.07),
     0 1px 1px rgba(0,0,0,0.04);
@@ -2558,7 +2558,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   color: #00AAFF;
   text-shadow: 0 0 6px rgba(0,170,255,0.4);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.40),
     0 1px 3px rgba(0,0,0,0.60),
     0 1px 1px rgba(0,0,0,0.05);
@@ -2645,7 +2644,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   transition: all 150ms ease;
   position: relative;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     0 1px 1px rgba(0,0,0,0.05);
 }
@@ -2666,7 +2664,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   border-top-color: #8A8A8A;
   color: #FFFFFF;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.03),
     0 1px 1px rgba(0,0,0,0.06);
 }
@@ -2824,7 +2821,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   transition: all 150ms ease;
   position: relative;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.02),
     inset 0 -1px 0 rgba(0,0,0,0.04),
     inset 1px 0 0 rgba(255,255,255,0.008),
     inset -1px 0 0 rgba(0,0,0,0.008),
@@ -2848,7 +2844,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
     linear-gradient(180deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.0) 15%, rgba(255,255,255,0.0) 50%, rgba(0,0,0,0.015) 85%, rgba(0,0,0,0.03) 100%),
     linear-gradient(180deg, #3E3E3E 0%, #363636 50%, #303030 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.04),
     0 1px 1px rgba(0,0,0,0.07),
     0 1px 2px rgba(0,0,0,0.04);
@@ -5086,7 +5081,6 @@ body.theme-pioneer-gold .closing-stat-number {
   transition: all 120ms ease;
   position: relative;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.015),
     inset 0 -1px 0 rgba(0,0,0,0.28),
     inset 1px 0 0 rgba(255,255,255,0.06),
     inset -1px 0 0 rgba(0,0,0,0.06),
@@ -5312,13 +5306,13 @@ body.theme-pioneer-gold .closing-stat-number {
 @keyframes fireGlow {
   0%, 100% {
     box-shadow:
-      0 0 10px rgba(255, 80, 0, 0.4),
+    0 0 10px rgba(255, 80, 0, 0.4),
       0 0 25px rgba(255, 120, 0, 0.2),
       inset 0 0 10px rgba(255, 60, 0, 0.1);
   }
   50% {
     box-shadow:
-      0 0 20px rgba(255, 80, 0, 0.6),
+    0 0 20px rgba(255, 80, 0, 0.6),
       0 0 45px rgba(255, 120, 0, 0.3),
       0 0 60px rgba(255, 200, 0, 0.15),
       inset 0 0 15px rgba(255, 60, 0, 0.15);
@@ -6022,13 +6016,13 @@ body.theme-pioneer-gold .display-mode-pioneer {
 @keyframes djPhotoGlow {
   0%, 100% {
     box-shadow:
-      0 0 15px rgba(255, 255, 255, 0.3),
+    0 0 15px rgba(255, 255, 255, 0.3),
       0 0 30px rgba(0, 204, 0, 0.2);
     border-color: rgba(255, 255, 255, 0.5);
   }
   50% {
     box-shadow:
-      0 0 20px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(255, 255, 255, 0.5),
       0 0 40px rgba(0, 204, 0, 0.35),
       0 0 60px rgba(0, 204, 0, 0.1);
     border-color: rgba(255, 255, 255, 0.7);
