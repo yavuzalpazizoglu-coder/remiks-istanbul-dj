@@ -3030,13 +3030,11 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 }
 .login-remiksbox-logo {
   display: block;
-  height: 160px;
+  height: 140px;
   width: auto;
   margin: 0 auto 12px;
-  filter:
-    drop-shadow(0 0 4px rgba(0,160,0,0.1))
-    drop-shadow(0 0 10px rgba(0,160,0,0.06));
-  animation: loginLogoGlow 3s ease-in-out infinite;
+  filter: none;
+  animation: none;
 }
 @keyframes loginLogoGlow {
   0%, 100% {
