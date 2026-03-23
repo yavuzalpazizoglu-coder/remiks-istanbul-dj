@@ -6288,7 +6288,6 @@ body.theme-pioneer-gold .right-panel-tab.night-tab.has-active-vote { animation-n
   cursor: pointer; background: rgba(200,40,60,0.1); border: 1px solid rgba(200,40,60,0.3); color: #c8283c;
 }
 
-.night-winner-display { text-align: center; padding: 8px 0; }
 .night-winner-icon { font-size: 22px; margin-bottom: 2px; }
 .night-winner-name { font-size: 13px; font-weight: 700; color: var(--rb-accent, #00CC00); }
 .night-winner-artist { font-size: 11px; color: var(--rb-text-secondary, rgba(255,255,255,0.4)); }
@@ -6302,6 +6301,53 @@ body.theme-pioneer-gold .right-panel-tab.night-tab.has-active-vote { animation-n
 }
 .night-result-btn:hover { background: rgba(var(--rb-accent-rgb, 0, 204, 0), 0.1); }
 .night-result-btn.primary { background: var(--rb-accent, #00CC00); color: #000; border-color: var(--rb-accent, #00CC00); }
+
+/* Night Spotify Search */
+.night-spotify-search { margin-bottom: 8px; }
+.night-search-results {
+  max-height: 180px; overflow-y: auto; border-radius: 6px;
+  background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08);
+  margin-top: 4px;
+}
+.night-search-item {
+  display: flex; align-items: center; gap: 8px; padding: 5px 8px;
+  cursor: pointer; transition: background 0.15s;
+}
+.night-search-item:hover { background: rgba(255,255,255,0.06); }
+.night-search-art { width: 36px; height: 36px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+.night-search-info { flex: 1; min-width: 0; overflow: hidden; }
+.night-search-name { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.night-search-artist { font-size: 10px; color: rgba(255,255,255,0.45); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.night-selected-song {
+  display: flex; align-items: center; gap: 8px; padding: 5px 8px;
+  background: rgba(var(--rb-accent-rgb, 0,204,0), 0.08);
+  border: 1px solid rgba(var(--rb-accent-rgb, 0,204,0), 0.2);
+  border-radius: 6px; margin-top: 4px;
+}
+.night-finalist-art { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
+.night-vote-art { width: 28px; height: 28px; border-radius: 4px; object-fit: cover; flex-shrink: 0; margin-right: 4px; }
+.night-vote-info { flex: 1; min-width: 0; overflow: hidden; }
+.night-vote-artist { font-size: 9px; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.night-winner-display { display: flex; align-items: center; gap: 10px; text-align: left; padding: 8px 0; }
+.night-winner-art { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; flex-shrink: 0; border: 2px solid var(--rb-accent, #00CC00); }
+
+/* Display: Night VS album art */
+.night-vs-album-art {
+  width: clamp(28px, 3.5vw, 70px); height: clamp(28px, 3.5vw, 70px);
+  border-radius: clamp(3px, 0.4vw, 8px); object-fit: cover; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.night-winner-album-art {
+  width: clamp(80px, 10vw, 200px); height: clamp(80px, 10vw, 200px);
+  border-radius: clamp(8px, 1vw, 20px); object-fit: cover;
+  border: 2px solid var(--theme-primary, #00d4ff);
+  box-shadow: 0 0 30px rgba(var(--theme-rgb, 0,212,255), 0.3);
+}
+.closing-night-art {
+  width: clamp(40px, 5vw, 80px); height: clamp(40px, 5vw, 80px);
+  border-radius: clamp(4px, 0.5vw, 10px); object-fit: cover;
+  margin-bottom: clamp(4px, 0.4vw, 8px);
+}
 
 /* Pioneer Gold overrides */
 body.theme-pioneer-gold .night-start-btn,

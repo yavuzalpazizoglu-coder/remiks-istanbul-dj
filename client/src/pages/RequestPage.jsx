@@ -391,12 +391,13 @@ export default function RequestPage() {
                 className={`night-mobile-card ${f.id === leaderId ? 'leading' : ''} ${nightVotedId === f.id ? 'voted' : ''} ${nightVotedId && nightVotedId !== f.id ? 'disabled' : ''}`}
                 onClick={() => !nightVotedId && nightRound.phase === 'voting' && handleNightVote(f.id)}
                 whileTap={!nightVotedId ? { scale: 0.98 } : {}}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                  <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, gap: 10 }}>
+                  {f.albumArt && <img src={f.albumArt} alt="" style={{ width: 48, height: 48, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }} />}
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 700, fontSize: 15 }}>{i + 1}. {f.title}</div>
                     <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{f.artist}</div>
                   </div>
-                  <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--neon-cyan)' }}>{f.votes}</div>
+                  <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--neon-cyan)', flexShrink: 0 }}>{f.votes}</div>
                 </div>
                 <div className="night-vs-bar" style={{ height: 6 }}>
                   <div className="night-vs-bar-fill" style={{ width: `${(f.votes / maxVotes) * 100}%` }} />

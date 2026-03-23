@@ -259,6 +259,7 @@ function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eve
             if (!w) return null;
             return (
               <div key={r.roundNumber} className="closing-stat-card closing-stat-wide">
+                {w.albumArt && <img src={w.albumArt} alt="" className="closing-night-art" />}
                 <div className="closing-stat-icon">🏆</div>
                 <div className="closing-stat-song">{w.title}</div>
                 <div className="closing-stat-artist">{w.artist} — {w.votes} {lang === 'tr' ? 'oy' : 'votes'}</div>
@@ -953,8 +954,9 @@ export default function DisplayPage() {
                         {nightFinalists.map((f, i) => (
                           <div key={f.id}>
                             <div className={`night-vs-song ${f.id === nightLeader ? 'leading' : ''} ${nightPhase === 'finished' && f.id !== nightRound?.winnerId ? 'night-vs-loser' : ''}`}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'clamp(4px,0.5vw,10px)' }}>
+                                {f.albumArt && <img src={f.albumArt} alt="" className="night-vs-album-art" />}
+                                <div style={{ flex: 1, minWidth: 0 }}>
                                   <div className="night-vs-song-title">{f.title}</div>
                                   <div className="night-vs-song-artist">{f.artist}</div>
                                 </div>
@@ -1039,6 +1041,7 @@ export default function DisplayPage() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
               <div className="night-winner-dj-name">{round.djName}</div>
               <div className="night-winner-badge">{lang === 'tr' ? 'GECENİN ŞARKISI' : 'SONG OF THE NIGHT'}</div>
+              {winner.albumArt && <motion.img src={winner.albumArt} alt="" className="night-winner-album-art" initial={{ scale: 0.3, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3, duration: 0.6 }} />}
               <motion.div className="night-winner-song-name"
                 initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }}>
                 {winner.title}

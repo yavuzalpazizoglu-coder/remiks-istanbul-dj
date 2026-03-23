@@ -426,7 +426,7 @@ app.get('/api/events/:slug/night/status', (req, res) => {
 
 app.post('/api/events/:slug/night/finalists', djAuth, (req, res) => {
   try {
-    const { action, title, artist, songId } = req.body;
+    const { action, title, artist, albumArt, spotifyId, songId } = req.body;
     const state = getNightState(req.params.slug);
     const round = state.rounds[state.currentRound - 1];
     if (!round || round.phase !== 'idle') return res.status(400).json({ error: 'Cannot modify finalists now' });
@@ -435,7 +435,7 @@ app.post('/api/events/:slug/night/finalists', djAuth, (req, res) => {
       if (!title) return res.status(400).json({ error: 'Title required' });
       if (round.finalists.length >= 3) return res.status(400).json({ error: 'Max 3 finalists' });
       const id = Math.random().toString(36).slice(2, 10);
-      round.finalists.push({ id, title: sanitize(title), artist: sanitize(artist || ''), votes: 0 });
+      round.finalists.push({ id, title: sanitize(title), artist: sanitize(artist || ''), albumArt: albumArt || '', spotifyId: spotifyId || '', votes: 0 });
     } else if (action === 'remove') {
       round.finalists = round.finalists.filter(f => f.id !== songId);
     } else {
