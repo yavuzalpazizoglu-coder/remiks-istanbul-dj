@@ -5006,6 +5006,27 @@ body.theme-pioneer-gold .closing-stat-number {
 }
 
 /* Closing Stars */
+/* Closing Album Art Grid Background */
+.closing-album-grid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0;
+  opacity: 0.22;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.closing-album-tile {
+  width: clamp(60px, 10vw, 140px);
+  height: clamp(60px, 10vw, 140px);
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
 .closing-stars {
   position: absolute;
   inset: 0;

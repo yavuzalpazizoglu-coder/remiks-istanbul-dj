@@ -221,9 +221,19 @@ function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eve
 
   const confettiColors = ['var(--theme-primary, #00d4ff)', '#ffffff', '#FFD700', '#ff0080', '#008D4B'];
 
+  const albumArts = (requests || []).filter(r => r.album_art).map(r => r.album_art);
+
   return (
     <motion.div className={`ceremony-overlay closing-overlay closing-phase-${phase}`}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
+
+      {albumArts.length > 0 && (
+        <div className="closing-album-grid">
+          {albumArts.map((art, i) => (
+            <div key={i} className="closing-album-tile" style={{ backgroundImage: `url(${art})` }} />
+          ))}
+        </div>
+      )}
 
       <div className="closing-stars">
         {Array.from({ length: 40 }, (_, i) => (
