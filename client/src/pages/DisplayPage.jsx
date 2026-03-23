@@ -997,76 +997,98 @@ export default function DisplayPage({ rejiMode = false }) {
             <span className="reji-bar-label">/{slug}</span>
           </div>
         </div>
-        <div className="reji-control-bar">
-          <div className="reji-ctrl-section">
-            <span className="reji-ctrl-label">📺 Ekran Yazısı</span>
-            <input className="reji-ctrl-input" value={rejiBrand}
-              onChange={e => { setRejiBrand(e.target.value); socket.emit('reji-brand', { text: e.target.value }); }}
-              placeholder="Organizasyon adı..." />
+        <div className="reji-panel">
+          <div className="reji-panel-header">
+            <span className="reji-panel-title"><strong>REJİ</strong> · Sahne Kontrol</span>
+            <span className="reji-panel-event">{event?.name} <span className="reji-panel-slug">/{slug}</span></span>
           </div>
-          <div className="reji-ctrl-section">
-            <span className="reji-ctrl-label">📜 Kayan Yazı</span>
-            <input className="reji-ctrl-input" value={rejiTicker}
-              onChange={e => { setRejiTicker(e.target.value); socket.emit('reji-ticker', { text: e.target.value }); }}
-              placeholder="Kayan yazı..." />
-          </div>
-          <div className="reji-ctrl-section reji-ctrl-ceremony">
-            <span className="reji-ctrl-label">🎬 Tören</span>
-            <div className="reji-ctrl-row">
-              <select className="reji-ctrl-select" value={rejiCeremonyMin} onChange={e => setRejiCeremonyMin(Number(e.target.value))}>
-                {[1,3,5,10,15].map(m => <option key={m} value={m}>{m} dk</option>)}
-              </select>
-              <button className="reji-ctrl-btn reji-btn-green" onClick={() => socket.emit('reji-ceremony', { type: 'opening', active: true, minutes: rejiCeremonyMin })}>
-                ▶ Açılış
-              </button>
-              <button className="reji-ctrl-btn reji-btn-green" onClick={() => socket.emit('reji-ceremony', { type: 'closing', active: true, minutes: rejiCeremonyMin })}>
-                ▶ Kapanış
-              </button>
-              <button className="reji-ctrl-btn reji-btn-red" onClick={() => { socket.emit('reji-ceremony', { type: 'opening', active: false }); socket.emit('reji-ceremony', { type: 'closing', active: false }); }}>
-                ⏹ Durdur
-              </button>
-            </div>
-          </div>
-          <div className="reji-ctrl-section reji-ctrl-spotlight">
-            <span className="reji-ctrl-label">💡 Spotlight</span>
-            <div className="reji-ctrl-row">
-              <input className="reji-ctrl-input" value={rejiSpotInput}
-                onChange={e => setRejiSpotInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && rejiSpotInput.trim()) { socket.emit('reji-spotlight', { text: rejiSpotInput.trim() }); setRejiSpotInput(''); } }}
-                placeholder="Sahne mesajı (5sn)..." maxLength={120} />
-              <button className="reji-ctrl-btn reji-btn-yellow" onClick={() => { if (rejiSpotInput.trim()) { socket.emit('reji-spotlight', { text: rejiSpotInput.trim() }); setRejiSpotInput(''); } }}>
-                ⚡
-              </button>
-            </div>
-          </div>
-          <div className="reji-ctrl-section reji-ctrl-actions">
-            <button className={`reji-ctrl-btn reji-btn-blackout ${blackout ? 'active' : ''}`}
-              onClick={() => { socket.emit('reji-blackout', { active: !blackout }); setBlackout(!blackout); }}>
-              {blackout ? '💡 AYDINLAT' : '🔲 KARART'}
-            </button>
-            <button className="reji-ctrl-btn reji-btn-countdown" onClick={() => socket.emit('reji-countdown', { seconds: 5 })}>
-              ⏱ 5...1
-            </button>
-            <button className="reji-ctrl-btn reji-btn-countdown" onClick={() => socket.emit('reji-countdown', { seconds: 3 })}>
-              ⏱ 3...1
-            </button>
-          </div>
-          <div className="reji-ctrl-section reji-ctrl-chat-mini">
-            <div className="reji-ctrl-chat-msgs">
-              {chatMessages.slice(-4).map(m => (
-                <div key={m.id} className={`reji-ctrl-chat-msg crew-chat-${m.sender}`}>
-                  <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧' : '🎬'}</span>
-                  <span className="crew-chat-text">{m.message}</span>
+          <div className="reji-panel-body">
+
+            <div className="reji-panel-col">
+              <div className="reji-panel-sec-title"><strong>METİN</strong> · Ekran</div>
+              <div className="reji-panel-field">
+                <label className="reji-panel-label">Ekran Yazısı</label>
+                <input className="reji-panel-input" value={rejiBrand}
+                  onChange={e => { setRejiBrand(e.target.value); socket.emit('reji-brand', { text: e.target.value }); }}
+                  placeholder="Organizasyon adı..." />
+              </div>
+              <div className="reji-panel-field">
+                <label className="reji-panel-label">Kayan Yazı</label>
+                <input className="reji-panel-input" value={rejiTicker}
+                  onChange={e => { setRejiTicker(e.target.value); socket.emit('reji-ticker', { text: e.target.value }); }}
+                  placeholder="Ticker mesajı..." />
+              </div>
+              <div className="reji-panel-field">
+                <label className="reji-panel-label">Spotlight</label>
+                <div className="reji-panel-input-row">
+                  <input className="reji-panel-input" value={rejiSpotInput}
+                    onChange={e => setRejiSpotInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && rejiSpotInput.trim()) { socket.emit('reji-spotlight', { text: rejiSpotInput.trim() }); setRejiSpotInput(''); } }}
+                    placeholder="Sahne mesajı (5sn)..." maxLength={120} />
+                  <button className="reji-panel-btn reji-btn-yellow" onClick={() => { if (rejiSpotInput.trim()) { socket.emit('reji-spotlight', { text: rejiSpotInput.trim() }); setRejiSpotInput(''); } }}>
+                    ⚡ Gönder
+                  </button>
                 </div>
-              ))}
-              <div ref={chatEndRef} />
+              </div>
             </div>
-            <div className="reji-ctrl-chat-input">
-              <input className="reji-ctrl-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && sendChat('reji')}
-                placeholder="💬 Mesaj..." maxLength={200} />
-              <button className="reji-ctrl-btn reji-btn-purple" onClick={() => sendChat('reji')}>↑</button>
+
+            <div className="reji-panel-col">
+              <div className="reji-panel-sec-title"><strong>TÖREN</strong> · Seremoni</div>
+              <div className="reji-panel-field reji-panel-field-inline">
+                <label className="reji-panel-label">Süre</label>
+                <div className="reji-panel-toggle">
+                  {[1,3,5,10,15].map(m => (
+                    <button key={m} className={`reji-panel-toggle-btn ${rejiCeremonyMin === m ? 'active' : ''}`}
+                      onClick={() => setRejiCeremonyMin(m)}>{m} dk</button>
+                  ))}
+                </div>
+              </div>
+              <div className="reji-panel-btn-grid">
+                <button className="reji-panel-btn reji-btn-green" onClick={() => socket.emit('reji-ceremony', { type: 'opening', active: true, minutes: rejiCeremonyMin })}>
+                  ▶ Açılış Başlat
+                </button>
+                <button className="reji-panel-btn reji-btn-green" onClick={() => socket.emit('reji-ceremony', { type: 'closing', active: true, minutes: rejiCeremonyMin })}>
+                  ▶ Kapanış Başlat
+                </button>
+                <button className="reji-panel-btn reji-btn-red" onClick={() => { socket.emit('reji-ceremony', { type: 'opening', active: false }); socket.emit('reji-ceremony', { type: 'closing', active: false }); }}>
+                  ⏹ Töreni Durdur
+                </button>
+              </div>
+              <div className="reji-panel-sec-title" style={{ marginTop: 8 }}><strong>SAHNE</strong> · Efekt</div>
+              <div className="reji-panel-btn-grid">
+                <button className={`reji-panel-btn reji-btn-blackout ${blackout ? 'active' : ''}`}
+                  onClick={() => { socket.emit('reji-blackout', { active: !blackout }); setBlackout(!blackout); }}>
+                  {blackout ? '💡 Aydınlat' : '🔲 Karartma'}
+                </button>
+                <button className="reji-panel-btn reji-btn-countdown" onClick={() => socket.emit('reji-countdown', { seconds: 5 })}>
+                  ⏱ Geri Sayım 5s
+                </button>
+                <button className="reji-panel-btn reji-btn-countdown" onClick={() => socket.emit('reji-countdown', { seconds: 3 })}>
+                  ⏱ Geri Sayım 3s
+                </button>
+              </div>
             </div>
+
+            <div className="reji-panel-col reji-panel-chat-col">
+              <div className="reji-panel-sec-title"><strong>CHAT</strong> · DJ İletişim</div>
+              <div className="reji-panel-chat-msgs">
+                {chatMessages.length === 0 && <div className="reji-panel-chat-empty">Henüz mesaj yok</div>}
+                {chatMessages.map(m => (
+                  <div key={m.id} className={`reji-panel-chat-msg crew-chat-${m.sender}`}>
+                    <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
+                    <span className="crew-chat-text">{m.message}</span>
+                  </div>
+                ))}
+                <div ref={chatEndRef} />
+              </div>
+              <div className="reji-panel-chat-input">
+                <input className="reji-panel-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendChat('reji')}
+                  placeholder="Mesaj yaz..." maxLength={200} />
+                <button className="reji-panel-btn reji-btn-purple" onClick={() => sendChat('reji')}>↑</button>
+              </div>
+            </div>
+
           </div>
         </div>
         </>
