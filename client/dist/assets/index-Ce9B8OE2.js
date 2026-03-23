@@ -80,16 +80,7 @@ Powered by RemiksBox`:`🎵 ${x.name}
 Tap the link → Type your song → Send!
 Most voted songs play first 🔥
 ━━━━━━━━━━━━━━━━━━━━
-Powered by RemiksBox`;navigator.clipboard.writeText(F).then(()=>bn(S==="tr"?"Misafir linki kopyalandı!":"Guest link copied!"))},title:S==="tr"?"Misafir istek linkini kopyala":"Copy guest request link",children:["📱 ",S==="tr"?"MİSAFİR":"GUEST"]}),u.jsxs("button",{className:"djc-reji-link-btn",onClick:()=>{const k=`${window.location.origin}/reji/${g}`,F=S==="tr"?`╔══════════════════════════╗
-║  ██▀███ ▓█████  ███▄ ▄███▓██▓ ██ ▄█▀  ██████ 
-║ ▓██ ▒ ██▓█   ▀ ▓██▒▀█▀██▓██▒██▄█▒ ▒██    ▒ 
-║ ▓██ ░▄█ ▒███   ▓██    ▓██▒██▓███▄░ ░ ▓██▄   
-║ ▒██▀▀█▄ ▒▓█  ▄ ▒██    ▒██░██▓██ █▄   ▒   ██▒
-║ ░██▓ ▒██▒░▒████▒▒██▒   ░██░██▒██▒ █▄▒██████▒▒
-║          𝗕 𝗢 𝗫  ·  DJ Platform
-╚══════════════════════════╝
-
-🎬 REJİ KONTROL PANELİ
+Powered by RemiksBox`;navigator.clipboard.writeText(F).then(()=>bn(S==="tr"?"Misafir linki kopyalandı!":"Guest link copied!"))},title:S==="tr"?"Misafir istek linkini kopyala":"Copy guest request link",children:["📱 ",S==="tr"?"MİSAFİR":"GUEST"]}),u.jsxs("button",{className:"djc-reji-link-btn",onClick:()=>{const k=`${window.location.origin}/reji/${g}`,F=S==="tr"?`🎬 REJİ KONTROL PANELİ
 📺 Etkinlik: ${x.name}
 🔗 ${k}
 
@@ -136,16 +127,7 @@ Alt taraftaki kontrol çubuğu ile sahneyi yönetebilirsin.
 📱 Mobil cihazdan da erişilebilir ama laptop/PC önerilir.
 ━━━━━━━━━━━━━━━━━━━━
 Powered by Remiks İstanbul
-remiksistanbul.com`:`╔══════════════════════════╗
-║  ██▀███ ▓█████  ███▄ ▄███▓██▓ ██ ▄█▀  ██████ 
-║ ▓██ ▒ ██▓█   ▀ ▓██▒▀█▀██▓██▒██▄█▒ ▒██    ▒ 
-║ ▓██ ░▄█ ▒███   ▓██    ▓██▒██▓███▄░ ░ ▓██▄   
-║ ▒██▀▀█▄ ▒▓█  ▄ ▒██    ▒██░██▓██ █▄   ▒   ██▒
-║ ░██▓ ▒██▒░▒████▒▒██▒   ░██░██▒██▒ █▄▒██████▒▒
-║          𝗕 𝗢 𝗫  ·  DJ Platform
-╚══════════════════════════╝
-
-🎬 CREW CONTROL PANEL
+remiksistanbul.com`:`🎬 CREW CONTROL PANEL
 📺 Event: ${x.name}
 🔗 ${k}
 
