@@ -497,7 +497,7 @@ function SongRow({ req, rank, lang, isPlayed }) {
       {...(isPlayed ? { transition: { duration: 40, times: [0, 0.1, 0.85, 1] } } : {})}
     >
       <td className={`dtable-rank rank-${rank}`}>
-        {isPlayed ? <span className="dtable-medal">🔥</span> : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
+        {isPlayed ? <span className="played-dot" /> : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
       </td>
       <td className="dtable-art-cell">
         {req.album_art
@@ -508,7 +508,7 @@ function SongRow({ req, rank, lang, isPlayed }) {
       <td className="dtable-info-cell">
         <div className={`dtable-song ${isTop3 ? 'dtable-song-lg' : ''}`}>{req.song_name}</div>
         {req.artist && <div className="dtable-artist">{req.artist}</div>}
-        {isPlayed && <div className="dtable-played-label">{lang === 'tr' ? '🔥 Çalınıyor!' : '🔥 Now Playing!'}</div>}
+        {isPlayed && <div className="played-indicator"><span className="played-dot" /><span className="dtable-played-label">{lang === 'tr' ? 'ÇALINIYOR' : 'NOW PLAYING'}</span></div>}
       </td>
       <td className="dtable-votes-cell">
         <div style={{ position: 'relative', display: 'inline-block' }}>
