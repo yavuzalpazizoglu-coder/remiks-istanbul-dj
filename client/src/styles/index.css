@@ -4245,51 +4245,96 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   background: linear-gradient(135deg, rgba(10,10,14,0.97), rgba(20,20,30,0.97));
   z-index: 50;
   display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 30px;
+  flex-direction: column; gap: clamp(12px, 1.5vw, 30px);
   animation: fadeIn 0.6s ease;
+  overflow: hidden;
+  padding: clamp(16px, 2vw, 40px);
 }
 .summary-title {
   font-family: var(--font-display);
-  font-size: 40px; font-weight: 800;
+  font-size: clamp(24px, 3.5vw, 56px); font-weight: 800;
   background: var(--gradient-main);
   background-clip: text; -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-align: center;
 }
-.summary-cards {
-  display: flex; gap: 24px; flex-wrap: wrap;
-  justify-content: center; max-width: 900px;
+.summary-footer-info {
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: clamp(4px, 0.5vw, 10px);
 }
-.summary-card {
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-lg);
-  padding: 24px 30px;
-  min-width: 240px; text-align: center;
-  backdrop-filter: blur(16px);
-  animation: fadeSlideUp 0.5s ease both;
+
+/* ── Top 3 Songs Section ── */
+.summary-top3 {
+  width: 100%;
+  max-width: clamp(400px, 50vw, 800px);
+  text-align: center;
 }
-.summary-card:nth-child(2) { animation-delay: 0.15s; }
-.summary-card:nth-child(3) { animation-delay: 0.3s; }
-.summary-card-label {
-  font-size: 11px; text-transform: uppercase;
-  letter-spacing: 2px; color: var(--text-muted);
-  margin-bottom: 12px;
-}
-.summary-card-value {
+.summary-top3-title {
   font-family: var(--font-display);
-  font-size: 22px; font-weight: 700;
-  color: var(--text-primary);
+  font-size: clamp(12px, 1.4vw, 24px);
+  font-weight: 800;
+  color: var(--theme-primary, #00d4ff);
+  text-transform: uppercase;
+  letter-spacing: clamp(1px, 0.2vw, 3px);
+  margin-bottom: clamp(8px, 1vw, 16px);
 }
-.summary-card-sub {
-  font-size: 12px; color: var(--text-secondary);
-  margin-top: 4px;
+.summary-top3-list {
+  display: flex; flex-direction: column; gap: clamp(6px, 0.6vw, 12px);
 }
-.summary-stat-big {
+.summary-top3-card {
+  display: flex; align-items: center; gap: clamp(8px, 0.8vw, 16px);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: clamp(6px, 0.6vw, 12px);
+  padding: clamp(6px, 0.6vw, 12px) clamp(10px, 1vw, 20px);
+  backdrop-filter: blur(8px);
+}
+.summary-top3-card.rank-1 {
+  border-color: rgba(255, 215, 0, 0.3);
+  background: rgba(255, 215, 0, 0.06);
+}
+.summary-top3-card.rank-2 {
+  border-color: rgba(192, 192, 192, 0.2);
+  background: rgba(192, 192, 192, 0.04);
+}
+.summary-top3-card.rank-3 {
+  border-color: rgba(205, 127, 50, 0.2);
+  background: rgba(205, 127, 50, 0.04);
+}
+.summary-top3-rank {
+  font-size: clamp(16px, 2vw, 36px);
+  flex-shrink: 0;
+}
+.summary-top3-art {
+  width: clamp(36px, 4vw, 64px);
+  height: clamp(36px, 4vw, 64px);
+  border-radius: clamp(4px, 0.4vw, 8px);
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.summary-top3-info {
+  flex: 1; text-align: left; min-width: 0;
+}
+.summary-top3-song {
   font-family: var(--font-display);
-  font-size: 56px; font-weight: 900;
-  background: var(--gradient-main);
-  background-clip: text; -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: clamp(11px, 1.2vw, 20px);
+  font-weight: 700;
+  color: #FFFFFF;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.summary-top3-artist {
+  font-size: clamp(9px, 0.9vw, 15px);
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.summary-top3-votes {
+  font-family: var(--font-display);
+  font-size: clamp(12px, 1.3vw, 22px);
+  font-weight: 800;
+  color: var(--theme-primary, #00d4ff);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* ─── Theme Variables (overrides via inline style) ─── */

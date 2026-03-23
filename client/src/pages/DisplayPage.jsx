@@ -539,42 +539,104 @@ function SongRow({ req, rank, lang, isPlayed }) {
   );
 }
 
-function EventSummary({ requests, lang }) {
+function EventSummary({ requests, lang, nightState, eventName }) {
   const totalRequests = requests.length;
-  const totalVotes = requests.reduce((sum, r) => sum + r.votes, 0);
-  const sorted = [...requests].sort((a, b) => b.votes - a.votes);
-  const topVoted = sorted[0];
+  const totalVotes = requests.reduce((sum, r) => sum + (r.votes || 0), 0);
+  const sorted = [...requests].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+  const top3 = sorted.slice(0, 3);
+  const albumArts = requests.filter(r => r.album_art).map(r => r.album_art);
+  const today = new Date().toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+  const confettiColors = ['var(--theme-primary, #00d4ff)', '#ffffff', '#FFD700', '#ff0080', '#008D4B'];
 
   return (
     <div className="summary-overlay">
+      {albumArts.length > 0 && (
+        <div className="closing-album-grid">
+          {albumArts.map((art, i) => (
+            <div key={i} className="closing-album-tile" style={{ backgroundImage: `url(${art})` }} />
+          ))}
+        </div>
+      )}
+
+      <div className="closing-stars">
+        {Array.from({ length: 40 }, (_, i) => (
+          <div key={i} className="closing-star" style={{
+            left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 6}s`, animationDuration: `${4 + Math.random() * 4}s`,
+            width: 2 + Math.random() * 3, height: 2 + Math.random() * 3,
+          }} />
+        ))}
+      </div>
+
+      <div className="closing-confetti">
+        {Array.from({ length: 20 }, (_, i) => (
+          <div key={i} className="closing-confetti-piece" style={{
+            left: `${5 + Math.random() * 90}%`,
+            '--fall-duration': `${5 + Math.random() * 5}s`,
+            '--fall-delay': `${Math.random() * 4}s`,
+            background: confettiColors[i % confettiColors.length],
+            borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+          }} />
+        ))}
+      </div>
+
       <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
         <div className="summary-title">{t(lang, 'display.summary_title')}</div>
       </motion.div>
 
-      <div className="summary-cards">
-        <div className="summary-card">
-          <div className="summary-card-label">{t(lang, 'display.summary_total_requests')}</div>
-          <div className="summary-stat-big">{totalRequests}</div>
+      <div className="closing-stats-grid" style={{ marginBottom: 'clamp(10px, 1.5vw, 30px)' }}>
+        <div className="closing-stat-card">
+          <div className="closing-stat-number">{totalRequests}</div>
+          <div className="closing-stat-label">{lang === 'tr' ? 'şarkı istendi' : 'songs requested'}</div>
         </div>
-        <div className="summary-card">
-          <div className="summary-card-label">{t(lang, 'display.summary_total_votes')}</div>
-          <div className="summary-stat-big">{totalVotes}</div>
+        <div className="closing-stat-card">
+          <div className="closing-stat-number">{totalVotes}</div>
+          <div className="closing-stat-label">{lang === 'tr' ? 'oy kullanıldı' : 'votes cast'}</div>
         </div>
-        {topVoted && (
-          <div className="summary-card">
-            <div className="summary-card-label">{t(lang, 'display.summary_most_voted')}</div>
-            <div className="summary-card-value">{topVoted.song_name}</div>
-            {topVoted.artist && <div className="summary-card-sub">{topVoted.artist}</div>}
-            <div style={{ marginTop: 8, color: 'var(--neon-cyan)', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 20 }}>
-              {topVoted.votes} {t(lang, 'request.votes')}
-            </div>
-          </div>
-        )}
       </div>
 
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
-        style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 10 }}>
-        {t(lang, 'display.summary_thanks')}
+      {top3.length > 0 && (
+        <motion.div className="summary-top3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}>
+          <div className="summary-top3-title">{lang === 'tr' ? '🏆 EN ÇOK OY ALAN ŞARKILAR' : '🏆 MOST VOTED SONGS'}</div>
+          <div className="summary-top3-list">
+            {top3.map((song, i) => (
+              <motion.div key={song.id || i} className={`summary-top3-card rank-${i + 1}`}
+                initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 + i * 0.2 }}>
+                <div className="summary-top3-rank">{i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</div>
+                {song.album_art && <img src={song.album_art} alt="" className="summary-top3-art" />}
+                <div className="summary-top3-info">
+                  <div className="summary-top3-song">{song.song_name}</div>
+                  {song.artist && <div className="summary-top3-artist">{song.artist}</div>}
+                </div>
+                <div className="summary-top3-votes">{song.votes} {lang === 'tr' ? 'oy' : 'votes'}</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {nightState?.rounds?.filter(r => r.winnerId).map(r => {
+        const w = r.finalists.find(f => f.id === r.winnerId);
+        if (!w) return null;
+        return (
+          <motion.div key={r.roundNumber} className="closing-stat-card closing-stat-wide" style={{ marginTop: 'clamp(8px, 1vw, 20px)' }}
+            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.3 }}>
+            {w.albumArt && <img src={w.albumArt} alt="" className="closing-night-art" />}
+            <div className="closing-stat-icon">🏆</div>
+            <div className="closing-stat-song">{w.title}</div>
+            <div className="closing-stat-artist">{w.artist} — {w.votes} {lang === 'tr' ? 'oy' : 'votes'}</div>
+            <div className="closing-stat-label">{r.djName}{lang === 'tr' ? "'ın Gecenin Şarkısı" : "'s Song of the Night"}</div>
+          </motion.div>
+        );
+      })}
+
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+        className="summary-footer-info">
+        <div className="closing-thankyou-text" style={{ fontSize: 'clamp(18px, 2.5vw, 48px)' }}>
+          {lang === 'tr' ? 'TEŞEKKÜRLER!' : 'THANK YOU!'}
+        </div>
+        {eventName && <div className="closing-event-name">{eventName}</div>}
+        <div className="closing-event-date">{today}</div>
       </motion.div>
     </div>
   );
@@ -1066,7 +1128,7 @@ export default function DisplayPage() {
 
         {/* ─── ENDED (summary after closing) ─── */}
         {event.status === 'ended' && !closingActive && (
-          <EventSummary requests={allRequests.length > 0 ? allRequests : requests} lang={lang} />
+          <EventSummary requests={allRequests.length > 0 ? allRequests : requests} lang={lang} nightState={nightState} eventName={event?.name} />
         )}
       </div>
     </div>
