@@ -1491,6 +1491,164 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   font-style: italic;
 }
 
+/* ─── DJ Panel Embedded Crew Chat ─── */
+.djc-crew-chat-panel {
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
+  padding-left: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+.djc-crew-chat-title {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 2px 0 5px;
+  text-align: center;
+  background: linear-gradient(90deg, #ff00ff, #00ccff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.djc-crew-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 2px 0;
+  min-height: 0;
+}
+.djc-crew-chat-messages::-webkit-scrollbar { width: 3px; }
+.djc-crew-chat-messages::-webkit-scrollbar-track { background: transparent; }
+.djc-crew-chat-messages::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+.djc-crew-chat-messages .crew-chat-msg {
+  padding: 4px 6px;
+  border-radius: 5px;
+  gap: 3px;
+  font-size: 10px;
+}
+.djc-crew-chat-messages .crew-chat-sender {
+  font-size: 8px;
+}
+.djc-crew-chat-messages .crew-chat-text {
+  font-size: 10px;
+}
+.djc-crew-chat-messages .crew-chat-empty {
+  font-size: 9px;
+  padding: 12px 0;
+}
+
+.djc-crew-chat-input-row {
+  display: flex;
+  gap: 0;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 4px;
+}
+.djc-crew-chat-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(138, 43, 226, 0.25);
+  border-radius: 4px 0 0 4px;
+  padding: 4px 6px;
+  color: #e0e0e0;
+  font-size: 10px;
+  outline: none;
+  min-width: 0;
+}
+.djc-crew-chat-input:focus {
+  border-color: #aa44ff;
+  box-shadow: 0 0 6px rgba(170, 68, 255, 0.15);
+}
+.djc-crew-chat-input::placeholder {
+  color: #555;
+}
+.djc-crew-chat-send {
+  width: 28px;
+  background: linear-gradient(135deg, #8b00ff, #5500cc);
+  border: none;
+  border-radius: 0 4px 4px 0;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.djc-crew-chat-send:hover {
+  background: linear-gradient(135deg, #aa22ff, #7700ee);
+}
+
+/* ─── Reji Link Button in Header ─── */
+.djc-reji-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #e0e0e0;
+  background: linear-gradient(135deg, #1a0033, #0d001a);
+  border: 1px solid rgba(138, 43, 226, 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.djc-reji-link-btn:hover {
+  background: linear-gradient(135deg, #2a0055, #1a003a);
+  border-color: rgba(170, 68, 255, 0.6);
+  box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+  color: #fff;
+}
+
+/* Pioneer Gold overrides for crew chat & reji button */
+body.theme-pioneer-gold .djc-crew-chat-panel {
+  border-left-color: rgba(255, 204, 0, 0.1);
+}
+body.theme-pioneer-gold .djc-crew-chat-title {
+  background: linear-gradient(90deg, #ffcc00, #ff8800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+body.theme-pioneer-gold .djc-crew-chat-input {
+  border-color: rgba(255, 170, 0, 0.2);
+}
+body.theme-pioneer-gold .djc-crew-chat-input:focus {
+  border-color: #ff9922;
+  box-shadow: 0 0 6px rgba(255, 153, 34, 0.15);
+}
+body.theme-pioneer-gold .djc-crew-chat-send {
+  background: linear-gradient(135deg, #cc8800, #996600);
+}
+body.theme-pioneer-gold .djc-crew-chat-send:hover {
+  background: linear-gradient(135deg, #ee9900, #bb7700);
+}
+body.theme-pioneer-gold .djc-reji-link-btn {
+  background: linear-gradient(135deg, #1a1000, #0d0a00);
+  border-color: rgba(255, 170, 0, 0.35);
+}
+body.theme-pioneer-gold .djc-reji-link-btn:hover {
+  background: linear-gradient(135deg, #2a1800, #1a1000);
+  border-color: rgba(255, 204, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 170, 0, 0.25);
+}
+body.theme-pioneer-gold .crew-chat-msg.crew-chat-reji {
+  border-left-color: #ff9922;
+  background: linear-gradient(135deg, rgba(255, 136, 0, 0.12), rgba(200, 100, 0, 0.06));
+}
+body.theme-pioneer-gold .crew-chat-msg.crew-chat-reji .crew-chat-sender {
+  color: #ffaa33;
+}
+
 /* Pioneer Gold overrides for live stats */
 body.theme-pioneer-gold .djc-live-stats-side {
   border-left-color: rgba(255, 204, 0, 0.1);

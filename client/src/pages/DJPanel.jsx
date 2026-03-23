@@ -768,6 +768,12 @@ export default function DJPanel() {
           <button className={lang === 'tr' ? 'active' : ''} onClick={() => changeLang('tr')}>TR</button>
           <button className={lang === 'en' ? 'active' : ''} onClick={() => changeLang('en')}>EN</button>
         </div>
+        <button className="djc-reji-link-btn" onClick={() => {
+          const url = `${window.location.origin}/reji/${slug}`;
+          navigator.clipboard.writeText(url).then(() => showToast(lang === 'tr' ? 'Reji linki kopyalandı!' : 'Reji link copied!'));
+        }} title={lang === 'tr' ? 'Reji ekranı linkini kopyala' : 'Copy reji display link'}>
+          🎬 {lang === 'tr' ? 'REJİ' : 'CREW'}
+        </button>
         <span className={`status-chip ${event.status}`}>{T(`dj.status_${event.status}`)}</span>
       </div>
 
@@ -1145,6 +1151,25 @@ export default function DJPanel() {
                     )}
                   </div>
                 </div>
+                <div className="djc-crew-chat-panel">
+                  <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
+                  <div className="djc-crew-chat-messages">
+                    {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
+                    {chatMessages.map(m => (
+                      <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
+                        <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
+                        <span className="crew-chat-text">{m.message}</span>
+                      </div>
+                    ))}
+                    <div ref={chatEndRef} />
+                  </div>
+                  <div className="djc-crew-chat-input-row">
+                    <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && sendChat()}
+                      placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
+                    <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -1307,36 +1332,6 @@ export default function DJPanel() {
 
       </div>
 
-      {event && (
-        <div className={`crew-chat-box crew-chat-dj ${chatOpen ? 'open' : 'collapsed'}`}>
-          <div className="crew-chat-header" onClick={() => { setChatOpen(!chatOpen); setChatUnread(0); }}>
-            <span className="crew-chat-title">💬 REJİ CHAT</span>
-            {!chatOpen && chatUnread > 0 && <span className="crew-chat-badge">{chatUnread}</span>}
-            <span className="crew-chat-toggle">{chatOpen ? '▼' : '▲'}</span>
-          </div>
-          {chatOpen && (
-            <>
-              <div className="crew-chat-messages">
-                {chatMessages.length === 0 && <div className="crew-chat-empty">Henüz mesaj yok</div>}
-                {chatMessages.map(m => (
-                  <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
-                    <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
-                    <span className="crew-chat-text">{m.message}</span>
-                    <span className="crew-chat-time">{new Date(m.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
-                  </div>
-                ))}
-                <div ref={chatEndRef} />
-              </div>
-              <div className="crew-chat-input-row">
-                <input className="crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && sendChat()}
-                  placeholder="Mesaj yaz..." maxLength={200} />
-                <button className="crew-chat-send" onClick={sendChat}>↑</button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
 
       <AnimatePresence>
         {toast && <motion.div className="success-toast" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>{toast}</motion.div>}
