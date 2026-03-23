@@ -21,7 +21,7 @@ function NeonOrbs() {
       size: 80 + Math.random() * 120,
       duration: 12 + Math.random() * 10,
       delay: i * 2,
-      color: ['rgba(0,212,255,0.12)', 'rgba(184,41,221,0.10)', 'rgba(255,0,128,0.08)', 'rgba(0,128,68,0.10)', 'rgba(255,107,53,0.08)', 'rgba(255,255,255,0.06)'][i],
+      color: ['rgba(0,212,255,0.12)', 'rgba(184,41,221,0.10)', 'rgba(255,0,128,0.08)', 'rgba(0,141,75,0.10)', 'rgba(255,107,53,0.08)', 'rgba(255,255,255,0.06)'][i],
     })), []);
 
   return (
@@ -47,7 +47,7 @@ function DiscoParticles() {
       size: 2 + Math.random() * 4,
       duration: 8 + Math.random() * 12,
       delay: Math.random() * 10,
-      color: ['rgba(0,212,255,0.6)', 'rgba(184,41,221,0.5)', 'rgba(255,0,128,0.4)', 'rgba(255,255,255,0.3)', 'rgba(0,128,68,0.3)'][Math.floor(Math.random() * 5)],
+      color: ['rgba(0,212,255,0.6)', 'rgba(184,41,221,0.5)', 'rgba(255,0,128,0.4)', 'rgba(255,255,255,0.3)', 'rgba(0,141,75,0.3)'][Math.floor(Math.random() * 5)],
     })), []);
 
   return (
@@ -92,7 +92,7 @@ function Confetti() {
     Array.from({ length: 50 }, (_, i) => ({
       id: i, left: Math.random() * 100,
       delay: Math.random() * 2, duration: 2 + Math.random() * 3,
-      color: ['#00d4ff', '#b829dd', '#ff0080', '#ff6b35', '#008044'][Math.floor(Math.random() * 5)],
+      color: ['#00d4ff', '#b829dd', '#ff0080', '#ff6b35', '#008D4B'][Math.floor(Math.random() * 5)],
       size: 6 + Math.random() * 10,
     })), []);
   return (
@@ -219,7 +219,7 @@ function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eve
   const countReq = useCountUp(totalRequests, 2000, phase >= 1);
   const countVotes = useCountUp(totalVotes, 2000, phase >= 1);
 
-  const confettiColors = ['var(--theme-primary, #00d4ff)', '#ffffff', '#FFD700', '#ff0080', '#008044'];
+  const confettiColors = ['var(--theme-primary, #00d4ff)', '#ffffff', '#FFD700', '#ff0080', '#008D4B'];
 
   return (
     <motion.div className={`ceremony-overlay closing-overlay closing-phase-${phase}`}
@@ -351,7 +351,7 @@ const MUSIC_MODE_CONFIG = {
     subtitle: { tr: 'Remiks Tech', en: 'Remiks Tech' },
     icon: '🎧',
     bg: 'radial-gradient(ellipse at center, rgba(0, 5, 20, 0.95) 0%, rgba(0, 2, 8, 0.98) 100%)',
-    color1: '#0088ff', color2: '#008044', color3: '#00d4ff',
+    color1: '#0088ff', color2: '#008D4B', color3: '#00d4ff',
     image: '/modes/mode-tech.png', imgClass: 'mm-img-tech',
   },
   latino: {
@@ -375,7 +375,7 @@ const MUSIC_MODE_CONFIG = {
     subtitle: { tr: 'Winamp Mode', en: 'Winamp Mode' },
     icon: '📟',
     bg: 'radial-gradient(ellipse at center, rgba(35, 35, 35, 0.96) 0%, rgba(26, 26, 26, 0.98) 100%)',
-    color1: '#006600', color2: '#008000', color3: '#004D00',
+    color1: '#007000', color2: '#008D00', color3: '#005500',
     image: '/modes/winamp_mode.png', imgClass: 'mm-img-winamp',
     modeClass: 'display-mode-winamp',
   },
@@ -808,7 +808,7 @@ export default function DisplayPage() {
     cyan: { primary: '#00d4ff', glow: 'rgba(0,212,255,0.3)' },
     purple: { primary: '#b829dd', glow: 'rgba(184,41,221,0.3)' },
     pink: { primary: '#ff0080', glow: 'rgba(255,0,128,0.3)' },
-    green: { primary: '#008044', glow: 'rgba(0,128,68,0.3)' },
+    green: { primary: '#008D4B', glow: 'rgba(0,141,75,0.3)' },
     orange: { primary: '#ff6b35', glow: 'rgba(255,107,53,0.3)' },
     red: { primary: '#ff4444', glow: 'rgba(255,68,68,0.3)' },
   };
