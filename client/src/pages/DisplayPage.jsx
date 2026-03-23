@@ -711,6 +711,13 @@ export default function DisplayPage({ rejiMode = false }) {
   const [chatOpen, setChatOpen] = useState(true);
   const [chatUnread, setChatUnread] = useState(0);
   const chatEndRef = useRef(null);
+  const [blackout, setBlackout] = useState(false);
+  const [spotlightText, setSpotlightText] = useState('');
+  const [rejiCountdown, setRejiCountdown] = useState(0);
+  const [rejiBrand, setRejiBrand] = useState('');
+  const [rejiTicker, setRejiTicker] = useState('');
+  const [rejiSpotInput, setRejiSpotInput] = useState('');
+  const [rejiCeremonyMin, setRejiCeremonyMin] = useState(3);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -729,6 +736,8 @@ export default function DisplayPage({ rejiMode = false }) {
       setLang(eventData.language || 'tr');
       setBrandText(eventData.brand_text || '');
       setTickerTexts(eventData.ticker_texts || '');
+      setRejiBrand(eventData.brand_text || '');
+      setRejiTicker(eventData.ticker_texts || '');
       setTheme(eventData.theme || 'cyan');
       setAnimLevel(eventData.animation_level || 'high');
       setRequests((reqData.requests || []).filter(r => r.status === 'approved'));
@@ -812,6 +821,23 @@ export default function DisplayPage({ rejiMode = false }) {
     socket.on('crew-chat', (msg) => {
       setChatMessages(prev => [...prev.slice(-50), msg]);
     });
+
+    socket.on('reji-blackout', ({ active }) => setBlackout(active));
+
+    socket.on('reji-spotlight', ({ text }) => {
+      setSpotlightText(text);
+      setTimeout(() => setSpotlightText(''), 5000);
+    });
+
+    socket.on('reji-countdown', ({ seconds }) => {
+      setRejiCountdown(seconds);
+      const iv = setInterval(() => {
+        setRejiCountdown(prev => {
+          if (prev <= 1) { clearInterval(iv); return 0; }
+          return prev - 1;
+        });
+      }, 1000);
+    });
     socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
       setNightState(prev => {
         if (!prev) return prev;
@@ -832,6 +858,7 @@ export default function DisplayPage({ rejiMode = false }) {
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('ceremony'); socket.off('music-mode');
       socket.off('night-update'); socket.off('night-vote'); socket.off('crew-chat');
+      socket.off('reji-blackout'); socket.off('reji-spotlight'); socket.off('reji-countdown');
       socket.disconnect();
     };
   }, [slug]);
@@ -925,6 +952,17 @@ export default function DisplayPage({ rejiMode = false }) {
 
   return (
     <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
+      {blackout && <div className="reji-blackout-overlay" />}
+      {spotlightText && (
+        <div className="reji-spotlight-overlay">
+          <div className="reji-spotlight-text">{spotlightText}</div>
+        </div>
+      )}
+      {rejiCountdown > 0 && (
+        <div className="reji-countdown-overlay">
+          <div className="reji-countdown-number">{rejiCountdown}</div>
+        </div>
+      )}
       {rejiMode && (
         <>
         <div className="reji-bar">
@@ -959,33 +997,77 @@ export default function DisplayPage({ rejiMode = false }) {
             <span className="reji-bar-label">/{slug}</span>
           </div>
         </div>
-        <div className={`crew-chat-box ${chatOpen ? 'open' : 'collapsed'}`}>
-          <div className="crew-chat-header" onClick={() => { setChatOpen(!chatOpen); setChatUnread(0); }}>
-            <span className="crew-chat-title">💬 DJ ↔ REJİ</span>
-            {!chatOpen && chatUnread > 0 && <span className="crew-chat-badge">{chatUnread}</span>}
-            <span className="crew-chat-toggle">{chatOpen ? '▼' : '▲'}</span>
+        <div className="reji-control-bar">
+          <div className="reji-ctrl-section">
+            <span className="reji-ctrl-label">📺 Ekran Yazısı</span>
+            <input className="reji-ctrl-input" value={rejiBrand}
+              onChange={e => { setRejiBrand(e.target.value); socket.emit('reji-brand', { text: e.target.value }); }}
+              placeholder="Organizasyon adı..." />
           </div>
-          {chatOpen && (
-            <>
-              <div className="crew-chat-messages">
-                {chatMessages.length === 0 && <div className="crew-chat-empty">Henüz mesaj yok</div>}
-                {chatMessages.map(m => (
-                  <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
-                    <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
-                    <span className="crew-chat-text">{m.message}</span>
-                    <span className="crew-chat-time">{new Date(m.timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</span>
-                  </div>
-                ))}
-                <div ref={chatEndRef} />
-              </div>
-              <div className="crew-chat-input-row">
-                <input className="crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && sendChat('reji')}
-                  placeholder="Mesaj yaz..." maxLength={200} />
-                <button className="crew-chat-send" onClick={() => sendChat('reji')}>↑</button>
-              </div>
-            </>
-          )}
+          <div className="reji-ctrl-section">
+            <span className="reji-ctrl-label">📜 Kayan Yazı</span>
+            <input className="reji-ctrl-input" value={rejiTicker}
+              onChange={e => { setRejiTicker(e.target.value); socket.emit('reji-ticker', { text: e.target.value }); }}
+              placeholder="Kayan yazı..." />
+          </div>
+          <div className="reji-ctrl-section reji-ctrl-ceremony">
+            <span className="reji-ctrl-label">🎬 Tören</span>
+            <div className="reji-ctrl-row">
+              <select className="reji-ctrl-select" value={rejiCeremonyMin} onChange={e => setRejiCeremonyMin(Number(e.target.value))}>
+                {[1,3,5,10,15].map(m => <option key={m} value={m}>{m} dk</option>)}
+              </select>
+              <button className="reji-ctrl-btn reji-btn-green" onClick={() => socket.emit('reji-ceremony', { type: 'opening', active: true, minutes: rejiCeremonyMin })}>
+                ▶ Açılış
+              </button>
+              <button className="reji-ctrl-btn reji-btn-green" onClick={() => socket.emit('reji-ceremony', { type: 'closing', active: true, minutes: rejiCeremonyMin })}>
+                ▶ Kapanış
+              </button>
+              <button className="reji-ctrl-btn reji-btn-red" onClick={() => { socket.emit('reji-ceremony', { type: 'opening', active: false }); socket.emit('reji-ceremony', { type: 'closing', active: false }); }}>
+                ⏹ Durdur
+              </button>
+            </div>
+          </div>
+          <div className="reji-ctrl-section reji-ctrl-spotlight">
+            <span className="reji-ctrl-label">💡 Spotlight</span>
+            <div className="reji-ctrl-row">
+              <input className="reji-ctrl-input" value={rejiSpotInput}
+                onChange={e => setRejiSpotInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && rejiSpotInput.trim()) { socket.emit('reji-spotlight', { text: rejiSpotInput.trim() }); setRejiSpotInput(''); } }}
+                placeholder="Sahne mesajı (5sn)..." maxLength={120} />
+              <button className="reji-ctrl-btn reji-btn-yellow" onClick={() => { if (rejiSpotInput.trim()) { socket.emit('reji-spotlight', { text: rejiSpotInput.trim() }); setRejiSpotInput(''); } }}>
+                ⚡
+              </button>
+            </div>
+          </div>
+          <div className="reji-ctrl-section reji-ctrl-actions">
+            <button className={`reji-ctrl-btn reji-btn-blackout ${blackout ? 'active' : ''}`}
+              onClick={() => { socket.emit('reji-blackout', { active: !blackout }); setBlackout(!blackout); }}>
+              {blackout ? '💡 AYDINLAT' : '🔲 KARART'}
+            </button>
+            <button className="reji-ctrl-btn reji-btn-countdown" onClick={() => socket.emit('reji-countdown', { seconds: 5 })}>
+              ⏱ 5...1
+            </button>
+            <button className="reji-ctrl-btn reji-btn-countdown" onClick={() => socket.emit('reji-countdown', { seconds: 3 })}>
+              ⏱ 3...1
+            </button>
+          </div>
+          <div className="reji-ctrl-section reji-ctrl-chat-mini">
+            <div className="reji-ctrl-chat-msgs">
+              {chatMessages.slice(-4).map(m => (
+                <div key={m.id} className={`reji-ctrl-chat-msg crew-chat-${m.sender}`}>
+                  <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧' : '🎬'}</span>
+                  <span className="crew-chat-text">{m.message}</span>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+            <div className="reji-ctrl-chat-input">
+              <input className="reji-ctrl-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && sendChat('reji')}
+                placeholder="💬 Mesaj..." maxLength={200} />
+              <button className="reji-ctrl-btn reji-btn-purple" onClick={() => sendChat('reji')}>↑</button>
+            </div>
+          </div>
         </div>
         </>
       )}

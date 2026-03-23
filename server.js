@@ -598,6 +598,50 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('reji-brand', ({ text }) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug) return;
+    const brandText = sanitize((text || '').slice(0, 200));
+    try { db.updateBrandText(eventSlug, brandText); } catch {}
+    io.to(eventSlug).emit('brand-updated', { brand_text: brandText });
+  });
+
+  socket.on('reji-ticker', ({ text }) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug) return;
+    const tickerTexts = (text || '').split('\n').map(l => sanitize(l)).join('\n').slice(0, 500);
+    try { db.updateTickerTexts(eventSlug, tickerTexts); } catch {}
+    io.to(eventSlug).emit('ticker-updated', { ticker_texts: tickerTexts });
+  });
+
+  socket.on('reji-ceremony', ({ type, active, minutes }) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug || !['opening', 'closing'].includes(type)) return;
+    const endTime = active && minutes ? Date.now() + minutes * 60 * 1000 : null;
+    const payload = { type, active: !!active, endTime };
+    if (active) { activeCeremonies.set(eventSlug, payload); } else { activeCeremonies.delete(eventSlug); }
+    io.to(eventSlug).emit('ceremony', payload);
+  });
+
+  socket.on('reji-spotlight', ({ text }) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug || !text) return;
+    io.to(eventSlug).emit('reji-spotlight', { text: sanitize(text.slice(0, 120)), timestamp: Date.now() });
+  });
+
+  socket.on('reji-blackout', ({ active }) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug) return;
+    io.to(eventSlug).emit('reji-blackout', { active: !!active });
+  });
+
+  socket.on('reji-countdown', ({ seconds }) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug) return;
+    const sec = Math.min(Math.max(Number(seconds) || 5, 3), 10);
+    io.to(eventSlug).emit('reji-countdown', { seconds: sec, timestamp: Date.now() });
+  });
+
   socket.on('crew-chat', ({ message, sender }) => {
     const { eventSlug } = socket.data;
     if (!eventSlug || !message) return;
