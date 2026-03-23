@@ -2630,11 +2630,12 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 
 /* ─── Stats Strip (in header) ─── */
 .djc-stats-strip {
-  display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 16px; align-items: center;
+  display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 18px; align-items: center;
   min-width: 0;
+  margin-right: auto;
 }
 .djc-stat {
-  display: inline-flex !important; flex-direction: row !important; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap;
+  display: inline-flex !important; flex-direction: row !important; align-items: center; gap: 4px; flex-shrink: 0; white-space: nowrap;
 }
 .djc-stat-val {
   font-family: var(--font-display);
@@ -2643,6 +2644,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   transition: color 0.3s ease;
   line-height: 1;
   display: inline;
+  margin-right: 2px;
 }
 .djc-stat-lbl { font-size: 12px; font-weight: 600; color: var(--rb-text-dim); line-height: 1; white-space: nowrap; display: inline; }
 
