@@ -150,7 +150,7 @@ function OpeningOverlay({ lang, brandText, countdown, ceremonyEnd }) {
 
       {/* Phase 2: Logo reveal */}
       <div className="opening-logo-wrap">
-        <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="opening-logo" />
+        <span className="opening-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
         <div className="opening-powered">POWERED BY REMiKS iSTANBUL</div>
       </div>
 
@@ -292,7 +292,7 @@ function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eve
 
       {/* Phase 3: Logo + Instagram */}
       <div className="closing-phase-block closing-final-block">
-        <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="closing-final-logo" />
+        <span className="closing-final-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
         <div className="closing-social-row">
           <div className="closing-social-info">
             <svg className="closing-ig-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -844,7 +844,7 @@ export default function DisplayPage() {
         {/* ─── Logo + Event Name + Motto (top center) + LIVE badge (top right) ─── */}
         <div className="dsp-topbar">
           <div className="dsp-topbar-center">
-            <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="dsp-brand-logo" />
+            <span className="dsp-brand-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
             <motion.div className="dsp-event-name"
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
               {displayName}

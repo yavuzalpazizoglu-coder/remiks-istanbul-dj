@@ -471,15 +471,13 @@ body.theme-pioneer-gold .req-tab:first-child {
   animation: fadeIn 0.4s ease;
 }
 .request-brand-logo {
-  height: 28px;
-  width: auto;
-  display: block;
+  display: flex; align-items: baseline; justify-content: center;
+  font-size: 22px; font-weight: 800; letter-spacing: -0.5px; line-height: 1;
   margin: 0 auto 10px;
-  filter: drop-shadow(0 0 8px rgba(0, 112, 0, 0.2));
 }
-body.theme-pioneer-gold .request-brand-logo {
-  filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.2));
-}
+.request-brand-logo .login-logo-remiks { color: #008D4B; font-style: italic; }
+.request-brand-logo .login-logo-box { color: #FFFFFF; font-weight: 900; }
+body.theme-pioneer-gold .request-brand-logo .login-logo-remiks { color: #FFCC00; }
 .request-header .logo { height: 32px; margin-bottom: 14px; }
 .request-header h1 {
   font-family: var(--font-display);
@@ -1267,15 +1265,13 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   flex-shrink: 0;
 }
 .djc-remiksbox-logo {
-  height: 42px;
-  width: auto;
-  display: block;
-  filter: drop-shadow(0 0 6px var(--djt-accent-glow1)) drop-shadow(0 0 12px var(--djt-accent-glow2));
-  transition: filter 0.4s ease;
+  display: flex; align-items: baseline;
+  font-size: 22px; font-weight: 800; letter-spacing: -0.5px; line-height: 1;
 }
-body.theme-pioneer-gold .djc-remiksbox-logo {
-  filter: drop-shadow(0 0 6px rgba(255, 204, 0, 0.3)) drop-shadow(0 0 12px rgba(255, 170, 0, 0.15));
-}
+.djc-remiksbox-logo .login-logo-remiks { color: #008D4B; font-style: italic; }
+.djc-remiksbox-logo .login-logo-box { color: #FFFFFF; font-weight: 900; }
+body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-remiks { color: #FFCC00; }
+body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
 .djc-row1-divider {
   width: 1px; height: 32px;
   background: var(--border-glass);
@@ -3205,6 +3201,11 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   display: block;
   filter: drop-shadow(0 0 4px rgba(29,94,47,0.1));
 }
+.login-footer-logo-text {
+  font-size: 16px; font-weight: 800; letter-spacing: -0.3px; line-height: 1;
+}
+.login-footer-logo-text .login-logo-remiks { color: #008D4B; font-style: italic; }
+.login-footer-logo-text .login-logo-box { color: #CCCCCC; font-weight: 900; }
 .login-footer-by {
   font-size: 14px; color: #777;
 }
@@ -3389,8 +3390,11 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 .dsp-topbar-right { flex-shrink: 0; position: absolute; right: clamp(16px, 2vw, 56px); top: clamp(10px, 1.2vw, 30px); }
 
 .dsp-brand-logo {
-  height: clamp(50px, 8vw, 200px); width: auto;
+  display: inline-flex; align-items: baseline;
+  font-size: clamp(18px, 3vw, 60px); font-weight: 800; letter-spacing: -0.5px; line-height: 1;
 }
+.dsp-brand-logo .login-logo-remiks { color: #008D4B; font-style: italic; }
+.dsp-brand-logo .login-logo-box { color: #FFFFFF; font-weight: 900; }
 .dsp-brand-motto {
   font-family: var(--font-display);
   font-size: clamp(8px, 1vw, 24px); font-weight: 600;
@@ -4515,9 +4519,9 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 /* Logo Wrap */
 .opening-logo-wrap { z-index: 3; }
 .opening-logo {
-  height: clamp(60px, 10vh, 200px);
-  width: auto;
-  filter: drop-shadow(0 0 clamp(15px, 3vw, 60px) rgba(255,255,255,0.4));
+  display: inline-flex; align-items: baseline;
+  font-size: clamp(40px, 8vw, 160px); font-weight: 800; letter-spacing: -1px; line-height: 1;
+  text-shadow: 0 0 clamp(15px, 3vw, 60px) rgba(255,255,255,0.4);
   clip-path: inset(0 100% 0 0);
   animation: logoWipeIn 1.5s ease-out forwards;
 }
@@ -4756,11 +4760,15 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   padding-top: clamp(40px, 8vh, 140px);
 }
 .closing-final-logo {
-  height: clamp(60px, 10vh, 200px);
-  width: auto;
-  filter: drop-shadow(0 0 clamp(15px, 3vw, 60px) rgba(255,255,255,0.4));
+  display: inline-flex; align-items: baseline;
+  font-size: clamp(40px, 8vw, 160px); font-weight: 800; letter-spacing: -1px; line-height: 1;
+  text-shadow: 0 0 clamp(15px, 3vw, 60px) rgba(255,255,255,0.4);
   margin-bottom: clamp(24px, 4vh, 60px);
 }
+.opening-logo .login-logo-remiks,
+.closing-final-logo .login-logo-remiks { color: #008D4B; font-style: italic; }
+.opening-logo .login-logo-box,
+.closing-final-logo .login-logo-box { color: #FFFFFF; font-weight: 900; }
 .closing-social-row {
   display: flex;
   align-items: center;

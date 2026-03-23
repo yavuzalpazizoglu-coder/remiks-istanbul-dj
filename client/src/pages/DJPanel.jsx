@@ -551,7 +551,7 @@ export default function DJPanel() {
     const loginFooter = (
       <footer className="login-footer">
         <div className="login-footer-brand">
-          <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="login-footer-logo-img" />
+          <span className="login-footer-logo-text"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
           <span className="login-footer-by">by Remiks İstanbul</span>
         </div>
         <div className="login-footer-links">
@@ -730,7 +730,7 @@ export default function DJPanel() {
       {/* ─── Top Header Bar ─── */}
       <div className="djc-row1">
         <div className="djc-brand-block">
-          <img src="/logos/remiksbox_logo_transparent.png" alt="RemiksBox" className="djc-remiksbox-logo" />
+          <span className="djc-remiksbox-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
         </div>
         <div className="djc-row1-divider" />
         <span className="djc-event-name">{event.name}</span>
