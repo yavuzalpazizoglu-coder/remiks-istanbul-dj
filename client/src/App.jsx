@@ -39,6 +39,7 @@ export default function App() {
           <Route path="/dj" element={<DJPanel />} />
           <Route path="/dj/:slug" element={<DJPanel />} />
           <Route path="/display/:slug" element={<DisplayPage />} />
+          <Route path="/reji/:slug" element={<DisplayPage rejiMode />} />
           <Route path="*" element={<Navigate to="/dj" replace />} />
         </Routes>
       </BrowserRouter>

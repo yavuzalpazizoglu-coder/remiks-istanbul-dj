@@ -681,7 +681,7 @@ function Ticker({ requests, lang, tickerTexts }) {
   );
 }
 
-export default function DisplayPage() {
+export default function DisplayPage({ rejiMode = false }) {
   const { slug } = useParams();
   const [event, setEvent] = useState(null);
   const [lang, setLang] = useState('tr');
@@ -886,9 +886,49 @@ export default function DisplayPage() {
   };
   const tc = themeColors[theme] || themeColors.cyan;
 
+  const MUSIC_MODE_LABELS = {
+    arabesk: 'Arabesk', rock: 'Rock', '90s-pop': '90s Pop',
+    'turkish-delight': 'Turkish Delight', tech: 'Tech/EDM',
+    latino: 'Latino', rap: 'Rap/HipHop', winamp: 'Winamp', pioneer: 'Pioneer'
+  };
+
   return (
     <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
-      {!isPreview && (
+      {rejiMode && (
+        <div className="reji-bar">
+          <div className="reji-bar-item">
+            <span className="reji-bar-label">REJİ</span>
+            <span className="reji-bar-dot reji-dot-live" />
+          </div>
+          <div className="reji-bar-item">
+            <span className="reji-bar-label">Durum</span>
+            <span className="reji-bar-value">{
+              event?.status === 'active' ? '▶ CANLI' :
+              event?.status === 'paused' ? '⏸ MOLA' :
+              event?.status === 'countdown' ? '⏱ GERİ SAYIM' :
+              event?.status === 'ended' ? '⏹ BİTTİ' : '—'
+            }</span>
+          </div>
+          <div className="reji-bar-item">
+            <span className="reji-bar-label">Mod</span>
+            <span className="reji-bar-value">{activeMusicMode ? MUSIC_MODE_LABELS[activeMusicMode] || activeMusicMode : 'Yok'}</span>
+          </div>
+          <div className="reji-bar-item">
+            <span className="reji-bar-label">İstek</span>
+            <span className="reji-bar-value">{requests.length}</span>
+          </div>
+          <div className="reji-bar-item">
+            <span className="reji-bar-label">Bağlı</span>
+            <span className="reji-bar-value">{connectedCount}</span>
+          </div>
+          {openingActive && <div className="reji-bar-item reji-bar-ceremony"><span>🎬 AÇILIŞ {ceremonyCountdown}</span></div>}
+          {closingActive && <div className="reji-bar-item reji-bar-ceremony"><span>🎬 KAPANIŞ {ceremonyCountdown}</span></div>}
+          <div className="reji-bar-item reji-bar-slug">
+            <span className="reji-bar-label">/{slug}</span>
+          </div>
+        </div>
+      )}
+      {!isPreview && !rejiMode && (
         <div className="live-indicator" aria-hidden="true">
           <span className="live-indicator-dot" />
           LIVE

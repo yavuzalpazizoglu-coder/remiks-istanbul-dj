@@ -4224,6 +4224,68 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   white-space: nowrap;
 }
 
+/* ─── Reji Bar (production control room overlay) ─── */
+.reji-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 16px;
+  background: rgba(0, 0, 0, 0.85);
+  border-bottom: 1px solid #333;
+  backdrop-filter: blur(8px);
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: #CCCCCC;
+  pointer-events: none;
+}
+.reji-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.reji-bar-label {
+  color: #666666;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.reji-bar-value {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+.reji-dot-live {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff3333;
+  animation: rejiDotPulse 1s ease-in-out infinite;
+}
+@keyframes rejiDotPulse {
+  0%, 100% { box-shadow: 0 0 2px #ff3333; }
+  50% { box-shadow: 0 0 8px #ff3333, 0 0 16px rgba(255,51,51,0.4); }
+}
+.reji-bar-ceremony {
+  color: #FFCC00;
+  font-weight: 800;
+  animation: rejiCeremonyPulse 0.8s ease-in-out infinite alternate;
+}
+@keyframes rejiCeremonyPulse {
+  0% { color: #FFCC00; }
+  100% { color: #FF6600; }
+}
+.reji-bar-slug {
+  margin-left: auto;
+}
+.reji-bar-slug .reji-bar-label {
+  color: #555555;
+  font-size: 10px;
+}
+
 /* ─── Theme Variables (overrides via inline style) ─── */
 
 .display-page {
