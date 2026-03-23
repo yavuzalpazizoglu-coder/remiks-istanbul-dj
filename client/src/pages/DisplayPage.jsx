@@ -883,7 +883,17 @@ export default function DisplayPage({ rejiMode = false }) {
 
   const sendChat = (sender) => {
     if (!chatInput.trim()) return;
-    socket.emit('crew-chat', { message: chatInput.trim(), sender });
+    const EMOJI_MAP = { ':)':'😊',':D':'😄',':(':'😢',';)':'😉',':P':'😛',':O':'😮','<3':'❤️',':*':'😘',
+      ':fire:':'🔥',':ok:':'👍',':no:':'👎',':clap:':'👏',':mic:':'🎤',':music:':'🎵',':headphones:':'🎧',
+      ':star:':'⭐',':check:':'✅',':x:':'❌',':warning:':'⚠️',':eyes:':'👀',':100:':'💯',':rocket:':'🚀',
+      ':wave:':'👋',':pray:':'🙏',':party:':'🎉',':dj:':'🎧',':camera:':'🎬',':speaker:':'🔊',':stop:':'⏹',
+      ':play:':'▶️',':pause:':'⏸',':next:':'⏭',':prev:':'⏮',':up:':'⬆️',':down:':'⬇️',':cool:':'😎',
+      ':think:':'🤔',':sad:':'😞',':angry:':'😡',':love:':'😍',':lol:':'🤣',':wow:':'🤩',':sleep:':'😴',
+      ':thumbsup:':'👍',':thumbsdown:':'👎',':raised:':'🙌',':time:':'⏰',':light:':'💡',':ready:':'🟢',
+      ':wait:':'🟡',':alert:':'🔴' };
+    let msg = chatInput.trim();
+    Object.entries(EMOJI_MAP).forEach(([k, v]) => { msg = msg.split(k).join(v); });
+    socket.emit('crew-chat', { message: msg, sender });
     setChatInput('');
   };
 

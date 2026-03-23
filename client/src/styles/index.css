@@ -1493,7 +1493,7 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
 
 /* ─── DJ Panel Embedded Crew Chat ─── */
 .djc-crew-chat-panel {
-  flex: 0 0 180px;
+  flex: 0 0 255px;
   display: flex;
   flex-direction: column;
   border-left: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
