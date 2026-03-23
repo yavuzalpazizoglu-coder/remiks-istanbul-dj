@@ -196,6 +196,10 @@ app.post('/api/events/:slug/requests', (req, res) => {
       return res.status(400).json({ error: 'Request limit reached', limit });
     }
 
+    if (db.isDuplicateRequest(event.id, songName, artist)) {
+      return res.status(400).json({ error: 'Bu şarkı zaten istendi / This song has already been requested' });
+    }
+
     const request = db.createRequest(event.id, songName, artist, albumArt, spotifyId, deviceId, genre || '');
     io.to(req.params.slug).emit('request-added', request);
     res.json(request);

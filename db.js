@@ -159,6 +159,15 @@ export function updateTickerTexts(slug, tickerTexts) {
 
 // ─── Requests ───
 
+export function isDuplicateRequest(eventId, songName, artist) {
+  const row = db.prepare(`
+    SELECT id FROM requests
+    WHERE event_id = ? AND LOWER(song_name) = LOWER(?) AND LOWER(artist) = LOWER(?)
+    AND status NOT IN ('rejected')
+  `).get(eventId, songName, artist || '');
+  return !!row;
+}
+
 export function createRequest(eventId, songName, artist, albumArt, spotifyId, deviceId, genre) {
   const id = nanoid(12);
   db.prepare(`
