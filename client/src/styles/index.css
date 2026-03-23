@@ -721,7 +721,7 @@ body.theme-pioneer-gold .dj-panel.dj-compact {
   border-right: 1px solid #1A1A1A;
   border-bottom: 1px solid #111111;
   border-radius: 5px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   transition: all 150ms ease;
@@ -1281,8 +1281,8 @@ body.theme-pioneer-gold .djc-remiksbox-logo {
   background: var(--border-glass);
   flex-shrink: 0;
 }
-.djc-event-name { font-weight: 700; font-size: 18px; color: #ffffff; letter-spacing: 0.3px; }
-.djc-slug { font-size: 14px; color: var(--rb-text-dim); }
+.djc-event-name { font-weight: 700; font-size: 19px; color: #ffffff; letter-spacing: 0.3px; }
+.djc-slug { font-size: 15px; color: var(--rb-text-dim); }
 
 /* ─── 2-Column Body ─── */
 .djc-body {
@@ -1714,7 +1714,7 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 }
 .djc-sec-title {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -1918,7 +1918,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 }
 .djc-btn {
   padding: 5px 12px !important;
-  font-size: 12px !important;
+  font-size: 13px !important;
   min-width: auto !important;
   border-radius: 7px !important;
   box-shadow:  0 1px 1px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.12);
@@ -2643,18 +2643,18 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 }
 .djc-stat-val {
   font-family: var(--font-display);
-  font-weight: 800; font-size: 18px;
+  font-weight: 800; font-size: 19px;
   color: var(--djt-stat-color);
   transition: color 0.3s ease;
   line-height: 1;
   display: inline;
 }
-.djc-stat-lbl { font-size: 11px; font-weight: 600; color: var(--rb-text-dim); line-height: 1; white-space: nowrap; display: inline; }
+.djc-stat-lbl { font-size: 12px; font-weight: 600; color: var(--rb-text-dim); line-height: 1; white-space: nowrap; display: inline; }
 
 /* ─── Request List Header (right side) ─── */
 .djc-list-header {
   font-family: var(--font-display);
-  font-size: 12px; font-weight: 700;
+  font-size: 13px; font-weight: 700;
   padding: 6px 14px; flex-shrink: 0;
   color: var(--rb-text);
   display: flex; align-items: center; justify-content: space-between;
@@ -6137,7 +6137,7 @@ body.theme-pioneer-gold .display-mode-pioneer {
   }
   .djc-right { flex: 1; }
   .djc-stats-strip { gap: 10px; flex-wrap: nowrap; }
-  .djc-stat-val { font-size: 16px; }
+  .djc-stat-val { font-size: 17px; }
   .djc-countdown-group { flex-wrap: wrap; }
   .djc-big-links { flex-direction: row; }
   .djc-row1 { flex-wrap: nowrap; gap: 8px; }
