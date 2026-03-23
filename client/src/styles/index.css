@@ -3175,8 +3175,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
 /* Legal Footer */
 .login-footer {
   position: relative; z-index: 1;
-  width: 100%; max-width: 560px;
-  margin-top: 40px; padding: 24px 20px 20px;
+  width: 100%; max-width: 680px;
+  margin-top: 40px; padding: 24px 28px 20px;
   text-align: center;
   border-top: 1px solid rgba(255,255,255,0.05);
 }
@@ -3185,28 +3185,28 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-pioneer {
   margin-bottom: 10px;
 }
 .login-footer-logo-img {
-  height: 18px;
+  height: 20px;
   width: auto;
   display: block;
   filter: drop-shadow(0 0 4px rgba(51,170,85,0.1));
 }
 .login-footer-by {
-  font-size: 12px; color: #555;
+  font-size: 14px; color: #777;
 }
 .login-footer-links {
   display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
-  font-size: 11px; color: #666; margin-bottom: 12px;
+  font-size: 13px; color: #888; margin-bottom: 12px;
 }
 .login-footer-links span:not(.login-footer-sep) {
   cursor: default;
   transition: color 0.2s;
 }
 .login-footer-links span:not(.login-footer-sep):hover {
-  color: #aaa;
+  color: #bbb;
 }
-.login-footer-sep { color: #333; }
+.login-footer-sep { color: #555; }
 .login-footer-legal {
-  font-size: 10px; color: #444; line-height: 1.6; max-width: 480px; margin: 0 auto;
+  font-size: 12px; color: #666; line-height: 1.6; max-width: 620px; margin: 0 auto;
 }
 .login-footer-legal p { margin: 4px 0; }
 
