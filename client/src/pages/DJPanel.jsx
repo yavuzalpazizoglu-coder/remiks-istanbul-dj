@@ -770,7 +770,10 @@ export default function DJPanel() {
         </div>
         <button className="djc-reji-link-btn" onClick={() => {
           const url = `${window.location.origin}/reji/${slug}`;
-          navigator.clipboard.writeText(url).then(() => showToast(lang === 'tr' ? 'Reji linki kopyalandı!' : 'Reji link copied!'));
+          const msg = lang === 'tr'
+            ? `🎬 RemiksBox — Reji Ekranı\n━━━━━━━━━━━━━━━━━━━━\n📺 Etkinlik: ${event.name}\n🔗 ${url}\n\nBu linki tarayıcıda açarak sahne ekranını (Display) canlı olarak izleyebilirsiniz.\nÜst barda etkinlik durumu, mod, istek sayısı ve bağlı kullanıcı bilgileri görüntülenir.\n💬 Ekrandaki chat kutusu ile DJ ile anlık iletişim kurabilirsiniz.\n━━━━━━━━━━━━━━━━━━━━\nPowered by Remiks İstanbul`
+            : `🎬 RemiksBox — Crew Display\n━━━━━━━━━━━━━━━━━━━━\n📺 Event: ${event.name}\n🔗 ${url}\n\nOpen this link in your browser to view the live stage display.\nThe top bar shows event status, mode, request count, and connected users.\n💬 Use the chat box on screen to communicate with the DJ in real-time.\n━━━━━━━━━━━━━━━━━━━━\nPowered by Remiks İstanbul`;
+          navigator.clipboard.writeText(msg).then(() => showToast(lang === 'tr' ? 'Reji linki kopyalandı!' : 'Reji link copied!'));
         }} title={lang === 'tr' ? 'Reji ekranı linkini kopyala' : 'Copy reji display link'}>
           🎬 {lang === 'tr' ? 'REJİ' : 'CREW'}
         </button>
