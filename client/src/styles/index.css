@@ -5227,7 +5227,7 @@ body.theme-pioneer-gold .closing-stat-number {
 
 /* ─── Played Animation: Fire Effect ─── */
 
-/* ─── Played Card: Ember Glow Border ─── */
+/* ─── Played Card: 3D Ember Border Only ─── */
 .dtable-played {
   position: relative;
   overflow: visible;
@@ -5294,50 +5294,6 @@ body.theme-pioneer-gold .closing-stat-number {
   85% { opacity: 1; }
   92% { opacity: 0.6; filter: saturate(0.5); }
   100% { opacity: 0; filter: saturate(0); }
-}
-
-.dtable-played .dtable-song {
-  color: #ffaa33 !important;
-  text-shadow: 0 0 6px rgba(255, 140, 0, 0.35);
-}
-
-.dtable-played .dtable-votes {
-  color: #ff8800 !important;
-}
-
-/* Played indicator dot */
-.played-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(3px, 0.3vw, 6px);
-  margin-top: clamp(1px, 0.1vw, 3px);
-}
-.played-dot {
-  width: clamp(6px, 0.6vw, 12px);
-  height: clamp(6px, 0.6vw, 12px);
-  border-radius: 50%;
-  background: #ff6600;
-  box-shadow: 0 0 6px rgba(255, 100, 0, 0.6), 0 0 12px rgba(255, 80, 0, 0.3);
-  animation: dotEmber 0.8s ease-in-out infinite alternate;
-  flex-shrink: 0;
-}
-@keyframes dotEmber {
-  0% { background: #ff4400; box-shadow: 0 0 4px rgba(255, 68, 0, 0.5), 0 0 8px rgba(255, 68, 0, 0.2); transform: scale(0.9); }
-  100% { background: #ffaa00; box-shadow: 0 0 8px rgba(255, 170, 0, 0.7), 0 0 16px rgba(255, 140, 0, 0.35); transform: scale(1.1); }
-}
-
-.dtable-played-label {
-  font-size: clamp(8px, 0.9vw, 18px);
-  font-weight: 700;
-  color: #ff8800;
-  letter-spacing: clamp(0.5px, 0.1vw, 2px);
-  text-transform: uppercase;
-  animation: playedTextGlow 1.2s ease-in-out infinite alternate;
-}
-
-@keyframes playedTextGlow {
-  0% { color: #ff6600; text-shadow: 0 0 4px rgba(255, 100, 0, 0.3); }
-  100% { color: #ffbb33; text-shadow: 0 0 8px rgba(255, 170, 0, 0.5); }
 }
 
 /* ─── Socket Warning ─── */
