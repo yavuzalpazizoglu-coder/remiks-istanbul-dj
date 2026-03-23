@@ -1729,7 +1729,7 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 }
 .djc-sec-title {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -1782,7 +1782,7 @@ body.theme-pioneer-gold .djc-sec-title strong {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 10px;
+  font-size: 11px;
   color: rgba(255,255,255,0.5);
   letter-spacing: 0.3px;
 }
@@ -1797,7 +1797,7 @@ body.theme-pioneer-gold .djc-sec-title strong {
   border-bottom: 1px solid #1A1A1A;
   border-radius: 5px;
   padding: 3px 6px;
-  font-size: 11px;
+  font-size: 12px;
   font-family: var(--font-body);
   cursor: pointer;
   outline: none;
@@ -1933,7 +1933,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 }
 .djc-btn {
   padding: 5px 12px !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
   min-width: auto !important;
   border-radius: 7px !important;
   box-shadow:  0 1px 1px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.12);
@@ -2109,7 +2109,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   height: 16px;
 }
 .djc-share-label {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--rb-text-dim);
   text-transform: uppercase;
@@ -2251,7 +2251,7 @@ body.theme-pioneer-gold .djc-booth-select:focus {
 .djc-mmode-tag {
   padding: 3px 5px;
   border-radius: 5px;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.2px;
   border-top: 1px solid #3A3A3A;
@@ -5074,7 +5074,7 @@ body.theme-pioneer-gold .closing-stat-number {
 }
 
 .djc-ceremony-btn {
-  font-size: 10px !important;
+  font-size: 12px !important;
   padding: 4px 8px !important;
   border-radius: 6px !important;
   font-weight: 600 !important;
