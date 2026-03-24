@@ -12,7 +12,7 @@ function AmbientGlow() {
   return <div className="ambient-glow" />;
 }
 
-function NeonOrbs() {
+function NeonOrbs({ themeRgb }) {
   const orbs = useMemo(() =>
     Array.from({ length: 6 }, (_, i) => ({
       id: i,
@@ -21,7 +21,7 @@ function NeonOrbs() {
       size: 80 + Math.random() * 120,
       duration: 12 + Math.random() * 10,
       delay: i * 2,
-      color: ['rgba(0,212,255,0.12)', 'rgba(184,41,221,0.10)', 'rgba(255,0,128,0.08)', 'rgba(0,141,75,0.10)', 'rgba(255,107,53,0.08)', 'rgba(255,255,255,0.06)'][i],
+      opacity: [0.14, 0.11, 0.09, 0.12, 0.08, 0.07][i],
     })), []);
 
   return (
@@ -30,7 +30,7 @@ function NeonOrbs() {
         <div key={o.id} className="neon-orb" style={{
           left: `${o.left}%`, top: `${o.top}%`,
           width: o.size, height: o.size,
-          background: `radial-gradient(circle, ${o.color}, transparent 70%)`,
+          background: `radial-gradient(circle, rgba(${themeRgb}, ${o.opacity}), transparent 70%)`,
           animationDuration: `${o.duration}s`,
           animationDelay: `${o.delay}s`,
         }} />
@@ -39,7 +39,7 @@ function NeonOrbs() {
   );
 }
 
-function DiscoParticles() {
+function DiscoParticles({ themeRgb }) {
   const particles = useMemo(() =>
     Array.from({ length: 35 }, (_, i) => ({
       id: i,
@@ -47,30 +47,33 @@ function DiscoParticles() {
       size: 2 + Math.random() * 4,
       duration: 8 + Math.random() * 12,
       delay: Math.random() * 10,
-      color: ['rgba(0,212,255,0.6)', 'rgba(184,41,221,0.5)', 'rgba(255,0,128,0.4)', 'rgba(255,255,255,0.3)', 'rgba(0,141,75,0.3)'][Math.floor(Math.random() * 5)],
+      opacity: [0.6, 0.5, 0.4, 0.3, 0.35][Math.floor(Math.random() * 5)],
     })), []);
 
   return (
     <div className="disco-particles">
-      {particles.map(p => (
-        <div key={p.id} className="disco-particle" style={{
-          left: `${p.left}%`, width: p.size, height: p.size,
-          background: p.color,
-          boxShadow: `0 0 ${p.size * 3}px ${p.color}`,
-          animationDuration: `${p.duration}s`,
-          animationDelay: `${p.delay}s`,
-        }} />
-      ))}
+      {particles.map(p => {
+        const c = `rgba(${themeRgb}, ${p.opacity})`;
+        return (
+          <div key={p.id} className="disco-particle" style={{
+            left: `${p.left}%`, width: p.size, height: p.size,
+            background: c,
+            boxShadow: `0 0 ${p.size * 3}px ${c}`,
+            animationDuration: `${p.duration}s`,
+            animationDelay: `${p.delay}s`,
+          }} />
+        );
+      })}
     </div>
   );
 }
 
-function LightBeams() {
+function LightBeams({ themeColor }) {
   const beams = useMemo(() => [
-    { left: '15%', delay: '0s', color: 'var(--neon-cyan)' },
-    { left: '40%', delay: '2s', color: 'var(--neon-purple)' },
-    { left: '65%', delay: '4s', color: 'var(--neon-pink)' },
-    { left: '85%', delay: '1s', color: 'var(--neon-cyan)' },
+    { left: '15%', delay: '0s' },
+    { left: '40%', delay: '2s' },
+    { left: '65%', delay: '4s' },
+    { left: '85%', delay: '1s' },
   ], []);
 
   return (
@@ -78,7 +81,7 @@ function LightBeams() {
       {beams.map((b, i) => (
         <div key={i} className="light-beam" style={{
           left: b.left,
-          background: `linear-gradient(180deg, transparent, ${b.color}, transparent)`,
+          background: `linear-gradient(180deg, transparent, ${themeColor}, transparent)`,
           animationDelay: b.delay,
           animationDuration: `${6 + i * 2}s`,
         }} />
@@ -720,6 +723,9 @@ export default function DisplayPage({ rejiMode = false }) {
   const [rejiCeremonyMin, setRejiCeremonyMin] = useState(3);
   const [rejiPanelOpen, setRejiPanelOpen] = useState(false);
 
+  const [displayCard, setDisplayCard] = useState(null);
+  const displayCardTimer = useRef(null);
+
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
   const requestUrl = `${window.location.origin}/request/${slug}`;
@@ -839,6 +845,17 @@ export default function DisplayPage({ rejiMode = false }) {
         });
       }, 1000);
     });
+
+    socket.on('display-card', (card) => {
+      setDisplayCard(card);
+      if (displayCardTimer.current) clearTimeout(displayCardTimer.current);
+      displayCardTimer.current = setTimeout(() => setDisplayCard(null), (card.duration || 45) * 1000);
+    });
+
+    socket.on('dismiss-card', () => {
+      setDisplayCard(null);
+      if (displayCardTimer.current) clearTimeout(displayCardTimer.current);
+    });
     socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
       setNightState(prev => {
         if (!prev) return prev;
@@ -860,6 +877,7 @@ export default function DisplayPage({ rejiMode = false }) {
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('ceremony'); socket.off('music-mode');
       socket.off('night-update'); socket.off('night-vote'); socket.off('crew-chat');
       socket.off('reji-blackout'); socket.off('reji-spotlight'); socket.off('reji-countdown');
+      socket.off('display-card'); socket.off('dismiss-card');
       socket.disconnect();
     };
   }, [slug]);
@@ -936,12 +954,12 @@ export default function DisplayPage({ rejiMode = false }) {
   const displayName = brandText || event.name;
 
   const themeColors = {
-    cyan: { primary: '#00d4ff', glow: 'rgba(0,212,255,0.3)' },
-    purple: { primary: '#b829dd', glow: 'rgba(184,41,221,0.3)' },
-    pink: { primary: '#ff0080', glow: 'rgba(255,0,128,0.3)' },
-    green: { primary: '#008D4B', glow: 'rgba(0,141,75,0.3)' },
-    orange: { primary: '#ff6b35', glow: 'rgba(255,107,53,0.3)' },
-    red: { primary: '#ff4444', glow: 'rgba(255,68,68,0.3)' },
+    cyan: { primary: '#00d4ff', glow: 'rgba(0,212,255,0.3)', rgb: '0,212,255' },
+    purple: { primary: '#b829dd', glow: 'rgba(184,41,221,0.3)', rgb: '184,41,221' },
+    pink: { primary: '#ff0080', glow: 'rgba(255,0,128,0.3)', rgb: '255,0,128' },
+    green: { primary: '#008D4B', glow: 'rgba(0,141,75,0.3)', rgb: '0,141,75' },
+    orange: { primary: '#ff6b35', glow: 'rgba(255,107,53,0.3)', rgb: '255,107,53' },
+    red: { primary: '#ff4444', glow: 'rgba(255,68,68,0.3)', rgb: '255,68,68' },
   };
   const tc = themeColors[theme] || themeColors.cyan;
 
@@ -952,7 +970,7 @@ export default function DisplayPage({ rejiMode = false }) {
   };
 
   return (
-    <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow }}>
+    <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow, '--theme-rgb': tc.rgb }}>
       {blackout && <div className="reji-blackout-overlay" />}
       {spotlightText && (
         <div className="reji-spotlight-overlay">
@@ -964,6 +982,67 @@ export default function DisplayPage({ rejiMode = false }) {
           <div className="reji-countdown-number">{rejiCountdown}</div>
         </div>
       )}
+      {displayCard && (() => {
+        const DCARD_TYPES = {
+          request: { icon: '🎵', tr: 'ŞARKI İSTEĞİ', en: 'SONG REQUEST' },
+          birthday: { icon: '🎂', tr: 'DOĞUM GÜNÜ', en: 'BIRTHDAY' },
+          anniversary: { icon: '💍', tr: 'EVLİLİK YILDÖNÜMÜ', en: 'ANNIVERSARY' },
+          celebration: { icon: '🎉', tr: 'KUTLAMA', en: 'CELEBRATION' },
+          custom: { icon: '💬', tr: 'ÖZEL MESAJ', en: 'SPECIAL MESSAGE' },
+        };
+        const ct = DCARD_TYPES[displayCard.type] || DCARD_TYPES.request;
+        const igUser = displayCard.instagram;
+        const socialPhoto = displayCard.socialPhoto;
+        const senderInitial = displayCard.sender ? displayCard.sender.charAt(0).toUpperCase() : '';
+
+        return (
+          <div className={`dcard-overlay dcard-type-${displayCard.type}`}>
+            <div className="dcard-backdrop" />
+            <div className="dcard-container">
+              <div className="dcard-badge">
+                <span className="dcard-badge-icon">{ct.icon}</span>
+                <span className="dcard-badge-label">{lang === 'tr' ? ct.tr : ct.en}</span>
+              </div>
+              <div className="dcard-content">
+                {displayCard.albumArt && (
+                  <div className="dcard-album-wrap">
+                    <img src={displayCard.albumArt} alt="" className="dcard-album-img" />
+                    <div className="dcard-album-glow" style={{ backgroundImage: `url(${displayCard.albumArt})` }} />
+                  </div>
+                )}
+                <div className="dcard-info">
+                  {displayCard.songName && <div className="dcard-song">{displayCard.songName}</div>}
+                  {displayCard.artist && <div className="dcard-artist">{displayCard.artist}</div>}
+                  {(displayCard.recipient || displayCard.message) && <div className="dcard-divider" />}
+                  {displayCard.recipient && <div className="dcard-recipient">{displayCard.recipient}</div>}
+                  {displayCard.message && <div className="dcard-message">"{displayCard.message}"</div>}
+                </div>
+              </div>
+              <div className="dcard-footer">
+                <div className="dcard-sender-area">
+                  {socialPhoto ? (
+                    <img src={socialPhoto} alt="" className="dcard-social-photo"
+                      onError={e => { e.target.style.display = 'none'; e.target.nextSibling && (e.target.nextSibling.style.display = 'flex'); }} />
+                  ) : null}
+                  {socialPhoto ? (
+                    <div className="dcard-sender-initial" style={{ display: 'none' }}>{senderInitial}</div>
+                  ) : senderInitial ? (
+                    <div className="dcard-sender-initial">{senderInitial}</div>
+                  ) : null}
+                  <div className="dcard-sender-text">
+                    {displayCard.sender && <div className="dcard-sender-name">{lang === 'tr' ? 'İsteyen' : 'From'}: {displayCard.sender}</div>}
+                    {igUser && <div className="dcard-sender-ig">@{igUser}</div>}
+                  </div>
+                </div>
+                <div className="dcard-branding">
+                  <span className="dcard-branding-note">♪</span>
+                  <span className="dcard-branding-text">RemiksBox</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
       {rejiMode && (
         <>
         <div className="reji-bar">
@@ -1110,8 +1189,8 @@ export default function DisplayPage({ rejiMode = false }) {
       <div className="floating-particles" aria-hidden="true" />
       <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
       {animLevel === 'low' && <AmbientGlow />}
-      {animLevel === 'medium' && <NeonOrbs />}
-      {animLevel === 'high' && <><DiscoParticles /><LightBeams /></>}
+      {animLevel === 'medium' && <NeonOrbs themeRgb={tc.rgb} />}
+      {animLevel === 'high' && <><DiscoParticles themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /></>}
       {showConfetti && <Confetti />}
 
       {!socketConnected && (

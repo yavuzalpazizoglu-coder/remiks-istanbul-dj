@@ -654,6 +654,22 @@ io.on('connection', (socket) => {
     io.to(eventSlug).emit('crew-chat', payload);
   });
 
+  socket.on('display-card', (data) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug) return;
+    io.to(eventSlug).emit('display-card', {
+      ...data,
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      timestamp: Date.now(),
+    });
+  });
+
+  socket.on('dismiss-card', () => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug) return;
+    io.to(eventSlug).emit('dismiss-card');
+  });
+
   socket.on('disconnect', () => {
     const { eventSlug } = socket.data;
     if (eventSlug) {
