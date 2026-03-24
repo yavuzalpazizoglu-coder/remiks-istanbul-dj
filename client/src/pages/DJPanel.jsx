@@ -1143,7 +1143,6 @@ export default function DJPanel() {
 
         {/* ═══ RIGHT: Request List + Settings ═══ */}
         <div className="djc-right">
-          <div className="djc-right-main">
           <div className="djc-list-header">
             <span>🎵 {T('dj.requests_list')} ({allActiveRequests.length})</span>
           </div>
@@ -1425,29 +1424,9 @@ export default function DJPanel() {
               );
             })()}
           </div>
-          </div>
-          <div className="djc-crew-chat-panel">
-            <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
-            <div className="djc-crew-chat-messages">
-              {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
-              {chatMessages.map(m => (
-                <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
-                  <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
-                  <span className="crew-chat-text">{m.message}</span>
-                </div>
-              ))}
-              <div ref={chatEndRef} />
-            </div>
-            <div className="djc-crew-chat-input-row">
-              <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && sendChat()}
-                placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
-              <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
-            </div>
-          </div>
         </div>
 
-        {/* ═══ RIGHT SIDEBAR: Display Card ═══ */}
+        {/* ═══ RIGHT SIDEBAR: Display Card + Chat ═══ */}
         <div className="djc-dcard-sidebar">
           <div className="djc-dcard-sidebar-top">
             <div className="djc-dcard-sidebar-title">📺 {lang === 'tr' ? 'EKRAN KARTI' : 'DISPLAY CARD'}</div>
@@ -1541,6 +1520,27 @@ export default function DJPanel() {
               <button className="djc-dcard-btn djc-dcard-btn-reset" onClick={resetCardForm}>
                 🔄
               </button>
+            </div>
+          </div>
+
+          {/* ─── Chat Box (bottom of sidebar) ─── */}
+          <div className="djc-crew-chat-panel">
+            <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
+            <div className="djc-crew-chat-messages">
+              {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
+              {chatMessages.map(m => (
+                <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
+                  <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
+                  <span className="crew-chat-text">{m.message}</span>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+            <div className="djc-crew-chat-input-row">
+              <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && sendChat()}
+                placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
+              <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
             </div>
           </div>
         </div>

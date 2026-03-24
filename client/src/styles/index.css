@@ -1296,13 +1296,6 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-direction: row;
-  overflow: hidden;
-}
-.djc-right-main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
   flex-direction: column;
   overflow: hidden;
 }
@@ -1710,10 +1703,16 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   background: rgba(12, 14, 22, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
-  padding: 6px;
+  padding: 12px 8px;
+  min-height: 180px;
   position: relative;
   overflow: hidden;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 .djc-dcard-lp-card::before {
   content: '';
@@ -1727,23 +1726,23 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
 .dcard-preview-celebration.djc-dcard-lp-card::before { background: linear-gradient(90deg, #008D4B, #FFD700); }
 .dcard-preview-custom.djc-dcard-lp-card::before { background: linear-gradient(90deg, #b829dd, #8b5cf6); }
 .djc-dcard-lp-badge {
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.8px;
   color: rgba(255, 255, 255, 0.45);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 .djc-dcard-lp-album {
-  width: 44px;
-  height: 44px;
+  width: 64px;
+  height: 64px;
   border-radius: 5px;
   object-fit: cover;
-  margin: 0 auto 4px;
+  margin: 0 auto 6px;
   display: block;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 .djc-dcard-lp-song {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   color: #fff;
   white-space: nowrap;
@@ -1751,40 +1750,40 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   text-overflow: ellipsis;
 }
 .djc-dcard-lp-artist {
-  font-size: 8px;
+  font-size: 10px;
   color: rgba(255, 255, 255, 0.45);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .djc-dcard-lp-recipient {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   color: #00d4ff;
-  margin-top: 3px;
+  margin-top: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .djc-dcard-lp-message {
-  font-size: 8px;
+  font-size: 10px;
   font-style: italic;
   color: rgba(255, 255, 255, 0.6);
-  margin-top: 2px;
+  margin-top: 4px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 .djc-dcard-lp-sender {
-  font-size: 7px;
+  font-size: 9px;
   color: rgba(255, 255, 255, 0.35);
-  margin-top: 3px;
+  margin-top: 4px;
 }
 .djc-dcard-lp-empty {
-  font-size: 9px;
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.15);
-  padding: 10px 0;
+  padding: 20px 0;
 }
 
 /* ─── DJ Panel Embedded Crew Chat ─── */
@@ -1803,6 +1802,9 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   flex-direction: column;
   gap: 5px;
   flex-shrink: 0;
+  overflow-y: auto;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 .djc-dcard-sidebar-title {
   font-size: 9px;
@@ -1834,13 +1836,13 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   width: 100%;
 }
 .djc-crew-chat-panel {
-  flex: 0 0 200px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
-  border-left: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
-  padding: 10px;
+  border-top: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
+  padding: 8px;
 }
 .djc-crew-chat-title {
   font-size: 9px;
@@ -2081,7 +2083,7 @@ body.theme-pioneer-gold .djc-dcard-sidebar-title {
   background-clip: text;
 }
 body.theme-pioneer-gold .djc-crew-chat-panel {
-  border-left-color: rgba(255, 204, 0, 0.1);
+  border-top-color: rgba(255, 204, 0, 0.1);
 }
 body.theme-pioneer-gold .djc-crew-chat-title {
   background: linear-gradient(90deg, #ffcc00, #ff8800);
