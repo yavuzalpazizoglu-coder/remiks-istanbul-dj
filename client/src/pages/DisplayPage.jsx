@@ -231,16 +231,42 @@ function ClubStrobe() {
   return <div className="club-strobe" />;
 }
 
+function ElegantShimmerCurtain({ themeRgb }) {
+  const strands = useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      left: 2 + (i * 5),
+      height: 30 + Math.random() * 40,
+      duration: 3 + Math.random() * 4,
+      delay: Math.random() * 5,
+      opacity: 0.03 + Math.random() * 0.05,
+    })), []);
+
+  return (
+    <div className="elegant-shimmer-curtain">
+      {strands.map(s => (
+        <div key={s.id} className="elegant-shimmer-strand" style={{
+          left: `${s.left}%`,
+          height: `${s.height}%`,
+          background: `linear-gradient(180deg, rgba(${themeRgb},${s.opacity}), transparent)`,
+          animationDuration: `${s.duration}s`,
+          animationDelay: `${s.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 function ElegantBokeh({ themeRgb }) {
   const circles = useMemo(() =>
-    Array.from({ length: 12 }, (_, i) => ({
+    Array.from({ length: 14 }, (_, i) => ({
       id: i,
       left: 5 + Math.random() * 90,
       top: 5 + Math.random() * 90,
-      size: 60 + Math.random() * 180,
+      size: 60 + Math.random() * 200,
       duration: 18 + Math.random() * 15,
       delay: Math.random() * 10,
-      opacity: 0.04 + Math.random() * 0.06,
+      opacity: 0.03 + Math.random() * 0.05,
     })), []);
 
   return (
@@ -336,12 +362,67 @@ function FestivalConfetti() {
   );
 }
 
+function FestivalColorBars({ themeRgb }) {
+  const barColors = useMemo(() => [
+    '255,60,100', '60,120,255', themeRgb, '255,200,0', '0,255,150', '180,60,255',
+  ], [themeRgb]);
+
+  return (
+    <div className="festival-color-bars">
+      {barColors.map((c, i) => (
+        <div key={i} className="festival-color-bar" style={{
+          background: `rgba(${c}, 0.06)`,
+          animationDelay: `${i * 0.8}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 function FestivalWaves({ themeRgb }) {
   return (
     <div className="festival-waves">
       <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.04)`, animationDelay: '0s' }} />
       <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.03)`, animationDelay: '2s' }} />
       <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.02)`, animationDelay: '4s' }} />
+    </div>
+  );
+}
+
+function MinimalScanLine({ themeRgb }) {
+  return <div className="minimal-scanline" style={{ background: `linear-gradient(90deg, transparent, rgba(${themeRgb},0.06), transparent)` }} />;
+}
+
+function MinimalPulseRing({ themeRgb }) {
+  return (
+    <div className="minimal-pulse-rings">
+      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.04)`, animationDelay: '0s' }} />
+      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.03)`, animationDelay: '2s' }} />
+      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.02)`, animationDelay: '4s' }} />
+    </div>
+  );
+}
+
+function CorporateDataStreams({ themeRgb }) {
+  const streams = useMemo(() =>
+    Array.from({ length: 8 }, (_, i) => ({
+      id: i,
+      left: 8 + (i * 12),
+      duration: 6 + Math.random() * 6,
+      delay: Math.random() * 5,
+      opacity: 0.03 + Math.random() * 0.03,
+    })), []);
+
+  return (
+    <div className="corporate-streams">
+      {streams.map(s => (
+        <div key={s.id} className="corporate-stream" style={{
+          left: `${s.left}%`,
+          background: `linear-gradient(180deg, transparent, rgba(${themeRgb},${s.opacity}) 40%, rgba(${themeRgb},${s.opacity}) 60%, transparent)`,
+          animationDuration: `${s.duration}s`,
+          animationDelay: `${s.delay}s`,
+        }} />
+      ))}
     </div>
   );
 }
@@ -1435,26 +1516,37 @@ export default function DisplayPage({ rejiMode = false }) {
           LIVE
         </div>
       )}
-      {stageDesign !== 'minimal' && stageDesign !== 'corporate' && <div className="display-bg" />}
-      {stageDesign === 'classic' && <div className="floating-particles" aria-hidden="true" />}
-      {stageDesign === 'classic' && <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />}
-
-      {/* Classic: original behavior tied to animLevel */}
+      {/* Classic: disco ball + effects by animLevel */}
       {stageDesign === 'classic' && <>
+        <div className="display-bg" />
+        <div className="floating-particles" aria-hidden="true" />
+        <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
         {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={10} /></>}
         {animLevel === 'medium' && <><NeonOrbs themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={18} /></>}
         {animLevel === 'high' && <><DiscoParticles themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={30} /></>}
       </>}
 
-      {/* Elegant: soft bokeh + golden dust + ambient glow */}
+      {/* Minimal: logo bg + scanline + pulse rings */}
+      {stageDesign === 'minimal' && <>
+        <img src="/logos/remiksbox_logo_transparent.png" alt="" className="stage-bg-img stage-bg-minimal" />
+        <MinimalScanLine themeRgb={tc.rgb} />
+        <MinimalPulseRing themeRgb={tc.rgb} />
+      </>}
+
+      {/* Elegant: logo bg + shimmer curtain + bokeh + dust */}
       {stageDesign === 'elegant' && <>
+        <div className="display-bg" />
+        <img src="/logos/remiksbox_logo_square.png" alt="" className="stage-bg-img stage-bg-elegant" />
+        <ElegantShimmerCurtain themeRgb={tc.rgb} />
         <ElegantBokeh themeRgb={tc.rgb} />
         <ElegantDust themeRgb={tc.rgb} />
         <AmbientGlow />
+        <Sparkles themeRgb={tc.rgb} count={15} />
       </>}
 
-      {/* Club: equalizer + lasers + strobe + disco ball + particles */}
+      {/* Club: disco ball + equalizer + lasers + strobe + particles */}
       {stageDesign === 'club' && <>
+        <div className="display-bg" />
         <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
         <ClubEqualizer themeRgb={tc.rgb} />
         <ClubLasers themeRgb={tc.rgb} />
@@ -1463,17 +1555,22 @@ export default function DisplayPage({ rejiMode = false }) {
         <Sparkles themeRgb={tc.rgb} count={30} />
       </>}
 
-      {/* Festival: spotlights + confetti + color waves */}
+      {/* Festival: mode bg + spotlights + confetti + color bars + waves */}
       {stageDesign === 'festival' && <>
+        <div className="display-bg" />
+        <img src="/modes/pioneer_mode.png" alt="" className="stage-bg-img stage-bg-festival" />
         <FestivalSpotlights themeRgb={tc.rgb} />
         <FestivalConfetti />
+        <FestivalColorBars themeRgb={tc.rgb} />
         <FestivalWaves themeRgb={tc.rgb} />
         <Sparkles themeRgb={tc.rgb} count={20} />
       </>}
 
-      {/* Corporate: subtle grid + accent line */}
+      {/* Corporate: logo bg + grid + data streams + accent line */}
       {stageDesign === 'corporate' && <>
+        <img src="/logos/remiksbox_logo_horizontal.png" alt="" className="stage-bg-img stage-bg-corporate" />
         <CorporateGrid />
+        <CorporateDataStreams themeRgb={tc.rgb} />
         <CorporateAccentLine themeRgb={tc.rgb} />
       </>}
 

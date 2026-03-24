@@ -4152,7 +4152,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   background-clip: text; -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: brandGradientH 8s ease infinite;
-  filter: drop-shadow(0 0 clamp(8px, 1.2vw, 32px) rgba(0,112,0,0.25));
+  filter: drop-shadow(0 0 6px rgba(var(--theme-rgb), 0.15));
 }
 
 @keyframes brandGradientH {
@@ -8531,6 +8531,151 @@ body.theme-pioneer-gold .night-mobile-back { color: #FFCC00; }
   50% { opacity: 0.6; transform: scaleX(1); }
 }
 
+/* ─── Stage Background Images (shared base) ─── */
+.stage-bg-img {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  object-fit: contain;
+}
+.stage-bg-minimal {
+  bottom: 5%;
+  right: 5%;
+  width: 15%;
+  opacity: 0.03;
+  filter: grayscale(1) brightness(2);
+}
+.stage-bg-elegant {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20%;
+  opacity: 0.025;
+  filter: blur(1px);
+  animation: elegantLogoPulse 10s ease-in-out infinite;
+}
+@keyframes elegantLogoPulse {
+  0%, 100% { opacity: 0.02; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.035; transform: translate(-50%, -50%) scale(1.05); }
+}
+.stage-bg-festival {
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 25%;
+  opacity: 0.06;
+  filter: saturate(1.5);
+  mix-blend-mode: screen;
+}
+.stage-bg-corporate {
+  bottom: 4%;
+  right: 4%;
+  width: 12%;
+  opacity: 0.04;
+  filter: grayscale(1) brightness(1.5);
+}
+
+/* ─── Elegant: Shimmer Curtain ─── */
+.elegant-shimmer-curtain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.elegant-shimmer-strand {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  animation: shimmerDrip 4s ease-in-out infinite alternate;
+}
+@keyframes shimmerDrip {
+  0% { opacity: 0.3; transform: scaleY(0.8); }
+  100% { opacity: 1; transform: scaleY(1.1); }
+}
+
+/* ─── Festival: Color Bars ─── */
+.festival-color-bars {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  display: flex;
+  z-index: 2;
+  pointer-events: none;
+}
+.festival-color-bar {
+  flex: 1;
+  animation: festBarPulse 3s ease-in-out infinite alternate;
+}
+@keyframes festBarPulse {
+  0% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* ─── Minimal: Scan Line ─── */
+.minimal-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  z-index: 1;
+  pointer-events: none;
+  animation: scanDown 8s linear infinite;
+}
+@keyframes scanDown {
+  0% { top: -2%; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 102%; opacity: 0; }
+}
+
+/* ─── Minimal: Pulse Rings ─── */
+.minimal-pulse-rings {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.minimal-pulse-ring {
+  position: absolute;
+  width: 30vw;
+  height: 30vw;
+  border-radius: 50%;
+  border: 1px solid;
+  animation: pulseRingExpand 8s ease-out infinite;
+}
+@keyframes pulseRingExpand {
+  0% { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* ─── Corporate: Data Streams ─── */
+.corporate-streams {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.corporate-stream {
+  position: absolute;
+  top: -20%;
+  width: 1px;
+  height: 40%;
+  animation: streamFlow 8s linear infinite;
+}
+@keyframes streamFlow {
+  0% { top: -40%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 110%; opacity: 0; }
+}
+
 /* ─── 2. MINIMAL — monochrome, architectural, stark ─── */
 .display-page.stage-minimal {
   background: #060608;
@@ -8634,7 +8779,7 @@ body.theme-pioneer-gold .night-mobile-back { color: #FFCC00; }
 .stage-elegant .dsp-event-name {
   font-weight: 200;
   letter-spacing: 3px;
-  text-shadow: 0 0 40px rgba(var(--theme-rgb), 0.25);
+  text-shadow: none;
   font-style: italic;
 }
 .stage-elegant .dsp-brand-motto {
@@ -8660,7 +8805,7 @@ body.theme-pioneer-gold .night-mobile-back { color: #FFCC00; }
   border-bottom: 1px solid rgba(var(--theme-rgb), 0.05);
 }
 .stage-elegant .dtable-votes-lg {
-  text-shadow: 0 0 12px rgba(var(--theme-rgb), 0.4);
+  text-shadow: none;
 }
 
 /* ─── 4. CLUB — neon overload, laser grid, hard pulse ─── */
@@ -8736,23 +8881,14 @@ body.theme-pioneer-gold .night-mobile-back { color: #FFCC00; }
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 6px;
-  text-shadow:
-    0 0 8px var(--theme-primary),
-    0 0 25px rgba(var(--theme-rgb), 0.6),
-    0 0 50px rgba(var(--theme-rgb), 0.3),
-    0 0 80px rgba(var(--theme-rgb), 0.15);
-  animation: clubTextGlow 2s ease-in-out infinite;
-}
-@keyframes clubTextGlow {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.3); }
+  text-shadow: 0 0 10px rgba(var(--theme-rgb), 0.3);
 }
 .stage-club .dsp-brand-motto {
   text-transform: uppercase;
   letter-spacing: 8px;
   font-weight: 800;
   color: var(--theme-primary);
-  text-shadow: 0 0 20px rgba(var(--theme-rgb), 0.6);
+  text-shadow: none;
 }
 .stage-club .display-ticker-bar {
   background: rgba(var(--theme-rgb), 0.03);
@@ -8769,7 +8905,7 @@ body.theme-pioneer-gold .night-mobile-back { color: #FFCC00; }
   box-shadow: inset 0 0 20px rgba(var(--theme-rgb), 0.05);
 }
 .stage-club .dtable-top3 {
-  text-shadow: 0 0 10px rgba(var(--theme-rgb), 0.7);
+  text-shadow: none;
 }
 .stage-club .dsp-card,
 .stage-club .dsp-qr-wrap {
