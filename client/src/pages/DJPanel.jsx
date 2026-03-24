@@ -74,7 +74,6 @@ export default function DJPanel() {
   const [cardMessage, setCardMessage] = useState('');
   const [cardSender, setCardSender] = useState('');
   const [cardInstagram, setCardInstagram] = useState('');
-  const [cardPreview, setCardPreview] = useState(false);
   const [cardSent, setCardSent] = useState(false);
   const cardSearchTimer = useRef(null);
   const [eventTimer, setEventTimer] = useState('00:00:00');
@@ -923,6 +922,16 @@ export default function DJPanel() {
         }} title={lang === 'tr' ? 'Reji ekranı linkini kopyala' : 'Copy reji display link'}>
           🎬 {lang === 'tr' ? 'REJİ' : 'CREW'}
         </button>
+        <div className="djc-topbar-timers">
+          <div className="djc-topbar-timer">
+            <span className="djc-topbar-timer-label">{lang === 'tr' ? 'ETKİNLİK' : 'EVENT'}</span>
+            <span className="djc-topbar-timer-lcd">{eventTimer}</span>
+          </div>
+          <div className="djc-topbar-timer">
+            <span className="djc-topbar-timer-label">{lang === 'tr' ? 'İSTEK' : 'REQ'}</span>
+            <span className={`djc-topbar-timer-lcd ${event.status === 'active' ? 'djc-topbar-timer-active' : ''}`}>{requestTimer}</span>
+          </div>
+        </div>
         <span className={`status-chip ${event.status}`}>{T(`dj.status_${event.status}`)}</span>
       </div>
 
@@ -952,16 +961,6 @@ export default function DJPanel() {
               <span className="djc-sec-title"><strong>{lang === 'tr' ? 'KUMANDA' : 'BOOTH'}</strong> · {lang === 'tr' ? 'Kontrol' : 'Command'}</span>
             </div>
             <div className="djc-sec-body">
-              <div className="djc-timer-row">
-                <div className="djc-timer">
-                  <span className="djc-timer-label">{lang === 'tr' ? 'ETKİNLİK' : 'EVENT'}</span>
-                  <span className="djc-timer-lcd">{eventTimer}</span>
-                </div>
-                <div className="djc-timer">
-                  <span className="djc-timer-label">{lang === 'tr' ? 'İSTEK' : 'REQ'}</span>
-                  <span className={`djc-timer-lcd ${event.status === 'active' ? 'djc-timer-active' : ''}`}>{requestTimer}</span>
-                </div>
-              </div>
               <div className="djc-booth-top">
                 <div className="djc-booth-buttons">
                   {event.status === 'waiting' && (
@@ -1205,7 +1204,7 @@ export default function DJPanel() {
 
             {/* ─── Settings Tab ─── */}
             {rightTab === 'settings' && (
-              <div className="djc-settings-split">
+                <div className="djc-settings-split">
                 <div className="djc-settings-main">
                   <div className="djc-sec-head">
                     <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings'}</span>
@@ -1275,120 +1274,23 @@ export default function DJPanel() {
                     </div>
                   </div>
                 </div>
-                <div className="djc-card-chat-col">
-                  {/* ─── Display Card Form ─── */}
-                  <div className="djc-display-card-form">
-                    <div className="djc-dcard-title">📺 {lang === 'tr' ? 'EKRAN KARTI' : 'DISPLAY CARD'}</div>
-                    <div className="djc-dcard-types">
-                      {CARD_TYPES.map(ct => (
-                        <button key={ct.id}
-                          className={`djc-dcard-type-btn ${cardType === ct.id ? 'active' : ''}`}
-                          onClick={() => setCardType(ct.id)}>
-                          {ct.icon} {lang === 'tr' ? ct.tr : ct.en}
-                        </button>
-                      ))}
-                    </div>
-                    {spotifyEnabled && (
-                      <div className="djc-dcard-field">
-                        <input className="djc-dcard-input" placeholder={lang === 'tr' ? '🔍 Spotify\'da şarkı ara...' : '🔍 Search Spotify...'}
-                          value={cardSearchQuery} onChange={e => handleCardSearch(e.target.value)} />
-                        {cardSearching && <span className="djc-dcard-searching">...</span>}
-                        {cardSearchResults.length > 0 && !cardSelectedSong && (
-                          <div className="djc-dcard-results">
-                            {cardSearchResults.slice(0, 5).map(song => (
-                              <div key={song.spotifyId} className="djc-dcard-result-item"
-                                onClick={() => { setCardSelectedSong(song); setCardSearchResults([]); setCardSearchQuery(song.name); }}>
-                                {song.albumArt && <img src={song.albumArt} alt="" className="djc-dcard-result-art" />}
-                                <div className="djc-dcard-result-info">
-                                  <span className="djc-dcard-result-name">{song.name}</span>
-                                  <span className="djc-dcard-result-artist">{song.artist}</span>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        {cardSelectedSong && (
-                          <div className="djc-dcard-selected">
-                            {cardSelectedSong.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-result-art" />}
-                            <div className="djc-dcard-result-info">
-                              <span className="djc-dcard-result-name">{cardSelectedSong.name}</span>
-                              <span className="djc-dcard-result-artist">{cardSelectedSong.artist}</span>
-                            </div>
-                            <button className="djc-dcard-remove" onClick={() => { setCardSelectedSong(null); setCardSearchQuery(''); }}>✕</button>
-                          </div>
-                        )}
+                <div className="djc-crew-chat-panel">
+                  <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
+                  <div className="djc-crew-chat-messages">
+                    {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
+                    {chatMessages.map(m => (
+                      <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
+                        <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
+                        <span className="crew-chat-text">{m.message}</span>
                       </div>
-                    )}
-                    <div className="djc-dcard-field">
-                      <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'Kime? (Ayşe\'ye, Sevgilime...)' : 'To whom?'}
-                        value={cardRecipient} onChange={e => setCardRecipient(e.target.value)} maxLength={60} />
-                    </div>
-                    <div className="djc-dcard-field">
-                      <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'Kısa mesaj (max 120 karakter)' : 'Short message (max 120)'}
-                        value={cardMessage} onChange={e => setCardMessage(e.target.value)} maxLength={120} />
-                    </div>
-                    <div className="djc-dcard-row">
-                      <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'İsteyen kişi' : 'Requester'}
-                        value={cardSender} onChange={e => setCardSender(e.target.value)} maxLength={40} />
-                      <input className="djc-dcard-input" placeholder="@instagram"
-                        value={cardInstagram} onChange={e => setCardInstagram(e.target.value)} maxLength={40} />
-                    </div>
-                    <div className="djc-dcard-actions">
-                      <button className="djc-dcard-btn djc-dcard-btn-preview" onClick={() => setCardPreview(!cardPreview)}>
-                        {cardPreview ? '✕' : '👁'} {lang === 'tr' ? (cardPreview ? 'Kapat' : 'Önizle') : (cardPreview ? 'Close' : 'Preview')}
-                      </button>
-                      {!cardSent ? (
-                        <button className="djc-dcard-btn djc-dcard-btn-send" onClick={sendDisplayCard}>
-                          📺 {lang === 'tr' ? 'Ekrana Gönder' : 'Send to Display'}
-                        </button>
-                      ) : (
-                        <button className="djc-dcard-btn djc-dcard-btn-dismiss" onClick={dismissDisplayCard}>
-                          ❌ {lang === 'tr' ? 'Kartı Kapat' : 'Dismiss Card'}
-                        </button>
-                      )}
-                      <button className="djc-dcard-btn djc-dcard-btn-reset" onClick={resetCardForm} title={lang === 'tr' ? 'Formu Temizle' : 'Clear Form'}>
-                        🔄
-                      </button>
-                    </div>
-                    {cardPreview && (
-                      <div className="djc-dcard-preview">
-                        <div className={`djc-dcard-preview-card dcard-preview-${cardType}`}>
-                          <div className="djc-dcard-preview-badge">
-                            {CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}
-                          </div>
-                          <div className="djc-dcard-preview-body">
-                            {cardSelectedSong?.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-preview-album" />}
-                            <div className="djc-dcard-preview-info">
-                              {cardSelectedSong && <div className="djc-dcard-preview-song">{cardSelectedSong.name}</div>}
-                              {cardSelectedSong?.artist && <div className="djc-dcard-preview-artist">{cardSelectedSong.artist}</div>}
-                              {cardRecipient && <div className="djc-dcard-preview-recipient">{cardRecipient}</div>}
-                              {cardMessage && <div className="djc-dcard-preview-message">"{cardMessage}"</div>}
-                            </div>
-                          </div>
-                          {cardSender && <div className="djc-dcard-preview-sender">{lang === 'tr' ? 'İsteyen' : 'From'}: {cardSender}</div>}
-                        </div>
-                      </div>
-                    )}
+                    ))}
+                    <div ref={chatEndRef} />
                   </div>
-                  {/* ─── Crew Chat ─── */}
-                  <div className="djc-crew-chat-panel">
-                    <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
-                    <div className="djc-crew-chat-messages">
-                      {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
-                      {chatMessages.map(m => (
-                        <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
-                          <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
-                          <span className="crew-chat-text">{m.message}</span>
-                        </div>
-                      ))}
-                      <div ref={chatEndRef} />
-                    </div>
-                    <div className="djc-crew-chat-input-row">
-                      <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                        onKeyDown={e => e.key === 'Enter' && sendChat()}
-                        placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
-                      <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
-                    </div>
+                  <div className="djc-crew-chat-input-row">
+                    <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && sendChat()}
+                      placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
+                    <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
                   </div>
                 </div>
               </div>
@@ -1551,8 +1453,99 @@ export default function DJPanel() {
           </div>
         </div>
 
-      </div>
+        {/* ═══ RIGHT SIDEBAR: Display Card ═══ */}
+        <div className="djc-dcard-sidebar">
+          <div className="djc-dcard-sidebar-title">📺 {lang === 'tr' ? 'EKRAN KARTI' : 'DISPLAY CARD'}</div>
+          <div className="djc-dcard-types">
+            {CARD_TYPES.map(ct => (
+              <button key={ct.id}
+                className={`djc-dcard-type-btn ${cardType === ct.id ? 'active' : ''}`}
+                onClick={() => setCardType(ct.id)}>
+                {ct.icon} {lang === 'tr' ? ct.tr : ct.en}
+              </button>
+            ))}
+          </div>
+          {spotifyEnabled && (
+            <div className="djc-dcard-field">
+              <input className="djc-dcard-input" placeholder={lang === 'tr' ? '🔍 Spotify ara...' : '🔍 Search...'}
+                value={cardSearchQuery} onChange={e => handleCardSearch(e.target.value)} />
+              {cardSearching && <span className="djc-dcard-searching">...</span>}
+              {cardSearchResults.length > 0 && !cardSelectedSong && (
+                <div className="djc-dcard-results">
+                  {cardSearchResults.slice(0, 5).map(song => (
+                    <div key={song.spotifyId} className="djc-dcard-result-item"
+                      onClick={() => { setCardSelectedSong(song); setCardSearchResults([]); setCardSearchQuery(song.name); }}>
+                      {song.albumArt && <img src={song.albumArt} alt="" className="djc-dcard-result-art" />}
+                      <div className="djc-dcard-result-info">
+                        <span className="djc-dcard-result-name">{song.name}</span>
+                        <span className="djc-dcard-result-artist">{song.artist}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {cardSelectedSong && (
+                <div className="djc-dcard-selected">
+                  {cardSelectedSong.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-result-art" />}
+                  <div className="djc-dcard-result-info">
+                    <span className="djc-dcard-result-name">{cardSelectedSong.name}</span>
+                    <span className="djc-dcard-result-artist">{cardSelectedSong.artist}</span>
+                  </div>
+                  <button className="djc-dcard-remove" onClick={() => { setCardSelectedSong(null); setCardSearchQuery(''); }}>✕</button>
+                </div>
+              )}
+            </div>
+          )}
+          <div className="djc-dcard-field">
+            <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'Kime?' : 'To whom?'}
+              value={cardRecipient} onChange={e => setCardRecipient(e.target.value)} maxLength={60} />
+          </div>
+          <div className="djc-dcard-field">
+            <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'Mesaj (max 120)' : 'Message (max 120)'}
+              value={cardMessage} onChange={e => setCardMessage(e.target.value)} maxLength={120} />
+          </div>
+          <div className="djc-dcard-field">
+            <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'İsteyen' : 'From'}
+              value={cardSender} onChange={e => setCardSender(e.target.value)} maxLength={40} />
+          </div>
+          <div className="djc-dcard-field">
+            <input className="djc-dcard-input" placeholder="@instagram"
+              value={cardInstagram} onChange={e => setCardInstagram(e.target.value)} maxLength={40} />
+          </div>
+          <div className="djc-dcard-actions-col">
+            {!cardSent ? (
+              <button className="djc-dcard-btn djc-dcard-btn-send" onClick={sendDisplayCard}>
+                📺 {lang === 'tr' ? 'Gönder' : 'Send'}
+              </button>
+            ) : (
+              <button className="djc-dcard-btn djc-dcard-btn-dismiss" onClick={dismissDisplayCard}>
+                ❌ {lang === 'tr' ? 'Kapat' : 'Dismiss'}
+              </button>
+            )}
+            <button className="djc-dcard-btn djc-dcard-btn-reset" onClick={resetCardForm}>
+              🔄
+            </button>
+          </div>
+          <div className="djc-dcard-live-preview">
+            <div className="djc-dcard-lp-label">{lang === 'tr' ? 'ÖNİZLEME' : 'PREVIEW'}</div>
+            <div className={`djc-dcard-lp-card dcard-preview-${cardType}`}>
+              <div className="djc-dcard-lp-badge">
+                {CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}
+              </div>
+              {cardSelectedSong?.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-lp-album" />}
+              {cardSelectedSong && <div className="djc-dcard-lp-song">{cardSelectedSong.name}</div>}
+              {cardSelectedSong?.artist && <div className="djc-dcard-lp-artist">{cardSelectedSong.artist}</div>}
+              {cardRecipient && <div className="djc-dcard-lp-recipient">{cardRecipient}</div>}
+              {cardMessage && <div className="djc-dcard-lp-message">"{cardMessage}"</div>}
+              {cardSender && <div className="djc-dcard-lp-sender">{lang === 'tr' ? 'İsteyen' : 'From'}: {cardSender}</div>}
+              {!cardSelectedSong && !cardRecipient && !cardMessage && !cardSender && (
+                <div className="djc-dcard-lp-empty">{lang === 'tr' ? 'Formu doldurun...' : 'Fill the form...'}</div>
+              )}
+            </div>
+          </div>
+        </div>
 
+      </div>
 
       <AnimatePresence>
         {toast && <motion.div className="success-toast" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>{toast}</motion.div>}

@@ -1491,33 +1491,12 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   font-style: italic;
 }
 
-/* ─── DJ Panel Display Card Form ─── */
-.djc-display-card-form {
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.djc-dcard-title {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  text-align: center;
-  background: linear-gradient(90deg, #00d4ff, #b829dd, #ff0080);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  padding-bottom: 3px;
-}
-.djc-dcard-types {
+/* ─── DJ Panel Display Card Sidebar ─── */
+.djc-dcard-sidebar .djc-dcard-types {
   display: flex;
   gap: 3px;
   flex-wrap: wrap;
+  flex-direction: column;
 }
 .djc-dcard-type-btn {
   flex: 1;
@@ -1680,72 +1659,156 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
 }
 .djc-dcard-btn-reset:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
 
-/* Preview mini-card */
-.djc-dcard-preview {
-  margin-top: 4px;
+/* Live preview inside sidebar */
+.djc-dcard-live-preview {
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
 }
-.djc-dcard-preview-card {
+.djc-dcard-lp-label {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  text-align: center;
+  margin-bottom: 4px;
+}
+.djc-dcard-lp-card {
   background: rgba(12, 14, 22, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 8px;
+  border-radius: 6px;
+  padding: 6px;
   position: relative;
   overflow: hidden;
+  text-align: center;
 }
-.djc-dcard-preview-card::before {
+.djc-dcard-lp-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
 }
-.dcard-preview-request::before { background: linear-gradient(90deg, #00d4ff, #0088ff); }
-.dcard-preview-birthday::before { background: linear-gradient(90deg, #FFD700, #ff8800); }
-.dcard-preview-anniversary::before { background: linear-gradient(90deg, #e8a0bf, #d4a017); }
-.dcard-preview-celebration::before { background: linear-gradient(90deg, #008D4B, #FFD700); }
-.dcard-preview-custom::before { background: linear-gradient(90deg, #b829dd, #8b5cf6); }
-.djc-dcard-preview-badge {
-  font-size: 9px;
+.dcard-preview-request.djc-dcard-lp-card::before { background: linear-gradient(90deg, #00d4ff, #0088ff); }
+.dcard-preview-birthday.djc-dcard-lp-card::before { background: linear-gradient(90deg, #FFD700, #ff8800); }
+.dcard-preview-anniversary.djc-dcard-lp-card::before { background: linear-gradient(90deg, #e8a0bf, #d4a017); }
+.dcard-preview-celebration.djc-dcard-lp-card::before { background: linear-gradient(90deg, #008D4B, #FFD700); }
+.dcard-preview-custom.djc-dcard-lp-card::before { background: linear-gradient(90deg, #b829dd, #8b5cf6); }
+.djc-dcard-lp-badge {
+  font-size: 8px;
   font-weight: 700;
-  letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 6px;
+  letter-spacing: 0.8px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 4px;
 }
-.djc-dcard-preview-body {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-}
-.djc-dcard-preview-album {
-  width: 40px;
-  height: 40px;
+.djc-dcard-lp-album {
+  width: 44px;
+  height: 44px;
   border-radius: 5px;
   object-fit: cover;
-  flex-shrink: 0;
+  margin: 0 auto 4px;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
-.djc-dcard-preview-info { flex: 1; min-width: 0; }
-.djc-dcard-preview-song { font-size: 11px; font-weight: 700; color: #fff; }
-.djc-dcard-preview-artist { font-size: 9px; color: rgba(255, 255, 255, 0.5); }
-.djc-dcard-preview-recipient { font-size: 10px; font-weight: 700; color: #00d4ff; margin-top: 4px; }
-.djc-dcard-preview-message { font-size: 10px; font-style: italic; color: rgba(255, 255, 255, 0.7); }
-.djc-dcard-preview-sender { font-size: 9px; color: rgba(255, 255, 255, 0.4); margin-top: 6px; }
+.djc-dcard-lp-song {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.djc-dcard-lp-artist {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.djc-dcard-lp-recipient {
+  font-size: 9px;
+  font-weight: 700;
+  color: #00d4ff;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.djc-dcard-lp-message {
+  font-size: 8px;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.djc-dcard-lp-sender {
+  font-size: 7px;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 3px;
+}
+.djc-dcard-lp-empty {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.15);
+  padding: 10px 0;
+}
 
 /* ─── DJ Panel Embedded Crew Chat ─── */
-.djc-card-chat-col {
-  flex: 0 0 510px;
+.djc-dcard-sidebar {
+  flex: 0 0 200px;
   display: flex;
   flex-direction: column;
   border-left: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
-  padding-left: 10px;
+  padding: 8px;
   min-height: 0;
-  overflow: hidden;
-  gap: 6px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.01);
+}
+.djc-dcard-sidebar::-webkit-scrollbar { width: 3px; }
+.djc-dcard-sidebar::-webkit-scrollbar-track { background: transparent; }
+.djc-dcard-sidebar::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+.djc-dcard-sidebar-title {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: center;
+  background: linear-gradient(90deg, #00d4ff, #b829dd, #ff0080);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding-bottom: 3px;
+  flex-shrink: 0;
+}
+.djc-dcard-sidebar .djc-dcard-types {
+  flex-direction: column;
+}
+.djc-dcard-sidebar .djc-dcard-type-btn {
+  font-size: 8px;
+  padding: 3px 4px;
+}
+.djc-dcard-actions-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+.djc-dcard-actions-col .djc-dcard-btn {
+  width: 100%;
 }
 .djc-crew-chat-panel {
-  flex: 1;
+  flex: 0 0 240px;
   display: flex;
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+  border-left: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
+  padding-left: 10px;
 }
 .djc-crew-chat-title {
   font-size: 9px;
@@ -1976,11 +2039,17 @@ body.theme-pioneer-gold .djc-left-top3-votes {
 }
 
 /* Pioneer Gold overrides for crew chat & reji button */
-body.theme-pioneer-gold .djc-card-chat-col {
+body.theme-pioneer-gold .djc-dcard-sidebar {
   border-left-color: rgba(255, 204, 0, 0.1);
 }
+body.theme-pioneer-gold .djc-dcard-sidebar-title {
+  background: linear-gradient(90deg, #ffcc00, #ff8800);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 body.theme-pioneer-gold .djc-crew-chat-panel {
-  border-left-color: transparent;
+  border-left-color: rgba(255, 204, 0, 0.1);
 }
 body.theme-pioneer-gold .djc-crew-chat-title {
   background: linear-gradient(90deg, #ffcc00, #ff8800);
@@ -1988,17 +2057,11 @@ body.theme-pioneer-gold .djc-crew-chat-title {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-body.theme-pioneer-gold .djc-dcard-title {
-  background: linear-gradient(90deg, #ffcc00, #ff8800);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-body.theme-pioneer-gold .djc-display-card-form {
-  border-color: rgba(255, 204, 0, 0.08);
+body.theme-pioneer-gold .djc-dcard-sidebar {
+  border-left-color: rgba(255, 204, 0, 0.1);
   background: rgba(255, 204, 0, 0.02);
 }
-body.theme-pioneer-gold .djc-dcard-type-btn.active {
+body.theme-pioneer-gold .djc-dcard-sidebar .djc-dcard-type-btn.active {
   background: rgba(255, 204, 0, 0.1);
   border-color: rgba(255, 204, 0, 0.3);
   color: #ffcc00;
@@ -2350,47 +2413,46 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   border-color: #FFCC00;
 }
 
-/* ─── Winamp LCD Timers ─── */
-.djc-timer-row {
+/* ─── Topbar LCD Timers ─── */
+.djc-topbar-timers {
   display: flex;
-  gap: 6px;
-  margin-bottom: 4px;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 6px;
 }
-.djc-timer {
-  flex: 1;
+.djc-topbar-timer {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 6px;
-  background:
-    linear-gradient(180deg, #0a0a0a 0%, #111111 40%, #0d0d0d 100%);
-  border: 1px solid #1a1a1a;
+  padding: 2px 7px;
+  background: linear-gradient(180deg, #0c0000 0%, #140808 40%, #0c0000 100%);
+  border: 1px solid #3a1010;
   border-radius: 4px;
   box-shadow:
     inset 0 1px 3px rgba(0, 0, 0, 0.6),
-    0 1px 0 rgba(255, 255, 255, 0.03);
+    0 0 4px rgba(255, 40, 40, 0.08);
 }
-.djc-timer-label {
+.djc-topbar-timer-label {
   font-size: 7px;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: rgba(0, 112, 0, 0.6);
+  color: rgba(255, 60, 60, 0.5);
   white-space: nowrap;
 }
-.djc-timer-lcd {
+.djc-topbar-timer-lcd {
   font-family: 'Courier New', 'Consolas', monospace;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 1.5px;
-  color: #00cc00;
-  text-shadow: 0 0 6px rgba(0, 204, 0, 0.4);
+  color: #ff3333;
+  text-shadow: 0 0 6px rgba(255, 50, 50, 0.45);
   margin-left: auto;
   white-space: nowrap;
 }
-.djc-timer-active {
-  color: #00ff44;
-  text-shadow: 0 0 8px rgba(0, 255, 68, 0.5);
+.djc-topbar-timer-active {
+  color: #ff4444;
+  text-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
   animation: lcdBlink 1s ease-in-out infinite;
 }
 @keyframes lcdBlink {
@@ -2398,25 +2460,21 @@ body.theme-pioneer-gold .djc-booth-select:focus {
   50% { opacity: 0.85; }
 }
 
-/* Pioneer Gold theme timers */
-body.theme-pioneer-gold .djc-timer {
-  background:
-    linear-gradient(180deg, #0e0c08 0%, #141210 40%, #0e0c08 100%);
-  border-color: #2a2418;
-  box-shadow:
-    inset 0 1px 3px rgba(0, 0, 0, 0.6),
-    0 1px 0 rgba(255, 200, 0, 0.03);
+/* Pioneer Gold theme topbar timers */
+body.theme-pioneer-gold .djc-topbar-timer {
+  background: linear-gradient(180deg, #0c0000 0%, #140808 40%, #0c0000 100%);
+  border-color: #3a1010;
 }
-body.theme-pioneer-gold .djc-timer-label {
-  color: rgba(255, 204, 0, 0.5);
+body.theme-pioneer-gold .djc-topbar-timer-label {
+  color: rgba(255, 60, 60, 0.5);
 }
-body.theme-pioneer-gold .djc-timer-lcd {
-  color: #ffcc00;
-  text-shadow: 0 0 6px rgba(255, 204, 0, 0.4);
+body.theme-pioneer-gold .djc-topbar-timer-lcd {
+  color: #ff3333;
+  text-shadow: 0 0 6px rgba(255, 50, 50, 0.45);
 }
-body.theme-pioneer-gold .djc-timer-active {
-  color: #ffdd44;
-  text-shadow: 0 0 8px rgba(255, 221, 68, 0.5);
+body.theme-pioneer-gold .djc-topbar-timer-active {
+  color: #ff4444;
+  text-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
 }
 
 .djc-btn-sm {
