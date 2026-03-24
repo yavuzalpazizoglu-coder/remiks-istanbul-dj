@@ -1689,7 +1689,7 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
 
 /* Live preview inside sidebar */
 .djc-dcard-live-preview {
-  margin-top: auto;
+  margin-top: 4px;
   padding-top: 6px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
@@ -1786,20 +1786,21 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
 
 /* ─── DJ Panel Embedded Crew Chat ─── */
 .djc-dcard-sidebar {
-  flex: 0 0 200px;
+  flex: 0 0 310px;
   display: flex;
   flex-direction: column;
   border-left: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
   padding: 8px;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  gap: 5px;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.01);
 }
-.djc-dcard-sidebar::-webkit-scrollbar { width: 3px; }
-.djc-dcard-sidebar::-webkit-scrollbar-track { background: transparent; }
-.djc-dcard-sidebar::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+.djc-dcard-sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-shrink: 0;
+}
 .djc-dcard-sidebar-title {
   font-size: 9px;
   font-weight: 800;
@@ -1830,7 +1831,7 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   width: 100%;
 }
 .djc-crew-chat-panel {
-  flex: 0 0 340px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;

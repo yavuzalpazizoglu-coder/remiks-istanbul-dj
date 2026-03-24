@@ -991,8 +991,6 @@ export default function DisplayPage({ rejiMode = false }) {
           custom: { icon: '💬', tr: 'ÖZEL MESAJ', en: 'SPECIAL MESSAGE' },
         };
         const ct = DCARD_TYPES[displayCard.type] || DCARD_TYPES.request;
-        const igUser = displayCard.instagram;
-        const socialPhoto = displayCard.socialPhoto;
         const senderInitial = displayCard.sender ? displayCard.sender.charAt(0).toUpperCase() : '';
 
         return (
@@ -1020,18 +1018,9 @@ export default function DisplayPage({ rejiMode = false }) {
               </div>
               <div className="dcard-footer">
                 <div className="dcard-sender-area">
-                  {socialPhoto ? (
-                    <img src={socialPhoto} alt="" className="dcard-social-photo"
-                      onError={e => { e.target.style.display = 'none'; e.target.nextSibling && (e.target.nextSibling.style.display = 'flex'); }} />
-                  ) : null}
-                  {socialPhoto ? (
-                    <div className="dcard-sender-initial" style={{ display: 'none' }}>{senderInitial}</div>
-                  ) : senderInitial ? (
-                    <div className="dcard-sender-initial">{senderInitial}</div>
-                  ) : null}
+                  {senderInitial && <div className="dcard-sender-initial">{senderInitial}</div>}
                   <div className="dcard-sender-text">
                     {displayCard.sender && <div className="dcard-sender-name">{lang === 'tr' ? 'İsteyen' : 'From'}: {displayCard.sender}</div>}
-                    {igUser && <div className="dcard-sender-ig">@{igUser}</div>}
                   </div>
                 </div>
                 <div className="dcard-branding">
