@@ -93,31 +93,36 @@ function LightBeams({ themeColor }) {
 function GeoShapes({ themeRgb }) {
   const shapes = useMemo(() => {
     const types = ['triangle', 'diamond', 'hexagon', 'circle-ring', 'square'];
-    return Array.from({ length: 12 }, (_, i) => ({
+    return Array.from({ length: 14 }, (_, i) => ({
       id: i,
       type: types[i % types.length],
       left: 5 + Math.random() * 90,
       top: 5 + Math.random() * 90,
-      size: 20 + Math.random() * 40,
-      duration: 18 + Math.random() * 14,
+      size: 25 + Math.random() * 50,
+      duration: 16 + Math.random() * 14,
       delay: Math.random() * 12,
-      opacity: 0.08 + Math.random() * 0.1,
-      rotation: Math.random() * 360,
+      opacity: 0.15 + Math.random() * 0.2,
     }));
   }, []);
 
   return (
     <div className="geo-shapes">
-      {shapes.map(s => (
-        <div key={s.id} className={`geo-shape geo-${s.type}`} style={{
-          left: `${s.left}%`, top: `${s.top}%`,
-          width: s.size, height: s.size,
-          borderColor: `rgba(${themeRgb}, ${s.opacity})`,
-          animationDuration: `${s.duration}s`,
-          animationDelay: `${s.delay}s`,
-          transform: `rotate(${s.rotation}deg)`,
-        }} />
-      ))}
+      {shapes.map(s => {
+        const color = `rgba(${themeRgb}, ${s.opacity})`;
+        const isOutline = s.type === 'circle-ring' || s.type === 'square';
+        return (
+          <div key={s.id} className={`geo-shape geo-${s.type}`} style={{
+            left: `${s.left}%`, top: `${s.top}%`,
+            width: s.size, height: s.size,
+            ...(isOutline
+              ? { borderColor: color, background: 'transparent' }
+              : { background: color, borderColor: 'transparent' }),
+            boxShadow: `0 0 ${s.size * 0.4}px ${color}`,
+            animationDuration: `${s.duration}s`,
+            animationDelay: `${s.delay}s`,
+          }} />
+        );
+      })}
     </div>
   );
 }

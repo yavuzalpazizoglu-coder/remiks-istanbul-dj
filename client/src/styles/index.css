@@ -1831,7 +1831,7 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   width: 100%;
 }
 .djc-crew-chat-panel {
-  flex: 1;
+  flex: 0 0 220px;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -4290,38 +4290,38 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .geo-shape {
   position: absolute;
-  border: 1.5px solid;
+  border: 1.5px solid transparent;
   animation: geoFloat ease-in-out infinite alternate;
-  background: transparent;
 }
 .geo-triangle {
-  border: none;
-  border-left: 1.5px solid;
-  border-bottom: 1.5px solid;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  background: transparent;
+  border: none;
 }
 .geo-diamond {
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  border: none;
 }
 .geo-hexagon {
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  border: none;
 }
 .geo-circle-ring {
   border-radius: 50%;
-  background: transparent;
+  border-width: 1.5px;
+  border-style: solid;
 }
 .geo-square {
-  border-radius: 3px;
-  background: transparent;
+  border-radius: 4px;
+  border-width: 1.5px;
+  border-style: solid;
 }
 
 @keyframes geoFloat {
-  0% { transform: rotate(0deg) translateY(0) scale(1); opacity: 0.4; }
-  25% { transform: rotate(45deg) translateY(-20px) scale(1.1); opacity: 0.8; }
-  50% { transform: rotate(90deg) translateY(10px) scale(0.95); opacity: 0.5; }
-  75% { transform: rotate(135deg) translateY(-15px) scale(1.05); opacity: 0.9; }
-  100% { transform: rotate(180deg) translateY(0) scale(1); opacity: 0.4; }
+  0% { transform: rotate(0deg) translateY(0); opacity: 0.3; }
+  25% { transform: rotate(30deg) translateY(-25px); opacity: 0.7; }
+  50% { transform: rotate(60deg) translateY(15px); opacity: 0.4; }
+  75% { transform: rotate(90deg) translateY(-20px); opacity: 0.8; }
+  100% { transform: rotate(120deg) translateY(0); opacity: 0.3; }
 }
 
 /* ─── Sparkle Field ─── */
