@@ -1185,7 +1185,8 @@ export default function DJPanel() {
           )}
 
           {/* ═══ Settings & Appearance (in right panel) — TAB SYSTEM ═══ */}
-          <div className="djc-settings-bottom">
+          <div className="djc-settings-chat-row">
+            <div className="djc-settings-bottom">
             <div className="djc-settings-bottom-divider" />
             <div className="right-panel-tabs">
               <button className={`right-panel-tab ${rightTab === 'settings' ? 'active' : ''}`} onClick={() => setRightTab('settings')}>
@@ -1198,7 +1199,6 @@ export default function DJPanel() {
 
             {/* ─── Settings Tab ─── */}
             {rightTab === 'settings' && (
-                <div className="djc-settings-split">
                 <div className="djc-settings-main">
                   <div className="djc-sec-head">
                     <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings'}</span>
@@ -1268,26 +1268,6 @@ export default function DJPanel() {
                     </div>
                   </div>
                 </div>
-                <div className="djc-crew-chat-panel">
-                  <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
-                  <div className="djc-crew-chat-messages">
-                    {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
-                    {chatMessages.map(m => (
-                      <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
-                        <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
-                        <span className="crew-chat-text">{m.message}</span>
-                      </div>
-                    ))}
-                    <div ref={chatEndRef} />
-                  </div>
-                  <div className="djc-crew-chat-input-row">
-                    <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && sendChat()}
-                      placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
-                    <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
-                  </div>
-                </div>
-              </div>
             )}
 
             {/* ─── Song of the Night Tab ─── */}
@@ -1444,6 +1424,26 @@ export default function DJPanel() {
                 </div>
               );
             })()}
+          </div>
+          <div className="djc-crew-chat-panel">
+            <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
+            <div className="djc-crew-chat-messages">
+              {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
+              {chatMessages.map(m => (
+                <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
+                  <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
+                  <span className="crew-chat-text">{m.message}</span>
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+            <div className="djc-crew-chat-input-row">
+              <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && sendChat()}
+                placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
+              <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
+            </div>
+          </div>
           </div>
         </div>
 

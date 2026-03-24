@@ -1360,8 +1360,14 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
 }
 
 /* ═══ Settings Bottom (now in right panel) ═══ */
-.djc-settings-bottom {
+.djc-settings-chat-row {
+  display: flex;
+  gap: 0;
   flex-shrink: 0;
+}
+.djc-settings-bottom {
+  flex: 1;
+  min-width: 0;
   padding: 8px 14px 10px 14px;
 }
 .djc-settings-bottom-divider {
@@ -1369,10 +1375,6 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   background: var(--djt-sec-border, rgba(255,255,255,0.06));
   margin-bottom: 10px;
   transition: background 0.4s ease;
-}
-.djc-settings-split {
-  display: flex;
-  gap: 12px;
 }
 .djc-settings-main {
   flex: 1;
@@ -1831,13 +1833,13 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   width: 100%;
 }
 .djc-crew-chat-panel {
-  flex: 0 0 220px;
+  flex: 0 0 200px;
   display: flex;
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
   border-left: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
-  padding-left: 10px;
+  padding: 8px 10px;
 }
 .djc-crew-chat-title {
   font-size: 9px;
