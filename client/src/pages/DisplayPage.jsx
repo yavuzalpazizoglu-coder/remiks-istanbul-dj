@@ -239,7 +239,7 @@ function ElegantShimmerCurtain({ themeRgb }) {
       height: 30 + Math.random() * 40,
       duration: 3 + Math.random() * 4,
       delay: Math.random() * 5,
-      opacity: 0.03 + Math.random() * 0.05,
+      opacity: 0.12 + Math.random() * 0.15,
     })), []);
 
   return (
@@ -266,7 +266,7 @@ function ElegantBokeh({ themeRgb }) {
       size: 60 + Math.random() * 200,
       duration: 18 + Math.random() * 15,
       delay: Math.random() * 10,
-      opacity: 0.03 + Math.random() * 0.05,
+      opacity: 0.08 + Math.random() * 0.12,
     })), []);
 
   return (
@@ -275,7 +275,7 @@ function ElegantBokeh({ themeRgb }) {
         <div key={c.id} className="elegant-bokeh-circle" style={{
           left: `${c.left}%`, top: `${c.top}%`,
           width: c.size, height: c.size,
-          background: `radial-gradient(circle, rgba(${themeRgb},${c.opacity}) 0%, rgba(${themeRgb},${c.opacity * 0.3}) 40%, transparent 70%)`,
+          background: `radial-gradient(circle, rgba(${themeRgb},${c.opacity}) 0%, rgba(${themeRgb},${c.opacity * 0.4}) 40%, transparent 70%)`,
           animationDuration: `${c.duration}s`,
           animationDelay: `${c.delay}s`,
         }} />
@@ -289,10 +289,10 @@ function ElegantDust({ themeRgb }) {
     Array.from({ length: 30 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
-      size: 1 + Math.random() * 2,
+      size: 1.5 + Math.random() * 3,
       duration: 10 + Math.random() * 15,
       delay: Math.random() * 12,
-      opacity: 0.3 + Math.random() * 0.4,
+      opacity: 0.5 + Math.random() * 0.4,
     })), []);
 
   return (
@@ -302,7 +302,7 @@ function ElegantDust({ themeRgb }) {
           left: `${p.left}%`,
           width: p.size, height: p.size,
           background: `rgba(${themeRgb},${p.opacity})`,
-          boxShadow: `0 0 ${p.size * 4}px rgba(${themeRgb},${p.opacity * 0.5})`,
+          boxShadow: `0 0 ${p.size * 6}px rgba(${themeRgb},${p.opacity * 0.5})`,
           animationDuration: `${p.duration}s`,
           animationDelay: `${p.delay}s`,
         }} />
@@ -325,7 +325,7 @@ function FestivalSpotlights({ themeRgb }) {
       {spots.map((s, i) => (
         <div key={i} className="festival-spot" style={{
           left: s.x,
-          background: `conic-gradient(from 250deg, transparent 0deg, rgba(${s.color},0.08) 15deg, transparent 30deg)`,
+          background: `conic-gradient(from 250deg, transparent 0deg, rgba(${s.color},0.2) 15deg, transparent 30deg)`,
           animationDelay: `${s.delay}s`,
         }} />
       ))}
@@ -371,7 +371,7 @@ function FestivalColorBars({ themeRgb }) {
     <div className="festival-color-bars">
       {barColors.map((c, i) => (
         <div key={i} className="festival-color-bar" style={{
-          background: `rgba(${c}, 0.06)`,
+          background: `rgba(${c}, 0.4)`,
           animationDelay: `${i * 0.8}s`,
         }} />
       ))}
@@ -382,23 +382,23 @@ function FestivalColorBars({ themeRgb }) {
 function FestivalWaves({ themeRgb }) {
   return (
     <div className="festival-waves">
-      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.04)`, animationDelay: '0s' }} />
-      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.03)`, animationDelay: '2s' }} />
-      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.02)`, animationDelay: '4s' }} />
+      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.12)`, animationDelay: '0s' }} />
+      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.08)`, animationDelay: '2s' }} />
+      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.06)`, animationDelay: '4s' }} />
     </div>
   );
 }
 
 function MinimalScanLine({ themeRgb }) {
-  return <div className="minimal-scanline" style={{ background: `linear-gradient(90deg, transparent, rgba(${themeRgb},0.06), transparent)` }} />;
+  return <div className="minimal-scanline" style={{ background: `linear-gradient(90deg, transparent, rgba(${themeRgb},0.3), transparent)` }} />;
 }
 
 function MinimalPulseRing({ themeRgb }) {
   return (
     <div className="minimal-pulse-rings">
-      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.04)`, animationDelay: '0s' }} />
-      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.03)`, animationDelay: '2s' }} />
-      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.02)`, animationDelay: '4s' }} />
+      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.2)`, animationDelay: '0s' }} />
+      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.15)`, animationDelay: '2s' }} />
+      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.1)`, animationDelay: '4s' }} />
     </div>
   );
 }
@@ -410,7 +410,7 @@ function CorporateDataStreams({ themeRgb }) {
       left: 8 + (i * 12),
       duration: 6 + Math.random() * 6,
       delay: Math.random() * 5,
-      opacity: 0.03 + Math.random() * 0.03,
+      opacity: 0.1 + Math.random() * 0.1,
     })), []);
 
   return (
@@ -434,7 +434,7 @@ function CorporateGrid() {
 function CorporateAccentLine({ themeRgb }) {
   return (
     <div className="corporate-accent-line" style={{
-      background: `linear-gradient(90deg, transparent, rgba(${themeRgb},0.4), transparent)`,
+      background: `linear-gradient(90deg, transparent, rgba(${themeRgb},0.6), transparent)`,
     }} />
   );
 }
@@ -526,7 +526,7 @@ function useCountUp(target, duration = 2000, active = false) {
   return val;
 }
 
-function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eventName, nightState }) {
+function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eventName }) {
   const name = brandText || eventName || 'Remiks İstanbul';
   const [phase, setPhase] = useState(1);
 
@@ -595,19 +595,6 @@ function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eve
               <div className="closing-stat-label">{lang === 'tr' ? 'en çok oy alan istek' : 'most voted request'}</div>
             </div>
           )}
-          {nightState?.rounds?.filter(r => r.winnerId).map(r => {
-            const w = r.finalists.find(f => f.id === r.winnerId);
-            if (!w) return null;
-            return (
-              <div key={r.roundNumber} className="closing-stat-card closing-stat-wide">
-                {w.albumArt && <img src={w.albumArt} alt="" className="closing-night-art" />}
-                <div className="closing-stat-icon">🏆</div>
-                <div className="closing-stat-song">{w.title}</div>
-                <div className="closing-stat-artist">{w.artist} — {w.votes} {lang === 'tr' ? 'oy' : 'votes'}</div>
-                <div className="closing-stat-label">{r.djName}{lang === 'tr' ? "'ın Gecenin Şarkısı" : "'s Song of the Night"}</div>
-              </div>
-            );
-          })}
         </div>
       </div>
 
@@ -870,7 +857,7 @@ function SongRow({ req, rank, lang, isPlayed }) {
   );
 }
 
-function EventSummary({ requests, lang, nightState, eventName }) {
+function EventSummary({ requests, lang, eventName }) {
   const totalRequests = requests.length;
   const totalVotes = requests.reduce((sum, r) => sum + (r.votes || 0), 0);
   const sorted = [...requests].sort((a, b) => (b.votes || 0) - (a.votes || 0));
@@ -945,21 +932,6 @@ function EventSummary({ requests, lang, nightState, eventName }) {
           </div>
         </motion.div>
       )}
-
-      {nightState?.rounds?.filter(r => r.winnerId).map(r => {
-        const w = r.finalists.find(f => f.id === r.winnerId);
-        if (!w) return null;
-        return (
-          <motion.div key={r.roundNumber} className="closing-stat-card closing-stat-wide" style={{ marginTop: 'clamp(8px, 1vw, 20px)' }}
-            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.3 }}>
-            {w.albumArt && <img src={w.albumArt} alt="" className="closing-night-art" />}
-            <div className="closing-stat-icon">🏆</div>
-            <div className="closing-stat-song">{w.title}</div>
-            <div className="closing-stat-artist">{w.artist} — {w.votes} {lang === 'tr' ? 'oy' : 'votes'}</div>
-            <div className="closing-stat-label">{r.djName}{lang === 'tr' ? "'ın Gecenin Şarkısı" : "'s Song of the Night"}</div>
-          </motion.div>
-        );
-      })}
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
         className="summary-footer-info">
@@ -1037,7 +1009,6 @@ export default function DisplayPage({ rejiMode = false }) {
   const [eventLogo, setEventLogo] = useState('');
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
-  const [nightState, setNightState] = useState(null);
 
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
@@ -1052,6 +1023,7 @@ export default function DisplayPage({ rejiMode = false }) {
   const [rejiSpotInput, setRejiSpotInput] = useState('');
   const [rejiCeremonyMin, setRejiCeremonyMin] = useState(3);
   const [rejiPanelOpen, setRejiPanelOpen] = useState(false);
+  const [rejiEnabled, setRejiEnabled] = useState(rejiMode);
 
   const [displayCard, setDisplayCard] = useState(null);
   const displayCardTimer = useRef(null);
@@ -1157,8 +1129,6 @@ export default function DisplayPage({ rejiMode = false }) {
 
     socket.on('room-count', ({ count }) => setConnectedCount(count));
 
-    socket.on('night-update', (data) => setNightState(data));
-
     socket.on('crew-chat', (msg) => {
       setChatMessages(prev => [...prev.slice(-50), msg]);
     });
@@ -1197,26 +1167,13 @@ export default function DisplayPage({ rejiMode = false }) {
       setTimeout(() => setDisplayCard(null), 600);
       if (displayCardTimer.current) clearTimeout(displayCardTimer.current);
     });
-    socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
-      setNightState(prev => {
-        if (!prev) return prev;
-        const rounds = prev.rounds.map(r => {
-          if (r.roundNumber !== roundNumber) return r;
-          return { ...r, finalists: r.finalists.map(f => {
-            const updated = finalists.find(u => u.id === f.id);
-            return updated ? { ...f, votes: updated.votes } : f;
-          }), totalVotes };
-        });
-        return { ...prev, rounds };
-      });
-    });
 
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('ceremony'); socket.off('music-mode');
-      socket.off('night-update'); socket.off('night-vote'); socket.off('crew-chat');
+      socket.off('crew-chat');
       socket.off('reji-blackout'); socket.off('reji-spotlight'); socket.off('reji-countdown');
       socket.off('display-card'); socket.off('dismiss-card');
       socket.disconnect();
@@ -1255,15 +1212,6 @@ export default function DisplayPage({ rejiMode = false }) {
   }, [ceremonyEnd]);
 
   useEffect(() => {
-    const round = nightState?.rounds?.[nightState?.currentRound - 1];
-    if (round?.phase !== 'voting' || !round?.endTime) return;
-    const interval = setInterval(() => {
-      setNightState(prev => ({ ...prev }));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [nightState?.rounds?.[nightState?.currentRound - 1]?.phase]);
-
-  useEffect(() => {
     if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
     if (!chatOpen && chatMessages.length > 0) setChatUnread(prev => prev + 1);
   }, [chatMessages.length]);
@@ -1292,6 +1240,8 @@ export default function DisplayPage({ rejiMode = false }) {
   if (!event) return <div className="display-page"><div className="display-bg" /></div>;
 
   const top10 = requests.slice(0, 10);
+  const listLeft = top10.filter((_, i) => i % 2 === 0);
+  const listRight = top10.filter((_, i) => i % 2 === 1);
   const displayName = brandText || event.name;
 
   const themeColors = {
@@ -1339,6 +1289,15 @@ export default function DisplayPage({ rejiMode = false }) {
             <div className="dcard-backdrop" />
             <div className="dcard-container">
               <div className="dcard-shimmer" />
+              <div className="dcard-now-playing">
+                <span className="dcard-np-bars">
+                  <span className="dcard-np-bar" /><span className="dcard-np-bar" /><span className="dcard-np-bar" /><span className="dcard-np-bar" />
+                </span>
+                <span className="dcard-np-text">{lang === 'tr' ? 'ŞU AN ÇALIYOR' : 'NOW PLAYING'}</span>
+                <span className="dcard-np-bars">
+                  <span className="dcard-np-bar" /><span className="dcard-np-bar" /><span className="dcard-np-bar" /><span className="dcard-np-bar" />
+                </span>
+              </div>
               <div className="dcard-badge">
                 <span className="dcard-badge-icon">{ct.icon}</span>
                 <span className="dcard-badge-label">{lang === 'tr' ? ct.tr : ct.en}</span>
@@ -1374,7 +1333,7 @@ export default function DisplayPage({ rejiMode = false }) {
           </div>
         );
       })()}
-      {rejiMode && (
+      {rejiEnabled && (
         <>
         <div className="reji-bar">
           <div className="reji-bar-item">
@@ -1510,11 +1469,16 @@ export default function DisplayPage({ rejiMode = false }) {
         </div>
         </>
       )}
-      {!isPreview && !rejiMode && (
+      {!isPreview && !rejiEnabled && (
         <div className="live-indicator" aria-hidden="true">
           <span className="live-indicator-dot" />
           LIVE
         </div>
+      )}
+      {!rejiEnabled && !isPreview && (
+        <button className="reji-activate-btn" onClick={() => setRejiEnabled(true)} title="REJİ Panelini Aç">
+          🎬
+        </button>
       )}
       {/* Classic: disco ball + effects by animLevel */}
       {stageDesign === 'classic' && <>
@@ -1556,14 +1520,16 @@ export default function DisplayPage({ rejiMode = false }) {
       </>}
 
       {/* Festival: mode bg + spotlights + confetti + color bars + waves */}
+      {/* Festival: disco ball + spotlights + confetti + color bars + waves + equalizer */}
       {stageDesign === 'festival' && <>
         <div className="display-bg" />
-        <img src="/modes/pioneer_mode.png" alt="" className="stage-bg-img stage-bg-festival" />
+        <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
         <FestivalSpotlights themeRgb={tc.rgb} />
         <FestivalConfetti />
         <FestivalColorBars themeRgb={tc.rgb} />
         <FestivalWaves themeRgb={tc.rgb} />
-        <Sparkles themeRgb={tc.rgb} count={20} />
+        <ClubEqualizer themeRgb={tc.rgb} />
+        <Sparkles themeRgb={tc.rgb} count={25} />
       </>}
 
       {/* Corporate: logo bg + grid + data streams + accent line */}
@@ -1668,79 +1634,36 @@ export default function DisplayPage({ rejiMode = false }) {
                     <span>🎵</span> {T('display.no_requests')}
                   </div>
                 ) : (
-                  <div className="dsp-table-wrap">
-                    <table className="dsp-table">
-                      <AnimatePresence>
-                        <tbody>
-                          {top10.map((req, idx) => (
-                            <SongRow key={req.id} req={req} rank={idx + 1} lang={lang} isPlayed={playedId === req.id} />
-                          ))}
-                        </tbody>
-                      </AnimatePresence>
-                    </table>
+                  <div className="dsp-table-wrap dsp-table-2col">
+                    <div className="dsp-table-col">
+                      <table className="dsp-table">
+                        <AnimatePresence>
+                          <tbody>
+                            {listLeft.map((req, idx) => (
+                              <SongRow key={req.id} req={req} rank={idx * 2 + 1} lang={lang} isPlayed={playedId === req.id} />
+                            ))}
+                          </tbody>
+                        </AnimatePresence>
+                      </table>
+                    </div>
+                    <div className="dsp-table-col-divider" />
+                    <div className="dsp-table-col">
+                      <table className="dsp-table">
+                        <AnimatePresence>
+                          <tbody>
+                            {listRight.map((req, idx) => (
+                              <SongRow key={req.id} req={req} rank={idx * 2 + 2} lang={lang} isPlayed={playedId === req.id} />
+                            ))}
+                          </tbody>
+                        </AnimatePresence>
+                      </table>
+                    </div>
                   </div>
                 )}
               </div>
 
-              {/* RIGHT: VS Card + QR Card */}
+              {/* RIGHT: QR Card */}
               <div className="dsp-card dsp-qr-card">
-                {(() => {
-                  const nightRound = nightState?.rounds?.[nightState.currentRound - 1];
-                  const nightPhase = nightRound?.phase;
-                  const nightFinalists = nightRound?.finalists || [];
-                  const nightMaxVotes = Math.max(...nightFinalists.map(f => f.votes), 1);
-                  const nightLeader = nightFinalists.length > 0 ? [...nightFinalists].sort((a, b) => b.votes - a.votes)[0]?.id : null;
-                  const nightRemaining = nightRound?.endTime ? Math.max(0, (nightRound.endTime - Date.now()) / 1000) : 0;
-                  const nightProgress = nightRound?.duration ? Math.min(100, ((Date.now() - (nightRound.startedAt || Date.now())) / (nightRound.duration * 1000)) * 100) : 0;
-                  const nm = Math.floor(nightRemaining / 60);
-                  const ns = Math.floor(nightRemaining % 60);
-                  const nightWinner = nightRound?.winnerId ? nightFinalists.find(f => f.id === nightRound.winnerId) : null;
-
-                  if ((nightPhase === 'voting' || nightPhase === 'finished') && nightFinalists.length > 0) {
-                    return (
-                      <div className="night-vs-card">
-                        <div className="night-vs-title">★ {lang === 'tr' ? 'GECENİN ŞARKISI' : 'SONG OF THE NIGHT'}</div>
-                        <div className="night-vs-round-label">{nightRound?.djName} {lang === 'tr' ? 'Turu' : 'Round'}</div>
-                        {nightFinalists.map((f, i) => (
-                          <div key={f.id}>
-                            <div className={`night-vs-song ${f.id === nightLeader ? 'leading' : ''} ${nightPhase === 'finished' && f.id !== nightRound?.winnerId ? 'night-vs-loser' : ''}`}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'clamp(4px,0.5vw,10px)' }}>
-                                {f.albumArt && <img src={f.albumArt} alt="" className="night-vs-album-art" />}
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div className="night-vs-song-title">{f.title}</div>
-                                  <div className="night-vs-song-artist">{f.artist}</div>
-                                </div>
-                                <div className="night-vs-vote-count">{f.votes}</div>
-                              </div>
-                              <div className="night-vs-bar">
-                                <div className="night-vs-bar-fill" style={{ width: `${(f.votes / nightMaxVotes) * 100}%` }} />
-                              </div>
-                            </div>
-                            {i < nightFinalists.length - 1 && (
-                              <div className="night-vs-divider">─── VS ───</div>
-                            )}
-                          </div>
-                        ))}
-                        {nightPhase === 'voting' && (
-                          <>
-                            <div className="night-vs-countdown" style={{ marginTop: 'clamp(4px,0.6vw,12px)' }}>
-                              <span className={nightRemaining < 30 ? 'critical' : ''}>⏱ {String(nm).padStart(2, '0')}:{String(ns).padStart(2, '0')}</span>
-                            </div>
-                            <div className="night-vs-progress">
-                              <div className={`night-vs-progress-fill ${nightRemaining < 30 ? 'urgent' : ''}`} style={{ width: `${nightProgress}%` }} />
-                            </div>
-                          </>
-                        )}
-                        {nightPhase === 'finished' && nightWinner && (
-                          <div style={{ textAlign: 'center', marginTop: 'clamp(4px,0.5vw,10px)' }}>
-                            <span className="night-vs-title" style={{ fontSize: 'clamp(9px,1.1vw,20px)' }}>🏆 {lang === 'tr' ? 'KAZANAN' : 'WINNER'}: {nightWinner.title}</span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
-                  return null;
-                })()}
                 <div className="dsp-qr-box">
                   <QRCodeSVG value={requestUrl} size={300} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
@@ -1770,7 +1693,7 @@ export default function DisplayPage({ rejiMode = false }) {
         {/* ─── CLOSING OVERLAY ─── */}
         <AnimatePresence>
           {closingActive && (
-            <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} ceremonyEnd={ceremonyEnd} requests={requests} eventName={event?.name} nightState={nightState} />
+            <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} ceremonyEnd={ceremonyEnd} requests={requests} eventName={event?.name} />
           )}
         </AnimatePresence>
 
@@ -1781,32 +1704,9 @@ export default function DisplayPage({ rejiMode = false }) {
           )}
         </AnimatePresence>
 
-        {/* ─── NIGHT FULLSCREEN WINNER ─── */}
-        {nightState?.showFullscreen && (() => {
-          const round = nightState.rounds[nightState.currentRound - 1];
-          const winner = round?.winnerId ? round.finalists.find(f => f.id === round.winnerId) : null;
-          if (!winner) return null;
-          return (
-            <motion.div className="night-winner-fullscreen"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
-              <div className="night-winner-dj-name">{round.djName}</div>
-              <div className="night-winner-badge">{lang === 'tr' ? 'GECENİN ŞARKISI' : 'SONG OF THE NIGHT'}</div>
-              {winner.albumArt && <motion.img src={winner.albumArt} alt="" className="night-winner-album-art" initial={{ scale: 0.3, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3, duration: 0.6 }} />}
-              <motion.div className="night-winner-song-name"
-                initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }}>
-                {winner.title}
-              </motion.div>
-              <div className="night-winner-artist-name">{winner.artist}</div>
-              <div style={{ marginTop: 'clamp(8px,1vw,20px)', fontSize: 'clamp(14px,1.8vw,40px)', color: 'var(--theme-primary,#00d4ff)' }}>
-                🏆 {winner.votes} {lang === 'tr' ? 'oy' : 'votes'}
-              </div>
-            </motion.div>
-          );
-        })()}
-
         {/* ─── ENDED (summary after closing) ─── */}
         {event.status === 'ended' && !closingActive && (
-          <EventSummary requests={allRequests.length > 0 ? allRequests : requests} lang={lang} nightState={nightState} eventName={event?.name} />
+          <EventSummary requests={allRequests.length > 0 ? allRequests : requests} lang={lang} eventName={event?.name} />
         )}
       </div>
     </div>

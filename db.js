@@ -299,14 +299,6 @@ export function getEventHistory(password) {
   `).all(password);
 }
 
-export function getGenreStats(eventId) {
-  return db.prepare(`
-    SELECT genre, COUNT(*) as count FROM requests
-    WHERE event_id = ? AND genre != '' AND status != 'rejected'
-    GROUP BY genre ORDER BY count DESC
-  `).all(eventId);
-}
-
 export function getNowPlaying(eventId) {
   return db.prepare(
     "SELECT * FROM requests WHERE event_id = ? AND status = 'playing' LIMIT 1"

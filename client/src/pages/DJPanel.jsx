@@ -285,7 +285,7 @@ export default function DJPanel() {
       message: cardMessage.trim(),
       sender: cardSender.trim(),
       eventName: event.name,
-      duration: 45,
+      duration: 60,
     });
     setCardSent(true);
     showToast(lang === 'tr' ? 'Kart ekrana gönderildi!' : 'Card sent to display!');
