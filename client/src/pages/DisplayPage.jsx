@@ -90,6 +90,69 @@ function LightBeams({ themeColor }) {
   );
 }
 
+function GeoShapes({ themeRgb }) {
+  const shapes = useMemo(() => {
+    const types = ['triangle', 'diamond', 'hexagon', 'circle-ring', 'square'];
+    return Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      type: types[i % types.length],
+      left: 5 + Math.random() * 90,
+      top: 5 + Math.random() * 90,
+      size: 20 + Math.random() * 40,
+      duration: 18 + Math.random() * 14,
+      delay: Math.random() * 12,
+      opacity: 0.08 + Math.random() * 0.1,
+      rotation: Math.random() * 360,
+    }));
+  }, []);
+
+  return (
+    <div className="geo-shapes">
+      {shapes.map(s => (
+        <div key={s.id} className={`geo-shape geo-${s.type}`} style={{
+          left: `${s.left}%`, top: `${s.top}%`,
+          width: s.size, height: s.size,
+          borderColor: `rgba(${themeRgb}, ${s.opacity})`,
+          animationDuration: `${s.duration}s`,
+          animationDelay: `${s.delay}s`,
+          transform: `rotate(${s.rotation}deg)`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function Sparkles({ themeRgb, count = 20 }) {
+  const sparks = useMemo(() =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      size: 2 + Math.random() * 3,
+      duration: 2 + Math.random() * 3,
+      delay: Math.random() * 5,
+      opacity: 0.4 + Math.random() * 0.5,
+    })), [count]);
+
+  return (
+    <div className="sparkle-field">
+      {sparks.map(s => {
+        const c = `rgba(${themeRgb}, ${s.opacity})`;
+        return (
+          <div key={s.id} className="sparkle-dot" style={{
+            left: `${s.left}%`, top: `${s.top}%`,
+            width: s.size, height: s.size,
+            background: c,
+            boxShadow: `0 0 ${s.size * 2}px ${c}, 0 0 ${s.size * 4}px ${c}`,
+            animationDuration: `${s.duration}s`,
+            animationDelay: `${s.delay}s`,
+          }} />
+        );
+      })}
+    </div>
+  );
+}
+
 function Confetti() {
   const pieces = useMemo(() =>
     Array.from({ length: 50 }, (_, i) => ({
@@ -1177,9 +1240,9 @@ export default function DisplayPage({ rejiMode = false }) {
       <div className="display-bg" />
       <div className="floating-particles" aria-hidden="true" />
       <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
-      {animLevel === 'low' && <AmbientGlow />}
-      {animLevel === 'medium' && <NeonOrbs themeRgb={tc.rgb} />}
-      {animLevel === 'high' && <><DiscoParticles themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /></>}
+      {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={10} /></>}
+      {animLevel === 'medium' && <><NeonOrbs themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={18} /></>}
+      {animLevel === 'high' && <><DiscoParticles themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={30} /></>}
       {showConfetti && <Confetti />}
 
       {!socketConnected && (

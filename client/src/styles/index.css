@@ -3916,16 +3916,20 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   margin: auto;
   width: min(65vw, 65vh);
   height: auto;
-  opacity: 0.35;
+  opacity: 0.4;
   pointer-events: none;
   z-index: 0;
   animation: discoPulse 5s ease-in-out infinite;
-  filter: drop-shadow(0 0 clamp(20px, 3vw, 80px) rgba(var(--theme-rgb), 0.15)) drop-shadow(0 0 clamp(40px, 6vw, 160px) rgba(var(--theme-rgb), 0.08));
+  filter:
+    drop-shadow(0 0 clamp(20px, 3vw, 80px) rgba(var(--theme-rgb), 0.25))
+    drop-shadow(0 0 clamp(40px, 6vw, 160px) rgba(var(--theme-rgb), 0.15))
+    drop-shadow(0 0 clamp(60px, 8vw, 200px) rgba(var(--theme-rgb), 0.08));
+  mix-blend-mode: screen;
 }
 
 @keyframes discoPulse {
-  0%, 100% { opacity: 0.35; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(1.02); }
+  0%, 100% { opacity: 0.35; transform: scale(1) rotate(0deg); }
+  50% { opacity: 0.5; transform: scale(1.03) rotate(3deg); }
 }
 
 .dsp-center-hero {
@@ -4276,6 +4280,67 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 @keyframes beamSway {
   0%, 100% { transform: rotate(-15deg); opacity: 0.3; }
   50% { transform: rotate(15deg); opacity: 0.8; }
+}
+
+/* ─── Geometric Shapes ─── */
+.geo-shapes {
+  position: absolute; inset: 0;
+  overflow: hidden; pointer-events: none;
+  z-index: 0;
+}
+.geo-shape {
+  position: absolute;
+  border: 1.5px solid;
+  animation: geoFloat ease-in-out infinite alternate;
+  background: transparent;
+}
+.geo-triangle {
+  border: none;
+  border-left: 1.5px solid;
+  border-bottom: 1.5px solid;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background: transparent;
+}
+.geo-diamond {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+.geo-hexagon {
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+.geo-circle-ring {
+  border-radius: 50%;
+  background: transparent;
+}
+.geo-square {
+  border-radius: 3px;
+  background: transparent;
+}
+
+@keyframes geoFloat {
+  0% { transform: rotate(0deg) translateY(0) scale(1); opacity: 0.4; }
+  25% { transform: rotate(45deg) translateY(-20px) scale(1.1); opacity: 0.8; }
+  50% { transform: rotate(90deg) translateY(10px) scale(0.95); opacity: 0.5; }
+  75% { transform: rotate(135deg) translateY(-15px) scale(1.05); opacity: 0.9; }
+  100% { transform: rotate(180deg) translateY(0) scale(1); opacity: 0.4; }
+}
+
+/* ─── Sparkle Field ─── */
+.sparkle-field {
+  position: absolute; inset: 0;
+  overflow: hidden; pointer-events: none;
+  z-index: 0;
+}
+.sparkle-dot {
+  position: absolute;
+  border-radius: 50%;
+  animation: sparklePulse ease-in-out infinite;
+}
+@keyframes sparklePulse {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  20% { opacity: 1; transform: scale(1.2); }
+  40% { opacity: 0.3; transform: scale(0.8); }
+  60% { opacity: 1; transform: scale(1.4); }
+  80% { opacity: 0.2; transform: scale(0.6); }
 }
 
 .display-content {
