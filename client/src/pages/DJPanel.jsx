@@ -1240,94 +1240,109 @@ export default function DJPanel() {
             {/* ─── Settings Tab ─── */}
             {rightTab === 'settings' && (
                 <div className="djc-settings-main">
-                  <div className="djc-sec-head">
-                    <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings'}</span>
-                  </div>
-                  <div className="djc-settings-grid">
-                    <div className="djc-field">
-                      <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
-                      <div className="djc-field-input-wrap">
-                        <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
-                        {brandSaving && <span className="djc-field-status">...</span>}
+                  <div className="djc-settings-split-row">
+                    {/* ─── Left: Ayarlar ─── */}
+                    <div className="djc-settings-col">
+                      <div className="djc-sec-head">
+                        <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar' : 'Settings'}</span>
                       </div>
-                    </div>
-                    <div className="djc-field">
-                      <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
-                      <div className="djc-field-input-wrap">
-                        <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
-                        {tickerSaving && <span className="djc-field-status">...</span>}
-                      </div>
-                    </div>
-                    <div className="djc-field djc-field-inline">
-                      <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
-                      <div className="djc-theme-picker">
-                        {[
-                          { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
-                          { id: 'purple', color: '#b829dd', label: 'Mor' },
-                          { id: 'pink', color: '#ff0080', label: 'Pembe' },
-                          { id: 'green', color: '#008D4B', label: 'Yeşil' },
-                          { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
-                          { id: 'red', color: '#ff4444', label: 'Kırmızı' },
-                        ].map(t => (
-                          <button key={t.id}
-                            className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
-                            style={{ background: t.color }}
-                            onClick={() => changeTheme(t.id)}
-                            title={t.label}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <div className="djc-field djc-field-inline">
-                      <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
-                      <div className="djc-fx-toggle">
-                        {[
-                          { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
-                          { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
-                          { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
-                        ].map(l => (
-                          <button key={l.id}
-                            className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
-                            onClick={() => changeAnimationLevel(l.id)}>
-                            {l.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="djc-field djc-field-inline">
-                      <label className="djc-field-label">{lang === 'tr' ? 'Sahne Tasarımı' : 'Stage Design'}</label>
-                      <div className="djc-stage-design-grid">
-                        {[
-                          { id: 'classic', icon: '🎵', tr: 'Klasik', en: 'Classic' },
-                          { id: 'minimal', icon: '◻️', tr: 'Minimal', en: 'Minimal' },
-                          { id: 'elegant', icon: '✨', tr: 'Elegant', en: 'Elegant' },
-                          { id: 'club', icon: '🔥', tr: 'Club', en: 'Club' },
-                          { id: 'festival', icon: '🎪', tr: 'Festival', en: 'Festival' },
-                          { id: 'corporate', icon: '🏢', tr: 'Kurumsal', en: 'Corporate' },
-                        ].map(d => (
-                          <button key={d.id}
-                            className={`djc-stage-btn ${stageDesign === d.id ? 'active' : ''} djc-stage-${d.id}`}
-                            onClick={() => changeStageDesign(d.id)}>
-                            <span className="djc-stage-icon">{d.icon}</span>
-                            <span className="djc-stage-name">{lang === 'tr' ? d.tr : d.en}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="djc-field djc-field-inline">
-                      <label className="djc-field-label">{lang === 'tr' ? 'Logo' : 'Logo'}</label>
-                      <div className="djc-logo-upload-row">
-                        {eventLogo && (
-                          <div className="djc-logo-preview-wrap">
-                            <img src={eventLogo} alt="Logo" className="djc-logo-preview-img" />
-                            <button className="djc-logo-remove" onClick={removeEventLogo} title={lang === 'tr' ? 'Logoyu kaldır' : 'Remove logo'}>✕</button>
+                      <div className="djc-settings-grid">
+                        <div className="djc-field">
+                          <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
+                          <div className="djc-field-input-wrap">
+                            <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
+                            {brandSaving && <span className="djc-field-status">...</span>}
                           </div>
-                        )}
-                        <label className="djc-logo-upload-btn">
-                          {eventLogo ? (lang === 'tr' ? 'Değiştir' : 'Change') : (lang === 'tr' ? '📁 Yükle' : '📁 Upload')}
-                          <input type="file" accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp" hidden
-                            onChange={handleLogoUpload} />
-                        </label>
+                        </div>
+                        <div className="djc-field">
+                          <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
+                          <div className="djc-field-input-wrap">
+                            <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
+                            {tickerSaving && <span className="djc-field-status">...</span>}
+                          </div>
+                        </div>
+                        <div className="djc-field djc-field-inline">
+                          <label className="djc-field-label">{lang === 'tr' ? 'Logo' : 'Logo'}</label>
+                          <div className="djc-logo-upload-row">
+                            {eventLogo && (
+                              <div className="djc-logo-preview-wrap">
+                                <img src={eventLogo} alt="Logo" className="djc-logo-preview-img" />
+                                <button className="djc-logo-remove" onClick={removeEventLogo} title={lang === 'tr' ? 'Logoyu kaldır' : 'Remove logo'}>✕</button>
+                              </div>
+                            )}
+                            <label className="djc-logo-upload-btn">
+                              {eventLogo ? (lang === 'tr' ? 'Değiştir' : 'Change') : (lang === 'tr' ? '📁 Yükle' : '📁 Upload')}
+                              <input type="file" accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp" hidden
+                                onChange={handleLogoUpload} />
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ─── Right: Görünüm ─── */}
+                    <div className="djc-settings-col">
+                      <div className="djc-sec-head">
+                        <span className="djc-sec-title">{lang === 'tr' ? 'Görünüm' : 'Appearance'}</span>
+                      </div>
+                      <div className="djc-settings-grid">
+                        <div className="djc-field djc-field-inline">
+                          <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
+                          <div className="djc-theme-picker">
+                            {[
+                              { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
+                              { id: 'purple', color: '#b829dd', label: 'Mor' },
+                              { id: 'pink', color: '#ff0080', label: 'Pembe' },
+                              { id: 'green', color: '#008D4B', label: 'Yeşil' },
+                              { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
+                              { id: 'red', color: '#ff4444', label: 'Kırmızı' },
+                            ].map(t => (
+                              <button key={t.id}
+                                className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
+                                style={{ background: t.color }}
+                                onClick={() => changeTheme(t.id)}
+                                title={t.label}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        <div className="djc-field djc-field-inline">
+                          <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
+                          <div className="djc-fx-toggle">
+                            {[
+                              { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
+                              { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
+                              { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
+                            ].map(l => (
+                              <button key={l.id}
+                                className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
+                                onClick={() => changeAnimationLevel(l.id)}>
+                                {l.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="djc-field">
+                          <label className="djc-field-label">{lang === 'tr' ? 'Sahne Tasarımı' : 'Stage Design'}</label>
+                          <div className="djc-stage-design-grid">
+                            {[
+                              { id: 'classic', tr: 'Klasik', en: 'Classic', gradient: 'linear-gradient(135deg, #1a1a2e 0%, #0a0a1a 100%)', accent: '#00d4ff' },
+                              { id: 'minimal', tr: 'Minimal', en: 'Minimal', gradient: 'linear-gradient(135deg, #0a0a0e 0%, #141418 100%)', accent: '#888' },
+                              { id: 'elegant', tr: 'Elegant', en: 'Elegant', gradient: 'linear-gradient(135deg, #1a0f2e 0%, #0d0618 100%)', accent: '#d4a0ff' },
+                              { id: 'club', tr: 'Club', en: 'Club', gradient: 'linear-gradient(135deg, #1a0005 0%, #000820 100%)', accent: '#ff2060' },
+                              { id: 'festival', tr: 'Festival', en: 'Festival', gradient: 'linear-gradient(135deg, #1a1000 0%, #001020 100%)', accent: '#ff8c00' },
+                              { id: 'corporate', tr: 'Kurumsal', en: 'Corporate', gradient: 'linear-gradient(135deg, #0c0e14 0%, #0a0c12 100%)', accent: '#4a90d9' },
+                            ].map(d => (
+                              <button key={d.id}
+                                className={`djc-stage-btn ${stageDesign === d.id ? 'active' : ''} djc-stage-${d.id}`}
+                                style={{ '--stage-gradient': d.gradient, '--stage-accent': d.accent }}
+                                onClick={() => changeStageDesign(d.id)}>
+                                <span className="djc-stage-preview" />
+                                <span className="djc-stage-name">{lang === 'tr' ? d.tr : d.en}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
