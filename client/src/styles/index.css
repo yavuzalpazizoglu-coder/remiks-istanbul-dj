@@ -8326,6 +8326,211 @@ body.theme-pioneer-gold .night-mobile-back { color: #FFCC00; }
 
 /* ─── 1. CLASSIC — default, no overrides needed ─── */
 
+/* ═══ STAGE COMPONENT STYLES ═══ */
+
+/* ─── Club: Equalizer ─── */
+.club-equalizer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 25%;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 0 5%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.club-eq-bar {
+  flex: 1;
+  min-width: 0;
+  border-radius: 2px 2px 0 0;
+  animation: eqBounce 0.6s ease-in-out infinite alternate;
+}
+@keyframes eqBounce {
+  0% { height: 15%; }
+  100% { height: var(--bar-h, 50%); }
+}
+
+/* ─── Club: Lasers ─── */
+.club-lasers {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.club-laser {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 120%;
+  transform-origin: top center;
+  opacity: 0.5;
+  animation: laserSweep 6s ease-in-out infinite alternate;
+  filter: blur(1px);
+}
+@keyframes laserSweep {
+  0% { transform: rotate(var(--start, -20deg)); opacity: 0.6; }
+  50% { opacity: 0.2; }
+  100% { transform: rotate(calc(var(--start, -20deg) + 40deg)); opacity: 0.6; }
+}
+.club-laser:nth-child(1) { --start: -25deg; }
+.club-laser:nth-child(2) { --start: 15deg; }
+.club-laser:nth-child(3) { --start: -10deg; }
+.club-laser:nth-child(4) { --start: 20deg; }
+.club-laser:nth-child(5) { --start: -30deg; }
+
+/* ─── Club: Strobe ─── */
+.club-strobe {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: white;
+  opacity: 0;
+  animation: strobeFlash 4s step-end infinite;
+}
+@keyframes strobeFlash {
+  0%, 100% { opacity: 0; }
+  2% { opacity: 0.03; }
+  3% { opacity: 0; }
+  50% { opacity: 0; }
+  52% { opacity: 0.02; }
+  53% { opacity: 0; }
+}
+
+/* ─── Elegant: Bokeh ─── */
+.elegant-bokeh {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.elegant-bokeh-circle {
+  position: absolute;
+  border-radius: 50%;
+  animation: bokehDrift 20s ease-in-out infinite;
+}
+@keyframes bokehDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  25% { transform: translate(15px, -20px) scale(1.1); opacity: 1; }
+  50% { transform: translate(-10px, 10px) scale(0.95); opacity: 0.7; }
+  75% { transform: translate(8px, 15px) scale(1.05); opacity: 0.9; }
+}
+
+/* ─── Elegant: Dust particles ─── */
+.elegant-dust {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.elegant-dust-particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: dustFloat 12s ease-in-out infinite;
+}
+@keyframes dustFloat {
+  0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+}
+
+/* ─── Festival: Spotlights ─── */
+.festival-spots {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.festival-spot {
+  position: absolute;
+  top: -20%;
+  width: 40%;
+  height: 140%;
+  transform-origin: top center;
+  animation: spotSwing 8s ease-in-out infinite alternate;
+}
+@keyframes spotSwing {
+  0% { transform: translateX(-50%) rotate(-15deg); }
+  100% { transform: translateX(-50%) rotate(15deg); }
+}
+
+/* ─── Festival: Confetti ─── */
+.festival-confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.festival-confetti-piece {
+  position: absolute;
+  top: -5%;
+  animation: confettiFall 8s linear infinite;
+  opacity: 0.6;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  5% { opacity: 0.7; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ─── Festival: Color Waves ─── */
+.festival-waves {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.festival-wave {
+  position: absolute;
+  bottom: -50%;
+  left: -10%;
+  width: 120%;
+  height: 100%;
+  border-radius: 40%;
+  background: var(--wave-color, rgba(255,255,255,0.03));
+  animation: wavePulse 10s ease-in-out infinite;
+}
+@keyframes wavePulse {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
+  50% { transform: translateY(-8%) rotate(3deg); opacity: 1; }
+}
+
+/* ─── Corporate: Grid ─── */
+.corporate-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, transparent 0px, transparent 59px, rgba(255,255,255,0.015) 60px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 59px, rgba(255,255,255,0.015) 60px);
+  opacity: 0.5;
+}
+
+/* ─── Corporate: Accent Line ─── */
+.corporate-accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 2;
+  animation: accentSlide 8s ease-in-out infinite;
+}
+@keyframes accentSlide {
+  0%, 100% { opacity: 0.3; transform: scaleX(0.5); }
+  50% { opacity: 0.6; transform: scaleX(1); }
+}
+
 /* ─── 2. MINIMAL — monochrome, architectural, stark ─── */
 .display-page.stage-minimal {
   background: #060608;

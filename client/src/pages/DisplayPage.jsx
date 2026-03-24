@@ -179,6 +179,185 @@ function Confetti() {
   );
 }
 
+/* ═══ STAGE-SPECIFIC VISUAL COMPONENTS ═══ */
+
+function ClubEqualizer({ themeRgb }) {
+  const bars = useMemo(() =>
+    Array.from({ length: 32 }, (_, i) => ({
+      id: i,
+      height: 20 + Math.random() * 60,
+      duration: 0.4 + Math.random() * 0.8,
+      delay: Math.random() * 0.5,
+    })), []);
+
+  return (
+    <div className="club-equalizer">
+      {bars.map(b => (
+        <div key={b.id} className="club-eq-bar" style={{
+          '--bar-h': `${b.height}%`,
+          background: `linear-gradient(0deg, rgba(${themeRgb},0.8), rgba(${themeRgb},0.2) 70%, transparent)`,
+          animationDuration: `${b.duration}s`,
+          animationDelay: `${b.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function ClubLasers({ themeRgb }) {
+  const lasers = useMemo(() => [
+    { angle: -25, left: '30%', delay: 0 },
+    { angle: 15, left: '50%', delay: 1.5 },
+    { angle: -10, left: '70%', delay: 3 },
+    { angle: 20, left: '20%', delay: 4.5 },
+    { angle: -30, left: '80%', delay: 2 },
+  ], []);
+
+  return (
+    <div className="club-lasers">
+      {lasers.map((l, i) => (
+        <div key={i} className="club-laser" style={{
+          left: l.left,
+          transform: `rotate(${l.angle}deg)`,
+          background: `linear-gradient(180deg, rgba(${themeRgb},0.6), rgba(${themeRgb},0.0))`,
+          animationDelay: `${l.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function ClubStrobe() {
+  return <div className="club-strobe" />;
+}
+
+function ElegantBokeh({ themeRgb }) {
+  const circles = useMemo(() =>
+    Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      left: 5 + Math.random() * 90,
+      top: 5 + Math.random() * 90,
+      size: 60 + Math.random() * 180,
+      duration: 18 + Math.random() * 15,
+      delay: Math.random() * 10,
+      opacity: 0.04 + Math.random() * 0.06,
+    })), []);
+
+  return (
+    <div className="elegant-bokeh">
+      {circles.map(c => (
+        <div key={c.id} className="elegant-bokeh-circle" style={{
+          left: `${c.left}%`, top: `${c.top}%`,
+          width: c.size, height: c.size,
+          background: `radial-gradient(circle, rgba(${themeRgb},${c.opacity}) 0%, rgba(${themeRgb},${c.opacity * 0.3}) 40%, transparent 70%)`,
+          animationDuration: `${c.duration}s`,
+          animationDelay: `${c.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function ElegantDust({ themeRgb }) {
+  const particles = useMemo(() =>
+    Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      size: 1 + Math.random() * 2,
+      duration: 10 + Math.random() * 15,
+      delay: Math.random() * 12,
+      opacity: 0.3 + Math.random() * 0.4,
+    })), []);
+
+  return (
+    <div className="elegant-dust">
+      {particles.map(p => (
+        <div key={p.id} className="elegant-dust-particle" style={{
+          left: `${p.left}%`,
+          width: p.size, height: p.size,
+          background: `rgba(${themeRgb},${p.opacity})`,
+          boxShadow: `0 0 ${p.size * 4}px rgba(${themeRgb},${p.opacity * 0.5})`,
+          animationDuration: `${p.duration}s`,
+          animationDelay: `${p.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function FestivalSpotlights({ themeRgb }) {
+  const spots = useMemo(() => [
+    { x: '0%', color: '255,60,100', delay: 0 },
+    { x: '100%', color: '60,120,255', delay: 2 },
+    { x: '50%', color: themeRgb, delay: 4 },
+    { x: '25%', color: '255,200,0', delay: 1 },
+    { x: '75%', color: '0,255,150', delay: 3 },
+  ], [themeRgb]);
+
+  return (
+    <div className="festival-spots">
+      {spots.map((s, i) => (
+        <div key={i} className="festival-spot" style={{
+          left: s.x,
+          background: `conic-gradient(from 250deg, transparent 0deg, rgba(${s.color},0.08) 15deg, transparent 30deg)`,
+          animationDelay: `${s.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function FestivalConfetti() {
+  const pieces = useMemo(() =>
+    Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      size: 4 + Math.random() * 8,
+      color: ['#ff3c64','#ffd000','#3c78ff','#00e87b','#b83cff','#ff8c00'][i % 6],
+      duration: 6 + Math.random() * 8,
+      delay: Math.random() * 8,
+      rotate: Math.random() * 360,
+    })), []);
+
+  return (
+    <div className="festival-confetti">
+      {pieces.map(p => (
+        <div key={p.id} className="festival-confetti-piece" style={{
+          left: `${p.left}%`,
+          width: p.size, height: p.size * 0.6,
+          background: p.color,
+          transform: `rotate(${p.rotate}deg)`,
+          animationDuration: `${p.duration}s`,
+          animationDelay: `${p.delay}s`,
+          borderRadius: Math.random() > 0.5 ? '50%' : '1px',
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function FestivalWaves({ themeRgb }) {
+  return (
+    <div className="festival-waves">
+      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.04)`, animationDelay: '0s' }} />
+      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.03)`, animationDelay: '2s' }} />
+      <div className="festival-wave" style={{ '--wave-color': `rgba(${themeRgb},0.02)`, animationDelay: '4s' }} />
+    </div>
+  );
+}
+
+function CorporateGrid() {
+  return <div className="corporate-grid" />;
+}
+
+function CorporateAccentLine({ themeRgb }) {
+  return (
+    <div className="corporate-accent-line" style={{
+      background: `linear-gradient(90deg, transparent, rgba(${themeRgb},0.4), transparent)`,
+    }} />
+  );
+}
+
 function OpeningOverlay({ lang, brandText, countdown, ceremonyEnd }) {
   const name = brandText || 'Remiks İstanbul';
   const [phase, setPhase] = useState(1);
@@ -1257,33 +1436,45 @@ export default function DisplayPage({ rejiMode = false }) {
         </div>
       )}
       {stageDesign !== 'minimal' && stageDesign !== 'corporate' && <div className="display-bg" />}
-      {stageDesign !== 'minimal' && stageDesign !== 'corporate' && <div className="floating-particles" aria-hidden="true" />}
-      {stageDesign !== 'minimal' && stageDesign !== 'corporate' && <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />}
+      {stageDesign === 'classic' && <div className="floating-particles" aria-hidden="true" />}
+      {stageDesign === 'classic' && <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />}
 
+      {/* Classic: original behavior tied to animLevel */}
       {stageDesign === 'classic' && <>
         {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={10} /></>}
         {animLevel === 'medium' && <><NeonOrbs themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={18} /></>}
         {animLevel === 'high' && <><DiscoParticles themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={30} /></>}
       </>}
 
+      {/* Elegant: soft bokeh + golden dust + ambient glow */}
       {stageDesign === 'elegant' && <>
+        <ElegantBokeh themeRgb={tc.rgb} />
+        <ElegantDust themeRgb={tc.rgb} />
         <AmbientGlow />
-        <Sparkles themeRgb={tc.rgb} count={20} />
-        <NeonOrbs themeRgb={tc.rgb} />
       </>}
 
+      {/* Club: equalizer + lasers + strobe + disco ball + particles */}
       {stageDesign === 'club' && <>
+        <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
+        <ClubEqualizer themeRgb={tc.rgb} />
+        <ClubLasers themeRgb={tc.rgb} />
+        <ClubStrobe />
         <DiscoParticles themeRgb={tc.rgb} />
-        <LightBeams themeColor={tc.primary} />
-        <NeonOrbs themeRgb={tc.rgb} />
-        <GeoShapes themeRgb={tc.rgb} />
-        <Sparkles themeRgb={tc.rgb} count={40} />
+        <Sparkles themeRgb={tc.rgb} count={30} />
       </>}
 
+      {/* Festival: spotlights + confetti + color waves */}
       {stageDesign === 'festival' && <>
-        <GeoShapes themeRgb={tc.rgb} />
-        <Sparkles themeRgb={tc.rgb} count={25} />
-        <DiscoParticles themeRgb={tc.rgb} />
+        <FestivalSpotlights themeRgb={tc.rgb} />
+        <FestivalConfetti />
+        <FestivalWaves themeRgb={tc.rgb} />
+        <Sparkles themeRgb={tc.rgb} count={20} />
+      </>}
+
+      {/* Corporate: subtle grid + accent line */}
+      {stageDesign === 'corporate' && <>
+        <CorporateGrid />
+        <CorporateAccentLine themeRgb={tc.rgb} />
       </>}
 
       {showConfetti && <Confetti />}
