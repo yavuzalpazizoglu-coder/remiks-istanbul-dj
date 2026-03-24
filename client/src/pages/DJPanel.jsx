@@ -66,6 +66,7 @@ export default function DJPanel() {
   const chatEndRef = useRef(null);
 
   const [cardType, setCardType] = useState('request');
+  const [cardTypeOpen, setCardTypeOpen] = useState(false);
   const [cardSearchQuery, setCardSearchQuery] = useState('');
   const [cardSearchResults, setCardSearchResults] = useState([]);
   const [cardSelectedSong, setCardSelectedSong] = useState(null);
@@ -1456,14 +1457,22 @@ export default function DJPanel() {
         {/* ═══ RIGHT SIDEBAR: Display Card ═══ */}
         <div className="djc-dcard-sidebar">
           <div className="djc-dcard-sidebar-title">📺 {lang === 'tr' ? 'EKRAN KARTI' : 'DISPLAY CARD'}</div>
-          <div className="djc-dcard-types">
-            {CARD_TYPES.map(ct => (
-              <button key={ct.id}
-                className={`djc-dcard-type-btn ${cardType === ct.id ? 'active' : ''}`}
-                onClick={() => setCardType(ct.id)}>
-                {ct.icon} {lang === 'tr' ? ct.tr : ct.en}
-              </button>
-            ))}
+          <div className="djc-dcard-dropdown-wrap">
+            <button className="djc-dcard-dropdown-toggle" onClick={() => setCardTypeOpen(!cardTypeOpen)}>
+              <span>{CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}</span>
+              <span className={`djc-dcard-dropdown-arrow ${cardTypeOpen ? 'open' : ''}`}>▾</span>
+            </button>
+            {cardTypeOpen && (
+              <div className="djc-dcard-dropdown-menu">
+                {CARD_TYPES.map(ct => (
+                  <button key={ct.id}
+                    className={`djc-dcard-dropdown-item ${cardType === ct.id ? 'active' : ''}`}
+                    onClick={() => { setCardType(ct.id); setCardTypeOpen(false); }}>
+                    {ct.icon} {lang === 'tr' ? ct.tr : ct.en}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           {spotifyEnabled && (
             <div className="djc-dcard-field">

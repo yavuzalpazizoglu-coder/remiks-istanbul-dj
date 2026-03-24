@@ -1,0 +1,16 @@
+---
+description: Auto deploy after every code change - build, commit, push
+alwaysApply: true
+---
+
+# Auto Deploy Mode
+
+After completing ANY code change (JSX, CSS, JS, server, etc.), ALWAYS run the full deploy pipeline automatically without waiting for the user to ask:
+
+1. **Build**: `cd client && npm run build`
+2. **Stage**: `git add -A`
+3. **Commit**: `git commit` with a concise message describing the changes
+4. **Push**: `git push origin main`
+
+Do NOT ask "should I deploy?" — just do it automatically after every change.
+If the build fails, fix the error first, then retry the pipeline.
