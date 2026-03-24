@@ -910,13 +910,20 @@ export default function DisplayPage({ rejiMode = false }) {
     });
 
     socket.on('display-card', (card) => {
-      setDisplayCard(card);
+      setDisplayCard({ ...card, _state: 'entering' });
+      requestAnimationFrame(() => {
+        setTimeout(() => setDisplayCard(prev => prev ? { ...prev, _state: 'visible' } : null), 50);
+      });
       if (displayCardTimer.current) clearTimeout(displayCardTimer.current);
-      displayCardTimer.current = setTimeout(() => setDisplayCard(null), (card.duration || 45) * 1000);
+      displayCardTimer.current = setTimeout(() => {
+        setDisplayCard(prev => prev ? { ...prev, _state: 'exiting' } : null);
+        setTimeout(() => setDisplayCard(null), 600);
+      }, (card.duration || 45) * 1000);
     });
 
     socket.on('dismiss-card', () => {
-      setDisplayCard(null);
+      setDisplayCard(prev => prev ? { ...prev, _state: 'exiting' } : null);
+      setTimeout(() => setDisplayCard(null), 600);
       if (displayCardTimer.current) clearTimeout(displayCardTimer.current);
     });
     socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
@@ -1057,9 +1064,10 @@ export default function DisplayPage({ rejiMode = false }) {
         const senderInitial = displayCard.sender ? displayCard.sender.charAt(0).toUpperCase() : '';
 
         return (
-          <div className={`dcard-overlay dcard-type-${displayCard.type}`}>
+          <div className={`dcard-overlay dcard-type-${displayCard.type} dcard-${displayCard._state || 'visible'}`}>
             <div className="dcard-backdrop" />
             <div className="dcard-container">
+              <div className="dcard-shimmer" />
               <div className="dcard-badge">
                 <span className="dcard-badge-icon">{ct.icon}</span>
                 <span className="dcard-badge-label">{lang === 'tr' ? ct.tr : ct.en}</span>
