@@ -4,7 +4,9 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
 import * as db from './db.js';
 import { searchSpotify, isSpotifyConfigured } from './spotify.js';
 
@@ -316,6 +318,62 @@ app.put('/api/events/:slug/animation', djAuth, (req, res) => {
     const event = db.updateAnimationLevel(req.params.slug, level);
     io.to(req.params.slug).emit('animation-changed', { level });
     res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/events/:slug/stage-design', djAuth, (req, res) => {
+  try {
+    const { design } = req.body;
+    const valid = ['classic', 'minimal', 'elegant', 'club', 'festival', 'corporate'];
+    if (!valid.includes(design)) return res.status(400).json({ error: 'Invalid design' });
+    const event = db.updateStageDesign(req.params.slug, design);
+    io.to(req.params.slug).emit('stage-design-changed', { design });
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const logoUpload = multer({
+  storage: multer.diskStorage({
+    destination: path.join(__dirname, 'public/logos/events'),
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname).toLowerCase();
+      cb(null, `${req.params.slug}${ext}`);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, allowed.includes(ext));
+  },
+});
+
+app.post('/api/events/:slug/logo', djAuth, logoUpload.single('logo'), (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    const logoPath = `/logos/events/${req.file.filename}`;
+    const event = db.updateEventLogo(req.params.slug, logoPath);
+    io.to(req.params.slug).emit('logo-changed', { logo: logoPath });
+    res.json({ logo: logoPath, event });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/events/:slug/logo', djAuth, (req, res) => {
+  try {
+    const event = db.getEventBySlug(req.params.slug);
+    if (event?.event_logo) {
+      const filePath = path.join(__dirname, 'public', event.event_logo);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    }
+    const updated = db.updateEventLogo(req.params.slug, '');
+    io.to(req.params.slug).emit('logo-changed', { logo: '' });
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

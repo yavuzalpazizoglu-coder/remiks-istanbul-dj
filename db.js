@@ -107,6 +107,18 @@ try {
 }
 
 try {
+  db.prepare("SELECT stage_design FROM events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE events ADD COLUMN stage_design TEXT DEFAULT 'classic'");
+}
+
+try {
+  db.prepare("SELECT event_logo FROM events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE events ADD COLUMN event_logo TEXT DEFAULT ''");
+}
+
+try {
   db.prepare("SELECT genre FROM requests LIMIT 1").get();
 } catch {
   db.exec("ALTER TABLE requests ADD COLUMN genre TEXT DEFAULT ''");
@@ -264,6 +276,16 @@ export function updateTheme(slug, theme) {
 
 export function updateAnimationLevel(slug, level) {
   db.prepare('UPDATE events SET animation_level = ? WHERE slug = ?').run(level, slug);
+  return getEventBySlug(slug);
+}
+
+export function updateStageDesign(slug, design) {
+  db.prepare('UPDATE events SET stage_design = ? WHERE slug = ?').run(design, slug);
+  return getEventBySlug(slug);
+}
+
+export function updateEventLogo(slug, logoPath) {
+  db.prepare('UPDATE events SET event_logo = ? WHERE slug = ?').run(logoPath, slug);
   return getEventBySlug(slug);
 }
 

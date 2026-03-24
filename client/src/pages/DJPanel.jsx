@@ -36,6 +36,8 @@ export default function DJPanel() {
   const [requestLimit, setRequestLimit] = useState(2);
   const [theme, setTheme] = useState('cyan');
   const [animationLevel, setAnimationLevel] = useState('high');
+  const [stageDesign, setStageDesign] = useState('classic');
+  const [eventLogo, setEventLogo] = useState('');
   const [eventHistory, setEventHistory] = useState([]);
   const [openingOn, setOpeningOn] = useState(false);
   const [closingOn, setClosingOn] = useState(false);
@@ -136,6 +138,8 @@ export default function DJPanel() {
       setRequestLimit(data.request_limit || 2);
       setTheme(data.theme || 'cyan');
       setAnimationLevel(data.animation_level || 'high');
+      setStageDesign(data.stage_design || 'classic');
+      setEventLogo(data.event_logo || '');
       await fetchRequests(eventSlug);
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
     } catch (err) {
@@ -573,6 +577,43 @@ export default function DJPanel() {
         body: JSON.stringify({ level }),
       });
     } catch (err) { console.warn('changeAnimationLevel failed:', err); }
+  };
+
+  const changeStageDesign = async (design) => {
+    setStageDesign(design);
+    try {
+      await fetch(`${API}/api/events/${slug}/stage-design`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ design }),
+      });
+    } catch (err) { console.warn('changeStageDesign failed:', err); }
+  };
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('logo', file);
+    try {
+      const res = await fetch(`${API}/api/events/${slug}/logo`, {
+        method: 'POST',
+        headers: { 'x-dj-password': password },
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.logo) setEventLogo(data.logo);
+    } catch (err) { console.warn('Logo upload failed:', err); }
+  };
+
+  const removeEventLogo = async () => {
+    try {
+      await fetch(`${API}/api/events/${slug}/logo`, {
+        method: 'DELETE',
+        headers: { 'x-dj-password': password },
+      });
+      setEventLogo('');
+    } catch (err) { console.warn('Logo remove failed:', err); }
   };
 
   const nightApi = useCallback(async (endpoint, body = {}) => {
@@ -1254,15 +1295,39 @@ export default function DJPanel() {
                       </div>
                     </div>
                     <div className="djc-field djc-field-inline">
-                      <label className="djc-field-label">{lang === 'tr' ? 'Tören Süresi' : 'Ceremony'}</label>
-                      <div className="djc-fx-toggle">
-                        {[1, 3, 5, 10, 15].map(m => (
-                          <button key={m}
-                            className={`djc-fx-btn ${ceremonyMinutes === m ? 'active' : ''}`}
-                            onClick={() => updateCeremonyMinutes(m)}>
-                            {m} dk
+                      <label className="djc-field-label">{lang === 'tr' ? 'Sahne Tasarımı' : 'Stage Design'}</label>
+                      <div className="djc-stage-design-grid">
+                        {[
+                          { id: 'classic', icon: '🎵', tr: 'Klasik', en: 'Classic' },
+                          { id: 'minimal', icon: '◻️', tr: 'Minimal', en: 'Minimal' },
+                          { id: 'elegant', icon: '✨', tr: 'Elegant', en: 'Elegant' },
+                          { id: 'club', icon: '🔥', tr: 'Club', en: 'Club' },
+                          { id: 'festival', icon: '🎪', tr: 'Festival', en: 'Festival' },
+                          { id: 'corporate', icon: '🏢', tr: 'Kurumsal', en: 'Corporate' },
+                        ].map(d => (
+                          <button key={d.id}
+                            className={`djc-stage-btn ${stageDesign === d.id ? 'active' : ''} djc-stage-${d.id}`}
+                            onClick={() => changeStageDesign(d.id)}>
+                            <span className="djc-stage-icon">{d.icon}</span>
+                            <span className="djc-stage-name">{lang === 'tr' ? d.tr : d.en}</span>
                           </button>
                         ))}
+                      </div>
+                    </div>
+                    <div className="djc-field djc-field-inline">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Logo' : 'Logo'}</label>
+                      <div className="djc-logo-upload-row">
+                        {eventLogo && (
+                          <div className="djc-logo-preview-wrap">
+                            <img src={eventLogo} alt="Logo" className="djc-logo-preview-img" />
+                            <button className="djc-logo-remove" onClick={removeEventLogo} title={lang === 'tr' ? 'Logoyu kaldır' : 'Remove logo'}>✕</button>
+                          </div>
+                        )}
+                        <label className="djc-logo-upload-btn">
+                          {eventLogo ? (lang === 'tr' ? 'Değiştir' : 'Change') : (lang === 'tr' ? '📁 Yükle' : '📁 Upload')}
+                          <input type="file" accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp" hidden
+                            onChange={handleLogoUpload} />
+                        </label>
                       </div>
                     </div>
                   </div>

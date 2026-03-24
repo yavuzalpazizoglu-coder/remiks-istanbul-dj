@@ -773,6 +773,8 @@ export default function DisplayPage({ rejiMode = false }) {
   const [playedId, setPlayedId] = useState(null);
   const [theme, setTheme] = useState('cyan');
   const [animLevel, setAnimLevel] = useState('high');
+  const [stageDesign, setStageDesign] = useState('classic');
+  const [eventLogo, setEventLogo] = useState('');
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
   const [nightState, setNightState] = useState(null);
@@ -815,6 +817,8 @@ export default function DisplayPage({ rejiMode = false }) {
       setRejiTicker(eventData.ticker_texts || '');
       setTheme(eventData.theme || 'cyan');
       setAnimLevel(eventData.animation_level || 'high');
+      setStageDesign(eventData.stage_design || 'classic');
+      setEventLogo(eventData.event_logo || '');
       setRequests((reqData.requests || []).filter(r => r.status === 'approved'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
     } catch (err) { console.warn('DisplayPage fetchData failed:', err); }
@@ -883,6 +887,8 @@ export default function DisplayPage({ rejiMode = false }) {
     socket.on('ticker-updated', ({ ticker_texts }) => setTickerTexts(ticker_texts || ''));
     socket.on('theme-changed', ({ theme }) => setTheme(theme));
     socket.on('animation-changed', ({ level }) => setAnimLevel(level));
+    socket.on('stage-design-changed', ({ design }) => setStageDesign(design));
+    socket.on('logo-changed', ({ logo }) => setEventLogo(logo));
 
     socket.on('music-mode', ({ mode, active, djPhotos }) => {
       setActiveMusicMode(active ? mode : null);
@@ -949,7 +955,7 @@ export default function DisplayPage({ rejiMode = false }) {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
-      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('ceremony'); socket.off('music-mode');
+      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('ceremony'); socket.off('music-mode');
       socket.off('night-update'); socket.off('night-vote'); socket.off('crew-chat');
       socket.off('reji-blackout'); socket.off('reji-spotlight'); socket.off('reji-countdown');
       socket.off('display-card'); socket.off('dismiss-card');
@@ -1045,7 +1051,7 @@ export default function DisplayPage({ rejiMode = false }) {
   };
 
   return (
-    <div className="display-page" style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow, '--theme-rgb': tc.rgb }}>
+    <div className={`display-page stage-${stageDesign}`} style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow, '--theme-rgb': tc.rgb }}>
       {blackout && <div className="reji-blackout-overlay" />}
       {spotlightText && (
         <div className="reji-spotlight-overlay">
@@ -1250,12 +1256,36 @@ export default function DisplayPage({ rejiMode = false }) {
           LIVE
         </div>
       )}
-      <div className="display-bg" />
-      <div className="floating-particles" aria-hidden="true" />
-      <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
-      {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={10} /></>}
-      {animLevel === 'medium' && <><NeonOrbs themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={18} /></>}
-      {animLevel === 'high' && <><DiscoParticles themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={30} /></>}
+      {stageDesign !== 'minimal' && stageDesign !== 'corporate' && <div className="display-bg" />}
+      {stageDesign !== 'minimal' && stageDesign !== 'corporate' && <div className="floating-particles" aria-hidden="true" />}
+      {stageDesign !== 'minimal' && stageDesign !== 'corporate' && <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />}
+
+      {stageDesign === 'classic' && <>
+        {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={10} /></>}
+        {animLevel === 'medium' && <><NeonOrbs themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={18} /></>}
+        {animLevel === 'high' && <><DiscoParticles themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={30} /></>}
+      </>}
+
+      {stageDesign === 'elegant' && <>
+        <AmbientGlow />
+        <Sparkles themeRgb={tc.rgb} count={20} />
+        <NeonOrbs themeRgb={tc.rgb} />
+      </>}
+
+      {stageDesign === 'club' && <>
+        <DiscoParticles themeRgb={tc.rgb} />
+        <LightBeams themeColor={tc.primary} />
+        <NeonOrbs themeRgb={tc.rgb} />
+        <GeoShapes themeRgb={tc.rgb} />
+        <Sparkles themeRgb={tc.rgb} count={40} />
+      </>}
+
+      {stageDesign === 'festival' && <>
+        <GeoShapes themeRgb={tc.rgb} />
+        <Sparkles themeRgb={tc.rgb} count={25} />
+        <DiscoParticles themeRgb={tc.rgb} />
+      </>}
+
       {showConfetti && <Confetti />}
 
       {!socketConnected && (
@@ -1272,7 +1302,11 @@ export default function DisplayPage({ rejiMode = false }) {
         {/* ─── Logo + Event Name + Motto (top center) + LIVE badge (top right) ─── */}
         <div className="dsp-topbar">
           <div className="dsp-topbar-center">
-            <span className="dsp-brand-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
+            {eventLogo ? (
+              <img src={eventLogo} alt="Logo" className="dsp-event-logo" />
+            ) : (
+              <span className="dsp-brand-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
+            )}
             <motion.div className="dsp-event-name"
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
               {displayName}
