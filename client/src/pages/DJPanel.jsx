@@ -1141,8 +1141,9 @@ export default function DJPanel() {
 
         </div>
 
-        {/* ═══ RIGHT: Request List ═══ */}
+        {/* ═══ RIGHT: Request List + Settings ═══ */}
         <div className="djc-right">
+          <div className="djc-right-main">
           <div className="djc-list-header">
             <span>🎵 {T('dj.requests_list')} ({allActiveRequests.length})</span>
           </div>
@@ -1185,7 +1186,6 @@ export default function DJPanel() {
           )}
 
           {/* ═══ Settings & Appearance (in right panel) — TAB SYSTEM ═══ */}
-          <div className="djc-settings-chat-row">
             <div className="djc-settings-bottom">
             <div className="djc-settings-bottom-divider" />
             <div className="right-panel-tabs">
@@ -1425,6 +1425,7 @@ export default function DJPanel() {
               );
             })()}
           </div>
+          </div>
           <div className="djc-crew-chat-panel">
             <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
             <div className="djc-crew-chat-messages">
@@ -1443,7 +1444,6 @@ export default function DJPanel() {
                 placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
               <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
             </div>
-          </div>
           </div>
         </div>
 
