@@ -1451,6 +1451,23 @@ export default function DJPanel() {
         <div className="djc-dcard-sidebar">
           <div className="djc-dcard-sidebar-top">
             <div className="djc-dcard-sidebar-title">📺 {lang === 'tr' ? 'EKRAN KARTI' : 'DISPLAY CARD'}</div>
+            <div className="djc-dcard-live-preview">
+              <div className="djc-dcard-lp-label">{lang === 'tr' ? 'ÖNİZLEME' : 'PREVIEW'}</div>
+              <div className={`djc-dcard-lp-card dcard-preview-${cardType}`}>
+                <div className="djc-dcard-lp-badge">
+                  {CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}
+                </div>
+                {cardSelectedSong?.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-lp-album" />}
+                {cardSelectedSong && <div className="djc-dcard-lp-song">{cardSelectedSong.name}</div>}
+                {cardSelectedSong?.artist && <div className="djc-dcard-lp-artist">{cardSelectedSong.artist}</div>}
+                {cardRecipient && <div className="djc-dcard-lp-recipient">{cardRecipient}</div>}
+                {cardMessage && <div className="djc-dcard-lp-message">"{cardMessage}"</div>}
+                {cardSender && <div className="djc-dcard-lp-sender">{lang === 'tr' ? 'İsteyen' : 'From'}: {cardSender}</div>}
+                {!cardSelectedSong && !cardRecipient && !cardMessage && !cardSender && (
+                  <div className="djc-dcard-lp-empty">{lang === 'tr' ? 'Formu doldurun...' : 'Fill the form...'}</div>
+                )}
+              </div>
+            </div>
             <div className="djc-dcard-dropdown-wrap">
               <button className="djc-dcard-dropdown-toggle" onClick={() => setCardTypeOpen(!cardTypeOpen)}>
                 <span>{CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}</span>
@@ -1524,23 +1541,6 @@ export default function DJPanel() {
               <button className="djc-dcard-btn djc-dcard-btn-reset" onClick={resetCardForm}>
                 🔄
               </button>
-            </div>
-            <div className="djc-dcard-live-preview">
-              <div className="djc-dcard-lp-label">{lang === 'tr' ? 'ÖNİZLEME' : 'PREVIEW'}</div>
-              <div className={`djc-dcard-lp-card dcard-preview-${cardType}`}>
-                <div className="djc-dcard-lp-badge">
-                  {CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}
-                </div>
-                {cardSelectedSong?.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-lp-album" />}
-                {cardSelectedSong && <div className="djc-dcard-lp-song">{cardSelectedSong.name}</div>}
-                {cardSelectedSong?.artist && <div className="djc-dcard-lp-artist">{cardSelectedSong.artist}</div>}
-                {cardRecipient && <div className="djc-dcard-lp-recipient">{cardRecipient}</div>}
-                {cardMessage && <div className="djc-dcard-lp-message">"{cardMessage}"</div>}
-                {cardSender && <div className="djc-dcard-lp-sender">{lang === 'tr' ? 'İsteyen' : 'From'}: {cardSender}</div>}
-                {!cardSelectedSong && !cardRecipient && !cardMessage && !cardSender && (
-                  <div className="djc-dcard-lp-empty">{lang === 'tr' ? 'Formu doldurun...' : 'Fill the form...'}</div>
-                )}
-              </div>
             </div>
           </div>
         </div>
