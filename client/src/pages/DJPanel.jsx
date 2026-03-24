@@ -46,17 +46,7 @@ export default function DJPanel() {
   const [selectedDJs, setSelectedDJs] = useState([]);
   const [panelTheme, setPanelTheme] = useState(() => localStorage.getItem('remiks_panel_theme') || 'classic');
   const [connectedCount, setConnectedCount] = useState(0);
-  const [rightTab, setRightTab] = useState('settings');
-  const [nightState, setNightState] = useState(null);
-  const [nightInput, setNightInput] = useState('');
-  const [nightArtist, setNightArtist] = useState('');
-  const [nightDuration, setNightDuration] = useState(180);
-  const [nightQuery, setNightQuery] = useState('');
-  const [nightSearchResults, setNightSearchResults] = useState([]);
-  const [nightSelectedSong, setNightSelectedSong] = useState(null);
-  const [nightSearching, setNightSearching] = useState(false);
   const [spotifyEnabled, setSpotifyEnabled] = useState(false);
-  const nightSearchTimer = useRef(null);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
   const previewMonitorRef = useRef(null);
@@ -178,22 +168,8 @@ export default function DJPanel() {
 
     socket.on('room-count', ({ count }) => setConnectedCount(count));
 
-    socket.on('night-update', (data) => setNightState(data));
     socket.on('crew-chat', (msg) => {
       setChatMessages(prev => [...prev.slice(-50), msg]);
-    });
-    socket.on('night-vote', ({ roundNumber, finalists, totalVotes }) => {
-      setNightState(prev => {
-        if (!prev) return prev;
-        const rounds = prev.rounds.map(r => {
-          if (r.roundNumber !== roundNumber) return r;
-          return { ...r, finalists: r.finalists.map(f => {
-            const updated = finalists.find(u => u.id === f.id);
-            return updated ? { ...f, votes: updated.votes } : f;
-          }), totalVotes };
-        });
-        return { ...prev, rounds };
-      });
     });
 
     return () => {
@@ -204,8 +180,6 @@ export default function DJPanel() {
       socket.off('ceremony');
       socket.off('music-mode');
       socket.off('room-count');
-      socket.off('night-update');
-      socket.off('night-vote');
       socket.off('crew-chat');
       socket.disconnect();
     };
@@ -616,85 +590,9 @@ export default function DJPanel() {
     } catch (err) { console.warn('Logo remove failed:', err); }
   };
 
-  const nightApi = useCallback(async (endpoint, body = {}) => {
-    try {
-      const res = await fetch(`${API}/api/events/${slug}/night/${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      if (!res.ok) { showToast(data.error || 'Error'); return null; }
-      return data;
-    } catch (err) { showToast(err.message); return null; }
-  }, [slug, password]);
-
-  const fetchNightStatus = useCallback(async () => {
-    if (!slug) return;
-    try {
-      const res = await fetch(`${API}/api/events/${slug}/night/status`);
-      if (res.ok) setNightState(await res.json());
-    } catch {}
-  }, [slug]);
-
-  useEffect(() => { if (slug && event) fetchNightStatus(); }, [slug, event, fetchNightStatus]);
-
   useEffect(() => {
     fetch(`${API}/api/config`).then(r => r.json()).then(d => setSpotifyEnabled(d.spotifyEnabled)).catch(() => {});
   }, []);
-
-  const handleNightSearch = (value) => {
-    setNightQuery(value);
-    setNightSelectedSong(null);
-    if (nightSearchTimer.current) clearTimeout(nightSearchTimer.current);
-    if (!value.trim() || !spotifyEnabled) { setNightSearchResults([]); return; }
-    setNightSearching(true);
-    nightSearchTimer.current = setTimeout(async () => {
-      try {
-        const res = await fetch(`${API}/api/spotify/search?q=${encodeURIComponent(value)}`);
-        if (!res.ok) throw new Error();
-        setNightSearchResults(await res.json());
-      } catch { setNightSearchResults([]); }
-      finally { setNightSearching(false); }
-    }, 400);
-  };
-
-  useEffect(() => {
-    const round = nightState?.rounds?.[nightState.currentRound - 1];
-    if (round?.phase !== 'voting' || !round?.endTime) return;
-    const interval = setInterval(() => {
-      if (Date.now() >= round.endTime) { clearInterval(interval); nightStop(); }
-      setNightState(prev => ({ ...prev }));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [nightState?.rounds?.[nightState?.currentRound - 1]?.phase, nightState?.rounds?.[nightState?.currentRound - 1]?.endTime]);
-
-  const nightAddSong = async () => {
-    const title = nightSelectedSong ? nightSelectedSong.name : nightInput.trim();
-    const artist = nightSelectedSong ? nightSelectedSong.artist : nightArtist.trim();
-    if (!title) return;
-    const result = await nightApi('finalists', {
-      action: 'add',
-      title,
-      artist,
-      albumArt: nightSelectedSong?.albumArt || '',
-      spotifyId: nightSelectedSong?.spotifyId || '',
-    });
-    if (result) {
-      setNightInput(''); setNightArtist(''); setNightQuery('');
-      setNightSearchResults([]); setNightSelectedSong(null);
-    }
-  };
-
-  const nightRemoveSong = (songId) => nightApi('finalists', { action: 'remove', songId });
-  const nightStart = () => nightApi('start', { duration: nightDuration });
-  const nightStop = () => nightApi('stop');
-  const nightFullscreen = (show) => nightApi('fullscreen', { show });
-  const nightNewRound = () => {
-    const dj2Name = DJ_PHOTOS[1]?.name || 'DJ 2';
-    nightApi('new-round', { djName: dj2Name });
-  };
-  const nightReset = () => nightApi('reset');
 
   const handleTickerChange = (val) => {
     setTickerTexts(val);
@@ -1231,20 +1129,10 @@ export default function DJPanel() {
             </div>
           )}
 
-          {/* ═══ Settings & Appearance (in right panel) — TAB SYSTEM ═══ */}
+          {/* ═══ Settings & Appearance ═══ */}
             <div className="djc-settings-bottom">
             <div className="djc-settings-bottom-divider" />
-            <div className="right-panel-tabs">
-              <button className={`right-panel-tab ${rightTab === 'settings' ? 'active' : ''}`} onClick={() => setRightTab('settings')}>
-                {lang === 'tr' ? 'Ayarlar' : 'Settings'}
-              </button>
-              <button className={`right-panel-tab night-tab ${rightTab === 'night' ? 'active' : ''} ${nightState?.rounds?.some(r => r.phase === 'voting') ? 'has-active-vote' : ''}`} onClick={() => setRightTab('night')}>
-                ★ {lang === 'tr' ? 'Gecenin Şarkısı' : 'Song of the Night'}
-              </button>
-            </div>
 
-            {/* ─── Settings Tab ─── */}
-            {rightTab === 'settings' && (
                 <div className="djc-settings-main">
                   <div className="djc-settings-split-row">
                     {/* ─── Left: Ayarlar ─── */}
@@ -1353,162 +1241,6 @@ export default function DJPanel() {
                     </div>
                   </div>
                 </div>
-            )}
-
-            {/* ─── Song of the Night Tab ─── */}
-            {rightTab === 'night' && (() => {
-              const round = nightState?.rounds?.[nightState.currentRound - 1];
-              const phase = round?.phase || 'idle';
-              const finalists = round?.finalists || [];
-              const maxVotes = Math.max(...finalists.map(f => f.votes), 1);
-              const leaderId = finalists.length > 0 ? [...finalists].sort((a, b) => b.votes - a.votes)[0]?.id : null;
-              const winner = round?.winnerId ? finalists.find(f => f.id === round.winnerId) : null;
-              const elapsed = round?.startedAt ? (Date.now() - round.startedAt) / 1000 : 0;
-              const remaining = round?.endTime ? Math.max(0, (round.endTime - Date.now()) / 1000) : 0;
-              const progress = round?.duration ? Math.min(100, (elapsed / round.duration) * 100) : 0;
-              const mins = Math.floor(remaining / 60);
-              const secs = Math.floor(remaining % 60);
-              const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-              return (
-                <div className="night-panel">
-                  {phase === 'idle' && (
-                    <>
-                      <div className="night-round-label">
-                        {lang === 'tr' ? `Tur: ${round?.djName || 'DJ 1'}` : `Round: ${round?.djName || 'DJ 1'}`}
-                      </div>
-                      {spotifyEnabled ? (
-                        <div className="night-spotify-search">
-                          <div className="night-input-row">
-                            <input className="input night-input" placeholder={lang === 'tr' ? 'Spotify\'da ara...' : 'Search Spotify...'} value={nightQuery} onChange={e => handleNightSearch(e.target.value)} disabled={finalists.length >= 3} />
-                            <button className="night-add-btn" onClick={nightAddSong} disabled={finalists.length >= 3 || (!nightSelectedSong && !nightInput.trim())}>+</button>
-                          </div>
-                          {nightSearching && <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 11, padding: 4 }}>...</div>}
-                          {nightSearchResults.length > 0 && !nightSelectedSong && (
-                            <div className="night-search-results">
-                              {nightSearchResults.map(song => (
-                                <div key={song.spotifyId} className="night-search-item" onClick={() => { setNightSelectedSong(song); setNightSearchResults([]); setNightQuery(song.name); }}>
-                                  {song.albumArt && <img src={song.albumArt} alt="" className="night-search-art" />}
-                                  <div className="night-search-info">
-                                    <div className="night-search-name">{song.name}</div>
-                                    <div className="night-search-artist">{song.artist}</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          {nightSelectedSong && (
-                            <div className="night-selected-song">
-                              {nightSelectedSong.albumArt && <img src={nightSelectedSong.albumArt} alt="" className="night-search-art" />}
-                              <div className="night-search-info">
-                                <div className="night-search-name">{nightSelectedSong.name}</div>
-                                <div className="night-search-artist">{nightSelectedSong.artist}</div>
-                              </div>
-                              <button className="night-finalist-remove" onClick={() => { setNightSelectedSong(null); setNightQuery(''); }}>✕</button>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="night-input-row">
-                          <input className="input night-input" placeholder={lang === 'tr' ? 'Şarkı adı' : 'Song title'} value={nightInput} onChange={e => setNightInput(e.target.value)} disabled={finalists.length >= 3} />
-                          <input className="input night-input night-input-sm" placeholder={lang === 'tr' ? 'Sanatçı' : 'Artist'} value={nightArtist} onChange={e => setNightArtist(e.target.value)} disabled={finalists.length >= 3} />
-                          <button className="night-add-btn" onClick={nightAddSong} disabled={finalists.length >= 3 || !nightInput.trim()}>+</button>
-                        </div>
-                      )}
-                      <ul className="night-finalist-list">
-                        {finalists.map((f, i) => (
-                          <li key={f.id} className="night-finalist-item">
-                            {f.albumArt && <img src={f.albumArt} alt="" className="night-finalist-art" />}
-                            <span className="night-finalist-num">{i + 1}.</span>
-                            <span className="night-finalist-info">
-                              <span className="night-finalist-title">{f.title}</span>
-                              {f.artist && <span className="night-finalist-artist"> — {f.artist}</span>}
-                            </span>
-                            <button className="night-finalist-remove" onClick={() => nightRemoveSong(f.id)}>✕</button>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="night-duration-row">
-                        <span>{lang === 'tr' ? 'Süre:' : 'Duration:'}</span>
-                        <select className="night-duration-select" value={nightDuration} onChange={e => setNightDuration(Number(e.target.value))}>
-                          <option value={120}>2 dk</option>
-                          <option value={180}>3 dk</option>
-                          <option value={300}>5 dk</option>
-                          <option value={600}>10 dk</option>
-                        </select>
-                      </div>
-                      <button className="night-start-btn" onClick={nightStart} disabled={finalists.length !== 3}>
-                        ▶ {lang === 'tr' ? 'Oylamayı Başlat' : 'Start Voting'}
-                      </button>
-                    </>
-                  )}
-
-                  {phase === 'voting' && (
-                    <>
-                      <div className="night-active-header">
-                        <span className="night-active-badge">★ {lang === 'tr' ? 'AKTİF' : 'ACTIVE'}</span>
-                        <span className="night-active-round">{round?.djName} {lang === 'tr' ? 'Turu' : 'Round'}</span>
-                      </div>
-                      {finalists.map((f, i) => (
-                        <div key={f.id} className={`night-vote-item ${f.id === leaderId ? 'leading' : ''}`}>
-                          {f.albumArt && <img src={f.albumArt} alt="" className="night-vote-art" />}
-                          <span style={{ marginRight: 6, minWidth: 14 }}>{i + 1}.</span>
-                          {f.id === leaderId && <span className="night-leader-dot" />}
-                          <div className="night-vote-info">
-                            <span className="night-vote-name">{f.title}</span>
-                            <span className="night-vote-artist">{f.artist}</span>
-                          </div>
-                          <span className="night-vote-count">{f.votes} {lang === 'tr' ? 'oy' : ''}</span>
-                        </div>
-                      ))}
-                      <div className="night-countdown-row">
-                        <span className={`night-countdown-time ${remaining < 30 ? 'urgent' : ''}`}>⏱ {timeStr}</span>
-                        <span>{lang === 'tr' ? 'Toplam' : 'Total'}: {round?.totalVotes || 0}</span>
-                      </div>
-                      <div className="night-progress">
-                        <div className={`night-progress-fill ${remaining < 30 ? 'urgent' : ''}`} style={{ width: `${progress}%` }} />
-                      </div>
-                      <div className="night-controls">
-                        <button className="night-stop-btn" onClick={nightStop}>⏹ {lang === 'tr' ? 'Bitir' : 'End'}</button>
-                      </div>
-                    </>
-                  )}
-
-                  {phase === 'finished' && (
-                    <>
-                      <div className="night-active-header">
-                        <span className="night-active-badge">★ {lang === 'tr' ? 'KAZANAN' : 'WINNER'}</span>
-                        <span className="night-active-round">{round?.djName} {lang === 'tr' ? 'Turu' : 'Round'}</span>
-                      </div>
-                      {winner && (
-                        <div className="night-winner-display">
-                          {winner.albumArt && <img src={winner.albumArt} alt="" className="night-winner-art" />}
-                          <div>
-                            <div className="night-winner-icon">🏆</div>
-                            <div className="night-winner-name">{winner.title}</div>
-                            <div className="night-winner-artist">{winner.artist}</div>
-                            <div className="night-winner-votes">{winner.votes} {lang === 'tr' ? 'oy' : 'votes'}</div>
-                          </div>
-                        </div>
-                      )}
-                      <div className="night-result-actions">
-                        <button className="night-result-btn primary" onClick={() => nightFullscreen(true)}>
-                          {lang === 'tr' ? 'Tam Ekran Göster' : 'Show Fullscreen'}
-                        </button>
-                        {nightState?.currentRound < 2 && (
-                          <button className="night-result-btn" onClick={nightNewRound}>
-                            {lang === 'tr' ? `Yeni Tur Başlat (${DJ_PHOTOS[1]?.name || 'DJ 2'})` : `New Round (${DJ_PHOTOS[1]?.name || 'DJ 2'})`}
-                          </button>
-                        )}
-                        <button className="night-result-btn" onClick={() => { nightFullscreen(false); nightReset(); }}>
-                          {lang === 'tr' ? 'Kapat' : 'Close'}
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              );
-            })()}
           </div>
         </div>
 
