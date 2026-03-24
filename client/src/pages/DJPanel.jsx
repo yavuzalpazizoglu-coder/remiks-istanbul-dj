@@ -948,6 +948,12 @@ export default function DJPanel() {
         }} title={lang === 'tr' ? 'Misafir istek linkini kopyala' : 'Copy guest request link'}>
           📱 {lang === 'tr' ? 'MİSAFİR' : 'GUEST'}
         </button>
+        <button className="djc-reji-link-btn djc-display-link-btn" onClick={() => {
+          const url = `${window.location.origin}/display/${slug}`;
+          navigator.clipboard.writeText(url).then(() => showToast(lang === 'tr' ? 'Display linki kopyalandı!' : 'Display link copied!'));
+        }} title={lang === 'tr' ? 'Display ekran linkini kopyala' : 'Copy display screen link'}>
+          📺 {lang === 'tr' ? 'EKRAN' : 'DISPLAY'}
+        </button>
         <button className="djc-reji-link-btn" onClick={() => {
           const url = `${window.location.origin}/reji/${slug}`;
           const msg = lang === 'tr'
