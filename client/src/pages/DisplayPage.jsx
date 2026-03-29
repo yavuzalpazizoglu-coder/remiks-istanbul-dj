@@ -903,18 +903,20 @@ function SongCard({ req, rank, lang }) {
   }, [rank]);
 
   const tierClass = rank === 1 ? 'dsp-card-gold' : rank === 2 ? 'dsp-card-silver' : rank === 3 ? 'dsp-card-bronze' : '';
+  const rowGroup  = rank <= 3 ? 'dsp-row-t1' : rank <= 6 ? 'dsp-row-t2' : rank <= 9 ? 'dsp-row-t3' : 'dsp-row-t4';
 
   return (
     <motion.div
-      className={`dsp-song-card ${tierClass} ${voteFlash ? 'dsp-card-vote-flash' : ''}`}
+      className={`dsp-song-card ${tierClass} ${rowGroup} ${voteFlash ? 'dsp-card-vote-flash' : ''}`}
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       initial={{ opacity: 0, scale: 0.92 }}
       animate={{ opacity: 1, scale: 1 }}
     >
-      {/* Rank */}
+      {/* Rank — sıralama rozeti */}
       <div className={`dsp-card-rank dsp-card-rank-${tier}`}>
-        {rank}
+        <span className="dsp-card-rank-label">#</span>
+        <span className="dsp-card-rank-num">{rank}</span>
         {rankFlash && (
           <span className={rankFlash === 'up' ? 'dsp-card-rarrow dsp-rarrow-up' : 'dsp-card-rarrow dsp-rarrow-dn'}>
             {rankFlash === 'up' ? '▲' : '▼'}
@@ -937,14 +939,16 @@ function SongCard({ req, rank, lang }) {
       {/* Oy */}
       <div className="dsp-card-votes">
         <VoteFloat count={req.votes} />
-        <motion.span
-          className={`dsp-card-votes-num ${isTop3 ? 'dsp-card-votes-top' : ''}`}
-          key={req.votes}
-          initial={{ scale: 1.3 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.35 }}
-        >{req.votes}</motion.span>
-        <span className="dsp-card-votes-lbl">OY</span>
+        <div className="dsp-card-votes-box">
+          <motion.span
+            className={`dsp-card-votes-num ${isTop3 ? 'dsp-card-votes-top' : ''}`}
+            key={req.votes}
+            initial={{ scale: 1.3 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.35 }}
+          >{req.votes}</motion.span>
+          <span className="dsp-card-votes-lbl">OY</span>
+        </div>
         <div className="dsp-card-chg">
           {showDelta && delta > 0
             ? <motion.span className="dsp-chg-pill dsp-chg-green"
