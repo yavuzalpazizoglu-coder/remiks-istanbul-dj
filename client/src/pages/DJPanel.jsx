@@ -851,43 +851,66 @@ export default function DJPanel() {
           <div className="djc-sec">
             <div className="djc-sec-head">
               <span className="djc-sec-title"><strong>{lang === 'tr' ? 'KUMANDA' : 'BOOTH'}</strong> · {lang === 'tr' ? 'Kontrol' : 'Command'}</span>
+              <span className={`djc-ctrl-status-dot djc-ctrl-dot-${event.status}`} />
             </div>
-            <div className="djc-sec-body">
-              <div className="djc-booth-top">
-                <div className="djc-booth-buttons">
-                  {event.status === 'waiting' && (
-                    <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>{T('dj.start_requests')}</button>
-                  )}
-                  {event.status === 'countdown' && (
-                    <button className="btn btn-primary djc-btn" onClick={() => updateStatus('active')}>{T('dj.start_requests')}</button>
-                  )}
-                  {(event.status === 'active' || event.status === 'paused') && (
-                    <>
-                      <button className="btn btn-ghost djc-btn" onClick={() => updateStatus(event.status === 'paused' ? 'active' : 'paused')}>
-                        {event.status === 'paused' ? T('dj.resume') : T('dj.pause')}
-                      </button>
-                      <button className="btn btn-danger djc-btn" onClick={() => updateStatus('ended')}>{T('dj.end_event')}</button>
-                    </>
-                  )}
+            <div className="djc-sec-body djc-ctrl-body">
+
+              {/* WAITING / COUNTDOWN → Başlat */}
+              {(event.status === 'waiting' || event.status === 'countdown') && (
+                <button
+                  className="btn btn-primary djc-ctrl-main-btn"
+                  onClick={() => updateStatus('active')}
+                >
+                  <span className="djc-ctrl-btn-icon">▶</span>
+                  {lang === 'tr' ? 'İSTEKLERİ BAŞLAT' : 'START REQUESTS'}
+                </button>
+              )}
+
+              {/* ACTIVE → Kapat (onaylı) */}
+              {event.status === 'active' && (
+                <button
+                  className="btn btn-danger djc-ctrl-main-btn djc-ctrl-stop-btn"
+                  onClick={() => updateStatus('ended')}
+                  onDoubleClick={() => {}}
+                  title={lang === 'tr' ? 'Çift tıkla veya bas → kapat' : 'Click → close requests'}
+                >
+                  <span className="djc-ctrl-btn-icon">■</span>
+                  {lang === 'tr' ? 'İSTEKLERİ KAPAT' : 'CLOSE REQUESTS'}
+                </button>
+              )}
+
+              {/* PAUSED → Devam et veya Kapat */}
+              {event.status === 'paused' && (
+                <div className="djc-ctrl-pair">
+                  <button className="btn btn-primary djc-ctrl-sub-btn" onClick={() => updateStatus('active')}>
+                    ▶ {lang === 'tr' ? 'Devam' : 'Resume'}
+                  </button>
+                  <button className="btn btn-danger djc-ctrl-sub-btn" onClick={() => updateStatus('ended')}>
+                    ■ {lang === 'tr' ? 'Kapat' : 'Close'}
+                  </button>
                 </div>
-              </div>
-              <div className="djc-booth-selects">
-                <label className="djc-booth-select-label">
-                  {lang === 'tr' ? 'Süre' : 'Duration'}
-                  <select className="djc-booth-select" value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))}>
-                    {[5, 10, 15, 30, 60].map(m => <option key={m} value={m}>{m} dk</option>)}
-                  </select>
-                </label>
-                <label className="djc-booth-select-label">
-                  {lang === 'tr' ? 'G.Sayım' : 'Countdown'}
-                  <select className="djc-booth-select" value={countdownMinutes} onChange={(e) => { setCountdownMinutes(Number(e.target.value)); }}>
+              )}
+
+              {/* ENDED */}
+              {event.status === 'ended' && (
+                <div className="djc-ctrl-ended">
+                  <span className="djc-ctrl-ended-label">{lang === 'tr' ? 'Etkinlik tamamlandı' : 'Event ended'}</span>
+                </div>
+              )}
+
+              {/* Geri sayımlı başlat — sadece waiting'de, küçük/gizli */}
+              {event.status === 'waiting' && (
+                <div className="djc-ctrl-countdown-row">
+                  <span className="djc-ctrl-cd-label">{lang === 'tr' ? 'Geri sayımlı:' : 'Countdown:'}</span>
+                  <select className="djc-booth-select djc-ctrl-cd-select" value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))}>
                     {[3, 5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
                   </select>
-                </label>
-                {event.status === 'waiting' && (
-                  <button className="btn btn-ghost djc-btn djc-btn-sm" onClick={startCountdown}>{lang === 'tr' ? 'Başlat' : 'Start'}</button>
-                )}
-              </div>
+                  <button className="btn btn-ghost djc-ctrl-cd-btn" onClick={startCountdown}>
+                    ⏱
+                  </button>
+                </div>
+              )}
+
             </div>
           </div>
 
