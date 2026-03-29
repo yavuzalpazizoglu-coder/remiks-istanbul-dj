@@ -3908,8 +3908,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   background-image: url('/logos/dj-login-bg.jpg');
   background-size: cover;
   background-position: center center;
-  filter: blur(6px) brightness(0.55) saturate(1.6);
-  transform: scale(1.08);
+  filter: blur(2.5px) brightness(0.75) saturate(2.0) contrast(1.1);
+  transform: scale(1.04);
   pointer-events: none;
 }
 
@@ -3919,9 +3919,10 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,180,255,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 100% 100% at 50% 100%, rgba(0,0,0,0.35) 0%, transparent 60%),
-    radial-gradient(ellipse 100% 100% at 50% 0%, rgba(0,0,0,0.30) 0%, transparent 50%);
+    radial-gradient(ellipse 100% 100% at 50% 100%, rgba(0,0,0,0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 100% at 50% 0%, rgba(0,0,0,0.35) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 100% at 0% 50%, rgba(0,0,0,0.50) 0%, transparent 40%),
+    radial-gradient(ellipse 30% 100% at 100% 50%, rgba(0,0,0,0.50) 0%, transparent 40%);
   pointer-events: none;
 }
 
