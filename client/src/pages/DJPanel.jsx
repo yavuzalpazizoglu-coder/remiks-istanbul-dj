@@ -1153,7 +1153,10 @@ export default function DJPanel() {
                 className={`djc-settings-toggle-btn ${settingsOpen ? 'open' : ''}`}
                 onClick={() => setSettingsOpen(v => !v)}
               >
-                <span>{lang === 'tr' ? '⚙ Ayarlar & Görünüm' : '⚙ Settings & Appearance'}</span>
+                <div className="djc-settings-toggle-label">
+                  <span className="djc-settings-toggle-dot" />
+                  <span>{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings & Appearance'}</span>
+                </div>
                 <span className="djc-settings-toggle-arrow">{settingsOpen ? '▲' : '▼'}</span>
               </button>
             </div>
