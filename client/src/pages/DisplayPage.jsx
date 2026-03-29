@@ -1653,12 +1653,25 @@ export default function DisplayPage({ rejiMode = false }) {
           )}
         </AnimatePresence>
 
-        {/* ─── ACTIVE: 3-column layout ─── */}
+        {/* ─── ACTIVE: 2-column layout (QR sol, liste sağ) ─── */}
         {event.status === 'active' && !openingActive && (
           <>
-            <div className="dsp-3col">
-              {/* LEFT: Song Table Card */}
-              <div className="dsp-card dsp-list-card">
+            <div className="dsp-2col">
+              {/* LEFT: QR (sade, küçük) */}
+              <div className="dsp-qr-side">
+                <div className="dsp-qr-side-box">
+                  <QRCodeSVG value={requestUrl} size={160} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
+                </div>
+                <div className="dsp-qr-side-label">
+                  {lang === 'tr' ? 'QR ile Tara' : 'Scan QR Code'}
+                </div>
+                <div className="dsp-qr-side-sub">
+                  {lang === 'tr' ? 'İsteğini Gönder!' : 'Send Your Request!'}
+                </div>
+              </div>
+
+              {/* RIGHT: Song Table (geniş) */}
+              <div className="dsp-card dsp-list-card-wide">
                 <div className="dsp-card-title">
                   <span className="fire-icon">🔥</span> {T('display.hot_requests')}
                 </div>
@@ -1693,19 +1706,6 @@ export default function DisplayPage({ rejiMode = false }) {
                     </div>
                   </div>
                 )}
-              </div>
-
-              {/* RIGHT: QR Card */}
-              <div className="dsp-card dsp-qr-card">
-                <div className="dsp-qr-box">
-                  <QRCodeSVG value={requestUrl} size={300} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
-                </div>
-                <div className="dsp-qr-label">
-                  {lang === 'tr' ? 'QR Kodu Tara' : 'Scan QR Code'}
-                </div>
-                <div className="dsp-qr-sub">
-                  {lang === 'tr' ? 'İsteğini Gönder!' : 'Send Your Request!'}
-                </div>
               </div>
             </div>
           </>

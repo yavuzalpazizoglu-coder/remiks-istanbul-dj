@@ -2224,6 +2224,120 @@ body.theme-pioneer-gold .djc-sec-title strong {
   gap: 6px !important;
   padding: 8px 0 4px !important;
 }
+
+/* ─── Sabit LED butonlar ─── */
+.djc-ctrl-fixed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  width: 100%;
+}
+.djc-ctrl-fixed-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 4px 7px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms, opacity 150ms;
+  overflow: hidden;
+  min-height: 62px;
+}
+.djc-ctrl-fixed-btn:hover:not(.djc-ctrl-btn-disabled) {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.2);
+}
+.djc-ctrl-fixed-btn.djc-ctrl-btn-disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+/* LED ışık */
+.djc-ctrl-led {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: background 200ms, box-shadow 200ms;
+}
+.djc-ctrl-led-on .djc-ctrl-led {
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74,222,128,0.9), 0 0 12px rgba(74,222,128,0.5);
+  animation: ledPulse 1.4s ease-in-out infinite;
+}
+.djc-ctrl-led-red.djc-ctrl-led-on .djc-ctrl-led {
+  background: #f87171;
+  box-shadow: 0 0 6px rgba(248,113,113,0.9), 0 0 12px rgba(248,113,113,0.5);
+  animation: ledPulse 1.4s ease-in-out infinite;
+}
+@keyframes ledPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+/* Alt %10 glow efekti (aktifken) */
+.djc-ctrl-fixed-glow {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 30%;
+  opacity: 0;
+  transition: opacity 200ms;
+  pointer-events: none;
+  border-radius: 0 0 8px 8px;
+}
+.djc-ctrl-btn-start .djc-ctrl-fixed-glow {
+  background: linear-gradient(0deg, rgba(74,222,128,0.12), transparent);
+}
+.djc-ctrl-btn-pause .djc-ctrl-fixed-glow {
+  background: linear-gradient(0deg, rgba(96,165,250,0.12), transparent);
+}
+.djc-ctrl-btn-stop .djc-ctrl-fixed-glow {
+  background: linear-gradient(0deg, rgba(248,113,113,0.12), transparent);
+}
+.djc-ctrl-led-on .djc-ctrl-fixed-glow { opacity: 1; }
+
+/* İkon + etiket */
+.djc-ctrl-fixed-icon {
+  font-size: 15px;
+  margin-top: 4px;
+  line-height: 1;
+}
+.djc-ctrl-fixed-label {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  line-height: 1;
+}
+.djc-ctrl-led-on .djc-ctrl-fixed-label { color: rgba(255,255,255,0.9); }
+
+/* Renk varyantları */
+.djc-ctrl-btn-start.djc-ctrl-led-on {
+  border-color: rgba(74,222,128,0.3);
+  background: rgba(74,222,128,0.06);
+}
+.djc-ctrl-btn-pause.djc-ctrl-led-on {
+  border-color: rgba(96,165,250,0.3);
+  background: rgba(96,165,250,0.06);
+}
+.djc-ctrl-btn-pause .djc-ctrl-led { }
+.djc-ctrl-btn-pause.djc-ctrl-led-on .djc-ctrl-led {
+  background: #60a5fa;
+  box-shadow: 0 0 6px rgba(96,165,250,0.9), 0 0 12px rgba(96,165,250,0.5);
+}
+.djc-ctrl-btn-stop.djc-ctrl-led-on {
+  border-color: rgba(248,113,113,0.3);
+  background: rgba(248,113,113,0.06);
+}
 .djc-ctrl-main-btn {
   width: 100%;
   padding: 9px 12px !important;
@@ -3980,8 +4094,59 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   50% { background-position: 100% 50%; }
 }
 
-/* ─── 2-Column Active Layout ─── */
+/* ─── Display: 2-sütun layout (QR sol, liste sağ) ─── */
+.dsp-2col {
+  display: flex;
+  height: 75vh;
+  align-items: stretch;
+  gap: clamp(8px, 1vw, 20px);
+  width: 100%;
+}
 
+/* Sol: QR sade panel */
+.dsp-qr-side {
+  flex: 0 0 20%;
+  max-width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 18px);
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(var(--theme-rgb), 0.1);
+  border-radius: clamp(8px, 1vw, 20px);
+  padding: clamp(10px, 1.2vw, 28px) clamp(8px, 0.8vw, 18px);
+}
+.dsp-qr-side-box {
+  padding: clamp(6px, 0.6vw, 14px);
+  background: #fff;
+  border-radius: clamp(6px, 0.6vw, 14px);
+  box-shadow: 0 0 clamp(10px, 1.5vw, 32px) rgba(var(--theme-rgb), 0.15);
+}
+.dsp-qr-side-label {
+  font-family: var(--font-display);
+  font-size: clamp(10px, 1.1vw, 20px);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+}
+.dsp-qr-side-sub {
+  font-size: clamp(9px, 0.9vw, 17px);
+  color: var(--theme-primary, var(--neon-cyan));
+  font-weight: 600;
+  text-align: center;
+  animation: pulse 2s ease infinite;
+}
+
+/* Sağ: geniş şarkı listesi */
+.dsp-list-card-wide {
+  flex: 1;
+  min-width: 0;
+  padding: clamp(6px, 0.8vw, 18px) clamp(8px, 1vw, 22px);
+  overflow: hidden;
+}
+
+/* Eski 3-col (geriye uyumluluk) */
 .dsp-3col {
   display: flex;
   height: 75vh;

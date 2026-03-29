@@ -855,61 +855,69 @@ export default function DJPanel() {
             </div>
             <div className="djc-sec-body djc-ctrl-body">
 
-              {/* WAITING / COUNTDOWN → Başlat */}
-              {(event.status === 'waiting' || event.status === 'countdown') && (
+              {/* ─── 3 sabit buton her zaman görünür ─── */}
+              <div className="djc-ctrl-fixed-grid">
+
+                {/* BAŞLAT */}
                 <button
-                  className="btn btn-primary djc-ctrl-main-btn"
-                  onClick={() => updateStatus('active')}
+                  className={`djc-ctrl-fixed-btn djc-ctrl-btn-start ${event.status === 'active' ? 'djc-ctrl-led-on' : ''} ${['active', 'paused', 'ended'].includes(event.status) ? 'djc-ctrl-btn-disabled' : ''}`}
+                  onClick={() => {
+                    if (!['active', 'paused', 'ended'].includes(event.status)) updateStatus('active');
+                  }}
+                  title={lang === 'tr' ? 'İstekleri Başlat' : 'Start Requests'}
                 >
-                  <span className="djc-ctrl-btn-icon">▶</span>
-                  {lang === 'tr' ? 'İSTEKLERİ BAŞLAT' : 'START REQUESTS'}
+                  <span className="djc-ctrl-led" />
+                  <span className="djc-ctrl-fixed-icon">▶</span>
+                  <span className="djc-ctrl-fixed-label">{lang === 'tr' ? 'BAŞLAT' : 'START'}</span>
+                  <span className="djc-ctrl-fixed-glow" />
                 </button>
-              )}
 
-              {/* ACTIVE → Kapat (onaylı) */}
-              {event.status === 'active' && (
+                {/* DURAKLAT */}
                 <button
-                  className="btn btn-danger djc-ctrl-main-btn djc-ctrl-stop-btn"
-                  onClick={() => updateStatus('ended')}
-                  onDoubleClick={() => {}}
-                  title={lang === 'tr' ? 'Çift tıkla veya bas → kapat' : 'Click → close requests'}
+                  className={`djc-ctrl-fixed-btn djc-ctrl-btn-pause ${event.status === 'paused' ? 'djc-ctrl-led-on' : ''} ${!['active', 'paused'].includes(event.status) ? 'djc-ctrl-btn-disabled' : ''}`}
+                  onClick={() => {
+                    if (event.status === 'active') updateStatus('paused');
+                    else if (event.status === 'paused') updateStatus('active');
+                  }}
+                  title={event.status === 'paused' ? (lang === 'tr' ? 'Devam Et' : 'Resume') : (lang === 'tr' ? 'Duraklat' : 'Pause')}
                 >
-                  <span className="djc-ctrl-btn-icon">■</span>
-                  {lang === 'tr' ? 'İSTEKLERİ KAPAT' : 'CLOSE REQUESTS'}
+                  <span className="djc-ctrl-led" />
+                  <span className="djc-ctrl-fixed-icon">{event.status === 'paused' ? '▶▶' : '⏸'}</span>
+                  <span className="djc-ctrl-fixed-label">{event.status === 'paused' ? (lang === 'tr' ? 'DEVAM' : 'RESUME') : (lang === 'tr' ? 'DURAKLAT' : 'PAUSE')}</span>
+                  <span className="djc-ctrl-fixed-glow" />
                 </button>
-              )}
 
-              {/* PAUSED → Devam et veya Kapat */}
-              {event.status === 'paused' && (
-                <div className="djc-ctrl-pair">
-                  <button className="btn btn-primary djc-ctrl-sub-btn" onClick={() => updateStatus('active')}>
-                    ▶ {lang === 'tr' ? 'Devam' : 'Resume'}
-                  </button>
-                  <button className="btn btn-danger djc-ctrl-sub-btn" onClick={() => updateStatus('ended')}>
-                    ■ {lang === 'tr' ? 'Kapat' : 'Close'}
-                  </button>
-                </div>
-              )}
+                {/* KAPAT */}
+                <button
+                  className={`djc-ctrl-fixed-btn djc-ctrl-btn-stop ${event.status === 'ended' ? 'djc-ctrl-led-on djc-ctrl-led-red' : ''} ${!['active', 'paused'].includes(event.status) ? 'djc-ctrl-btn-disabled' : ''}`}
+                  onClick={() => {
+                    if (['active', 'paused'].includes(event.status)) updateStatus('ended');
+                  }}
+                  title={lang === 'tr' ? 'İstekleri Kapat' : 'Close Requests'}
+                >
+                  <span className="djc-ctrl-led" />
+                  <span className="djc-ctrl-fixed-icon">■</span>
+                  <span className="djc-ctrl-fixed-label">{lang === 'tr' ? 'KAPAT' : 'CLOSE'}</span>
+                  <span className="djc-ctrl-fixed-glow" />
+                </button>
 
-              {/* ENDED */}
-              {event.status === 'ended' && (
-                <div className="djc-ctrl-ended">
-                  <span className="djc-ctrl-ended-label">{lang === 'tr' ? 'Etkinlik tamamlandı' : 'Event ended'}</span>
-                </div>
-              )}
+              </div>
 
-              {/* Geri sayımlı başlat — sadece waiting'de, küçük/gizli */}
-              {event.status === 'waiting' && (
-                <div className="djc-ctrl-countdown-row">
-                  <span className="djc-ctrl-cd-label">{lang === 'tr' ? 'Geri sayımlı:' : 'Countdown:'}</span>
-                  <select className="djc-booth-select djc-ctrl-cd-select" value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))}>
-                    {[3, 5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
-                  </select>
-                  <button className="btn btn-ghost djc-ctrl-cd-btn" onClick={startCountdown}>
-                    ⏱
-                  </button>
-                </div>
-              )}
+              {/* Geri sayımlı başlat — her zaman görünür, küçük satır */}
+              <div className="djc-ctrl-countdown-row">
+                <span className="djc-ctrl-cd-label">{lang === 'tr' ? 'Geri sayımlı:' : 'Countdown:'}</span>
+                <select className="djc-booth-select djc-ctrl-cd-select" value={countdownMinutes} onChange={(e) => setCountdownMinutes(Number(e.target.value))}>
+                  {[3, 5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
+                </select>
+                <button
+                  className="btn btn-ghost djc-ctrl-cd-btn"
+                  onClick={startCountdown}
+                  disabled={['active', 'paused', 'ended'].includes(event.status)}
+                  title={lang === 'tr' ? 'Geri sayımlı başlat' : 'Start with countdown'}
+                >
+                  ⏱
+                </button>
+              </div>
 
             </div>
           </div>
