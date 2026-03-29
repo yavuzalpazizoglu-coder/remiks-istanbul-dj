@@ -1017,7 +1017,7 @@ function Ticker({ requests, lang, tickerTexts }) {
   );
 }
 
-export default function DisplayPage({ rejiMode = false }) {
+export default function DisplayPage() {
   const { slug } = useParams();
   const [event, setEvent] = useState(null);
   const [lang, setLang] = useState('tr');
@@ -1049,13 +1049,6 @@ export default function DisplayPage({ rejiMode = false }) {
   const [blackout, setBlackout] = useState(false);
   const [spotlightText, setSpotlightText] = useState('');
   const [rejiCountdown, setRejiCountdown] = useState(0);
-  const [rejiBrand, setRejiBrand] = useState('');
-  const [rejiTicker, setRejiTicker] = useState('');
-  const [rejiSpotInput, setRejiSpotInput] = useState('');
-  const [rejiCeremonyMin, setRejiCeremonyMin] = useState(3);
-  const [rejiPanelOpen, setRejiPanelOpen] = useState(false);
-  const [rejiEnabled, setRejiEnabled] = useState(rejiMode);
-
   const [displayCard, setDisplayCard] = useState(null);
   const displayCardTimer = useRef(null);
   const rejiCountdownTimer = useRef(null);
@@ -1077,8 +1070,6 @@ export default function DisplayPage({ rejiMode = false }) {
       setLang(eventData.language || 'tr');
       setBrandText(eventData.brand_text || '');
       setTickerTexts(eventData.ticker_texts || '');
-      setRejiBrand(eventData.brand_text || '');
-      setRejiTicker(eventData.ticker_texts || '');
       setTheme(eventData.theme || 'cyan');
       setAnimLevel(eventData.animation_level || 'high');
       setStageDesign(eventData.stage_design || 'classic');
@@ -1366,152 +1357,11 @@ export default function DisplayPage({ rejiMode = false }) {
           </div>
         );
       })()}
-      {rejiEnabled && (
-        <>
-        <div className="reji-bar">
-          <div className="reji-bar-item">
-            <span className="reji-bar-label">REJİ</span>
-            <span className="reji-bar-dot reji-dot-live" />
-          </div>
-          <div className="reji-bar-item">
-            <span className="reji-bar-label">Durum</span>
-            <span className="reji-bar-value">{
-              event?.status === 'active' ? '▶ CANLI' :
-              event?.status === 'paused' ? '⏸ MOLA' :
-              event?.status === 'countdown' ? '⏱ GERİ SAYIM' :
-              event?.status === 'ended' ? '⏹ BİTTİ' : '—'
-            }</span>
-          </div>
-          <div className="reji-bar-item">
-            <span className="reji-bar-label">Mod</span>
-            <span className="reji-bar-value">{activeMusicMode ? MUSIC_MODE_LABELS[activeMusicMode] || activeMusicMode : 'Yok'}</span>
-          </div>
-          <div className="reji-bar-item">
-            <span className="reji-bar-label">İstek</span>
-            <span className="reji-bar-value">{requests.length}</span>
-          </div>
-          <div className="reji-bar-item">
-            <span className="reji-bar-label">Bağlı</span>
-            <span className="reji-bar-value">{connectedCount}</span>
-          </div>
-          {openingActive && <div className="reji-bar-item reji-bar-ceremony"><span>🎬 AÇILIŞ {ceremonyCountdown}</span></div>}
-          {closingActive && <div className="reji-bar-item reji-bar-ceremony"><span>🎬 KAPANIŞ {ceremonyCountdown}</span></div>}
-          <div className="reji-bar-item reji-bar-slug">
-            <span className="reji-bar-label">/{slug}</span>
-          </div>
-        </div>
-        {!rejiPanelOpen && (
-          <button className="reji-panel-tab" onClick={() => setRejiPanelOpen(true)}>
-            ▲ REJİ KONTROL
-          </button>
-        )}
-        <div className={`reji-panel ${rejiPanelOpen ? 'open' : 'closed'}`}>
-          <div className="reji-panel-header" onClick={() => setRejiPanelOpen(!rejiPanelOpen)}>
-            <span className="reji-panel-title"><strong>REJİ</strong> · Sahne Kontrol</span>
-            <span className="reji-panel-event">{event?.name} <span className="reji-panel-slug">/{slug}</span></span>
-            <span className="reji-panel-toggle-arrow">{rejiPanelOpen ? '▼ Kapat' : '▲ Aç'}</span>
-          </div>
-          {rejiPanelOpen && <div className="reji-panel-body">
-
-            <div className="reji-panel-col">
-              <div className="reji-panel-sec-title"><strong>METİN</strong> · Ekran</div>
-              <div className="reji-panel-field">
-                <label className="reji-panel-label">Ekran Yazısı</label>
-                <input className="reji-panel-input" value={rejiBrand}
-                  onChange={e => { setRejiBrand(e.target.value); socket.emit('reji-brand', { text: e.target.value }); }}
-                  placeholder="Organizasyon adı..." />
-              </div>
-              <div className="reji-panel-field">
-                <label className="reji-panel-label">Kayan Yazı</label>
-                <input className="reji-panel-input" value={rejiTicker}
-                  onChange={e => { setRejiTicker(e.target.value); socket.emit('reji-ticker', { text: e.target.value }); }}
-                  placeholder="Ticker mesajı..." />
-              </div>
-              <div className="reji-panel-field">
-                <label className="reji-panel-label">Spotlight</label>
-                <div className="reji-panel-input-row">
-                  <input className="reji-panel-input" value={rejiSpotInput}
-                    onChange={e => setRejiSpotInput(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter' && rejiSpotInput.trim()) { socket.emit('reji-spotlight', { text: rejiSpotInput.trim() }); setRejiSpotInput(''); } }}
-                    placeholder="Sahne mesajı (5sn)..." maxLength={120} />
-                  <button className="reji-panel-btn reji-btn-yellow" onClick={() => { if (rejiSpotInput.trim()) { socket.emit('reji-spotlight', { text: rejiSpotInput.trim() }); setRejiSpotInput(''); } }}>
-                    ⚡ Gönder
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="reji-panel-col">
-              <div className="reji-panel-sec-title"><strong>TÖREN</strong> · Seremoni</div>
-              <div className="reji-panel-field reji-panel-field-inline">
-                <label className="reji-panel-label">Süre</label>
-                <div className="reji-panel-toggle">
-                  {[1,3,5,10,15].map(m => (
-                    <button key={m} className={`reji-panel-toggle-btn ${rejiCeremonyMin === m ? 'active' : ''}`}
-                      onClick={() => setRejiCeremonyMin(m)}>{m} dk</button>
-                  ))}
-                </div>
-              </div>
-              <div className="reji-panel-btn-grid">
-                <button className="reji-panel-btn reji-btn-green" onClick={() => socket.emit('reji-ceremony', { type: 'opening', active: true, minutes: rejiCeremonyMin })}>
-                  ▶ Açılış Başlat
-                </button>
-                <button className="reji-panel-btn reji-btn-green" onClick={() => socket.emit('reji-ceremony', { type: 'closing', active: true, minutes: rejiCeremonyMin })}>
-                  ▶ Kapanış Başlat
-                </button>
-                <button className="reji-panel-btn reji-btn-red" onClick={() => { socket.emit('reji-ceremony', { type: 'opening', active: false }); socket.emit('reji-ceremony', { type: 'closing', active: false }); }}>
-                  ⏹ Töreni Durdur
-                </button>
-              </div>
-              <div className="reji-panel-sec-title" style={{ marginTop: 8 }}><strong>SAHNE</strong> · Efekt</div>
-              <div className="reji-panel-btn-grid">
-                <button className={`reji-panel-btn reji-btn-blackout ${blackout ? 'active' : ''}`}
-                  onClick={() => { socket.emit('reji-blackout', { active: !blackout }); setBlackout(!blackout); }}>
-                  {blackout ? '💡 Aydınlat' : '🔲 Karartma'}
-                </button>
-                <button className="reji-panel-btn reji-btn-countdown" onClick={() => socket.emit('reji-countdown', { seconds: 5 })}>
-                  ⏱ Geri Sayım 5s
-                </button>
-                <button className="reji-panel-btn reji-btn-countdown" onClick={() => socket.emit('reji-countdown', { seconds: 3 })}>
-                  ⏱ Geri Sayım 3s
-                </button>
-              </div>
-            </div>
-
-            <div className="reji-panel-col reji-panel-chat-col">
-              <div className="reji-panel-sec-title"><strong>CHAT</strong> · DJ İletişim</div>
-              <div className="reji-panel-chat-msgs">
-                {chatMessages.length === 0 && <div className="reji-panel-chat-empty">Henüz mesaj yok</div>}
-                {chatMessages.map(m => (
-                  <div key={m.id} className={`reji-panel-chat-msg crew-chat-${m.sender}`}>
-                    <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
-                    <span className="crew-chat-text">{m.message}</span>
-                  </div>
-                ))}
-                <div ref={chatEndRef} />
-              </div>
-              <div className="reji-panel-chat-input">
-                <input className="reji-panel-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && sendChat('reji')}
-                  placeholder="Mesaj yaz..." maxLength={200} />
-                <button className="reji-panel-btn reji-btn-purple" onClick={() => sendChat('reji')}>↑</button>
-              </div>
-            </div>
-
-          </div>}
-        </div>
-        </>
-      )}
-      {!isPreview && !rejiEnabled && (
+      {!isPreview && (
         <div className="live-indicator" aria-hidden="true">
           <span className="live-indicator-dot" />
           LIVE
         </div>
-      )}
-      {!rejiEnabled && !isPreview && (
-        <button className="reji-activate-btn" onClick={() => setRejiEnabled(true)} title="REJİ Panelini Aç">
-          🎬
-        </button>
       )}
       {/* Classic: disco ball + effects by animLevel */}
       {stageDesign === 'classic' && <>

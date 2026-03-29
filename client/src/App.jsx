@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RequestPage from './pages/RequestPage.jsx';
 import DJPanel from './pages/DJPanel.jsx';
 import DisplayPage from './pages/DisplayPage.jsx';
+import RejiPage from './pages/RejiPage.jsx';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -39,7 +40,7 @@ export default function App() {
           <Route path="/dj" element={<DJPanel />} />
           <Route path="/dj/:slug" element={<DJPanel />} />
           <Route path="/display/:slug" element={<DisplayPage />} />
-          <Route path="/reji/:slug" element={<DisplayPage rejiMode />} />
+          <Route path="/reji/:slug" element={<RejiPage />} />
           <Route path="*" element={<Navigate to="/dj" replace />} />
         </Routes>
       </BrowserRouter>
