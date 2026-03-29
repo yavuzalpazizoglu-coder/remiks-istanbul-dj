@@ -1478,16 +1478,13 @@ export default function DisplayPage() {
       <div className="display-content dsp-v2">
         {/* ─── Topbar: Logo sol | Etkinlik adı merkez | LIVE sağ ─── */}
         <div className="dsp-topbar">
-          {/* Sol: Organizasyon logosu */}
+          {/* Sol: Organizasyon logosu (sadece gerçek logo yüklüyse göster) */}
           <div className="dsp-topbar-left">
-            <div className="dsp-logo-inline">
-              {eventLogo
-                ? <img src={eventLogo} alt="Logo" className="dsp-logo-inline-img" />
-                : <span className="dsp-logo-inline-text">
-                    <span className="dsp-logo-box-remiks">Remiks</span><span className="dsp-logo-box-box">Box</span>
-                  </span>
-              }
-            </div>
+            {eventLogo && (
+              <div className="dsp-logo-inline">
+                <img src={eventLogo} alt="Logo" className="dsp-logo-inline-img" />
+              </div>
+            )}
           </div>
 
           {/* Merkez: Etkinlik adı + motto */}
