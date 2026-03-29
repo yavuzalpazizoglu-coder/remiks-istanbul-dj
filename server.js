@@ -9,6 +9,98 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import * as db from './db.js';
 import { searchSpotify, isSpotifyConfigured } from './spotify.js';
+import { Resend } from 'resend';
+
+/* ── Resend mail istemcisi ── */
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+async function sendEventReport(event, allRequests) {
+  if (!resend) return; // API key yoksa sessizce geç
+  const toEmails = (process.env.REPORT_TO_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean);
+  if (!toEmails.length) return;
+
+  const played    = allRequests.filter(r => r.status === 'playing' || r.status === 'played');
+  const approved  = allRequests.filter(r => r.status === 'approved');
+  const rejected  = allRequests.filter(r => r.status === 'rejected');
+  const pending   = allRequests.filter(r => r.status === 'pending');
+  const totalVotes = allRequests.reduce((s, r) => s + (r.votes || 0), 0);
+
+  const songRow = (r, i) => `
+    <tr style="background:${i % 2 === 0 ? '#1a1a2e' : '#16213e'}">
+      <td style="padding:8px 12px;color:#aaa;text-align:center">${i + 1}</td>
+      <td style="padding:8px 12px;color:#fff">${r.song_name || r.title || '-'}</td>
+      <td style="padding:8px 12px;color:#ccc">${r.artist || '-'}</td>
+      <td style="padding:8px 12px;color:#00d4ff;text-align:center;font-weight:700">${r.votes || 0}</td>
+      <td style="padding:8px 12px;color:#888;text-align:center">${r.status}</td>
+    </tr>`;
+
+  const tableSection = (title, color, rows) => rows.length === 0 ? '' : `
+    <h3 style="color:${color};margin:28px 0 8px;font-size:15px;text-transform:uppercase;letter-spacing:2px">${title} (${rows.length})</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="background:#0d0d1a">
+        <th style="padding:8px;color:#666">#</th>
+        <th style="padding:8px;color:#666;text-align:left">Şarkı</th>
+        <th style="padding:8px;color:#666;text-align:left">Sanatçı</th>
+        <th style="padding:8px;color:#666">Oy</th>
+        <th style="padding:8px;color:#666">Durum</th>
+      </tr></thead>
+      <tbody>${rows.map((r, i) => songRow(r, i)).join('')}</tbody>
+    </table>`;
+
+  const html = `
+  <!DOCTYPE html>
+  <html lang="tr">
+  <head><meta charset="UTF-8"><style>
+    body{margin:0;padding:0;background:#0d0d1a;font-family:Arial,sans-serif;color:#fff}
+    .wrap{max-width:700px;margin:0 auto;padding:32px 24px}
+    .header{text-align:center;padding:32px 0 24px;border-bottom:1px solid #1e2a3a}
+    .logo{font-size:11px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase}
+    .title{font-size:28px;font-weight:900;margin:8px 0 4px;color:#fff}
+    .sub{font-size:14px;color:#888}
+    .stat-grid{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}
+    .stat{flex:1;min-width:120px;background:#1a1a2e;border:1px solid #1e2a3a;border-radius:8px;padding:16px;text-align:center}
+    .stat-num{font-size:32px;font-weight:900;color:#00d4ff}
+    .stat-lbl{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+    .footer{margin-top:40px;padding-top:20px;border-top:1px solid #1e2a3a;text-align:center;font-size:11px;color:#444}
+  </style></head>
+  <body><div class="wrap">
+    <div class="header">
+      <div class="logo">REMİKS İSTANBUL</div>
+      <div class="title">${event.name || 'Etkinlik'}</div>
+      <div class="sub">Etkinlik Sonu Raporu &nbsp;·&nbsp; ${new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-num">${allRequests.length}</div><div class="stat-lbl">Toplam İstek</div></div>
+      <div class="stat"><div class="stat-num">${played.length}</div><div class="stat-lbl">Çalınan Şarkı</div></div>
+      <div class="stat"><div class="stat-num">${totalVotes}</div><div class="stat-lbl">Toplam Oy</div></div>
+      <div class="stat"><div class="stat-num">${approved.length}</div><div class="stat-lbl">Onaylanan</div></div>
+      <div class="stat"><div class="stat-num">${rejected.length}</div><div class="stat-lbl">Reddedilen</div></div>
+    </div>
+
+    ${tableSection('✅ Çalınan Şarkılar', '#00ff88', played.sort((a,b) => (b.votes||0)-(a.votes||0)))}
+    ${tableSection('⏳ Onaylanan (Çalınmadı)', '#ffaa00', approved.sort((a,b) => (b.votes||0)-(a.votes||0)))}
+    ${tableSection('❌ Reddedilen İstekler', '#ff4466', rejected)}
+    ${tableSection('📋 Bekleyen İstekler', '#888', pending)}
+
+    <div class="footer">
+      Bu rapor otomatik olarak Remiks İstanbul DJ Sistemi tarafından gönderilmiştir.
+    </div>
+  </div></body></html>`;
+
+  try {
+    await resend.emails.send({
+      from: 'Remiks İstanbul <onboarding@resend.dev>',
+      to: toEmails,
+      subject: `🎧 Etkinlik Raporu: ${event.name || 'Gecenin Özeti'} — ${new Date().toLocaleDateString('tr-TR')}`,
+      html,
+    });
+    console.log(`📧 Etkinlik raporu gönderildi → ${toEmails.join(', ')}`);
+  } catch (err) {
+    console.error('❌ Mail gönderilemedi:', err.message);
+  }
+}
+
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -117,6 +209,12 @@ app.put('/api/events/:slug/status', djAuth, (req, res) => {
     }
     const event = db.updateEventStatus(req.params.slug, status);
     io.to(req.params.slug).emit('event-status', { status: event.status, countdown_end: event.countdown_end });
+
+    if (status === 'ended') {
+      const allRequests = db.getAllRequests(event.id);
+      sendEventReport(event, allRequests);
+    }
+
     res.json(event);
   } catch (err) {
     res.status(500).json({ error: err.message });
