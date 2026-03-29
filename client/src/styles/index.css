@@ -4181,7 +4181,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .dsp-topbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 12% 1fr 12%;
   align-items: center;
   gap: clamp(6px, 0.8vw, 16px);
   padding: clamp(10px, 1.2vh, 20px) 0;
@@ -4235,7 +4236,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 /* Merkez: Etkinlik adı */
 .dsp-topbar-center {
-  flex: 1;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -4248,11 +4248,9 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 /* Sağ: LIVE */
 .dsp-topbar-right {
-  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  min-width: clamp(60px, 8vw, 140px);
 }
 
 .dsp-brand-logo {
@@ -4374,44 +4372,48 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   margin-top: clamp(6px, 0.8vh, 12px);
 }
 .dsp-live-stat {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: baseline;
-  justify-content: space-between;
-  padding: clamp(3px, 0.4vh, 6px) 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  gap: clamp(4px, 0.5vw, 8px);
+  padding: clamp(4px, 0.5vh, 7px) clamp(2px, 0.3vw, 5px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .dsp-live-stat:last-child {
   border-bottom: none;
 }
-.dsp-live-stat-flash .dsp-live-stat-val {
-  color: var(--theme-primary, #00d4ff);
-  text-shadow: 0 0 8px rgba(var(--theme-rgb), 0.5);
-}
-@keyframes statFlash {
-  0%   { opacity: 1; }
-  30%  { opacity: 0.6; }
-  100% { opacity: 1; }
-}
-.dsp-live-stat-flash {
-  animation: statFlash 0.7s ease;
-}
 .dsp-live-stat-lbl {
-  font-size: clamp(7px, 0.85vh, 12px);
-  font-weight: 500;
-  color: rgba(255,255,255,0.4);
+  font-size: clamp(8px, 1vh, 13px);
+  font-weight: 600;
+  color: rgba(255,255,255,0.45);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .dsp-live-stat-val {
   font-family: var(--font-display);
-  font-size: clamp(13px, 2vh, 28px);
+  font-size: clamp(14px, 2.1vh, 30px);
   font-weight: 900;
   font-variant-numeric: tabular-nums;
   color: #ffffff;
   line-height: 1;
+  min-width: 2ch;
+  text-align: right;
   transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+.dsp-live-stat-flash .dsp-live-stat-val {
+  color: var(--theme-primary, #00d4ff);
+  text-shadow: 0 0 10px rgba(var(--theme-rgb), 0.6);
+}
+@keyframes statFlash {
+  0%   { opacity: 1; }
+  25%  { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+.dsp-live-stat-flash {
+  animation: statFlash 0.7s ease;
 }
 
 /* Sol: QR sade panel */
@@ -5222,7 +5224,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border-top: 1px solid rgba(0, 200, 220, 0.12);
   border-bottom: 1px solid rgba(0, 200, 220, 0.12);
   background: rgba(0, 0, 0, 0.35);
-  padding: clamp(5px, 0.65vh, 15px) 0;
+  padding: clamp(4px, 0.5vh, 12px) 0;
   margin-bottom: clamp(4px, 0.5vh, 14px);
   overflow: hidden;
   position: relative;
@@ -5242,12 +5244,12 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .ticker-item {
-  display: inline-flex; align-items: center; gap: clamp(4px, 0.5vw, 12px);
-  font-size: clamp(8px, 1.0vw, 26px); color: var(--text-secondary);
+  display: inline-flex; align-items: center; gap: clamp(3px, 0.4vw, 10px);
+  font-size: clamp(6px, 0.8vw, 22px); color: var(--text-secondary);
   flex-shrink: 0;
 }
 
-.ticker-item .ticker-emoji { font-size: clamp(9px, 1.1vw, 24px); }
+.ticker-item .ticker-emoji { font-size: clamp(7px, 0.9vw, 20px); }
 .ticker-item .ticker-rank {
   color: rgba(255,255,255,0.35);
   font-size: 0.8em;
@@ -5263,9 +5265,9 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .ticker-item .ticker-dot {
   color: var(--theme-primary, var(--neon-purple));
-  font-size: clamp(10px, 1.2vw, 22px);
+  font-size: clamp(8px, 1.0vw, 18px);
   opacity: 0.7;
-  margin: 0 clamp(4px, 0.5vw, 10px);
+  margin: 0 clamp(3px, 0.4vw, 8px);
 }
 
 @keyframes tickerScroll {
