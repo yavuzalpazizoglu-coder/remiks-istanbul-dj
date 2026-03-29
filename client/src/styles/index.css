@@ -1083,7 +1083,8 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   width: 440px;
   min-width: 340px;
   flex-shrink: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;          /* scroll — içerik kırpılmaz */
   border-right: 1px solid var(--djt-card-border);
   display: flex;
   flex-direction: column;
@@ -1109,7 +1110,8 @@ body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
   overflow: hidden;
   background: #080a10;
   transition: border-color 0.4s ease;
-  flex-shrink: 0;
+  flex-shrink: 0;           /* sabit — dinamik büyüme/küçülme yok */
+  min-height: 120px;        /* en küçük hali */
 }
 .stage-preview-iframe {
   width: 1920px;
@@ -2312,18 +2314,18 @@ body.theme-pioneer-gold .sp-stat-warn .sp-stat-val {
 /* ═══ Section System ═══ */
 .djc-sec {
   border-bottom: 1px solid var(--djt-sec-border);
-  padding: 4px 12px;
+  padding: 10px 14px;        /* was: 4px 12px — ferah görünüm */
+  flex-shrink: 0;            /* scroll'a bırak, bölümler sıkışmasın */
   transition: border-color 0.4s ease;
 }
 .djc-sec-grow {
-  flex: 1;
-  min-height: 0;
-  border-bottom: none;
+  flex: 0 0 auto;            /* was: flex:1 — artık dinamik büyümüyor */
+  border-bottom: 1px solid var(--djt-sec-border);
   display: flex;
   flex-direction: column;
 }
 .djc-sec-head {
-  padding: 1px 0;
+  padding: 2px 0 5px;        /* was: 1px 0 */
 }
 .djc-sec-title {
   font-family: var(--font-display);
@@ -2801,9 +2803,10 @@ body.theme-pioneer-gold .djc-topbar-timer-active {
 
 /* ═══ Left Footer ═══ */
 .djc-left-footer {
-  padding: 4px 12px;
+  padding: 8px 14px 10px;   /* was: 4px 12px — biraz daha ferah */
   text-align: left;
   flex-shrink: 0;
+  margin-top: auto;          /* her zaman en alta yapışır */
   border-top: 1px solid var(--djt-sec-border);
 }
 .djc-left-footer-powered {
@@ -2823,11 +2826,10 @@ body.theme-pioneer-gold .djc-topbar-timer-active {
   color: rgba(255,255,255,0.5);
 }
 .djc-sec-body {
-  padding: 1px 0 2px;
+  padding: 4px 0 6px;        /* was: 1px 0 2px */
 }
 .djc-sec-grow > .djc-sec-body {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto;            /* was: flex:1 — önizleme sabit kalır */
   display: flex;
   flex-direction: column;
 }
