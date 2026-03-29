@@ -1525,75 +1525,75 @@ export default function DisplayPage() {
       {/* Minimal: scanline + pulse rings — animLevel kontrolü */}
       {stageDesign === 'minimal' && <>
         <img src="/logos/remiksbox_logo_transparent.png" alt="" className="stage-bg-img stage-bg-minimal" />
-        {animLevel === 'low' && <><AmbientGlow /><MinimalPulseRing themeRgb={tc.rgb} /></>}
-        {animLevel === 'medium' && <><MinimalScanLine themeRgb={tc.rgb} /><MinimalPulseRing themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /></>}
-        {animLevel === 'high' && <><MinimalScanLine themeRgb={tc.rgb} /><MinimalPulseRing themeRgb={tc.rgb} /><NeonOrbs themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={15} /></>}
+        {animLevel === 'low' && <><AmbientGlow /><MinimalPulseRing themeRgb="0,220,180" /></>}
+        {animLevel === 'medium' && <><MinimalScanLine themeRgb="0,220,180" /><MinimalPulseRing themeRgb="0,220,180" /><GeoShapes themeRgb="0,200,180" /></>}
+        {animLevel === 'high' && <><MinimalScanLine themeRgb="0,220,180" /><MinimalPulseRing themeRgb="0,220,180" /><NeonOrbs themeRgb="0,200,160" /><ClubEqualizer themeRgb="0,220,180" /><Sparkles themeRgb="0,255,200" count={15} /></>}
       </>}
 
-      {/* Elegant: kadife + bokeh + şimmer — animLevel kontrolü */}
+      {/* Elegant: kadife bordo + gül altını bokeh + şimmer */}
       {stageDesign === 'elegant' && <>
         <div className="display-bg" />
         <img src="/logos/remiksbox_logo_square.png" alt="" className="stage-bg-img stage-bg-elegant" />
-        {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={8} /></>}
-        {animLevel === 'medium' && <><ElegantBokeh themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={15} /></>}
-        {animLevel === 'high' && <><ElegantShimmerCurtain themeRgb={tc.rgb} /><ElegantBokeh themeRgb={tc.rgb} /><ElegantDust themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={25} /></>}
+        {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb="200,80,120" count={8} /></>}
+        {animLevel === 'medium' && <><ElegantBokeh themeRgb="200,80,120" /><GeoShapes themeRgb="180,60,100" /><Sparkles themeRgb="220,100,140" count={15} /></>}
+        {animLevel === 'high' && <><ElegantShimmerCurtain themeRgb="200,80,120" /><ElegantBokeh themeRgb="200,80,120" /><ElegantDust themeRgb="220,100,140" /><ClubEqualizer themeRgb="200,80,120" /><AmbientGlow /><Sparkles themeRgb="240,120,160" count={25} /></>}
       </>}
 
-      {/* Club: disko topu + equalizer + lazer + strobe — animLevel kontrolü */}
+      {/* Club: gece mavisi + cyan equalizer + lazer + strobe */}
       {stageDesign === 'club' && <>
         <div className="display-bg" />
         <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
-        {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={10} /></>}
-        {animLevel === 'medium' && <><ClubEqualizer themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /><DiscoParticles themeRgb={tc.rgb} /></>}
-        {animLevel === 'high' && <><ClubEqualizer themeRgb={tc.rgb} /><ClubLasers themeRgb={tc.rgb} /><ClubStrobe /><DiscoParticles themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={30} /></>}
+        {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb="0,180,255" count={10} /></>}
+        {animLevel === 'medium' && <><ClubEqualizer themeRgb="0,180,255" /><GeoShapes themeRgb="0,160,255" /><DiscoParticles themeRgb="0,200,255" /></>}
+        {animLevel === 'high' && <><ClubEqualizer themeRgb="0,180,255" /><ClubLasers themeRgb="0,200,255" /><ClubStrobe /><DiscoParticles themeRgb="0,200,255" /><Sparkles themeRgb="0,220,255" count={30} /></>}
       </>}
 
-      {/* Festival: spotlights + konfeti + color bars + dalgalar — animLevel kontrolü */}
+      {/* Festival: sıcak turuncu/altın spotlar + konfeti + dalgalar */}
       {stageDesign === 'festival' && <>
         <div className="display-bg" />
         <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
-        {animLevel === 'low' && <><FestivalSpotlights themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={10} /></>}
-        {animLevel === 'medium' && <><FestivalSpotlights themeRgb={tc.rgb} /><FestivalColorBars themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={18} /></>}
-        {animLevel === 'high' && <><FestivalSpotlights themeRgb={tc.rgb} /><FestivalConfetti /><FestivalColorBars themeRgb={tc.rgb} /><FestivalWaves themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={25} /></>}
+        {animLevel === 'low' && <><FestivalSpotlights themeRgb="255,120,0" /><Sparkles themeRgb="255,160,0" count={10} /></>}
+        {animLevel === 'medium' && <><FestivalSpotlights themeRgb="255,100,0" /><FestivalColorBars themeRgb="255,140,0" /><ClubEqualizer themeRgb="255,160,0" /><Sparkles themeRgb="255,200,0" count={18} /></>}
+        {animLevel === 'high' && <><FestivalSpotlights themeRgb="255,80,0" /><FestivalConfetti /><FestivalColorBars themeRgb="255,120,0" /><FestivalWaves themeRgb="255,100,0" /><ClubEqualizer themeRgb="255,160,0" /><Sparkles themeRgb="255,200,0" count={25} /></>}
       </>}
 
-      {/* Corporate/Obsidian: veri akışları — animLevel kontrolü */}
+      {/* Corporate/Obsidian: çelik mavi veri akışları */}
       {stageDesign === 'corporate' && <>
         <img src="/logos/remiksbox_logo_horizontal.png" alt="" className="stage-bg-img stage-bg-corporate" />
-        {animLevel === 'low' && <><CorporateGrid /><CorporateAccentLine themeRgb={tc.rgb} /></>}
-        {animLevel === 'medium' && <><CorporateGrid /><CorporateDataStreams themeRgb={tc.rgb} /><CorporateAccentLine themeRgb={tc.rgb} /></>}
-        {animLevel === 'high' && <><CorporateGrid /><CorporateDataStreams themeRgb={tc.rgb} /><CorporateAccentLine themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><NeonOrbs themeRgb={tc.rgb} /></>}
+        {animLevel === 'low' && <><CorporateGrid /><CorporateAccentLine themeRgb="60,120,255" /></>}
+        {animLevel === 'medium' && <><CorporateGrid /><CorporateDataStreams themeRgb="60,120,255" /><CorporateAccentLine themeRgb="80,160,255" /></>}
+        {animLevel === 'high' && <><CorporateGrid /><CorporateDataStreams themeRgb="60,120,255" /><CorporateAccentLine themeRgb="80,160,255" /><ClubEqualizer themeRgb="60,140,255" /><NeonOrbs themeRgb="100,180,255" /></>}
       </>}
 
-      {/* Cyber: neon grid + geometri — animLevel kontrolü */}
+      {/* Cyber: neon pembe/magenta grid + cyan detaylar */}
       {stageDesign === 'cyber' && <>
         <div className="display-bg" />
         {animLevel === 'low' && <><div className="floating-particles" aria-hidden="true" /><AmbientGlow /></>}
-        {animLevel === 'medium' && <><div className="floating-particles" aria-hidden="true" /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={12} /></>}
-        {animLevel === 'high' && <><div className="floating-particles" aria-hidden="true" /><GeoShapes themeRgb={tc.rgb} /><NeonOrbs themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={22} /></>}
+        {animLevel === 'medium' && <><div className="floating-particles" aria-hidden="true" /><GeoShapes themeRgb="255,0,160" /><Sparkles themeRgb="255,0,160" count={12} /></>}
+        {animLevel === 'high' && <><div className="floating-particles" aria-hidden="true" /><GeoShapes themeRgb="255,0,160" /><NeonOrbs themeRgb="0,220,255" /><ClubEqualizer themeRgb="255,0,160" /><Sparkles themeRgb="0,220,255" count={22} /></>}
       </>}
 
-      {/* Lounge: sıcak ambient + partiküller — animLevel kontrolü */}
+      {/* Lounge: sıcak amber + bokeh */}
       {stageDesign === 'lounge' && <>
         <div className="display-bg" />
         {animLevel === 'low' && <><AmbientGlow /><div className="floating-particles" aria-hidden="true" /></>}
-        {animLevel === 'medium' && <><AmbientGlow /><div className="floating-particles" aria-hidden="true" /><Sparkles themeRgb={tc.rgb} count={10} /><GeoShapes themeRgb={tc.rgb} /></>}
-        {animLevel === 'high' && <><AmbientGlow /><div className="floating-particles" aria-hidden="true" /><ElegantBokeh themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={20} /></>}
+        {animLevel === 'medium' && <><AmbientGlow /><div className="floating-particles" aria-hidden="true" /><Sparkles themeRgb="255,140,60" count={10} /><GeoShapes themeRgb="255,120,40" /></>}
+        {animLevel === 'high' && <><AmbientGlow /><div className="floating-particles" aria-hidden="true" /><ElegantBokeh themeRgb="255,140,60" /><ClubEqualizer themeRgb="255,160,60" /><Sparkles themeRgb="255,180,80" count={20} /></>}
       </>}
 
-      {/* Rave: yoğun renkli partiküller + strobe — animLevel kontrolü */}
+      {/* Rave: UV mor + neon yeşil partiküller + strobe */}
       {stageDesign === 'rave' && <>
         <div className="display-bg" />
-        {animLevel === 'low' && <><div className="floating-particles" aria-hidden="true" /><Sparkles themeRgb={tc.rgb} count={12} /></>}
-        {animLevel === 'medium' && <><div className="floating-particles" aria-hidden="true" /><GeoShapes themeRgb={tc.rgb} /><DiscoParticles themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /></>}
-        {animLevel === 'high' && <><div className="floating-particles" aria-hidden="true" /><DiscoParticles themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><ClubLasers themeRgb={tc.rgb} /><ClubStrobe /><Sparkles themeRgb={tc.rgb} count={30} /></>}
+        {animLevel === 'low' && <><div className="floating-particles" aria-hidden="true" /><Sparkles themeRgb="120,0,255" count={12} /></>}
+        {animLevel === 'medium' && <><div className="floating-particles" aria-hidden="true" /><GeoShapes themeRgb="120,0,255" /><DiscoParticles themeRgb="0,255,120" /><ClubEqualizer themeRgb="120,0,255" /></>}
+        {animLevel === 'high' && <><div className="floating-particles" aria-hidden="true" /><DiscoParticles themeRgb="0,255,120" /><ClubEqualizer themeRgb="120,0,255" /><ClubLasers themeRgb="0,255,120" /><ClubStrobe /><Sparkles themeRgb="200,0,255" count={30} /></>}
       </>}
 
-      {/* Cinema: spotlight + film grain — animLevel kontrolü */}
+      {/* Cinema: noir siyah/beyaz spotlight + minimal */}
       {stageDesign === 'cinema' && <>
         {animLevel === 'low' && <AmbientGlow />}
-        {animLevel === 'medium' && <><AmbientGlow /><GeoShapes themeRgb={tc.rgb} /></>}
-        {animLevel === 'high' && <><ClubEqualizer themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /><Sparkles themeRgb={tc.rgb} count={15} /></>}
+        {animLevel === 'medium' && <><AmbientGlow /><GeoShapes themeRgb="200,200,200" /></>}
+        {animLevel === 'high' && <><ClubEqualizer themeRgb="220,220,200" /><LightBeams themeColor="#e0e0cc" /><Sparkles themeRgb="255,255,220" count={15} /></>}
       </>}
 
       {showConfetti && <Confetti />}

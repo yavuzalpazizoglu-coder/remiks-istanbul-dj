@@ -10258,3 +10258,126 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 }
 .display-page.stage-cinema .dtable-votes-lg { color: rgba(255,255,255,0.9); text-shadow: 0 0 10px rgba(255,255,255,0.3); font-weight: 400; }
 
+/* ═══════════════════════════════════════════════════════
+   SAHNE KİMLİK OVERRİDES — Her sahneye sabit renk paleti
+   (tema renginden bağımsız, daha güçlü görünürlük)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── CLUB: Gece mavisi + elektrik cyan ── */
+.display-page.stage-club { background: #000d1a !important; }
+.display-page.stage-club::before {
+  background:
+    repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,180,255,0.03) 3px, rgba(0,180,255,0.03) 4px) !important;
+}
+.display-page.stage-club::after {
+  background: conic-gradient(from 0deg at 50% 50%,
+    transparent 0deg, rgba(0,160,255,0.08) 30deg, transparent 60deg,
+    rgba(0,220,255,0.07) 120deg, transparent 150deg,
+    rgba(0,160,255,0.08) 210deg, transparent 240deg,
+    rgba(0,220,255,0.07) 300deg, transparent 330deg) !important;
+}
+.display-page.stage-club .display-bg {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(0,120,255,0.28) 0%, transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(0,220,255,0.18) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(0,60,120,0.3) 0%, transparent 60%) !important;
+}
+.display-page.stage-club .dsp-topbar { background: rgba(0,8,20,0.92) !important; border-bottom: 1px solid rgba(0,180,255,0.4) !important; box-shadow: 0 2px 30px rgba(0,180,255,0.15) !important; }
+.display-page.stage-club .dsp-event-name { text-shadow: 0 0 20px rgba(0,200,255,0.7), 0 0 40px rgba(0,120,255,0.4) !important; }
+.display-page.stage-club .dsp-card, .display-page.stage-club .dsp-qr-wrap { border-color: rgba(0,180,255,0.35) !important; box-shadow: 0 0 28px rgba(0,180,255,0.1) !important; }
+.display-page.stage-club .dtable-votes-lg { color: #00d4ff !important; text-shadow: 0 0 10px rgba(0,200,255,0.6) !important; }
+.display-page.stage-club .display-ticker-bar { border-top-color: rgba(0,180,255,0.3) !important; border-bottom-color: rgba(0,180,255,0.3) !important; }
+
+/* ── FESTIVAL: Sıcak kırmızı/turuncu/altın + renkli spotlar ── */
+.display-page.stage-festival { background: #0f0500 !important; }
+.display-page.stage-festival::before {
+  background:
+    radial-gradient(circle 450px at 5% 15%, rgba(255,80,0,0.35) 0%, transparent 70%),
+    radial-gradient(circle 380px at 95% 10%, rgba(255,200,0,0.28) 0%, transparent 65%),
+    radial-gradient(circle 300px at 50% 85%, rgba(255,40,80,0.25) 0%, transparent 60%),
+    radial-gradient(circle 260px at 80% 60%, rgba(255,140,0,0.22) 0%, transparent 55%) !important;
+  animation: festColorShift 12s ease-in-out infinite;
+}
+.display-page.stage-festival .display-bg {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(255,60,0,0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 0%, rgba(255,180,0,0.18) 0%, transparent 45%) !important;
+}
+.display-page.stage-festival .dsp-topbar { background: rgba(15,5,0,0.92) !important; border-bottom: 1px solid rgba(255,120,0,0.45) !important; box-shadow: 0 2px 30px rgba(255,80,0,0.18) !important; }
+.display-page.stage-festival .dsp-event-name { text-shadow: 0 0 20px rgba(255,140,0,0.8), 0 0 40px rgba(255,60,0,0.4) !important; color: #ffe0a0 !important; }
+.display-page.stage-festival .dsp-card, .display-page.stage-festival .dsp-qr-wrap { border-color: rgba(255,120,0,0.4) !important; box-shadow: 0 0 28px rgba(255,80,0,0.1) !important; background: rgba(20,6,0,0.82) !important; }
+.display-page.stage-festival .dtable-votes-lg { color: #ffaa00 !important; text-shadow: 0 0 10px rgba(255,160,0,0.6) !important; }
+.display-page.stage-festival .display-ticker-bar { border-top-color: rgba(255,100,0,0.3) !important; border-bottom-color: rgba(255,100,0,0.3) !important; }
+
+/* ── CYBER: Tam siyah + neon pembe + cyan grid ── */
+.display-page.stage-cyber { background: #020004 !important; }
+.display-page.stage-cyber::before {
+  background:
+    repeating-linear-gradient(0deg, transparent 0px, transparent 59px, rgba(255,0,160,0.12) 59px, rgba(255,0,160,0.12) 60px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 59px, rgba(0,220,255,0.07) 59px, rgba(0,220,255,0.07) 60px),
+    linear-gradient(180deg, rgba(0,200,255,0.06) 0%, rgba(255,0,160,0.14) 100%) !important;
+}
+.display-page.stage-cyber::after {
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255,0,160,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 50% 0%, rgba(0,220,255,0.22) 0%, transparent 50%) !important;
+}
+.display-page.stage-cyber .dsp-topbar { border-bottom-color: rgba(255,0,160,0.5) !important; box-shadow: 0 2px 30px rgba(255,0,160,0.18) !important; }
+.display-page.stage-cyber .dsp-event-name { text-shadow: 0 0 20px rgba(255,0,160,0.7), 0 0 40px rgba(0,220,255,0.35) !important; color: #ff66d0 !important; }
+.display-page.stage-cyber .dsp-card, .display-page.stage-cyber .dsp-qr-wrap { border-color: rgba(255,0,160,0.4) !important; box-shadow: 0 0 28px rgba(255,0,160,0.1), inset 0 0 30px rgba(255,0,160,0.03) !important; }
+.display-page.stage-cyber .dtable-votes-lg { color: #ff00a0 !important; text-shadow: 0 0 12px rgba(255,0,160,0.7) !important; }
+.display-page.stage-cyber .display-ticker-bar { border-top-color: rgba(255,0,160,0.35) !important; border-bottom-color: rgba(255,0,160,0.35) !important; }
+
+/* ── RAVE: UV mor + neon yeşil + floresan ── */
+.display-page.stage-rave { background: #05001a !important; }
+.display-page.stage-rave::before {
+  background:
+    radial-gradient(ellipse 65% 65% at 50% 50%, rgba(120,0,255,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 40% at 50% 100%, rgba(0,255,100,0.2) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 90% at 5% 50%, rgba(255,0,200,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 90% at 95% 50%, rgba(80,0,255,0.22) 0%, transparent 55%) !important;
+  animation: raveFlash 4s ease-in-out infinite;
+}
+.display-page.stage-rave::after {
+  background: repeating-conic-gradient(from 0deg at 50% 50%,
+    rgba(0,255,120,0.06) 0deg 10deg, transparent 10deg 30deg,
+    rgba(255,0,200,0.06) 30deg 40deg, transparent 40deg 60deg) !important;
+}
+.display-page.stage-rave .display-bg { background: radial-gradient(circle at 50% 50%, rgba(120,0,255,0.25) 0%, transparent 55%) !important; }
+.display-page.stage-rave .dsp-topbar { border-bottom: 2px solid rgba(120,0,255,0.5) !important; box-shadow: 0 2px 30px rgba(120,0,255,0.2) !important; }
+.display-page.stage-rave .dsp-event-name { text-shadow: 0 0 20px rgba(120,0,255,0.8), 0 0 40px rgba(0,255,120,0.4) !important; color: #cc88ff !important; }
+.display-page.stage-rave .dsp-card, .display-page.stage-rave .dsp-qr-wrap { border-color: rgba(120,0,255,0.4) !important; box-shadow: 0 0 32px rgba(120,0,255,0.1) !important; background: rgba(3,0,12,0.82) !important; }
+.display-page.stage-rave .dtable-votes-lg { color: #00ff78 !important; text-shadow: 0 0 12px rgba(0,255,120,0.7) !important; }
+.display-page.stage-rave .display-ticker-bar { border-top-color: rgba(120,0,255,0.3) !important; border-bottom-color: rgba(120,0,255,0.3) !important; }
+
+/* ── CINEMA: Saf noir — siyah + beyaz spotlight ── */
+.display-page.stage-cinema { background: #000000 !important; }
+.display-page.stage-cinema::before {
+  background:
+    radial-gradient(ellipse 55% 110% at 50% 0%, rgba(255,255,220,0.2) 0%, transparent 52%),
+    radial-gradient(ellipse 80% 50% at 50% 14%, rgba(255,255,200,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, transparent 50%, rgba(0,0,0,0.7) 100%) !important;
+}
+.display-page.stage-cinema .dsp-topbar { background: rgba(0,0,0,0.95) !important; border-bottom: 1px solid rgba(255,255,255,0.18) !important; }
+.display-page.stage-cinema .dsp-event-name { color: #ffffff !important; text-shadow: 0 0 30px rgba(255,255,200,0.5) !important; font-weight: 300 !important; letter-spacing: 8px !important; }
+.display-page.stage-cinema .dsp-card, .display-page.stage-cinema .dsp-qr-wrap { background: rgba(5,5,5,0.9) !important; border-color: rgba(255,255,255,0.15) !important; border-radius: 0 !important; }
+.display-page.stage-cinema .dtable-votes-lg { color: #ffffff !important; font-weight: 300 !important; }
+.display-page.stage-cinema .display-ticker-bar { border-top-color: rgba(255,255,255,0.12) !important; border-bottom-color: rgba(255,255,255,0.12) !important; }
+
+/* ── ELEGANT: Bordo/kadife + gül altını ── */
+.display-page.stage-elegant { background: #0a0208 !important; }
+.display-page.stage-elegant::before {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(180,40,80,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 80% at 0% 50%, rgba(140,20,60,0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 80% at 100% 50%, rgba(160,60,100,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(100,10,40,0.3) 0%, transparent 50%) !important;
+  animation: none;
+}
+.display-page.stage-elegant .display-bg { background: radial-gradient(ellipse at 50% 50%, rgba(180,40,80,0.18) 0%, transparent 55%) !important; }
+.display-page.stage-elegant .dsp-topbar { background: linear-gradient(180deg, rgba(10,2,8,0.96) 0%, transparent 100%) !important; border-bottom: 1px solid rgba(200,80,120,0.4) !important; box-shadow: 0 2px 30px rgba(160,40,80,0.2) !important; }
+.display-page.stage-elegant .dsp-event-name { font-weight: 200 !important; letter-spacing: 5px !important; font-style: italic !important; text-shadow: 0 0 25px rgba(220,100,140,0.6), 0 0 50px rgba(180,40,80,0.3) !important; color: #f0b0c8 !important; }
+.display-page.stage-elegant .dsp-card, .display-page.stage-elegant .dsp-qr-wrap { background: rgba(14,3,10,0.82) !important; border-color: rgba(200,80,120,0.35) !important; box-shadow: 0 0 28px rgba(160,40,80,0.1) !important; }
+.display-page.stage-elegant .dtable-votes-lg { color: #e090b0 !important; text-shadow: 0 0 10px rgba(200,80,140,0.5) !important; }
+.display-page.stage-elegant .display-ticker-bar { border-top-color: rgba(180,60,100,0.25) !important; border-bottom-color: rgba(180,60,100,0.25) !important; }
+
