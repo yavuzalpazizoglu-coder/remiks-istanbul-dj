@@ -231,11 +231,6 @@ export function voteRequest(requestId, deviceId) {
   return getRequestById(requestId);
 }
 
-export function hasVoted(requestId, deviceId) {
-  return !!db.prepare(
-    'SELECT id FROM votes WHERE request_id = ? AND device_id = ?'
-  ).get(requestId, deviceId);
-}
 
 export function updateRequestStatus(requestId, status) {
   if (status === 'playing') {
@@ -299,11 +294,6 @@ export function getEventHistory(password) {
   `).all(password);
 }
 
-export function getNowPlaying(eventId) {
-  return db.prepare(
-    "SELECT * FROM requests WHERE event_id = ? AND status = 'playing' LIMIT 1"
-  ).get(eventId);
-}
 
 // ─── DJ Users ───
 
@@ -311,8 +301,5 @@ export function getDJByEmail(email) {
   return db.prepare('SELECT * FROM dj_users WHERE email = ?').get(email);
 }
 
-export function getAllDJs() {
-  return db.prepare('SELECT id, name, email, role FROM dj_users').all();
-}
 
 export default db;

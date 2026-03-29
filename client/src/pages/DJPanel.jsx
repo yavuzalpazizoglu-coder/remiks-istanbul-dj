@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { QRCodeSVG } from 'qrcode.react';
 import socket from '../socket.js';
 import useSocketStatus from '../useSocketStatus.js';
 import { t } from '../i18n/index.js';
@@ -27,21 +26,16 @@ export default function DJPanel() {
   const [newEventName, setNewEventName] = useState('');
   const [connectSlug, setConnectSlug] = useState('');
   const [countdownMinutes, setCountdownMinutes] = useState(10);
-  const [copied, setCopied] = useState(false);
   const [brandText, setBrandText] = useState('');
   const [brandSaving, setBrandSaving] = useState(false);
   const [tickerTexts, setTickerTexts] = useState('');
   const [tickerSaving, setTickerSaving] = useState(false);
-  const [showQr, setShowQr] = useState(false);
   const [requestLimit, setRequestLimit] = useState(2);
   const [theme, setTheme] = useState('cyan');
   const [animationLevel, setAnimationLevel] = useState('high');
   const [stageDesign, setStageDesign] = useState('classic');
   const [eventLogo, setEventLogo] = useState('');
   const [eventHistory, setEventHistory] = useState([]);
-  const [openingOn, setOpeningOn] = useState(false);
-  const [closingOn, setClosingOn] = useState(false);
-  const [ceremonyMinutes, setCeremonyMinutes] = useState(10);
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [selectedDJs, setSelectedDJs] = useState([]);
   const [panelTheme, setPanelTheme] = useState(() => localStorage.getItem('remiks_panel_theme') || 'classic');
@@ -53,8 +47,6 @@ export default function DJPanel() {
   const previewIframeRef = useRef(null);
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatUnread, setChatUnread] = useState(0);
   const chatEndRef = useRef(null);
 
   const [cardType, setCardType] = useState('request');
@@ -157,11 +149,6 @@ export default function DJPanel() {
       setEvent(prev => prev ? { ...prev, status } : prev);
     });
 
-    socket.on('ceremony', ({ type, active }) => {
-      if (type === 'opening') { setOpeningOn(active); if (active) setClosingOn(false); }
-      if (type === 'closing') { setClosingOn(active); if (active) setOpeningOn(false); }
-    });
-
     socket.on('music-mode', ({ mode, active }) => {
       setActiveMusicMode(active ? mode : null);
     });
@@ -177,7 +164,6 @@ export default function DJPanel() {
       socket.off('vote-updated');
       socket.off('list-updated');
       socket.off('event-status');
-      socket.off('ceremony');
       socket.off('music-mode');
       socket.off('room-count');
       socket.off('crew-chat');
@@ -187,7 +173,6 @@ export default function DJPanel() {
 
   useEffect(() => {
     if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    if (!chatOpen && chatMessages.length > 0) setChatUnread(prev => prev + 1);
   }, [chatMessages.length]);
 
   useEffect(() => {
@@ -483,30 +468,6 @@ export default function DJPanel() {
     } catch (err) { console.warn('changeTheme failed:', err); }
   };
 
-  const sendCeremony = async (type, active, minutes) => {
-    try {
-      await fetch(`${API}/api/events/${slug}/ceremony`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
-        body: JSON.stringify({ type, active, minutes: active ? minutes : 0 }),
-      });
-    } catch (err) { console.warn('sendCeremony failed:', err); }
-  };
-
-  const toggleCeremony = async (type) => {
-    const isOn = type === 'opening' ? openingOn : closingOn;
-    const newState = !isOn;
-    if (type === 'opening') { setOpeningOn(newState); if (newState) setClosingOn(false); }
-    if (type === 'closing') { setClosingOn(newState); if (newState) setOpeningOn(false); }
-    await sendCeremony(type, newState, ceremonyMinutes);
-  };
-
-  const updateCeremonyMinutes = async (m) => {
-    setCeremonyMinutes(m);
-    const activeType = openingOn ? 'opening' : closingOn ? 'closing' : null;
-    if (activeType) await sendCeremony(activeType, true, m);
-  };
-
   const MUSIC_MODES = [
     { id: 'arabesk', icon: '🎻', tr: 'Arabesk', en: 'Arabesk' },
     { id: 'rock', icon: '🎸', tr: 'Rock', en: 'Rock' },
@@ -600,14 +561,6 @@ export default function DJPanel() {
     tickerTimer.current = setTimeout(() => saveTickerTexts(val), 800);
   };
 
-  const copyLink = () => {
-    const appUrl = window.location.origin;
-    navigator.clipboard.writeText(`${appUrl}/request/${slug}`);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const requestUrl = `${window.location.origin}/request/${slug}`;
 
   // ─── Fetch event history ───
 
@@ -804,7 +757,7 @@ export default function DJPanel() {
   // ─── Main DJ Panel ───
 
   const waitingRequests = requests.filter(r => r.status === 'pending');
-  const approvedRequests = requests.filter(r => r.status === 'approved');
+  const approvedRequests = requests.filter(r => r.status === 'approved' || r.status === 'playing');
   const allActiveRequests = [...waitingRequests, ...approvedRequests];
   const rejectedCount = requests.filter(r => r.status === 'rejected').length;
   const totalVotes = requests.reduce((sum, r) => sum + r.votes, 0);
@@ -977,37 +930,6 @@ export default function DJPanel() {
             </div>
           </div>
 
-          {/* Ceremony */}
-          <div className="djc-sec">
-            <div className="djc-sec-head">
-              <span className="djc-sec-title"><strong>{lang === 'tr' ? 'GÖSTERİ' : 'SHOW'}</strong> · {lang === 'tr' ? 'Sahne' : 'Ceremony'}</span>
-            </div>
-            <div className="djc-sec-body">
-              <div className="djc-btn-pair">
-                <button className={`btn djc-ceremony-btn opening ${openingOn ? 'active' : ''}`} onClick={() => toggleCeremony('opening')}>
-                  {lang === 'tr' ? 'Açılış' : 'Opening'}
-                </button>
-                <button className={`btn djc-ceremony-btn closing ${closingOn ? 'active' : ''}`} onClick={() => toggleCeremony('closing')}>
-                  {lang === 'tr' ? 'Kapanış' : 'Closing'}
-                </button>
-              </div>
-              <div className="djc-booth-selects" style={{ marginTop: 4 }}>
-                <label className="djc-booth-select-label">
-                  {lang === 'tr' ? 'Açılış' : 'Opening'}
-                  <select className="djc-booth-select" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))}>
-                    {[1, 5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
-                  </select>
-                </label>
-                <label className="djc-booth-select-label">
-                  {lang === 'tr' ? 'Kapanış' : 'Closing'}
-                  <select className="djc-booth-select" value={ceremonyMinutes} onChange={(e) => updateCeremonyMinutes(Number(e.target.value))}>
-                    {[1, 5, 10, 15, 30].map(m => <option key={m} value={m}>{m} dk</option>)}
-                  </select>
-                </label>
-              </div>
-            </div>
-          </div>
-
           {/* Music Mode & DJ */}
           <div className="djc-sec">
             <div className="djc-sec-head">
@@ -1098,34 +1020,97 @@ export default function DJPanel() {
               <p>{T('dj.no_requests')}</p>
             </div>
           ) : (
-            <div className="dj-list-scroll">
-              <table className="dj-table">
-                <AnimatePresence>
-                  <tbody>
-                    {[...waitingRequests, ...approvedRequests].map((req, idx) => (
-                      <motion.tr key={req.id} className={`dj-table-row ${req.status === 'pending' ? 'dj-table-row-pending' : ''}`} layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
-                        <td className={`dj-table-rank ${req.status === 'approved' && idx - waitingRequests.length === 0 ? 'top-1' : req.status === 'approved' && idx - waitingRequests.length === 1 ? 'top-2' : req.status === 'approved' && idx - waitingRequests.length === 2 ? 'top-3' : ''}`}>{idx + 1}</td>
-                        <td style={{ width: 40, padding: '6px' }}>
-                          {req.album_art
-                            ? <img src={req.album_art} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: 'cover', display: 'block' }} />
-                            : <div style={{ width: 34, height: 34, borderRadius: 6, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>🎵</div>
-                          }
-                        </td>
-                        <td>
-                          <div className="dj-table-song">{req.song_name}</div>
-                          {req.artist && <div className="dj-table-artist">{req.artist}</div>}
-                        </td>
-                        <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
-                        <td className="dj-table-actions">
-                          {req.status === 'pending' && <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')} title={lang === 'tr' ? 'Onayla' : 'Approve'}>✓</button>}
-                          {req.status === 'approved' && <button className="btn btn-small btn-played" onClick={() => updateRequestStatus(req.id, 'played')} title={lang === 'tr' ? 'Çalındı' : 'Played'}>♫</button>}
-                          <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} style={{ marginLeft: 4 }} title={lang === 'tr' ? 'Reddet' : 'Reject'}>✕</button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </AnimatePresence>
-              </table>
+            <div className="dj-list-2col">
+              {/* SOL: Gelen İstekler (pending) */}
+              <div className="dj-list-col dj-list-col-pending">
+                <div className="dj-list-col-header">
+                  <span className="dj-list-col-icon">📥</span>
+                  <span className="dj-list-col-title">{lang === 'tr' ? 'GELEN İSTEKLER' : 'INCOMING'}</span>
+                  <span className="dj-list-col-count">{waitingRequests.length}</span>
+                </div>
+                <div className="dj-list-scroll">
+                  {waitingRequests.length === 0 ? (
+                    <div className="dj-list-empty">{lang === 'tr' ? 'Bekleyen istek yok' : 'No pending requests'}</div>
+                  ) : (
+                    <table className="dj-table">
+                      <AnimatePresence>
+                        <tbody>
+                          {waitingRequests.map((req, idx) => (
+                            <motion.tr key={req.id} className="dj-table-row dj-table-row-pending"
+                              layout initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
+                              transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
+                              <td className="dj-table-rank">{idx + 1}</td>
+                              <td style={{ width: 36, padding: '4px' }}>
+                                {req.album_art
+                                  ? <img src={req.album_art} alt="" style={{ width: 30, height: 30, borderRadius: 5, objectFit: 'cover', display: 'block' }} />
+                                  : <div style={{ width: 30, height: 30, borderRadius: 5, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🎵</div>
+                                }
+                              </td>
+                              <td>
+                                <div className="dj-table-song">{req.song_name}</div>
+                                {req.artist && <div className="dj-table-artist">{req.artist}</div>}
+                              </td>
+                              <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
+                              <td className="dj-table-actions">
+                                <button className="btn btn-small btn-success" onClick={() => updateRequestStatus(req.id, 'approved')} title={lang === 'tr' ? 'Onayla' : 'Approve'}>✓</button>
+                                <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} title={lang === 'tr' ? 'Reddet' : 'Reject'}>✕</button>
+                              </td>
+                            </motion.tr>
+                          ))}
+                        </tbody>
+                      </AnimatePresence>
+                    </table>
+                  )}
+                </div>
+              </div>
+
+              {/* SAĞ: Onaylananlar (approved + playing) */}
+              <div className="dj-list-col dj-list-col-approved">
+                <div className="dj-list-col-header">
+                  <span className="dj-list-col-icon">✅</span>
+                  <span className="dj-list-col-title">{lang === 'tr' ? 'ONAYLANANLAR' : 'APPROVED'}</span>
+                  <span className="dj-list-col-count">{approvedRequests.length}</span>
+                </div>
+                <div className="dj-list-scroll">
+                  {approvedRequests.length === 0 ? (
+                    <div className="dj-list-empty">{lang === 'tr' ? 'Onaylanan istek yok' : 'No approved requests'}</div>
+                  ) : (
+                    <table className="dj-table">
+                      <AnimatePresence>
+                        <tbody>
+                          {[...approvedRequests].sort((a, b) => b.votes - a.votes).map((req, idx) => (
+                            <motion.tr key={req.id} className={`dj-table-row ${req.status === 'playing' ? 'dj-table-row-playing' : ''}`}
+                              layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
+                              transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
+                              <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>{idx + 1}</td>
+                              <td style={{ width: 36, padding: '4px' }}>
+                                {req.album_art
+                                  ? <img src={req.album_art} alt="" style={{ width: 30, height: 30, borderRadius: 5, objectFit: 'cover', display: 'block' }} />
+                                  : <div style={{ width: 30, height: 30, borderRadius: 5, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🎵</div>
+                                }
+                              </td>
+                              <td>
+                                <div className="dj-table-song">{req.song_name}</div>
+                                {req.artist && <div className="dj-table-artist">{req.artist}</div>}
+                              </td>
+                              <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
+                              <td className="dj-table-actions">
+                                {req.status === 'approved' && (
+                                  <button className="btn btn-small btn-primary" onClick={() => updateRequestStatus(req.id, 'playing')} title={lang === 'tr' ? 'Şimdi Çal' : 'Play Now'}>▶</button>
+                                )}
+                                {req.status === 'playing' && (
+                                  <button className="btn btn-small btn-played" onClick={() => updateRequestStatus(req.id, 'played')} title={lang === 'tr' ? 'Çalındı' : 'Played'}>♫</button>
+                                )}
+                                <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} title={lang === 'tr' ? 'Reddet' : 'Reject'}>✕</button>
+                              </td>
+                            </motion.tr>
+                          ))}
+                        </tbody>
+                      </AnimatePresence>
+                    </table>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 

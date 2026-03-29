@@ -807,17 +807,33 @@ function VoteFloat({ count }) {
 
 function SongRow({ req, rank, lang, isPlayed }) {
   const [shaking, setShaking] = useState(false);
+  const [voteFlash, setVoteFlash] = useState(false);
+  const [delta, setDelta] = useState(0);
   const prevVotes = useRef(req.votes);
+  const prevRank = useRef(rank);
   const isTop3 = rank <= 3;
+  const rankUp = rank < prevRank.current;
+  const rankDown = rank > prevRank.current;
 
   useEffect(() => {
-    if (req.votes > prevVotes.current) { setShaking(true); setTimeout(() => setShaking(false), 500); }
+    if (req.votes > prevVotes.current) {
+      setDelta(req.votes - prevVotes.current);
+      setShaking(true);
+      setVoteFlash(true);
+      setTimeout(() => setShaking(false), 500);
+      setTimeout(() => setVoteFlash(false), 1200);
+      setTimeout(() => setDelta(0), 1500);
+    }
     prevVotes.current = req.votes;
   }, [req.votes]);
 
+  useEffect(() => {
+    prevRank.current = rank;
+  }, [rank]);
+
   return (
     <motion.tr
-      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${shaking ? 'animate-shake' : ''} ${isPlayed ? 'dtable-played' : ''}`}
+      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${shaking ? 'animate-shake' : ''} ${isPlayed ? 'dtable-played' : ''} ${voteFlash ? 'dtable-vote-flash' : ''}`}
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       initial={{ opacity: 0, x: -30 }}
@@ -827,6 +843,8 @@ function SongRow({ req, rank, lang, isPlayed }) {
         {isPlayed
           ? <span className="played-badge">🔥 {lang === 'tr' ? 'ÇALINIYOR' : 'PLAYING'}</span>
           : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
+        {!isPlayed && rankUp && <span className="dtable-rank-arrow dtable-rank-up">▲</span>}
+        {!isPlayed && rankDown && <span className="dtable-rank-arrow dtable-rank-down">▼</span>}
       </td>
       <td className="dtable-art-cell">
         {req.album_art
@@ -845,6 +863,13 @@ function SongRow({ req, rank, lang, isPlayed }) {
             key={req.votes} initial={{ scale: 1.3 }} animate={{ scale: 1 }}>
             {req.votes}
           </motion.span>
+          {delta > 0 && (
+            <motion.span className="dtable-delta"
+              initial={{ opacity: 1, y: 0 }} animate={{ opacity: 0, y: -18 }}
+              transition={{ duration: 1.2 }}>
+              +{delta}
+            </motion.span>
+          )}
         </div>
         <span className="dtable-vote-label">{t(lang, 'request.votes')}</span>
       </td>
@@ -1012,8 +1037,6 @@ export default function DisplayPage({ rejiMode = false }) {
 
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
-  const [chatOpen, setChatOpen] = useState(true);
-  const [chatUnread, setChatUnread] = useState(0);
   const chatEndRef = useRef(null);
   const [blackout, setBlackout] = useState(false);
   const [spotlightText, setSpotlightText] = useState('');
@@ -1027,6 +1050,7 @@ export default function DisplayPage({ rejiMode = false }) {
 
   const [displayCard, setDisplayCard] = useState(null);
   const displayCardTimer = useRef(null);
+  const rejiCountdownTimer = useRef(null);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -1141,13 +1165,15 @@ export default function DisplayPage({ rejiMode = false }) {
     });
 
     socket.on('reji-countdown', ({ seconds }) => {
+      if (rejiCountdownTimer.current) clearInterval(rejiCountdownTimer.current);
       setRejiCountdown(seconds);
       const iv = setInterval(() => {
         setRejiCountdown(prev => {
-          if (prev <= 1) { clearInterval(iv); return 0; }
+          if (prev <= 1) { clearInterval(iv); rejiCountdownTimer.current = null; return 0; }
           return prev - 1;
         });
       }, 1000);
+      rejiCountdownTimer.current = iv;
     });
 
     socket.on('display-card', (card) => {
@@ -1213,7 +1239,6 @@ export default function DisplayPage({ rejiMode = false }) {
 
   useEffect(() => {
     if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    if (!chatOpen && chatMessages.length > 0) setChatUnread(prev => prev + 1);
   }, [chatMessages.length]);
 
   const sendChat = (sender) => {
@@ -1239,9 +1264,9 @@ export default function DisplayPage({ rejiMode = false }) {
 
   if (!event) return <div className="display-page"><div className="display-bg" /></div>;
 
-  const top10 = requests.slice(0, 10);
-  const listLeft = top10.filter((_, i) => i % 2 === 0);
-  const listRight = top10.filter((_, i) => i % 2 === 1);
+  const top15 = requests.slice(0, 15);
+  const listLeft = top15.filter((_, i) => i % 2 === 0);
+  const listRight = top15.filter((_, i) => i % 2 === 1);
   const displayName = brandText || event.name;
 
   const themeColors = {
