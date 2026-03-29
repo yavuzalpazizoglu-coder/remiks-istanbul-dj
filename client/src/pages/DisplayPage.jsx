@@ -821,8 +821,30 @@ function NowPlayingBar({ req, lang }) {
 
   return (
     <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''}`}>
-      {/* Sol: Albüm + Şarkı */}
+
+      {/* Sol: LIVE badge + Albüm + Şarkı Bilgisi */}
       <div className="dsp-np-stage-left">
+
+        {/* LIVE / WAIT pill */}
+        <div className={`dsp-np-live-pill ${req ? 'dsp-np-live-pill-on' : 'dsp-np-live-pill-off'}`}>
+          {req ? (
+            <>
+              <span className="dsp-np-live-dot" />
+              <span className="dsp-np-live-text">
+                {lang === 'tr' ? 'ŞU AN\nÇALINIYOR' : 'NOW\nPLAYING'}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="dsp-np-live-dot dsp-np-live-dot-idle" />
+              <span className="dsp-np-live-text dsp-np-live-text-idle">
+                {lang === 'tr' ? 'DJ\nSAHNESİ' : 'DJ\nSTAGE'}
+              </span>
+            </>
+          )}
+        </div>
+
+        {/* Albüm fotoğrafı */}
         {req ? (
           req.album_art
             ? <img src={req.album_art} alt="" className="dsp-np-stage-art" />
@@ -832,6 +854,8 @@ function NowPlayingBar({ req, lang }) {
             <span className="dsp-np-stage-wait-icon">⏸</span>
           </div>
         )}
+
+        {/* Şarkı adı + sanatçı */}
         <div className="dsp-np-stage-info">
           {req ? (
             <>
@@ -846,26 +870,16 @@ function NowPlayingBar({ req, lang }) {
         </div>
       </div>
 
-      {/* Merkez: Etiket + Equalizer */}
-      <div className="dsp-np-stage-center">
-        <div className="dsp-np-stage-label">
-          {req
-            ? (lang === 'tr' ? '▶  ŞU AN ÇALINIYOR' : '▶  NOW PLAYING')
-            : (lang === 'tr' ? '♬  DJ SAHNESİ' : '♬  DJ STAGE')
-          }
-        </div>
+      {/* Sağ: EQ barları + Oy */}
+      <div className="dsp-np-stage-right">
         <div className={`dsp-np-stage-bars ${req ? '' : 'dsp-np-bars-idle'}`}>
           {[1,2,3,4,5].map(i => <span key={i} className={`dsp-np-eq-bar dsp-np-eq-bar-${i}`} />)}
         </div>
-      </div>
-
-      {/* Sağ: Oy */}
-      <div className="dsp-np-stage-right">
         {req ? (
-          <>
+          <div className="dsp-np-stage-votes-wrap">
             <span className="dsp-np-stage-votes-num">{req.votes}</span>
             <span className="dsp-np-stage-votes-lbl">OY</span>
-          </>
+          </div>
         ) : (
           <span className="dsp-np-stage-votes-empty">—</span>
         )}

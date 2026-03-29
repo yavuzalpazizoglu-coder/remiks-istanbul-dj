@@ -4710,6 +4710,67 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   gap: clamp(7px, 0.9vw, 14px);
   flex: 1; min-width: 0;
 }
+
+/* ── LIVE pill (sol taraf büyük badge) ── */
+.dsp-np-live-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3px, 0.4vh, 6px);
+  flex-shrink: 0;
+  width: clamp(54px, 7vw, 90px);
+  padding: clamp(6px, 0.9vh, 12px) clamp(5px, 0.7vw, 10px);
+  border-radius: clamp(6px, 0.7vw, 10px);
+  border: 1px solid rgba(var(--theme-rgb), 0.35);
+}
+.dsp-np-live-pill-on {
+  background: linear-gradient(160deg, rgba(var(--theme-rgb),0.22) 0%, rgba(0,0,0,0.5) 100%);
+  border-color: rgba(var(--theme-rgb), 0.55);
+  box-shadow: 0 0 clamp(8px,1.3vw,20px) rgba(var(--theme-rgb),0.25),
+              inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: livePillPulse 1.4s ease-in-out infinite;
+}
+.dsp-np-live-pill-off {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.1);
+}
+@keyframes livePillPulse {
+  0%,100% { box-shadow: 0 0 clamp(6px,1vw,14px) rgba(var(--theme-rgb),0.18), inset 0 1px 0 rgba(255,255,255,0.07); }
+  50%     { box-shadow: 0 0 clamp(14px,2.2vw,32px) rgba(var(--theme-rgb),0.40), inset 0 1px 0 rgba(255,255,255,0.10); }
+}
+.dsp-np-live-dot {
+  display: block;
+  width:  clamp(6px, 0.9vh, 11px);
+  height: clamp(6px, 0.9vh, 11px);
+  border-radius: 50%;
+  background: var(--theme-primary, #00d4ff);
+  box-shadow: 0 0 clamp(4px,0.7vh,9px) var(--theme-primary, #00d4ff);
+  animation: liveDotBlink 1s ease-in-out infinite;
+}
+@keyframes liveDotBlink {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%     { opacity: 0.4; transform: scale(0.75); }
+}
+.dsp-np-live-dot-idle {
+  background: rgba(255,255,255,0.18);
+  box-shadow: none;
+  animation: npWaitIconPulse 2.8s ease-in-out infinite;
+}
+.dsp-np-live-text {
+  font-family: var(--font-display);
+  font-size: clamp(7px, 0.95vh, 12px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--theme-primary, #00d4ff);
+  text-align: center;
+  white-space: pre-line;
+  line-height: 1.15;
+}
+.dsp-np-live-text-idle {
+  color: rgba(255,255,255,0.28);
+}
 .dsp-np-stage-art {
   width: clamp(34px, 5.8vh, 66px); height: clamp(34px, 5.8vh, 66px);
   border-radius: clamp(4px, 0.5vw, 8px);
@@ -4766,17 +4827,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   0%,100% { color: rgba(255,255,255,0.35); }
   50%     { color: rgba(var(--theme-rgb), 0.80); }
 }
-.dsp-np-stage-center {
-  display: flex; flex-direction: column; align-items: center;
-  gap: clamp(3px, 0.45vh, 7px); flex-shrink: 0;
-}
-.dsp-np-stage-label {
-  font-family: var(--font-display);
-  font-size: clamp(7px, 0.82vh, 11px); font-weight: 700;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--theme-primary, #00d4ff); white-space: nowrap;
-}
-.dsp-np-stage-waiting .dsp-np-stage-label { color: rgba(255,255,255,0.18); }
+/* ── EQ barları ── */
 .dsp-np-stage-bars {
   display: flex; align-items: flex-end;
   gap: clamp(2px, 0.3vw, 4px);
@@ -4798,10 +4849,18 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   to   { transform: scaleY(1);    opacity: 0.9; }
 }
 .dsp-np-stage-right {
-  display: flex; flex-direction: column; align-items: flex-end;
-  flex-shrink: 0; padding-left: clamp(8px, 1vw, 16px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: clamp(4px, 0.6vh, 8px);
+  padding-left: clamp(8px, 1vw, 16px);
   border-left: 1px solid rgba(var(--theme-rgb), 0.2);
-  min-width: clamp(40px, 5vw, 70px);
+  min-width: clamp(50px, 6.5vw, 88px);
+}
+.dsp-np-stage-votes-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
 }
 .dsp-np-stage-votes-num {
   font-family: var(--font-mono, monospace);
@@ -4970,6 +5029,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   padding-right: clamp(3px, 0.35vw, 6px);
   border-right: 1px solid rgba(255,255,255,0.06);
   gap: 1px;
+  position: relative; z-index: 2;
 }
 .dsp-card-rank-label {
   font-family: var(--font-display);
@@ -5059,17 +5119,21 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   width: clamp(26px, 4.5vh, 52px); height: clamp(26px, 4.5vh, 52px);
   border-radius: clamp(3px, 0.4vw, 6px); object-fit: cover;
   display: block; flex-shrink: 0;
+  position: relative; z-index: 2;   /* shimmer ::before üstünde */
+  filter: none !important;           /* hiçbir filtre uygulanmasın */
 }
 .dsp-card-art-ph {
   width: clamp(26px, 4.5vh, 52px); height: clamp(26px, 4.5vh, 52px);
-  border-radius: clamp(3px, 0.4vw, 6px); background: rgba(255,255,255,0.04);
+  border-radius: clamp(3px, 0.4vw, 6px); background: rgba(255,255,255,0.06);
   display: flex; align-items: center; justify-content: center;
-  font-size: clamp(12px, 2vh, 22px); flex-shrink: 0; color: rgba(255,255,255,0.2);
+  font-size: clamp(12px, 2vh, 22px); flex-shrink: 0; color: rgba(255,255,255,0.35);
+  position: relative; z-index: 2;
 }
 
 /* İsim + sanatçı */
 .dsp-card-info {
   flex: 1; min-width: 0; display: flex; flex-direction: column; gap: clamp(1px, 0.15vh, 2px);
+  position: relative; z-index: 2;
 }
 .dsp-card-song {
   font-size: clamp(10px, 1.55vh, 19px); font-weight: 700; color: rgba(255,255,255,0.92);
@@ -5089,6 +5153,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   padding-left: clamp(4px, 0.5vw, 8px);
   border-left: 1px solid rgba(255,255,255,0.07);
   min-width: clamp(34px, 4.8vw, 58px);
+  position: relative; z-index: 2;
 }
 .dsp-card-votes-box {
   display: flex; flex-direction: column; align-items: center; width: 100%;
