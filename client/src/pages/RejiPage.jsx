@@ -184,36 +184,9 @@ export default function RejiPage() {
             </div>
           </div>
 
-          {/* TÖREN */}
-          <div className="reji-sb-sec">
-            <div className="reji-sb-sec-title">🎬 TÖREN</div>
-            <div className="reji-sb-field">
-              <div className="reji-sb-toggle-row">
-                {[1, 3, 5, 10, 15].map(m => (
-                  <button key={m}
-                    className={`reji-sb-toggle-btn ${rejiCeremonyMin === m ? 'active' : ''}`}
-                    onClick={() => setRejiCeremonyMin(m)}>{m} dk</button>
-                ))}
-              </div>
-            </div>
-            <div className="reji-sb-btn-grid">
-              <button className="reji-sb-btn reji-sb-btn-green"
-                onClick={() => socket.emit('reji-ceremony', { type: 'opening', active: true, minutes: rejiCeremonyMin })}>
-                ▶ Açılış
-              </button>
-              <button className="reji-sb-btn reji-sb-btn-green"
-                onClick={() => socket.emit('reji-ceremony', { type: 'closing', active: true, minutes: rejiCeremonyMin })}>
-                ▶ Kapanış
-              </button>
-              <button className="reji-sb-btn reji-sb-btn-red reji-sb-btn-full"
-                onClick={() => { socket.emit('reji-ceremony', { type: 'opening', active: false }); socket.emit('reji-ceremony', { type: 'closing', active: false }); }}>
-                ⏹ Töreni Durdur
-              </button>
-            </div>
-          </div>
 
           {/* CHAT */}
-          <div className="reji-sb-sec reji-sb-sec-chat">
+          <div className="reji-sb-sec reji-sb-sec-chat reji-sb-sec-chat-expanded">
             <div className="reji-sb-sec-title">💬 DJ CHAT</div>
             <div className="reji-sb-chat-msgs">
               {chatMessages.length === 0 && <div className="reji-sb-chat-empty">Henüz mesaj yok</div>}

@@ -6265,6 +6265,10 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .reji-sb-sec-chat {
   flex: 1; display: flex; flex-direction: column; min-height: 140px;
 }
+.reji-sb-sec-chat-expanded {
+  flex: 3;
+  min-height: 260px;
+}
 .reji-sb-field { margin-bottom: 6px; }
 .reji-sb-field:last-child { margin-bottom: 0; }
 .reji-sb-label {
@@ -6339,7 +6343,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .reji-sb-chat-msgs {
   flex: 1; overflow-y: auto; padding: 4px 2px;
   display: flex; flex-direction: column; gap: 4px;
-  min-height: 60px; max-height: 120px;
+  min-height: 80px;
   scrollbar-width: thin; scrollbar-color: #333 transparent;
 }
 .reji-sb-chat-msgs::-webkit-scrollbar { width: 3px; }
