@@ -4198,7 +4198,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   align-items: center;
   justify-content: center;
   padding: clamp(4px, 0.5vh, 8px);
-  min-width: clamp(70px, 9vw, 160px);
+  min-width: clamp(200px, 24vw, 420px);
 }
 .dsp-logo-inline::after {
   content: '';
@@ -4212,13 +4212,13 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   filter: blur(4px);
 }
 .dsp-logo-inline-img {
-  height: clamp(28px, 5vh, 76px);
-  max-width: clamp(90px, 13vw, 240px);
+  height: clamp(80px, 14vh, 200px);
+  max-width: clamp(250px, 32vw, 600px);
   object-fit: contain;
   display: block;
 }
 .dsp-logo-inline-text {
-  font-size: clamp(14px, 2vw, 30px);
+  font-size: clamp(40px, 5.5vw, 80px);
   font-weight: 800;
   line-height: 1;
   display: inline-flex;
