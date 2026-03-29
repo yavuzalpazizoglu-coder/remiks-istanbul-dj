@@ -20,6 +20,7 @@
     "marked": "^17.0.5",
     "multer": "^2.1.1",
     "nanoid": "^5.0.9",
+    "nodemailer": "^8.0.4",
     "puppeteer-core": "^24.40.0",
     "resend": "^6.9.4",
     "socket.io": "^4.8.1"

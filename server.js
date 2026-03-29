@@ -9,13 +9,21 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import * as db from './db.js';
 import { searchSpotify, isSpotifyConfigured } from './spotify.js';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-/* ── Resend mail istemcisi ── */
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+/* ── Gmail nodemailer istemcisi ── */
+const gmailTransporter = (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD)
+  ? nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    })
+  : null;
 
 async function sendEventReport(event, allRequests) {
-  if (!resend) return; // API key yoksa sessizce geç
+  if (!gmailTransporter) return;
   const toEmails = (process.env.REPORT_TO_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean);
   if (!toEmails.length) return;
 
@@ -69,7 +77,6 @@ async function sendEventReport(event, allRequests) {
       <div class="title">${event.name || 'Etkinlik'}</div>
       <div class="sub">Etkinlik Sonu Raporu &nbsp;·&nbsp; ${new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
     </div>
-
     <div class="stat-grid">
       <div class="stat"><div class="stat-num">${allRequests.length}</div><div class="stat-lbl">Toplam İstek</div></div>
       <div class="stat"><div class="stat-num">${played.length}</div><div class="stat-lbl">Çalınan Şarkı</div></div>
@@ -77,21 +84,17 @@ async function sendEventReport(event, allRequests) {
       <div class="stat"><div class="stat-num">${approved.length}</div><div class="stat-lbl">Onaylanan</div></div>
       <div class="stat"><div class="stat-num">${rejected.length}</div><div class="stat-lbl">Reddedilen</div></div>
     </div>
-
     ${tableSection('✅ Çalınan Şarkılar', '#00ff88', played.sort((a,b) => (b.votes||0)-(a.votes||0)))}
     ${tableSection('⏳ Onaylanan (Çalınmadı)', '#ffaa00', approved.sort((a,b) => (b.votes||0)-(a.votes||0)))}
-    ${tableSection('❌ Reddedilen İstekler', '#ff4466', rejected)}
-    ${tableSection('📋 Bekleyen İstekler', '#888', pending)}
-
-    <div class="footer">
-      Bu rapor otomatik olarak Remiks İstanbul DJ Sistemi tarafından gönderilmiştir.
-    </div>
+    ${tableSection('❌ Reddedilen İstekler', '#ff4466', rejected.sort((a,b) => (b.votes||0)-(a.votes||0)))}
+    ${tableSection('📋 Bekleyen İstekler', '#888', pending.sort((a,b) => (b.votes||0)-(a.votes||0)))}
+    <div class="footer">Bu rapor otomatik olarak Remiks İstanbul DJ Sistemi tarafından gönderilmiştir.</div>
   </div></body></html>`;
 
   try {
-    await resend.emails.send({
-      from: 'Remiks İstanbul <onboarding@resend.dev>',
-      to: toEmails,
+    await gmailTransporter.sendMail({
+      from: `"Remiks İstanbul DJ" <${process.env.GMAIL_USER}>`,
+      to: toEmails.join(', '),
       subject: `🎧 Etkinlik Raporu: ${event.name || 'Gecenin Özeti'} — ${new Date().toLocaleDateString('tr-TR')}`,
       html,
     });
