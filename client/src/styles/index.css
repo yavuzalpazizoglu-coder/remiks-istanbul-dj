@@ -2239,22 +2239,41 @@ body.theme-pioneer-gold .djc-sec-title strong {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 8px 4px 7px;
+  padding: 10px 4px 8px;
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
   cursor: pointer;
-  transition: background 150ms, border-color 150ms, opacity 150ms;
+  transition: all 150ms ease;
   overflow: hidden;
-  min-height: 62px;
+  min-height: 64px;
+  font-family: inherit;
+}
+.djc-ctrl-fixed-btn:active { transform: scale(0.96); }
+.djc-ctrl-fixed-btn.djc-ctrl-btn-disabled {
+  opacity: 0.42;
+  cursor: default;
 }
 .djc-ctrl-fixed-btn:hover:not(.djc-ctrl-btn-disabled) {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.2);
+  filter: brightness(1.18);
+  transform: translateY(-1px);
 }
-.djc-ctrl-fixed-btn.djc-ctrl-btn-disabled {
-  opacity: 0.38;
-  cursor: default;
+
+/* Renk varyantları — btn sınıflarıyla eşleşir */
+.djc-ctrl-btn-start {
+  background: linear-gradient(135deg, #007000, #008000);
+  border: none;
+  color: white;
+  box-shadow: 0 3px 12px rgba(0,112,0,0.35);
+}
+.djc-ctrl-btn-pause {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: var(--text-primary);
+}
+.djc-ctrl-btn-stop {
+  background: linear-gradient(135deg, #cc2200, #aa1800);
+  border: none;
+  color: white;
+  box-shadow: 0 3px 12px rgba(204,34,0,0.35);
 }
 
 /* LED ışık */
@@ -2306,28 +2325,30 @@ body.theme-pioneer-gold .djc-sec-title strong {
 
 /* İkon + etiket */
 .djc-ctrl-fixed-icon {
-  font-size: 15px;
-  margin-top: 4px;
+  font-size: 16px;
+  margin-top: 6px;
   line-height: 1;
+  color: inherit;
 }
 .djc-ctrl-fixed-label {
   font-size: 8px;
   font-weight: 800;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.7px;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.8);
   line-height: 1;
 }
-.djc-ctrl-led-on .djc-ctrl-fixed-label { color: rgba(255,255,255,0.9); }
+.djc-ctrl-btn-pause .djc-ctrl-fixed-label { color: rgba(255,255,255,0.6); }
+.djc-ctrl-btn-pause.djc-ctrl-led-on .djc-ctrl-fixed-label { color: rgba(255,255,255,0.9); }
 
-/* Renk varyantları */
+/* Renk varyantları — aktif LED durumu */
 .djc-ctrl-btn-start.djc-ctrl-led-on {
-  border-color: rgba(74,222,128,0.3);
-  background: rgba(74,222,128,0.06);
+  box-shadow: 0 3px 16px rgba(74,222,128,0.45);
 }
 .djc-ctrl-btn-pause.djc-ctrl-led-on {
-  border-color: rgba(96,165,250,0.3);
-  background: rgba(96,165,250,0.06);
+  border-color: rgba(96,165,250,0.4);
+  background: rgba(96,165,250,0.12);
+  box-shadow: 0 3px 12px rgba(96,165,250,0.25);
 }
 .djc-ctrl-btn-pause .djc-ctrl-led { }
 .djc-ctrl-btn-pause.djc-ctrl-led-on .djc-ctrl-led {
@@ -2335,8 +2356,7 @@ body.theme-pioneer-gold .djc-sec-title strong {
   box-shadow: 0 0 6px rgba(96,165,250,0.9), 0 0 12px rgba(96,165,250,0.5);
 }
 .djc-ctrl-btn-stop.djc-ctrl-led-on {
-  border-color: rgba(248,113,113,0.3);
-  background: rgba(248,113,113,0.06);
+  box-shadow: 0 3px 16px rgba(248,113,113,0.45);
 }
 .djc-ctrl-main-btn {
   width: 100%;
