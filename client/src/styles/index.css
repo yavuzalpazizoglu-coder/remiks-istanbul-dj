@@ -2249,7 +2249,7 @@ body.theme-pioneer-gold .djc-sec-title strong {
 }
 .djc-ctrl-fixed-btn:active { transform: scale(0.96); }
 .djc-ctrl-fixed-btn.djc-ctrl-btn-disabled {
-  opacity: 0.42;
+  opacity: 0.15;
   cursor: default;
 }
 .djc-ctrl-fixed-btn:hover:not(.djc-ctrl-btn-disabled) {
