@@ -4362,6 +4362,237 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   white-space: nowrap;
 }
 
+/* ─── Podium + Compact List Layout ─── */
+.dsp-podium-layout {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.4vh, 8px);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Podium kartı — ortak */
+.podium-card {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 0.8vw, 18px);
+  padding: clamp(5px, 0.55vh, 11px) clamp(10px, 1vw, 22px);
+  border-radius: clamp(6px, 0.6vw, 14px);
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+  transition: background 150ms;
+}
+.podium-vote-flash { animation: voteFlashGreen 1.2s ease-out forwards; }
+
+/* #1 — altın */
+.podium-card-1 {
+  border-color: rgba(255,215,0,0.35);
+  background: linear-gradient(90deg, rgba(255,215,0,0.09) 0%, rgba(255,215,0,0.03) 60%, transparent 100%);
+  box-shadow: 0 0 clamp(8px,1.2vw,28px) rgba(255,215,0,0.1);
+}
+/* #2 — gümüş */
+.podium-card-2 {
+  border-color: rgba(192,192,192,0.25);
+  background: linear-gradient(90deg, rgba(192,192,192,0.07) 0%, rgba(192,192,192,0.02) 60%, transparent 100%);
+}
+/* #3 — bronz */
+.podium-card-3 {
+  border-color: rgba(205,127,50,0.22);
+  background: linear-gradient(90deg, rgba(205,127,50,0.07) 0%, rgba(205,127,50,0.02) 60%, transparent 100%);
+}
+.podium-played {
+  border-color: rgba(255,69,0,0.5) !important;
+  background: rgba(255,69,0,0.07) !important;
+}
+
+/* İçerik */
+.podium-medal {
+  font-size: clamp(18px, 2vw, 40px);
+  flex-shrink: 0;
+  line-height: 1;
+}
+.podium-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1px, 0.15vh, 3px);
+}
+.podium-song {
+  font-family: var(--font-display);
+  font-size: clamp(13px, 1.35vw, 28px);
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.podium-card-1 .podium-song { font-size: clamp(15px, 1.6vw, 34px); font-weight: 800; }
+.podium-artist {
+  font-size: clamp(10px, 1vw, 20px);
+  color: rgba(255,255,255,0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.podium-playing-badge {
+  font-size: clamp(8px, 0.75vw, 14px);
+  font-weight: 800;
+  color: #ff6b35;
+  letter-spacing: 0.5px;
+}
+.podium-votes-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 1px;
+}
+.podium-votes-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.podium-votes {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 42px);
+  font-weight: 900;
+  color: var(--theme-primary, #00d4ff);
+  line-height: 1;
+  white-space: nowrap;
+}
+.podium-card-1 .podium-votes { font-size: clamp(22px, 2.4vw, 50px); }
+.podium-votes-label {
+  font-size: clamp(8px, 0.7vw, 13px);
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.podium-delta {
+  position: absolute;
+  top: -6px; right: -12px;
+  font-size: clamp(9px, 0.85vw, 15px);
+  font-weight: 900;
+  color: #4ade80;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.podium-rank-arrows { display: flex; gap: 3px; justify-content: flex-end; }
+.podium-arrow-up   { font-size: clamp(8px, 0.7vw, 13px); color: #4ade80; font-weight: 900; animation: rankArrowFade 2s ease-out forwards; }
+.podium-arrow-down { font-size: clamp(8px, 0.7vw, 13px); color: #f87171; font-weight: 900; animation: rankArrowFade 2s ease-out forwards; }
+
+/* #2 ve #3 yan yana */
+.podium-row-23 {
+  display: flex;
+  gap: clamp(4px, 0.4vw, 10px);
+}
+.podium-row-23 .podium-card { flex: 1; min-width: 0; }
+
+/* Ayırıcı */
+.podium-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin: clamp(1px, 0.2vh, 4px) 0;
+}
+.podium-divider::before, .podium-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+.podium-divider-label {
+  font-size: clamp(8px, 0.7vw, 13px);
+  color: rgba(255,255,255,0.2);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Kompakt liste */
+.compact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.compact-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 0.6vw, 14px);
+  padding: clamp(2px, 0.28vh, 5px) clamp(8px, 0.8vw, 18px);
+  border-left: 3px solid rgba(var(--theme-rgb), 0.3);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 150ms;
+  position: relative;
+}
+.compact-row:last-child { border-bottom: none; }
+.compact-row:hover { background: rgba(255,255,255,0.02); }
+.compact-vote-flash { animation: voteFlashGreen 1s ease-out forwards; }
+.compact-played {
+  border-left-color: #ff4500 !important;
+  background: rgba(255,69,0,0.05) !important;
+}
+.compact-rank {
+  font-family: var(--font-display);
+  font-size: clamp(10px, 1vw, 20px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.35);
+  width: clamp(16px, 1.6vw, 32px);
+  text-align: center;
+  flex-shrink: 0;
+}
+.compact-info {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(11px, 1.05vw, 21px);
+  line-height: 1.2;
+}
+.compact-song {
+  font-weight: 600;
+  color: #e8e8e8;
+}
+.compact-artist {
+  color: rgba(255,255,255,0.45);
+  font-size: clamp(10px, 0.95vw, 19px);
+}
+.compact-votes-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  position: relative;
+}
+.compact-votes {
+  font-family: var(--font-display);
+  font-size: clamp(12px, 1.1vw, 22px);
+  font-weight: 800;
+  color: var(--theme-primary, #00d4ff);
+  white-space: nowrap;
+  min-width: clamp(22px, 2.2vw, 44px);
+  text-align: right;
+  display: inline-block;
+}
+.compact-delta {
+  position: absolute;
+  top: -6px; right: -8px;
+  font-size: clamp(8px, 0.7vw, 12px);
+  font-weight: 900;
+  color: #4ade80;
+  pointer-events: none;
+}
+.compact-arrow-up   { font-size: clamp(8px, 0.65vw, 12px); color: #4ade80; font-weight: 900; animation: rankArrowFade 2s ease-out forwards; }
+.compact-arrow-down { font-size: clamp(8px, 0.65vw, 12px); color: #f87171; font-weight: 900; animation: rankArrowFade 2s ease-out forwards; }
+
 /* RIGHT: QR Card */
 .dsp-qr-card {
   flex: 0 0 30%;

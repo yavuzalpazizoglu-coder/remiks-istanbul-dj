@@ -882,6 +882,117 @@ function SongRow({ req, rank, lang, isPlayed }) {
   );
 }
 
+/* ─── Podium Kartı (#1, #2, #3) ─── */
+function PodiumCard({ req, rank, lang, isPlayed }) {
+  const [voteFlash, setVoteFlash] = useState(false);
+  const [delta, setDelta] = useState(0);
+  const prevVotes = useRef(req.votes);
+  const prevRank  = useRef(rank);
+  const rankUp    = rank < prevRank.current;
+  const rankDown  = rank > prevRank.current;
+
+  useEffect(() => {
+    if (req.votes > prevVotes.current) {
+      setDelta(req.votes - prevVotes.current);
+      setVoteFlash(true);
+      setTimeout(() => setVoteFlash(false), 1200);
+      setTimeout(() => setDelta(0), 1500);
+    }
+    prevVotes.current = req.votes;
+  }, [req.votes]);
+  useEffect(() => { prevRank.current = rank; }, [rank]);
+
+  const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
+  const rankClass = rank === 1 ? 'podium-card-1' : rank === 2 ? 'podium-card-2' : 'podium-card-3';
+
+  return (
+    <motion.div
+      className={`podium-card ${rankClass} ${voteFlash ? 'podium-vote-flash' : ''} ${isPlayed ? 'podium-played' : ''}`}
+      layout
+      transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+      initial={{ opacity: 0, y: -16 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <div className="podium-medal">{isPlayed ? '🔥' : medal}</div>
+      <div className="podium-info">
+        <div className="podium-song">{req.song_name}</div>
+        {req.artist && <div className="podium-artist">{req.artist}</div>}
+        {isPlayed && <div className="podium-playing-badge">{lang === 'tr' ? 'ÇALINIYOR' : 'PLAYING'}</div>}
+      </div>
+      <div className="podium-votes-col">
+        <div className="podium-votes-wrap">
+          <VoteFloat count={req.votes} />
+          <motion.span className="podium-votes" key={req.votes}
+            initial={{ scale: 1.4 }} animate={{ scale: 1 }}>
+            {req.votes}
+          </motion.span>
+          {delta > 0 && (
+            <motion.span className="podium-delta"
+              initial={{ opacity: 1, y: 0 }} animate={{ opacity: 0, y: -20 }}
+              transition={{ duration: 1.3 }}>+{delta}</motion.span>
+          )}
+        </div>
+        <div className="podium-votes-label">{t(lang, 'request.votes')}</div>
+        <div className="podium-rank-arrows">
+          {rankUp   && <span className="podium-arrow-up">▲</span>}
+          {rankDown && <span className="podium-arrow-down">▼</span>}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── Kompakt Satır (#4–15) ─── */
+function CompactRow({ req, rank, lang, isPlayed }) {
+  const [voteFlash, setVoteFlash] = useState(false);
+  const [delta, setDelta] = useState(0);
+  const prevVotes = useRef(req.votes);
+  const prevRank  = useRef(rank);
+  const rankUp    = rank < prevRank.current;
+  const rankDown  = rank > prevRank.current;
+
+  useEffect(() => {
+    if (req.votes > prevVotes.current) {
+      setDelta(req.votes - prevVotes.current);
+      setVoteFlash(true);
+      setTimeout(() => setVoteFlash(false), 1000);
+      setTimeout(() => setDelta(0), 1400);
+    }
+    prevVotes.current = req.votes;
+  }, [req.votes]);
+  useEffect(() => { prevRank.current = rank; }, [rank]);
+
+  return (
+    <motion.div
+      className={`compact-row ${voteFlash ? 'compact-vote-flash' : ''} ${isPlayed ? 'compact-played' : ''}`}
+      layout
+      transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+    >
+      <span className="compact-rank">{isPlayed ? '🔥' : rank}</span>
+      <div className="compact-info">
+        <span className="compact-song">{req.song_name}</span>
+        {req.artist && <span className="compact-artist"> · {req.artist}</span>}
+      </div>
+      <div className="compact-votes-wrap">
+        <VoteFloat count={req.votes} />
+        <motion.span className="compact-votes" key={req.votes}
+          initial={{ scale: 1.3 }} animate={{ scale: 1 }}>
+          {req.votes}
+        </motion.span>
+        {delta > 0 && (
+          <motion.span className="compact-delta"
+            initial={{ opacity: 1, y: 0 }} animate={{ opacity: 0, y: -14 }}
+            transition={{ duration: 1.1 }}>+{delta}</motion.span>
+        )}
+        {rankUp   && <span className="compact-arrow-up">▲</span>}
+        {rankDown && <span className="compact-arrow-down">▼</span>}
+      </div>
+    </motion.div>
+  );
+}
+
 function EventSummary({ requests, lang, eventName }) {
   const totalRequests = requests.length;
   const totalVotes = requests.reduce((sum, r) => sum + (r.votes || 0), 0);
@@ -1264,8 +1375,8 @@ export default function DisplayPage() {
   if (!event) return <div className="display-page"><div className="display-bg" /></div>;
 
   const top15 = requests.slice(0, 15);
-  const listLeft = top15.filter((_, i) => i % 2 === 0);
-  const listRight = top15.filter((_, i) => i % 2 === 1);
+  const podiumTop3 = top15.slice(0, 3);
+  const restList   = top15.slice(3);
   const displayName = brandText || event.name;
 
   const themeColors = {
@@ -1520,7 +1631,7 @@ export default function DisplayPage() {
                 </div>
               </div>
 
-              {/* RIGHT: Song Table (geniş) */}
+              {/* RIGHT: Song — Podium + Compact List */}
               <div className="dsp-card dsp-list-card-wide">
                 <div className="dsp-card-title">
                   <span className="fire-icon">🔥</span> {T('display.hot_requests')}
@@ -1530,29 +1641,42 @@ export default function DisplayPage() {
                     <span>🎵</span> {T('display.no_requests')}
                   </div>
                 ) : (
-                  <div className="dsp-table-wrap dsp-table-2col">
-                    <div className="dsp-table-col">
-                      <table className="dsp-table">
+                  <div className="dsp-podium-layout">
+                    {/* ── Podium: #1 tam genişlik ── */}
+                    <AnimatePresence>
+                      {podiumTop3[0] && (
+                        <PodiumCard key={podiumTop3[0].id} req={podiumTop3[0]} rank={1} lang={lang} isPlayed={playedId === podiumTop3[0].id} />
+                      )}
+                    </AnimatePresence>
+
+                    {/* ── Podium: #2 ve #3 yan yana ── */}
+                    {(podiumTop3[1] || podiumTop3[2]) && (
+                      <div className="podium-row-23">
                         <AnimatePresence>
-                          <tbody>
-                            {listLeft.map((req, idx) => (
-                              <SongRow key={req.id} req={req} rank={idx * 2 + 1} lang={lang} isPlayed={playedId === req.id} />
-                            ))}
-                          </tbody>
+                          {podiumTop3[1] && (
+                            <PodiumCard key={podiumTop3[1].id} req={podiumTop3[1]} rank={2} lang={lang} isPlayed={playedId === podiumTop3[1].id} />
+                          )}
+                          {podiumTop3[2] && (
+                            <PodiumCard key={podiumTop3[2].id} req={podiumTop3[2]} rank={3} lang={lang} isPlayed={playedId === podiumTop3[2].id} />
+                          )}
                         </AnimatePresence>
-                      </table>
-                    </div>
-                    <div className="dsp-table-col-divider" />
-                    <div className="dsp-table-col">
-                      <table className="dsp-table">
-                        <AnimatePresence>
-                          <tbody>
-                            {listRight.map((req, idx) => (
-                              <SongRow key={req.id} req={req} rank={idx * 2 + 2} lang={lang} isPlayed={playedId === req.id} />
-                            ))}
-                          </tbody>
-                        </AnimatePresence>
-                      </table>
+                      </div>
+                    )}
+
+                    {/* ── Ayırıcı ── */}
+                    {restList.length > 0 && (
+                      <div className="podium-divider">
+                        <span className="podium-divider-label">4 – {3 + restList.length}</span>
+                      </div>
+                    )}
+
+                    {/* ── Kompakt liste: #4–15 ── */}
+                    <div className="compact-list">
+                      <AnimatePresence>
+                        {restList.map((req, idx) => (
+                          <CompactRow key={req.id} req={req} rank={idx + 4} lang={lang} isPlayed={playedId === req.id} />
+                        ))}
+                      </AnimatePresence>
                     </div>
                   </div>
                 )}
