@@ -1382,16 +1382,7 @@ export default function DisplayPage() {
           </div>
         );
       })()}
-      {!isPreview && (
-        <div className="dsp-logo-box">
-          {eventLogo
-            ? <img src={eventLogo} alt="Logo" className="dsp-logo-box-img" />
-            : <span className="dsp-logo-box-text">
-                <span className="dsp-logo-box-remiks">Remiks</span><span className="dsp-logo-box-box">Box</span>
-              </span>
-          }
-        </div>
-      )}
+      {!isPreview && null /* logo artık topbar-left içinde */}
       {/* Classic: disco ball + effects by animLevel */}
       {stageDesign === 'classic' && <>
         <div className="display-bg" />
@@ -1465,8 +1456,21 @@ export default function DisplayPage() {
       )}
 
       <div className="display-content dsp-v2">
-        {/* ─── Logo + Event Name + Motto (top center) + LIVE badge (top right) ─── */}
+        {/* ─── Topbar: Logo sol | Etkinlik adı merkez | LIVE sağ ─── */}
         <div className="dsp-topbar">
+          {/* Sol: Organizasyon logosu */}
+          <div className="dsp-topbar-left">
+            <div className="dsp-logo-inline">
+              {eventLogo
+                ? <img src={eventLogo} alt="Logo" className="dsp-logo-inline-img" />
+                : <span className="dsp-logo-inline-text">
+                    <span className="dsp-logo-box-remiks">Remiks</span><span className="dsp-logo-box-box">Box</span>
+                  </span>
+              }
+            </div>
+          </div>
+
+          {/* Merkez: Etkinlik adı + motto */}
           <div className="dsp-topbar-center">
             <motion.div className="dsp-event-name"
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
@@ -1474,11 +1478,13 @@ export default function DisplayPage() {
             </motion.div>
             <div className="dsp-brand-motto">Request · Vote · Dance</div>
           </div>
+
+          {/* Sağ: LIVE */}
           <div className="dsp-topbar-right">
             <div className="display-live-badge">
               <span className="live-dot" />
               <span style={{ color: '#ff4444' }}>LIVE</span>
-              <span className="live-count">{connectedCount} {lang === 'tr' ? 'kişi' : 'people'}</span>
+              <span className="live-count">{connectedCount} {lang === 'tr' ? 'kişi' : 'ppl'}</span>
             </div>
           </div>
         </div>

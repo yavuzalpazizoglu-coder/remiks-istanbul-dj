@@ -4181,11 +4181,60 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .dsp-topbar {
-  display: flex; align-items: center;
-  padding: clamp(4px, 0.5vh, 12px) 0; flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 24px);
+  padding: clamp(4px, 0.6vh, 10px) 0;
+  flex-shrink: 0;
 }
-.dsp-topbar-center { flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: clamp(2px, 0.4vh, 8px); }
-.dsp-topbar-right { flex-shrink: 0; position: absolute; right: clamp(16px, 2vw, 56px); top: clamp(10px, 1.2vw, 30px); }
+
+/* Sol: Logo kutusu */
+.dsp-topbar-left {
+  flex: 0 0 auto;
+}
+.dsp-logo-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(6px, 0.9vh, 14px) clamp(12px, 1.4vw, 28px);
+  background: rgba(0,0,0,0.52);
+  border: 1px solid rgba(var(--theme-rgb), 0.28);
+  border-radius: clamp(8px, 0.8vw, 16px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  min-width: clamp(90px, 11vw, 200px);
+}
+.dsp-logo-inline-img {
+  height: clamp(30px, 5vh, 72px);
+  max-width: clamp(100px, 13vw, 240px);
+  object-fit: contain;
+  display: block;
+}
+.dsp-logo-inline-text {
+  font-size: clamp(18px, 2.8vh, 40px);
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+/* Merkez: Etkinlik adı */
+.dsp-topbar-center {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1px, 0.3vh, 5px);
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Sağ: LIVE */
+.dsp-topbar-right {
+  flex: 0 0 auto;
+}
 
 .dsp-brand-logo {
   display: inline-flex; align-items: baseline;
@@ -4195,23 +4244,27 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-brand-logo .login-logo-box { color: #FFFFFF; font-weight: 900; }
 .dsp-brand-motto {
   font-family: var(--font-display);
-  font-size: clamp(8px, 1vw, 24px); font-weight: 600;
-  letter-spacing: clamp(2px, 0.5vw, 12px); text-transform: uppercase;
+  font-size: clamp(7px, 0.85vh, 14px); font-weight: 600;
+  letter-spacing: clamp(2px, 0.4vw, 10px); text-transform: uppercase;
   color: var(--text-secondary);
   white-space: nowrap;
 }
 
 .dsp-event-name {
   font-family: var(--font-display);
-  font-size: clamp(24px, 4.5vw, 140px);
+  font-size: clamp(14px, 3.4vh, 52px);
   font-weight: 900; text-transform: uppercase;
-  letter-spacing: clamp(3px, 0.5vw, 14px);
+  letter-spacing: clamp(2px, 0.4vw, 10px);
   background: linear-gradient(90deg, var(--theme-primary), rgba(255,255,255,0.9), var(--theme-primary));
   background-size: 300% 100%;
   background-clip: text; -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: brandGradientH 8s ease infinite;
   filter: drop-shadow(0 0 6px rgba(var(--theme-rgb), 0.15));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 @keyframes brandGradientH {
@@ -4347,7 +4400,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
 }
 
 /* Thead başlık satırı */
@@ -4757,25 +4810,25 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .display-live-badge {
-  display: flex; align-items: center; gap: clamp(5px, 0.6vw, 14px);
-  padding: clamp(5px, 0.6vw, 16px) clamp(10px, 1.2vw, 30px);
+  display: flex; align-items: center; gap: clamp(4px, 0.5vh, 8px);
+  padding: clamp(4px, 0.55vh, 9px) clamp(8px, 1vw, 18px);
   background: rgba(255,0,0,0.1);
-  border: clamp(1px, 0.1vw, 3px) solid rgba(255,0,0,0.25);
-  border-radius: clamp(14px, 1.5vw, 36px);
-  font-size: clamp(10px, 1.1vw, 24px); font-weight: 700;
+  border: 1px solid rgba(255,0,0,0.25);
+  border-radius: clamp(10px, 1.2vh, 22px);
+  font-size: clamp(9px, 1vh, 14px); font-weight: 700;
 }
 
 .live-dot {
-  width: clamp(6px, 0.7vw, 16px); height: clamp(6px, 0.7vw, 16px);
+  width: clamp(5px, 0.6vh, 10px); height: clamp(5px, 0.6vh, 10px);
   background: #ff0000;
   border-radius: 50%;
   animation: pulse 1.5s ease infinite;
-  box-shadow: 0 0 clamp(4px, 0.5vw, 16px) rgba(255,0,0,0.6);
+  box-shadow: 0 0 clamp(3px, 0.4vh, 8px) rgba(255,0,0,0.6);
 }
 
 .live-count {
-  color: var(--text-secondary); font-size: clamp(9px, 1vw, 22px);
-  margin-left: clamp(3px, 0.3vw, 8px);
+  color: var(--text-secondary); font-size: clamp(8px, 0.85vh, 13px);
+  margin-left: clamp(2px, 0.2vw, 5px);
 }
 
 /* Main area: list left, QR right */
