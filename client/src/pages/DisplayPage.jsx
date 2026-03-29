@@ -915,8 +915,14 @@ function SongCard({ req, rank, lang }) {
     >
       {/* Rank — sıralama rozeti */}
       <div className={`dsp-card-rank dsp-card-rank-${tier}`}>
-        <span className="dsp-card-rank-label">#</span>
-        <span className="dsp-card-rank-num">{rank}</span>
+        {isTop3 ? (
+          <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
+        ) : (
+          <>
+            <span className="dsp-card-rank-label">#</span>
+            <span className="dsp-card-rank-num">{rank}</span>
+          </>
+        )}
         {rankFlash && (
           <span className={rankFlash === 'up' ? 'dsp-card-rarrow dsp-rarrow-up' : 'dsp-card-rarrow dsp-rarrow-dn'}>
             {rankFlash === 'up' ? '▲' : '▼'}
@@ -947,7 +953,6 @@ function SongCard({ req, rank, lang }) {
             animate={{ scale: 1 }}
             transition={{ duration: 0.35 }}
           >{req.votes}</motion.span>
-          <span className="dsp-card-votes-lbl">OY</span>
         </div>
         <div className="dsp-card-chg">
           {showDelta && delta > 0
