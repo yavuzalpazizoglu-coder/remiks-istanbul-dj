@@ -1100,6 +1100,8 @@ export default function DisplayPage() {
   const [tickerTexts, setTickerTexts] = useState('');
   const [allRequests, setAllRequests] = useState([]);
   const [playedId, setPlayedId] = useState(null);
+  const [playedSong, setPlayedSong] = useState(null);   // tam nesne — listeden çıksa da göster
+  const playedSongTimer = useRef(null);
   const [playedCount, setPlayedCount] = useState(0);
   const [theme, setTheme] = useState('cyan');
   const [animLevel, setAnimLevel] = useState('high');
@@ -1170,8 +1172,14 @@ export default function DisplayPage() {
 
     socket.on('request-played', (req) => {
       setPlayedId(req.id);
+      setPlayedSong(req);
       setPlayedCount(c => c + 1);
-      setTimeout(() => setPlayedId(null), 40000);
+      clearTimeout(playedSongTimer.current);
+      // 60 sn sonra hem fade hem temizlik
+      playedSongTimer.current = setTimeout(() => {
+        setPlayedId(null);
+        setPlayedSong(null);
+      }, 62000);
     });
 
     socket.on('event-status', ({ status, countdown_end }) => {
@@ -1265,6 +1273,7 @@ export default function DisplayPage() {
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('ceremony'); socket.off('music-mode');
       socket.off('crew-chat');
+      clearTimeout(playedSongTimer.current);
       socket.off('reji-blackout'); socket.off('reji-spotlight'); socket.off('reji-countdown');
       socket.off('display-card'); socket.off('dismiss-card');
       socket.disconnect();
@@ -1329,9 +1338,16 @@ export default function DisplayPage() {
 
   if (!event) return <div className="display-page"><div className="display-bg" /></div>;
 
-  const top15 = requests.slice(0, 15);
-  const listLeft  = top15.filter((_, i) => i % 2 === 0);
-  const listRight = top15.filter((_, i) => i % 2 === 1);
+  // Eğer çalınan şarkı artık approved listesinde yoksa üste enjekte et
+  const playedInList = playedSong && requests.some(r => r.id === playedSong.id);
+  const baseList = playedSong && !playedInList
+    ? [playedSong, ...requests]
+    : requests;
+  const top15 = baseList.slice(0, 15);
+  // Soldan sağa sıralı: sol = 1..8, sağ = 9..15
+  const half     = Math.ceil(top15.length / 2);
+  const listLeft  = top15.slice(0, half);
+  const listRight = top15.slice(half);
   const displayName = brandText || event.name;
 
   const themeColors = {
@@ -1639,7 +1655,7 @@ export default function DisplayPage() {
                         <AnimatePresence>
                           <tbody>
                             {listLeft.map((req, idx) => (
-                              <SongRow key={req.id} req={req} rank={idx * 2 + 1} lang={lang} isPlayed={playedId === req.id} />
+                              <SongRow key={req.id} req={req} rank={idx + 1} lang={lang} isPlayed={playedId === req.id} />
                             ))}
                           </tbody>
                         </AnimatePresence>
@@ -1660,7 +1676,7 @@ export default function DisplayPage() {
                         <AnimatePresence>
                           <tbody>
                             {listRight.map((req, idx) => (
-                              <SongRow key={req.id} req={req} rank={idx * 2 + 2} lang={lang} isPlayed={playedId === req.id} />
+                              <SongRow key={req.id} req={req} rank={half + idx + 1} lang={lang} isPlayed={playedId === req.id} />
                             ))}
                           </tbody>
                         </AnimatePresence>
