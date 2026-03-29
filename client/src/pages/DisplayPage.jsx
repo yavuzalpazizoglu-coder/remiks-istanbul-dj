@@ -1017,6 +1017,26 @@ function EventSummary({ requests, lang, eventName }) {
   );
 }
 
+function LiveStat({ icon, value, label }) {
+  const [flash, setFlash] = useState(false);
+  const prevVal = useRef(value);
+  useEffect(() => {
+    if (prevVal.current !== value) {
+      setFlash(true);
+      const t = setTimeout(() => setFlash(false), 900);
+      prevVal.current = value;
+      return () => clearTimeout(t);
+    }
+  }, [value]);
+  return (
+    <div className={`dsp-live-stat${flash ? ' dsp-live-stat-flash' : ''}`}>
+      <span className="dsp-live-stat-icon">{icon}</span>
+      <span className="dsp-live-stat-val">{value}</span>
+      <span className="dsp-live-stat-lbl">{label}</span>
+    </div>
+  );
+}
+
 function Ticker({ requests, lang, tickerTexts }) {
   const hasRequests = requests.length > 0;
   const customLines = (tickerTexts || '').split('\n').map(s => s.trim()).filter(Boolean);
@@ -1081,6 +1101,7 @@ export default function DisplayPage() {
   const [tickerTexts, setTickerTexts] = useState('');
   const [allRequests, setAllRequests] = useState([]);
   const [playedId, setPlayedId] = useState(null);
+  const [playedCount, setPlayedCount] = useState(0);
   const [theme, setTheme] = useState('cyan');
   const [animLevel, setAnimLevel] = useState('high');
   const [stageDesign, setStageDesign] = useState('classic');
@@ -1150,6 +1171,7 @@ export default function DisplayPage() {
 
     socket.on('request-played', (req) => {
       setPlayedId(req.id);
+      setPlayedCount(c => c + 1);
       setTimeout(() => setPlayedId(null), 40000);
     });
 
@@ -1551,17 +1573,24 @@ export default function DisplayPage() {
         </AnimatePresence>
 
         {/* ─── ACTIVE: Beatbox layout (QR sol | liste merkez | QR sağ) ─── */}
-        {event.status === 'active' && !openingActive && (
-          <>
-            <div className="dsp-beatbox">
-              {/* Sol QR */}
-              <div className="dsp-beatbox-qr">
-                <div className="dsp-beatbox-qr-wrap">
-                  <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
-                </div>
-                <div className="dsp-beatbox-qr-lbl">{lang === 'tr' ? 'QR ile Tara' : 'Scan QR'}</div>
-                <div className="dsp-beatbox-qr-sub">{lang === 'tr' ? 'İsteğini Gönder!' : 'Send Request!'}</div>
+        {event.status === 'active' && !openingActive && (() => {
+          const totalVotesStat = requests.reduce((s, r) => s + (r.votes || 0), 0);
+          const topVotesStat = requests[0]?.votes || 0;
+          return (
+          <div className="dsp-beatbox">
+            {/* Sol QR + Sol İstatistikler */}
+            <div className="dsp-beatbox-qr">
+              <div className="dsp-beatbox-stats">
+                <LiveStat icon="👥" value={connectedCount} label={lang === 'tr' ? 'Canlı' : 'Live'} />
+                <LiveStat icon="📋" value={requests.length} label={lang === 'tr' ? 'İstek' : 'Requests'} />
+                <LiveStat icon="🗳️" value={totalVotesStat} label={lang === 'tr' ? 'Oy' : 'Votes'} />
               </div>
+              <div className="dsp-beatbox-qr-wrap">
+                <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
+              </div>
+              <div className="dsp-beatbox-qr-lbl">{lang === 'tr' ? 'QR ile Tara' : 'Scan QR'}</div>
+              <div className="dsp-beatbox-qr-sub">{lang === 'tr' ? 'İsteğini Gönder!' : 'Send Request!'}</div>
+            </div>
 
               {/* Merkez: Altın Saatler + Şarkı Listesi */}
               <div className="dsp-beatbox-songs">
@@ -1623,8 +1652,12 @@ export default function DisplayPage() {
                 )}
               </div>
 
-              {/* Sağ QR */}
+              {/* Sağ QR + Sağ İstatistikler */}
               <div className="dsp-beatbox-qr">
+                <div className="dsp-beatbox-stats">
+                  <LiveStat icon="🎵" value={playedCount} label={lang === 'tr' ? 'Çalındı' : 'Played'} />
+                  <LiveStat icon="🏆" value={topVotesStat} label={lang === 'tr' ? '1. Sıra' : 'Top'} />
+                </div>
                 <div className="dsp-beatbox-qr-wrap">
                   <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
@@ -1632,8 +1665,8 @@ export default function DisplayPage() {
                 <div className="dsp-beatbox-qr-sub">{lang === 'tr' ? 'İsteğini Gönder!' : 'Send Request!'}</div>
               </div>
             </div>
-          </>
-        )}
+          );
+        })()}
 
         {/* ─── PAUSED: Live Performance Screen ─── */}
         {event.status === 'paused' && (

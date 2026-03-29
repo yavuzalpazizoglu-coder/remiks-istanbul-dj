@@ -4363,6 +4363,61 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   overflow: hidden;
 }
 
+/* ─── Live Stats (QR üstü istatistik kartları) ─── */
+.dsp-beatbox-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.6vh, 9px);
+  padding-bottom: clamp(6px, 0.8vh, 12px);
+  border-bottom: 1px solid rgba(var(--theme-rgb), 0.1);
+  margin-bottom: clamp(6px, 0.8vh, 12px);
+}
+.dsp-live-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: clamp(4px, 0.55vh, 8px) clamp(4px, 0.4vw, 8px);
+  background: rgba(var(--theme-rgb), 0.06);
+  border: 1px solid rgba(var(--theme-rgb), 0.12);
+  border-radius: clamp(5px, 0.5vw, 10px);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.dsp-live-stat-flash {
+  background: rgba(var(--theme-rgb), 0.22);
+  border-color: rgba(var(--theme-rgb), 0.5);
+  animation: statFlash 0.9s ease forwards;
+}
+@keyframes statFlash {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--theme-rgb), 0.6); }
+  40%  { box-shadow: 0 0 clamp(8px, 1vw, 18px) 0 rgba(var(--theme-rgb), 0.4); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--theme-rgb), 0); }
+}
+.dsp-live-stat-icon {
+  font-size: clamp(10px, 1.2vh, 17px);
+  line-height: 1;
+}
+.dsp-live-stat-val {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 2.2vh, 32px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+.dsp-live-stat-flash .dsp-live-stat-val {
+  color: var(--theme-primary, #00d4ff);
+}
+.dsp-live-stat-lbl {
+  font-size: clamp(6px, 0.85vh, 11px);
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 /* Sol: QR sade panel */
 .dsp-qr-side {
   flex: 0 0 18%;
