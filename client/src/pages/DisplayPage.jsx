@@ -1595,11 +1595,7 @@ export default function DisplayPage() {
               {/* Merkez: Altın Saatler + Şarkı Listesi */}
               <div className="dsp-beatbox-songs">
                 <div className="dsp-card-title dsp-card-title-altinsaatler">
-                  <span className="dtf-brand-logo-r">Remiks</span><span className="dtf-brand-logo-b">Box</span>
-                  <span className="dtf-brand-sep">—</span>
-                  <span className="dtf-brand-star">⭐</span>
-                  <span className="dtf-brand-gold">Altın Saatler</span>
-                  <span className="dtf-brand-star">⭐</span>
+                  <span className="dtf-brand-full">REMİKSBOX — ⭐ ALTIN SAATLER ⭐</span>
                 </div>
                 {requests.length === 0 ? (
                   <div className="dsp-table-empty">
