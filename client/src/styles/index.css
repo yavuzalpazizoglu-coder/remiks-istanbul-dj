@@ -2448,6 +2448,91 @@ body.theme-pioneer-gold .djc-sec-title strong {
 .djc-ctrl-btn-stop.djc-ctrl-led-on {
   box-shadow: 0 3px 16px rgba(248,113,113,0.45);
 }
+
+/* ══════════════════════════════════════════════
+   DJ PANEL — UNIVERSAL LED (tüm butonlar)
+   Büyük kontrol butonları hariç (djc-ctrl-fixed-btn)
+   kendi LED span'larına sahip — bu kural geri kalanları kapsar
+   ══════════════════════════════════════════════ */
+
+/* Tüm butonlar için position: relative garantisi */
+.dj-panel-page button:not(.djc-ctrl-fixed-btn) {
+  position: relative;
+}
+
+/* LED nokta — ::before pseudo-element */
+.dj-panel-page button:not(.djc-ctrl-fixed-btn)::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  box-shadow: none;
+  transition: background 150ms ease, box-shadow 200ms ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Aktif durum (.active class) → yeşil kalıcı */
+.dj-panel-page button:not(.djc-ctrl-fixed-btn).active::before {
+  background: #4ade80;
+  box-shadow: 0 0 5px rgba(74,222,128,0.95), 0 0 10px rgba(74,222,128,0.55);
+  animation: ledPulse 1.4s ease-in-out infinite;
+}
+
+/* Tıklama anı (:active) → anlık yeşil flaş */
+.dj-panel-page button:not(.djc-ctrl-fixed-btn):active::before {
+  background: #86efac;
+  box-shadow: 0 0 8px rgba(134,239,172,1), 0 0 16px rgba(74,222,128,0.7);
+  animation: ledClick 0.35s ease-out forwards;
+}
+@keyframes ledClick {
+  0%   { background: #86efac; box-shadow: 0 0 10px rgba(134,239,172,1), 0 0 20px rgba(74,222,128,0.8); }
+  100% { background: rgba(255,255,255,0.15); box-shadow: none; }
+}
+
+/* Tablo aksiyon butonları — küçük, daha küçük LED */
+.dj-table-actions .btn::before {
+  width: 4px;
+  height: 4px;
+  top: 2px;
+}
+
+/* btn-success (✓ onayla) → kalıcı yeşil LED */
+.dj-panel-page .btn-success::before {
+  background: #4ade80;
+  box-shadow: 0 0 5px rgba(74,222,128,0.8), 0 0 10px rgba(74,222,128,0.4);
+}
+
+/* btn-primary (▶ çal) → mavi LED */
+.dj-panel-page .btn-primary::before {
+  background: #60a5fa;
+  box-shadow: 0 0 5px rgba(96,165,250,0.8), 0 0 10px rgba(96,165,250,0.4);
+}
+
+/* btn-played (♫) → mor LED */
+.dj-panel-page .btn-played::before {
+  background: #c084fc;
+  box-shadow: 0 0 5px rgba(192,132,252,0.8), 0 0 10px rgba(192,132,252,0.4);
+}
+
+/* btn-danger (✕ reddet) → kırmızı LED */
+.dj-panel-page .btn-danger::before {
+  background: #f87171;
+  box-shadow: 0 0 5px rgba(248,113,113,0.8), 0 0 10px rgba(248,113,113,0.4);
+}
+
+/* Sahne butonları — aktifken yeşil */
+.dj-panel-page .djc-stage-btn.active::before {
+  background: #4ade80;
+  box-shadow: 0 0 5px rgba(74,222,128,0.95), 0 0 10px rgba(74,222,128,0.55);
+  animation: ledPulse 1.4s ease-in-out infinite;
+}
+
 .djc-ctrl-main-btn {
   width: 100%;
   padding: 9px 12px !important;
