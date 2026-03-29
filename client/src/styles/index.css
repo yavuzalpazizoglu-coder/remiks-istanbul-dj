@@ -4617,15 +4617,15 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
     inset 0 -1px 0 rgba(0,0,0,0.3);
 }
 .dsp-np-stage-waiting {
-  background: rgba(0,0,0,0.35);
-  border-color: rgba(255,255,255,0.07);
+  background: #080a0e;
+  border-color: rgba(255,255,255,0.08);
 }
 .dsp-np-stage-active {
   background: linear-gradient(90deg,
-    rgba(var(--theme-rgb), 0.22) 0%,
-    rgba(0,0,0,0.5) 45%,
-    rgba(var(--theme-rgb), 0.14) 100%);
-  border-color: rgba(var(--theme-rgb), 0.4);
+    rgba(var(--theme-rgb), 0.18) 0%,
+    #060810 45%,
+    rgba(var(--theme-rgb), 0.10) 100%);
+  border-color: rgba(var(--theme-rgb), 0.45);
 }
 @keyframes npStageFlash {
   0%   { box-shadow: 0 0 0 0 rgba(var(--theme-rgb), 0); }
@@ -4764,30 +4764,142 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   min-width: 0;
 }
 
-/* ── Top-3: tamamen opak, net renkler ── */
+/* ══════════════════════════════════════════════
+   Top-3 Premium Kartlar — opak, parlak, özel
+   ══════════════════════════════════════════════ */
+
+/* ─ #1 ALTIN ─ */
 .dsp-card-gold {
-  background: #1a1400;
-  border: 1px solid #7a5c00;
+  background: linear-gradient(135deg,
+    #2a1c00 0%,
+    #1a1000 40%,
+    #221800 100%);
+  border: 1px solid #c08800;
   box-shadow:
-    0 0 0 1px rgba(255,200,0,0.18),
-    inset 0 1px 0 rgba(255,220,60,0.14),
-    0 2px 12px rgba(255,180,0,0.15);
+    0 0 0 1px rgba(255,200,0,0.35),
+    inset 0 1px 0 rgba(255,230,80,0.3),
+    inset 0 -1px 0 rgba(80,45,0,0.6),
+    0 0 clamp(12px,2vw,28px) rgba(255,170,0,0.28),
+    0 3px 14px rgba(0,0,0,0.7);
+  position: relative;
+  overflow: hidden;
 }
+.dsp-card-gold::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+    transparent 30%,
+    rgba(255,220,60,0.08) 50%,
+    transparent 70%);
+  animation: goldShimmer 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes goldShimmer {
+  0%,100% { opacity: 0.4; transform: translateX(-20%); }
+  50%     { opacity: 1;   transform: translateX(20%); }
+}
+/* Rank 1 rengi altın temaya özel */
+.dsp-card-gold .dsp-card-rank-1  { color: #ffcc00; text-shadow: 0 0 14px rgba(255,200,0,0.9), 0 0 30px rgba(255,160,0,0.45); }
+.dsp-card-gold .dsp-card-song    { color: #fff8e0; }
+.dsp-card-gold .dsp-card-artist  { color: rgba(255,220,120,0.55); }
+.dsp-card-gold .dsp-card-votes-num { color: #ffcc00; }
+.dsp-card-gold .dsp-card-rank    { border-right-color: rgba(200,150,0,0.3); }
+.dsp-card-gold .dsp-card-votes   { border-left-color: rgba(200,150,0,0.25); }
+
+/* ─ #2 GÜMÜŞ ─ */
 .dsp-card-silver {
-  background: #0d1218;
-  border: 1px solid #4a6080;
+  background: linear-gradient(135deg,
+    #141c26 0%,
+    #0a1018 40%,
+    #101820 100%);
+  border: 1px solid #5880a0;
   box-shadow:
-    0 0 0 1px rgba(170,200,230,0.15),
-    inset 0 1px 0 rgba(200,220,240,0.1),
-    0 2px 12px rgba(160,200,240,0.1);
+    0 0 0 1px rgba(160,205,240,0.28),
+    inset 0 1px 0 rgba(210,235,255,0.22),
+    inset 0 -1px 0 rgba(20,40,60,0.6),
+    0 0 clamp(10px,1.8vw,24px) rgba(120,180,230,0.2),
+    0 3px 14px rgba(0,0,0,0.65);
+  position: relative;
+  overflow: hidden;
 }
+.dsp-card-silver::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+    transparent 30%,
+    rgba(200,225,255,0.07) 50%,
+    transparent 70%);
+  animation: silverShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes silverShimmer {
+  0%,100% { opacity: 0.3; transform: translateX(-20%); }
+  50%     { opacity: 1;   transform: translateX(20%); }
+}
+.dsp-card-silver .dsp-card-rank-2  { color: #c0d8f0; text-shadow: 0 0 10px rgba(160,210,255,0.7); }
+.dsp-card-silver .dsp-card-song    { color: #e8f4ff; }
+.dsp-card-silver .dsp-card-artist  { color: rgba(160,200,240,0.5); }
+.dsp-card-silver .dsp-card-votes-num { color: #90c8f0; }
+.dsp-card-silver .dsp-card-rank    { border-right-color: rgba(100,160,210,0.28); }
+.dsp-card-silver .dsp-card-votes   { border-left-color: rgba(100,160,210,0.22); }
+
+/* ─ #3 BRONZ ─ */
 .dsp-card-bronze {
-  background: #150a00;
-  border: 1px solid #6a3a10;
+  background: linear-gradient(135deg,
+    #1e0e04 0%,
+    #110600 40%,
+    #180c04 100%);
+  border: 1px solid #904a18;
   box-shadow:
-    0 0 0 1px rgba(210,130,50,0.18),
-    inset 0 1px 0 rgba(220,150,60,0.12),
-    0 2px 12px rgba(200,110,30,0.12);
+    0 0 0 1px rgba(220,140,60,0.28),
+    inset 0 1px 0 rgba(230,170,80,0.22),
+    inset 0 -1px 0 rgba(70,30,5,0.6),
+    0 0 clamp(10px,1.8vw,24px) rgba(200,110,30,0.22),
+    0 3px 14px rgba(0,0,0,0.65);
+  position: relative;
+  overflow: hidden;
+}
+.dsp-card-bronze::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,
+    transparent 30%,
+    rgba(230,160,60,0.07) 50%,
+    transparent 70%);
+  animation: bronzeShimmer 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes bronzeShimmer {
+  0%,100% { opacity: 0.35; transform: translateX(-20%); }
+  50%     { opacity: 1;    transform: translateX(20%); }
+}
+.dsp-card-bronze .dsp-card-rank-3  { color: #d08040; text-shadow: 0 0 10px rgba(210,120,40,0.7); }
+.dsp-card-bronze .dsp-card-song    { color: #ffeedd; }
+.dsp-card-bronze .dsp-card-artist  { color: rgba(210,160,100,0.5); }
+.dsp-card-bronze .dsp-card-votes-num { color: #d08040; }
+.dsp-card-bronze .dsp-card-rank    { border-right-color: rgba(180,100,30,0.28); }
+.dsp-card-bronze .dsp-card-votes   { border-left-color: rgba(180,100,30,0.22); }
+
+/* ══════════════════════════════════════════════
+   Kademeli şeffaflık: sıra 4'ten itibaren
+   ══════════════════════════════════════════════ */
+/* Kartlar 4-6 */
+.dsp-song-grid > *:nth-child(n+4):nth-child(-n+6) {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.07);
+}
+/* Kartlar 7-9 */
+.dsp-song-grid > *:nth-child(n+7):nth-child(-n+9) {
+  background: rgba(255,255,255,0.028);
+  border-color: rgba(255,255,255,0.05);
+}
+/* Kartlar 10-15 */
+.dsp-song-grid > *:nth-child(n+10) {
+  background: rgba(255,255,255,0.016);
+  border-color: rgba(255,255,255,0.04);
 }
 
 /* Oy flash efekti */
