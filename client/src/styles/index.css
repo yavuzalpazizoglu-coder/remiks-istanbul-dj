@@ -1942,28 +1942,76 @@ body.theme-pioneer-gold .djc-left-top3-votes {
   color: #FFCC00;
 }
 
-/* ─── Reji Link Button in Header ─── */
-.djc-reji-link-btn {
+/* ─── Link Butonları — SVG ikon stili ─── */
+.djc-link-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* MİSAFİR — yeşil/teal */
+.djc-guest-link-btn {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
+  gap: 5px;
+  padding: 4px 11px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.8px;
-  color: #e0e0e0;
-  background: linear-gradient(135deg, #1a0033, #0d001a);
-  border: 1px solid rgba(138, 43, 226, 0.4);
-  border-radius: 4px;
+  color: #5dffa0;
+  background: linear-gradient(135deg, #00261a 0%, #001510 100%);
+  border: 1px solid rgba(0,200,100,0.35);
+  border-radius: 5px;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition: all 0.18s;
+  box-shadow: inset 0 1px 0 rgba(0,200,100,0.08);
+}
+.djc-guest-link-btn:hover {
+  background: linear-gradient(135deg, #004028 0%, #002818 100%);
+  border-color: rgba(0,230,120,0.6);
+  box-shadow: 0 0 10px rgba(0,200,100,0.28), inset 0 1px 0 rgba(0,230,120,0.12);
+  color: #80ffb8;
+}
+
+/* ─── Reji / Display Link Butonları ─── */
+/* EKRAN — mavi (display-link-btn) */
+.djc-reji-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #c060ff;
+  background: linear-gradient(135deg, #180030 0%, #0e0020 100%);
+  border: 1px solid rgba(160,60,255,0.35);
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  box-shadow: inset 0 1px 0 rgba(160,60,255,0.08);
 }
 .djc-reji-link-btn:hover {
-  background: linear-gradient(135deg, #2a0055, #1a003a);
-  border-color: rgba(170, 68, 255, 0.6);
-  box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
-  color: #fff;
+  background: linear-gradient(135deg, #28004a 0%, #1c0038 100%);
+  border-color: rgba(190,80,255,0.65);
+  box-shadow: 0 0 10px rgba(160,60,255,0.28), inset 0 1px 0 rgba(190,80,255,0.12);
+  color: #d890ff;
+}
+/* EKRAN butonu (djc-display-link-btn) — mavi override */
+.djc-reji-link-btn.djc-display-link-btn {
+  color: #50c8ff;
+  background: linear-gradient(135deg, #001c2e 0%, #000f1c 100%);
+  border-color: rgba(0,160,220,0.35);
+  box-shadow: inset 0 1px 0 rgba(0,160,220,0.08);
+}
+.djc-reji-link-btn.djc-display-link-btn:hover {
+  background: linear-gradient(135deg, #003050 0%, #001e38 100%);
+  border-color: rgba(0,200,255,0.65);
+  box-shadow: 0 0 10px rgba(0,160,220,0.28), inset 0 1px 0 rgba(0,200,255,0.12);
+  color: #80dcff;
 }
 
 /* Pioneer Gold overrides for crew chat & reji button */

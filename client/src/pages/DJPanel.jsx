@@ -812,13 +812,21 @@ export default function DJPanel() {
             : `🎵 ${event.name}\n━━━━━━━━━━━━━━━━━━━━\n🎶 Request a song from the DJ!\n🔗 ${guestUrl}\n\nTap the link → Type your song → Send!\nMost voted songs play first 🔥\n━━━━━━━━━━━━━━━━━━━━\nPowered by RemiksBox`;
           navigator.clipboard.writeText(guestMsg).then(() => showToast(lang === 'tr' ? 'Misafir linki kopyalandı!' : 'Guest link copied!'));
         }} title={lang === 'tr' ? 'Misafir istek linkini kopyala' : 'Copy guest request link'}>
-          📱 {lang === 'tr' ? 'MİSAFİR' : 'GUEST'}
+          <svg className="djc-link-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="6" r="3.2" stroke="currentColor" strokeWidth="1.6"/>
+            <path d="M3 17c0-3.314 3.134-6 7-6s7 2.686 7 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+          </svg>
+          {lang === 'tr' ? 'MİSAFİR' : 'GUEST'}
         </button>
         <button className="djc-reji-link-btn djc-display-link-btn" onClick={() => {
           const url = `${window.location.origin}/display/${slug}`;
           navigator.clipboard.writeText(url).then(() => showToast(lang === 'tr' ? 'Display linki kopyalandı!' : 'Display link copied!'));
         }} title={lang === 'tr' ? 'Display ekran linkini kopyala' : 'Copy display screen link'}>
-          📺 {lang === 'tr' ? 'EKRAN' : 'DISPLAY'}
+          <svg className="djc-link-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="3" width="16" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
+            <path d="M7 17h6M10 14v3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+          </svg>
+          {lang === 'tr' ? 'EKRAN' : 'DISPLAY'}
         </button>
         <button className="djc-reji-link-btn" onClick={() => {
           const url = `${window.location.origin}/reji/${slug}`;
@@ -827,7 +835,14 @@ export default function DJPanel() {
             : `🎬 CREW CONTROL PANEL\n📺 Event: ${event.name}\n🔗 ${url}\n\nOpen this link in any browser (Chrome, Safari etc.).\nYou will see the live stage output being sent to the LED wall.\nUse the control bar at the bottom to manage the stage.\n\n━━━━ CONTROL BAR ━━━━\n\n📺 SCREEN TEXT\n   Changes the main title shown on the LED.\n   Type and press Enter — reflects instantly on stage.\n\n📜 TICKER\n   Changes the scrolling text at the bottom of the LED.\n   Multiple lines rotate automatically.\n\n🎬 CEREMONY (Opening / Closing)\n   Select duration (1-15 min) → press "▶ Opening" or "▶ Closing".\n   A cinematic animation plays on the LED.\n   Press "⏹ Stop" to cancel anytime.\n\n💡 SPOTLIGHT\n   Type a message → press ⚡.\n   A large neon text appears on LED for 5 seconds.\n   Example: "Cake Cutting", "Bouquet Toss", "DJ Switch"\n\n🔲 BLACKOUT\n   One press blacks out the entire LED.\n   Press again to restore. Use for transitions and surprises.\n\n⏱ COUNTDOWN\n   Press "5...1" or "3...1".\n   Large countdown numbers appear on LED.\n   Use for cake cutting, balloon pop, etc.\n\n💬 CHAT\n   Use the message box on the right to chat with the DJ.\n   DJ can reply back. Communication is real-time.\n\n━━━━━━━━━━━━━━━━━━━━\n⚠️ Open browser in fullscreen (F11) — display auto-scales.\n📱 Accessible from mobile but laptop/PC recommended.\n━━━━━━━━━━━━━━━━━━━━\nPowered by Remiks İstanbul\nremiksistanbul.com`;
           navigator.clipboard.writeText(msg).then(() => showToast(lang === 'tr' ? 'Reji linki kopyalandı!' : 'Reji link copied!'));
         }} title={lang === 'tr' ? 'Reji ekranı linkini kopyala' : 'Copy reji display link'}>
-          🎬 {lang === 'tr' ? 'REJİ' : 'CREW'}
+          <svg className="djc-link-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="5" width="16" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
+            <path d="M2 8h16" stroke="currentColor" strokeWidth="1.3"/>
+            <path d="M8 5V3M12 5V3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            <circle cx="10" cy="12" r="2" stroke="currentColor" strokeWidth="1.4"/>
+            <path d="M9 12l1.5-1v2L9 12z" fill="currentColor"/>
+          </svg>
+          {lang === 'tr' ? 'REJİ' : 'CREW'}
         </button>
         <div className="djc-topbar-timers">
           <div className="djc-topbar-timer">
