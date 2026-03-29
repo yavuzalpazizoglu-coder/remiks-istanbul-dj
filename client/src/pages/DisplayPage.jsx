@@ -1383,9 +1383,13 @@ export default function DisplayPage() {
         );
       })()}
       {!isPreview && (
-        <div className="live-indicator" aria-hidden="true">
-          <span className="live-indicator-dot" />
-          LIVE
+        <div className="dsp-logo-box">
+          {eventLogo
+            ? <img src={eventLogo} alt="Logo" className="dsp-logo-box-img" />
+            : <span className="dsp-logo-box-text">
+                <span className="dsp-logo-box-remiks">Remiks</span><span className="dsp-logo-box-box">Box</span>
+              </span>
+          }
         </div>
       )}
       {/* Classic: disco ball + effects by animLevel */}
@@ -1464,11 +1468,6 @@ export default function DisplayPage() {
         {/* ─── Logo + Event Name + Motto (top center) + LIVE badge (top right) ─── */}
         <div className="dsp-topbar">
           <div className="dsp-topbar-center">
-            {eventLogo ? (
-              <img src={eventLogo} alt="Logo" className="dsp-event-logo" />
-            ) : (
-              <span className="dsp-brand-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
-            )}
             <motion.div className="dsp-event-name"
               initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
               {displayName}

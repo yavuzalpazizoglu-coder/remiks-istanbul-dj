@@ -4016,26 +4016,41 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 /* ═══ LIVE Indicator — top-right of display ═══ */
-.live-indicator {
+/* ── Sol üst köşe: Organizasyon Logo Kutusu ── */
+.dsp-logo-box {
   position: absolute;
-  top: clamp(12px, 1.5vw, 36px);
+  top: clamp(12px, 1.5vh, 32px);
   left: clamp(14px, 1.8vw, 44px);
   z-index: 10;
   display: flex;
   align-items: center;
-  gap: clamp(5px, 0.6vw, 14px);
-  padding: clamp(4px, 0.5vw, 14px) clamp(10px, 1.2vw, 30px) clamp(4px, 0.5vw, 14px) clamp(8px, 1vw, 24px);
-  border: clamp(1px, 0.1vw, 3px) solid rgba(255, 60, 60, 0.5);
-  border-radius: clamp(14px, 1.5vw, 36px);
-  background: rgba(0, 0, 0, 0.5);
-  font-size: clamp(10px, 1.2vw, 28px);
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: clamp(1px, 0.15vw, 4px);
+  justify-content: center;
+  padding: clamp(6px, 0.8vh, 14px) clamp(10px, 1.2vw, 24px);
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(var(--theme-rgb), 0.28);
+  border-radius: clamp(8px, 0.8vw, 18px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   pointer-events: none;
-  animation: liveGlow 2s ease-in-out infinite;
-  backdrop-filter: blur(6px);
+  box-shadow: 0 0 clamp(8px, 1vw, 22px) rgba(var(--theme-rgb), 0.10),
+              inset 0 0 clamp(6px, 0.8vw, 18px) rgba(0,0,0,0.2);
 }
+.dsp-logo-box-img {
+  height: clamp(22px, 3.2vh, 52px);
+  max-width: clamp(80px, 10vw, 200px);
+  object-fit: contain;
+  display: block;
+}
+.dsp-logo-box-text {
+  font-size: clamp(14px, 2vh, 30px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+}
+.dsp-logo-box-remiks { color: #008D4B; font-style: italic; }
+.dsp-logo-box-box    { color: #ffffff; font-weight: 900; }
 .live-indicator-dot {
   width: clamp(6px, 0.7vw, 18px);
   height: clamp(6px, 0.7vw, 18px);
@@ -7825,7 +7840,7 @@ tr.dtable-row.dtable-played .dtf-rank-cell {
   border-top: 1px solid var(--wmp-border, #2F2F2F);
   border-bottom: 1px solid var(--wmp-border, #2F2F2F);
 }
-.display-mode-winamp .live-indicator { border-color: var(--wmp-border-light, #2a2a2a); background: #0a0a0a; }
+.display-mode-winamp .dsp-logo-box { border-color: var(--wmp-border-light, #2a2a2a); background: #0a0a0a; }
 .display-mode-winamp .dsp-rank.top-1,
 .display-mode-winamp .dsp-rank.top-2,
 .display-mode-winamp .dsp-rank.top-3 {
