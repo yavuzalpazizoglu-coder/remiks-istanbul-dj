@@ -4184,14 +4184,18 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   display: flex;
   align-items: center;
   gap: clamp(8px, 1.2vw, 24px);
-  padding: clamp(4px, 0.6vh, 10px) 0;
+  padding: clamp(10px, 1.2vh, 20px) 0;
   flex-shrink: 0;
+  border-bottom: 1px solid rgba(var(--theme-rgb), 0.15);
+  position: relative;
 }
 
 /* Sol: Logo */
 .dsp-topbar-left {
   flex: 0 0 auto;
   position: relative;
+  display: flex;
+  align-items: center;
 }
 .dsp-logo-inline {
   display: flex;
@@ -4234,7 +4238,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(1px, 0.3vh, 5px);
+  justify-content: center;
+  gap: clamp(2px, 0.4vh, 6px);
   min-width: 0;
   overflow: hidden;
 }
@@ -4242,6 +4247,10 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 /* Sağ: LIVE */
 .dsp-topbar-right {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: clamp(60px, 8vw, 140px);
 }
 
 .dsp-brand-logo {
@@ -4380,12 +4389,17 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dsp-card-title-altinsaatler {
   text-align: center;
-  font-size: clamp(8px, 1vw, 16px);
-  font-weight: 600;
-  letter-spacing: clamp(3px, 0.5vw, 10px);
+  font-size: clamp(9px, 1.1vw, 18px);
+  font-weight: 800;
+  letter-spacing: clamp(4px, 0.7vw, 14px);
   text-transform: uppercase;
-  color: var(--theme-primary, #00d4ff);
-  opacity: 0.75;
+  background: linear-gradient(90deg, var(--theme-primary), rgba(255,255,255,0.95), #ffd700, rgba(255,255,255,0.9), var(--theme-primary));
+  background-size: 400% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: brandGradientH 6s ease infinite;
+  filter: drop-shadow(0 0 4px rgba(var(--theme-rgb), 0.2));
 }
 
 .dsp-table-empty {
@@ -5055,14 +5069,19 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .ticker-item {
-  display: inline-flex; align-items: center; gap: clamp(5px, 0.6vw, 16px);
-  font-size: clamp(11px, 1.3vw, 32px); color: var(--text-secondary);
+  display: inline-flex; align-items: center; gap: clamp(4px, 0.5vw, 12px);
+  font-size: clamp(8px, 1.0vw, 26px); color: var(--text-secondary);
   flex-shrink: 0;
 }
 
-.ticker-item .ticker-emoji { font-size: clamp(12px, 1.5vw, 36px); }
+.ticker-item .ticker-emoji { font-size: clamp(9px, 1.1vw, 24px); }
 .ticker-item .ticker-song { color: var(--text-primary); font-weight: 600; }
-.ticker-item .ticker-dot { color: var(--theme-primary, var(--neon-purple)); font-size: clamp(6px, 0.7vw, 16px); }
+.ticker-item .ticker-dot {
+  color: var(--theme-primary, var(--neon-purple));
+  font-size: clamp(10px, 1.2vw, 22px);
+  opacity: 0.7;
+  margin: 0 clamp(4px, 0.5vw, 10px);
+}
 
 @keyframes tickerScroll {
   0% { transform: translateX(0); }
@@ -6850,6 +6869,18 @@ body.theme-pioneer-gold .crew-chat-send:hover {
 .display-page .countdown-timer,
 .display-page .display-live-badge .live-count {
   color: var(--theme-primary);
+}
+
+/* "Altın Saatler" başlığı — gradient override (display-page .dsp-card-title renk kuralını geçersiz kıl) */
+.display-page .dsp-card-title.dsp-card-title-altinsaatler {
+  color: transparent;
+  background: linear-gradient(90deg, var(--theme-primary), rgba(255,255,255,0.95), #ffd700, rgba(255,255,255,0.9), var(--theme-primary));
+  background-size: 400% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: brandGradientH 6s ease infinite;
+  filter: drop-shadow(0 0 4px rgba(var(--theme-rgb), 0.25));
 }
 
 .display-page .dtable-top3 {

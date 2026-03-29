@@ -1030,6 +1030,8 @@ function Ticker({ requests, lang, tickerTexts }) {
   const doubled = [...items, ...items];
   const duration = Math.max(20, items.length * 4);
 
+  const separatorEmojis = ['🎶', '◆', '🎵', '◆', '✦', '◆'];
+
   return (
     <div className="display-ticker">
       <div className="ticker-track" style={{ '--ticker-duration': `${duration}s` }}>
@@ -1048,7 +1050,7 @@ function Ticker({ requests, lang, tickerTexts }) {
                 <span className="ticker-song">{item}</span>
               </>
             )}
-            <span className="ticker-dot">●</span>
+            <span className="ticker-dot">{separatorEmojis[i % separatorEmojis.length]}</span>
           </div>
         ))}
       </div>
