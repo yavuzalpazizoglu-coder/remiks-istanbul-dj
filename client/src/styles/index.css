@@ -4190,10 +4190,10 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   position: relative;
 }
 
-/* Sol: Logo — QR sütunuyla aynı genişlikte */
+/* Sol: Logo — Beatbox sol QR sütunuyla aynı genişlikte (%12) */
 .dsp-topbar-left {
-  flex: 0 0 18%;
-  max-width: 18%;
+  flex: 0 0 12%;
+  max-width: 12%;
   min-width: 0;
   position: relative;
   display: flex;
@@ -4298,6 +4298,69 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   align-items: stretch;
   gap: clamp(6px, 0.8vw, 16px);
   width: 100%;
+}
+
+/* ─── Beatbox: Sol QR | Merkez Liste | Sağ QR ─── */
+.dsp-beatbox {
+  display: flex;
+  height: 76vh;
+  align-items: stretch;
+  width: 100%;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(var(--theme-rgb), 0.12);
+  border-radius: clamp(10px, 1.2vw, 22px);
+  overflow: hidden;
+}
+
+.dsp-beatbox-qr {
+  flex: 0 0 12%;
+  max-width: 12%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1vh, 14px);
+  padding: clamp(10px, 1.5vh, 22px) clamp(6px, 0.6vw, 12px);
+  border-right: 1px solid rgba(var(--theme-rgb), 0.1);
+  background: rgba(0,0,0,0.15);
+}
+.dsp-beatbox-qr:last-child {
+  border-right: none;
+  border-left: 1px solid rgba(var(--theme-rgb), 0.1);
+}
+.dsp-beatbox-qr-wrap {
+  width: min(85%, 145px);
+  aspect-ratio: 1;
+  padding: clamp(5px, 0.7vh, 10px);
+  background: #fff;
+  border-radius: clamp(6px, 0.6vw, 12px);
+  box-shadow: 0 0 clamp(8px, 1.2vw, 24px) rgba(var(--theme-rgb), 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dsp-beatbox-qr-lbl {
+  font-family: var(--font-display);
+  font-size: clamp(8px, 1.1vh, 15px);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+}
+.dsp-beatbox-qr-sub {
+  font-size: clamp(7px, 0.95vh, 13px);
+  color: var(--theme-primary, var(--neon-cyan));
+  font-weight: 600;
+  text-align: center;
+  animation: pulse 2s ease infinite;
+}
+
+.dsp-beatbox-songs {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(4px, 0.6vh, 10px) clamp(6px, 0.8vw, 14px);
+  overflow: hidden;
 }
 
 /* Sol: QR sade panel */
@@ -4405,8 +4468,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   justify-content: center;
   gap: clamp(4px, 0.5vw, 10px);
   font-family: var(--font-display);
-  font-size: clamp(9px, 1.1vh, 16px);
-  padding: clamp(2px, 0.25vh, 5px) 0 clamp(4px, 0.5vh, 9px);
+  font-size: clamp(10px, 1.15vw, 30px);
+  padding: clamp(3px, 0.35vh, 7px) 0 clamp(5px, 0.6vh, 11px);
   border-bottom: 1px solid rgba(var(--theme-rgb), 0.12);
   margin-bottom: clamp(2px, 0.3vh, 6px);
   flex-shrink: 0;

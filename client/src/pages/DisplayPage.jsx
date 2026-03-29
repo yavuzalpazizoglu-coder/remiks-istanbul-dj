@@ -1553,25 +1553,21 @@ export default function DisplayPage() {
           )}
         </AnimatePresence>
 
-        {/* ─── ACTIVE: 2-column layout (QR sol, liste sağ) ─── */}
+        {/* ─── ACTIVE: Beatbox layout (QR sol | liste merkez | QR sağ) ─── */}
         {event.status === 'active' && !openingActive && (
           <>
-            <div className="dsp-2col">
-              {/* LEFT: QR (sade, küçük) */}
-              <div className="dsp-qr-side">
-                <div className="dsp-qr-side-box">
-                  <QRCodeSVG value={requestUrl} size={180} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
+            <div className="dsp-beatbox">
+              {/* Sol QR */}
+              <div className="dsp-beatbox-qr">
+                <div className="dsp-beatbox-qr-wrap">
+                  <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
-                <div className="dsp-qr-side-label">
-                  {lang === 'tr' ? 'QR ile Tara' : 'Scan QR Code'}
-                </div>
-                <div className="dsp-qr-side-sub">
-                  {lang === 'tr' ? 'İsteğini Gönder!' : 'Send Your Request!'}
-                </div>
+                <div className="dsp-beatbox-qr-lbl">{lang === 'tr' ? 'QR ile Tara' : 'Scan QR'}</div>
+                <div className="dsp-beatbox-qr-sub">{lang === 'tr' ? 'İsteğini Gönder!' : 'Send Request!'}</div>
               </div>
 
-              {/* RIGHT: Song Table (geniş) */}
-              <div className="dsp-card dsp-list-card-wide">
+              {/* Merkez: Altın Saatler + Şarkı Listesi */}
+              <div className="dsp-beatbox-songs">
                 <div className="dsp-card-title dsp-card-title-altinsaatler">
                   <span className="dtf-brand-logo-r">Remiks</span><span className="dtf-brand-logo-b">Box</span>
                   <span className="dtf-brand-sep">—</span>
@@ -1628,6 +1624,15 @@ export default function DisplayPage() {
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Sağ QR */}
+              <div className="dsp-beatbox-qr">
+                <div className="dsp-beatbox-qr-wrap">
+                  <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
+                </div>
+                <div className="dsp-beatbox-qr-lbl">{lang === 'tr' ? 'QR ile Tara' : 'Scan QR'}</div>
+                <div className="dsp-beatbox-qr-sub">{lang === 'tr' ? 'İsteğini Gönder!' : 'Send Request!'}</div>
               </div>
             </div>
           </>
