@@ -4361,59 +4361,59 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   overflow: hidden;
 }
 
-/* ─── Live Stats (QR altı istatistikler — kutusu yok, sade metin) ─── */
+/* ─── Live Stats (QR altı istatistikler — ortalı, etiket üstte, sayı altta) ─── */
 .dsp-beatbox-stats {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: clamp(4px, 0.6vh, 10px);
   padding-top: clamp(8px, 1vh, 16px);
-  border-top: 1px solid rgba(var(--theme-rgb), 0.12);
+  border-top: 1px solid rgba(var(--theme-rgb), 0.15);
   margin-top: clamp(6px, 0.8vh, 12px);
 }
 .dsp-live-stat {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: baseline;
-  gap: clamp(4px, 0.5vw, 8px);
-  padding: clamp(4px, 0.5vh, 7px) clamp(2px, 0.3vw, 5px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1px, 0.15vh, 3px);
+  padding: clamp(3px, 0.45vh, 7px) 0;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .dsp-live-stat:last-child {
   border-bottom: none;
 }
 .dsp-live-stat-lbl {
-  font-size: clamp(8px, 1vh, 13px);
-  font-weight: 600;
-  color: rgba(255,255,255,0.45);
+  font-size: clamp(7px, 0.9vh, 12px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.38);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
+  text-align: center;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .dsp-live-stat-val {
   font-family: var(--font-display);
-  font-size: clamp(14px, 2.1vh, 30px);
+  font-size: clamp(16px, 2.4vh, 36px);
   font-weight: 900;
   font-variant-numeric: tabular-nums;
-  color: #ffffff;
+  color: var(--theme-primary, #00d4ff);
   line-height: 1;
-  min-width: 2ch;
-  text-align: right;
+  text-align: center;
+  letter-spacing: -0.02em;
   transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 .dsp-live-stat-flash .dsp-live-stat-val {
-  color: var(--theme-primary, #00d4ff);
-  text-shadow: 0 0 10px rgba(var(--theme-rgb), 0.6);
+  color: #ffffff;
+  text-shadow: 0 0 clamp(8px, 1.2vw, 20px) rgba(var(--theme-rgb), 0.8);
 }
 @keyframes statFlash {
-  0%   { opacity: 1; }
-  25%  { opacity: 0.5; }
-  100% { opacity: 1; }
+  0%   { opacity: 1; transform: scale(1); }
+  30%  { opacity: 0.7; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
 }
 .dsp-live-stat-flash {
-  animation: statFlash 0.7s ease;
+  animation: statFlash 0.6s ease;
 }
 
 /* Sol: QR sade panel */
