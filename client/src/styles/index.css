@@ -4152,41 +4152,41 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 /* ─── Display: 2-sütun layout (QR sol, liste sağ) ─── */
 .dsp-2col {
   display: flex;
-  height: 75vh;
+  height: 76vh;
   align-items: stretch;
-  gap: clamp(8px, 1vw, 20px);
+  gap: clamp(6px, 0.8vw, 16px);
   width: 100%;
 }
 
 /* Sol: QR sade panel */
 .dsp-qr-side {
-  flex: 0 0 20%;
-  max-width: 20%;
+  flex: 0 0 18%;
+  max-width: 18%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 1vw, 18px);
+  gap: clamp(6px, 1vh, 14px);
   background: rgba(255,255,255,0.025);
   border: 1px solid rgba(var(--theme-rgb), 0.1);
   border-radius: clamp(8px, 1vw, 20px);
-  padding: clamp(10px, 1.2vw, 28px) clamp(8px, 0.8vw, 18px);
+  padding: clamp(10px, 1.5vh, 24px) clamp(8px, 0.8vw, 16px);
 }
 .dsp-qr-side-box {
-  padding: clamp(6px, 0.6vw, 14px);
+  padding: clamp(5px, 0.8vh, 12px);
   background: #fff;
   border-radius: clamp(6px, 0.6vw, 14px);
   box-shadow: 0 0 clamp(10px, 1.5vw, 32px) rgba(var(--theme-rgb), 0.15);
 }
 .dsp-qr-side-label {
   font-family: var(--font-display);
-  font-size: clamp(10px, 1.1vw, 20px);
+  font-size: clamp(9px, 1.3vh, 18px);
   font-weight: 700;
   color: var(--text-primary);
   text-align: center;
 }
 .dsp-qr-side-sub {
-  font-size: clamp(9px, 0.9vw, 17px);
+  font-size: clamp(8px, 1.1vh, 15px);
   color: var(--theme-primary, var(--neon-cyan));
   font-weight: 600;
   text-align: center;
@@ -4197,8 +4197,10 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-list-card-wide {
   flex: 1;
   min-width: 0;
-  padding: clamp(6px, 0.8vw, 18px) clamp(8px, 1vw, 22px);
+  padding: clamp(4px, 0.6vh, 12px) clamp(6px, 0.8vw, 16px);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Eski 3-col (geriye uyumluluk) */
@@ -4238,12 +4240,12 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 .dsp-card-title {
   font-family: var(--font-display);
-  font-size: clamp(11px, 1.3vw, 32px); font-weight: 700;
-  padding: 0 0 clamp(4px, 0.5vw, 12px);
+  font-size: clamp(10px, 1.4vh, 22px); font-weight: 700;
+  padding: 0 0 clamp(3px, 0.4vh, 8px);
   color: var(--text-secondary);
   flex-shrink: 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
-  margin-bottom: clamp(3px, 0.4vw, 10px);
+  margin-bottom: clamp(2px, 0.3vh, 7px);
 }
 
 .dsp-table-empty {
@@ -4256,6 +4258,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-table-2col {
   display: flex;
   gap: 0;
+  height: 100%;
   overflow: hidden;
 }
 .dsp-table-col {
@@ -4267,7 +4270,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   width: 1px;
   background: linear-gradient(180deg, transparent, rgba(var(--theme-rgb), 0.15), transparent);
   flex-shrink: 0;
-  margin: clamp(4px, 0.5vw, 12px) clamp(4px, 0.5vw, 10px);
+  margin: clamp(4px, 0.5vh, 10px) clamp(4px, 0.5vw, 8px);
 }
 
 /* logoBreathe animation removed */
@@ -4275,197 +4278,211 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 clamp(1px, 0.15vw, 4px);
+  border-spacing: 0 clamp(1px, 0.15vh, 3px);
 }
 
 .dtable-row {
   background: transparent;
-  transition: all var(--transition-fast);
+  transition: background 0.15s;
 }
 .dtable-row:hover { background: rgba(255,255,255,0.02); }
 .dtable-top3 {
-  background: linear-gradient(90deg, rgba(var(--theme-rgb), 0.12), rgba(var(--theme-rgb), 0.03));
-  border: clamp(1px, 0.1vw, 3px) solid rgba(var(--theme-rgb), 0.2);
-  border-radius: clamp(3px, 0.3vw, 8px);
+  background: linear-gradient(90deg, rgba(var(--theme-rgb), 0.10), rgba(var(--theme-rgb), 0.02));
+  border: 1px solid rgba(var(--theme-rgb), 0.18);
+  border-radius: clamp(3px, 0.3vh, 6px);
 }
 .dtable-first {
-  background: linear-gradient(90deg, rgba(var(--theme-rgb), 0.18), rgba(var(--theme-rgb), 0.06));
-  border: clamp(1px, 0.1vw, 3px) solid rgba(var(--theme-rgb), 0.3);
-  border-radius: clamp(3px, 0.3vw, 8px);
+  background: linear-gradient(90deg, rgba(var(--theme-rgb), 0.14), rgba(var(--theme-rgb), 0.03));
+  border: 1px solid rgba(var(--theme-rgb), 0.28);
+  border-radius: clamp(3px, 0.3vh, 6px);
 }
 
 .dtable-row td {
-  padding: clamp(2px, 0.3vw, 8px) clamp(3px, 0.4vw, 10px);
+  padding: clamp(1px, 0.45vh, 6px) clamp(2px, 0.35vw, 8px);
   border-bottom: 1px solid rgba(255,255,255,0.04);
   vertical-align: middle;
 }
-.dtable-top3 td { padding: clamp(3px, 0.4vw, 10px) clamp(3px, 0.4vw, 10px); }
+.dtable-top3 td { padding: clamp(2px, 0.5vh, 7px) clamp(2px, 0.35vw, 8px); }
 .dtable-row td:first-child {
-  width: clamp(36px, 3.8vw, 76px); text-align: center;
-  border-left: clamp(2px, 0.2vw, 5px) solid transparent;
-  border-radius: clamp(3px, 0.3vw, 8px) 0 0 clamp(3px, 0.3vw, 8px);
+  width: clamp(32px, 4.5vh, 62px); text-align: center;
+  border-left: clamp(2px, 0.25vh, 4px) solid transparent;
+  border-radius: clamp(3px, 0.3vh, 6px) 0 0 clamp(3px, 0.3vh, 6px);
+  padding-left: clamp(3px, 0.4vw, 8px) !important;
+  padding-right: clamp(3px, 0.4vw, 8px) !important;
 }
-.dtable-top3 td:first-child { border-left-color: var(--theme-primary, var(--neon-cyan)); }
-.dtable-first td:first-child { border-left-color: var(--theme-primary, var(--neon-pink)); }
+.dtable-top3 td:first-child  { border-left-color: rgba(var(--theme-rgb), 0.8); }
+.dtable-first td:first-child  { border-left-color: var(--theme-primary, #00d4ff); }
 
 /* ── NYSE-style Rank Badge ── */
 .dtable-rank-cell {
   text-align: center;
   vertical-align: middle;
-  padding: clamp(2px, 0.3vw, 6px) clamp(4px, 0.5vw, 10px) !important;
 }
 .dtable-rank-badge-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1px;
+  gap: 0;
 }
 .dtable-rank-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: clamp(3px, 0.35vw, 7px);
+  border-radius: clamp(3px, 0.4vh, 6px);
   font-family: var(--font-display);
   font-weight: 900;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   transition: box-shadow 0.3s;
 }
 
-/* #1 — büyük, parlak, tema rengi */
+/* #1 — parlak, tema rengi, hafif pulse */
 .dtable-rank-badge.rank-badge-1 {
-  width: clamp(28px, 3vw, 58px);
-  height: clamp(28px, 3vw, 58px);
-  font-size: clamp(14px, 1.6vw, 34px);
-  background: rgba(var(--theme-rgb), 0.18);
-  border: clamp(1.5px, 0.15vw, 3px) solid rgba(var(--theme-rgb), 0.7);
+  width: clamp(22px, 4vh, 48px);
+  height: clamp(22px, 4vh, 48px);
+  font-size: clamp(11px, 2.1vh, 26px);
+  background: rgba(var(--theme-rgb), 0.2);
+  border: clamp(1.5px, 0.2vh, 3px) solid rgba(var(--theme-rgb), 0.75);
   color: var(--theme-primary, #00d4ff);
-  box-shadow: 0 0 clamp(6px, 0.8vw, 18px) rgba(var(--theme-rgb), 0.45);
+  box-shadow: 0 0 clamp(4px, 1vh, 14px) rgba(var(--theme-rgb), 0.4),
+              inset 0 0 clamp(4px, 1vh, 12px) rgba(var(--theme-rgb), 0.08);
+  animation: rankOnePulse 2.5s ease-in-out infinite;
 }
-/* #2 — orta boy */
-.dtable-rank-badge.rank-badge-2 {
-  width: clamp(24px, 2.5vw, 50px);
-  height: clamp(24px, 2.5vw, 50px);
-  font-size: clamp(12px, 1.35vw, 28px);
-  background: rgba(var(--theme-rgb), 0.10);
-  border: clamp(1px, 0.12vw, 2.5px) solid rgba(var(--theme-rgb), 0.45);
-  color: var(--theme-primary, #00d4ff);
-  opacity: 0.9;
-}
-/* #3 — biraz daha küçük */
-.dtable-rank-badge.rank-badge-3 {
-  width: clamp(22px, 2.2vw, 44px);
-  height: clamp(22px, 2.2vw, 44px);
-  font-size: clamp(11px, 1.2vw, 24px);
-  background: rgba(var(--theme-rgb), 0.07);
-  border: clamp(1px, 0.1vw, 2px) solid rgba(var(--theme-rgb), 0.3);
-  color: var(--theme-primary, #00d4ff);
-  opacity: 0.8;
-}
-/* #4-15 — compact, soluk */
-.dtable-rank-badge.rank-badge-rest {
-  width: clamp(18px, 1.8vw, 34px);
-  height: clamp(18px, 1.8vw, 34px);
-  font-size: clamp(9px, 0.95vw, 18px);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.10);
-  color: rgba(255,255,255,0.45);
+@keyframes rankOnePulse {
+  0%, 100% { box-shadow: 0 0 clamp(4px, 1vh, 14px) rgba(var(--theme-rgb), 0.35), inset 0 0 clamp(4px, 1vh, 12px) rgba(var(--theme-rgb), 0.06); }
+  50%       { box-shadow: 0 0 clamp(8px, 1.8vh, 24px) rgba(var(--theme-rgb), 0.55), inset 0 0 clamp(6px, 1.2vh, 16px) rgba(var(--theme-rgb), 0.12); }
 }
 
-/* ── Rank değişim okları (NYSE yeşil/kırmızı) ── */
+/* #2 */
+.dtable-rank-badge.rank-badge-2 {
+  width: clamp(19px, 3.4vh, 40px);
+  height: clamp(19px, 3.4vh, 40px);
+  font-size: clamp(10px, 1.75vh, 21px);
+  background: rgba(var(--theme-rgb), 0.10);
+  border: 1px solid rgba(var(--theme-rgb), 0.45);
+  color: var(--theme-primary, #00d4ff);
+  opacity: 0.88;
+}
+/* #3 */
+.dtable-rank-badge.rank-badge-3 {
+  width: clamp(17px, 3vh, 36px);
+  height: clamp(17px, 3vh, 36px);
+  font-size: clamp(9px, 1.5vh, 18px);
+  background: rgba(var(--theme-rgb), 0.06);
+  border: 1px solid rgba(var(--theme-rgb), 0.28);
+  color: var(--theme-primary, #00d4ff);
+  opacity: 0.75;
+}
+/* #4-15 — compact pill */
+.dtable-rank-badge.rank-badge-rest {
+  width: clamp(14px, 2.4vh, 28px);
+  height: clamp(14px, 2.4vh, 28px);
+  font-size: clamp(8px, 1.1vh, 13px);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.42);
+}
+
+/* ── Rank değişim okları ── */
 .dtable-rank-chg {
-  height: clamp(8px, 0.85vw, 16px);
+  height: clamp(7px, 1vh, 13px);
   display: flex; align-items: center; justify-content: center;
 }
 .dtable-chg-up {
-  font-size: clamp(7px, 0.65vw, 12px);
+  font-size: clamp(6px, 0.75vh, 10px);
   font-weight: 900;
   color: #4ade80;
   animation: rankChgFade 2s ease-out forwards;
-  letter-spacing: -0.5px;
 }
 .dtable-chg-down {
-  font-size: clamp(7px, 0.65vw, 12px);
+  font-size: clamp(6px, 0.75vh, 10px);
   font-weight: 900;
   color: #f87171;
   animation: rankChgFade 2s ease-out forwards;
-  letter-spacing: -0.5px;
 }
 @keyframes rankChgFade {
   0%   { opacity: 1; transform: translateY(0); }
   60%  { opacity: 0.9; }
-  100% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 0; transform: translateY(-3px); }
 }
 
 /* ── Çalınıyor göstergesi ── */
 .dtable-playing-indicator {
-  font-size: clamp(10px, 1.1vw, 22px);
+  font-size: clamp(9px, 1.4vh, 18px);
   color: var(--theme-primary, #00d4ff);
-  animation: playingPulse 1s ease-in-out infinite alternate;
+  animation: playingPulse 0.9s ease-in-out infinite alternate;
   display: block; text-align: center;
 }
 @keyframes playingPulse {
-  from { opacity: 0.5; }
-  to   { opacity: 1; }
+  from { opacity: 0.4; transform: scale(0.9); }
+  to   { opacity: 1;   transform: scale(1.1); }
 }
 .dtable-now-playing-label {
-  font-size: clamp(6px, 0.6vw, 10px);
+  font-size: clamp(5px, 0.65vh, 9px);
   color: var(--theme-primary, #00d4ff);
   font-weight: 700;
-  letter-spacing: 0.08em;
-  margin-top: 2px;
+  letter-spacing: 0.1em;
+  margin-top: 1px;
+  text-transform: uppercase;
 }
 
-/* ── Albüm kapağı placeholder (müzik notu) ── */
+/* ── Albüm kapağı ── */
 .dtable-art-note {
-  font-size: clamp(9px, 1vw, 20px);
-  color: rgba(255,255,255,0.25);
+  font-size: clamp(8px, 1.1vh, 14px);
+  color: rgba(255,255,255,0.22);
 }
 
-.dtable-art-cell { width: clamp(22px, 2.5vw, 52px); padding: clamp(2px, 0.2vw, 5px) clamp(3px, 0.3vw, 6px) !important; }
+.dtable-art-cell {
+  width: clamp(20px, 4vh, 46px);
+  padding: clamp(1px, 0.2vh, 4px) clamp(2px, 0.3vw, 5px) !important;
+}
 .dtable-art {
-  width: clamp(20px, 2.2vw, 48px); height: clamp(20px, 2.2vw, 48px); border-radius: clamp(3px, 0.3vw, 8px);
+  width: clamp(18px, 3.8vh, 42px); height: clamp(18px, 3.8vh, 42px);
+  border-radius: clamp(2px, 0.3vh, 6px);
   object-fit: cover; display: block;
 }
 .dtable-art-ph {
-  width: clamp(20px, 2.2vw, 48px); height: clamp(20px, 2.2vw, 48px); border-radius: clamp(3px, 0.3vw, 8px);
+  width: clamp(18px, 3.8vh, 42px); height: clamp(18px, 3.8vh, 42px);
+  border-radius: clamp(2px, 0.3vh, 6px);
   background: rgba(255,255,255,0.04);
   display: flex; align-items: center; justify-content: center;
-  font-size: clamp(9px, 1vw, 20px);
 }
 .dtable-top3 .dtable-art, .dtable-top3 .dtable-art-ph {
-  width: clamp(24px, 2.5vw, 56px); height: clamp(24px, 2.5vw, 56px);
+  width: clamp(20px, 4.2vh, 48px); height: clamp(20px, 4.2vh, 48px);
 }
 
+/* ── Şarkı bilgisi ── */
 .dtable-info-cell { min-width: 0; }
 .dtable-song {
-  font-weight: 600; font-size: clamp(10px, 1vw, 22px);
+  font-weight: 600; font-size: clamp(9px, 1.15vh, 16px);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  max-width: 14vw;
+  max-width: 18vw;
 }
-.dtable-song-lg { font-size: clamp(11px, 1.1vw, 24px); font-weight: 700; }
+.dtable-song-lg { font-size: clamp(10px, 1.3vh, 18px); font-weight: 700; }
 .dtable-artist {
-  font-size: clamp(7px, 0.8vw, 16px); color: var(--text-secondary);
+  font-size: clamp(7px, 0.85vh, 11px); color: var(--text-secondary);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.dtable-top3 .dtable-artist { font-size: clamp(8px, 0.9vw, 18px); }
+.dtable-top3 .dtable-artist { font-size: clamp(8px, 0.95vh, 13px); }
 
+/* ── Oy sayısı ── */
 .dtable-votes-cell {
-  text-align: center; width: clamp(40px, 4.5vw, 90px);
+  text-align: center; width: clamp(34px, 5vh, 68px);
 }
 .dtable-votes {
   font-family: var(--font-display);
-  font-weight: 800; font-size: clamp(11px, 1.1vw, 24px);
-  color: var(--neon-cyan);
+  font-weight: 800; font-size: clamp(10px, 1.4vh, 20px);
+  color: var(--theme-primary, var(--neon-cyan));
   display: block;
   white-space: nowrap;
 }
-.dtable-votes-lg { font-size: clamp(13px, 1.3vw, 28px); }
+.dtable-votes-lg { font-size: clamp(11px, 1.6vh, 22px); }
 .dtable-vote-label {
-  font-size: clamp(6px, 0.7vw, 16px); color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.5px;
+  font-size: clamp(5px, 0.65vh, 9px); color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.04em;
+  display: block;
 }
-.dtable-badge-cell { width: clamp(20px, 2vw, 48px); text-align: center; }
+.dtable-badge-cell { width: clamp(18px, 2.5vh, 36px); text-align: center; }
 
 /* Borsa: vote flash, delta */
 @keyframes voteFlashGreen {
