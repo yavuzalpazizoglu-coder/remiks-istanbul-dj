@@ -9353,11 +9353,6 @@ body.theme-pioneer-gold .display-mode-pioneer {
   flex-shrink: 0;
 }
 
-@keyframes liveDotBlink {
-  0%, 100% { opacity: 1; box-shadow: 0 0 6px #ff0000, 0 0 12px #ff0000; }
-  50% { opacity: 0.2; box-shadow: 0 0 2px #ff0000; }
-}
-
 @keyframes liveBadgePulse {
   0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.3); }
   50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.4); }
@@ -9568,11 +9563,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
   border-radius: 2px 2px 0 0;
   animation: eqBounce 0.6s ease-in-out infinite alternate;
 }
-@keyframes eqBounce {
-  0% { height: 15%; }
-  100% { height: var(--bar-h, 50%); }
-}
-
 /* ─── Club: Lasers ─── */
 .club-lasers {
   position: absolute;
@@ -9696,12 +9686,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
   animation: confettiFall 8s linear infinite;
   opacity: 0.6;
 }
-@keyframes confettiFall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-  5% { opacity: 0.7; }
-  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-}
-
 /* ─── Festival: Color Waves ─── */
 .festival-waves {
   position: absolute;
