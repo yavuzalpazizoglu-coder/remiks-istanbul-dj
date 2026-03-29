@@ -1249,12 +1249,16 @@ export default function DJPanel() {
                           <label className="djc-field-label">{lang === 'tr' ? 'Sahne Tasarımı' : 'Stage Design'}</label>
                           <div className="djc-stage-design-grid">
                             {[
-                              { id: 'classic', tr: 'Klasik', en: 'Classic', gradient: 'linear-gradient(135deg, #1a1a2e 0%, #0a0a1a 100%)', accent: '#00d4ff' },
-                              { id: 'minimal', tr: 'Minimal', en: 'Minimal', gradient: 'linear-gradient(135deg, #0a0a0e 0%, #141418 100%)', accent: '#888' },
-                              { id: 'elegant', tr: 'Elegant', en: 'Elegant', gradient: 'linear-gradient(135deg, #1a0f2e 0%, #0d0618 100%)', accent: '#d4a0ff' },
-                              { id: 'club', tr: 'Club', en: 'Club', gradient: 'linear-gradient(135deg, #1a0005 0%, #000820 100%)', accent: '#ff2060' },
-                              { id: 'festival', tr: 'Festival', en: 'Festival', gradient: 'linear-gradient(135deg, #1a1000 0%, #001020 100%)', accent: '#ff8c00' },
-                              { id: 'corporate', tr: 'Kurumsal', en: 'Corporate', gradient: 'linear-gradient(135deg, #0c0e14 0%, #0a0c12 100%)', accent: '#4a90d9' },
+                              { id: 'classic',   tr: 'Klasik',   en: 'Classic',  gradient: 'linear-gradient(135deg, #1a1a2e 0%, #0a0a1a 100%)', accent: '#00d4ff' },
+                              { id: 'minimal',   tr: 'Aurora',   en: 'Aurora',   gradient: 'linear-gradient(135deg, #060810 0%, #0a1418 100%)', accent: '#00d4c8' },
+                              { id: 'elegant',   tr: 'Velvet',   en: 'Velvet',   gradient: 'linear-gradient(135deg, #0d0609 0%, #110718 100%)', accent: '#c05070' },
+                              { id: 'club',      tr: 'Club',     en: 'Club',     gradient: 'linear-gradient(135deg, #1a0005 0%, #000820 100%)', accent: '#ff2060' },
+                              { id: 'festival',  tr: 'Festival', en: 'Festival', gradient: 'linear-gradient(135deg, #1a1000 0%, #001020 100%)', accent: '#ff8c00' },
+                              { id: 'corporate', tr: 'Obsidian', en: 'Obsidian', gradient: 'linear-gradient(135deg, #070b11 0%, #050810 100%)', accent: '#00d4ff' },
+                              { id: 'cyber',     tr: 'Cyber',    en: 'Cyber',    gradient: 'linear-gradient(135deg, #020004 0%, #100010 100%)', accent: '#ff00a0' },
+                              { id: 'lounge',    tr: 'Lounge',   en: 'Lounge',   gradient: 'linear-gradient(135deg, #0c0a06 0%, #0a0804 100%)', accent: '#c88c28' },
+                              { id: 'rave',      tr: 'Rave',     en: 'Rave',     gradient: 'linear-gradient(135deg, #050008 0%, #0a0020 100%)', accent: '#8c00dc' },
+                              { id: 'cinema',    tr: 'Cinema',   en: 'Cinema',   gradient: 'linear-gradient(135deg, #030303 0%, #080808 100%)', accent: '#ffffff' },
                             ].map(d => (
                               <button key={d.id}
                                 className={`djc-stage-btn ${stageDesign === d.id ? 'active' : ''} djc-stage-${d.id}`}

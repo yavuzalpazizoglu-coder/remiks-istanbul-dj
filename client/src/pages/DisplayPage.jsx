@@ -1476,13 +1476,36 @@ export default function DisplayPage() {
         <Sparkles themeRgb={tc.rgb} count={25} />
       </>}
 
-      {/* Corporate: logo bg + grid + data streams + accent line */}
+      {/* Corporate/Obsidian: logo bg + grid + data streams + accent line */}
       {stageDesign === 'corporate' && <>
         <img src="/logos/remiksbox_logo_horizontal.png" alt="" className="stage-bg-img stage-bg-corporate" />
         <CorporateGrid />
         <CorporateDataStreams themeRgb={tc.rgb} />
         <CorporateAccentLine themeRgb={tc.rgb} />
       </>}
+
+      {/* Cyber: particles only — CSS handles grid & glow */}
+      {stageDesign === 'cyber' && <>
+        <div className="display-bg" />
+        <div className="floating-particles" aria-hidden="true" />
+      </>}
+
+      {/* Lounge: ambient glow + dim particles */}
+      {stageDesign === 'lounge' && <>
+        <div className="display-bg" />
+        <div className="floating-particles" aria-hidden="true" />
+        <AmbientGlow />
+      </>}
+
+      {/* Rave: particles + display-bg */}
+      {stageDesign === 'rave' && <>
+        <div className="display-bg" />
+        <div className="floating-particles" aria-hidden="true" />
+        <Sparkles themeRgb={tc.rgb} count={20} />
+      </>}
+
+      {/* Cinema: minimal — CSS handles spotlight + grain */}
+      {stageDesign === 'cinema' && <></>}
 
       {showConfetti && <Confetti />}
 
