@@ -3623,13 +3623,25 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 .dj-table-actions {
   white-space: nowrap;
-  width: 62px;
-  min-width: 62px;
-  max-width: 62px;
+  width: 68px;
+  min-width: 68px;
+  max-width: 68px;
   text-align: right;
   overflow: hidden;
+  padding-right: 2px !important;
 }
-.dj-table-actions .btn { padding: 5px 10px; font-size: 11px; }
+.dj-table-actions .btn {
+  padding: 0;
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 3px;
+  flex-shrink: 0;
+}
 
 .dj-table-row-pending td:first-child {
   border-left: 3px solid var(--rb-orange, #f59e0b) !important;

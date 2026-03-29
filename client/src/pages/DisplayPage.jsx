@@ -1250,7 +1250,7 @@ export default function DisplayPage() {
       playedSongTimer.current = setTimeout(() => {
         setPlayedId(null);
         setPlayedSong(null);
-      }, 62000);
+      }, 60000);
     });
 
     socket.on('event-status', ({ status, countdown_end }) => {

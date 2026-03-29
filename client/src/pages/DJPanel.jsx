@@ -151,7 +151,7 @@ export default function DJPanel() {
     socket.on('request-played', (req) => {
       setPlayedDJSong(req);
       clearTimeout(playedDJTimer.current);
-      playedDJTimer.current = setTimeout(() => setPlayedDJSong(null), 62000);
+      playedDJTimer.current = setTimeout(() => setPlayedDJSong(null), 60000);
     });
 
     socket.on('event-status', ({ status }) => {
