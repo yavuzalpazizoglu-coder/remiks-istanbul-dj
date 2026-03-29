@@ -805,60 +805,6 @@ function VoteFloat({ count }) {
   ));
 }
 
-/* ─── İSTEK BAŞLAĞI ANİMASYON ─────────────────────────── */
-function RequestStartOverlay({ themeRgb, eventName, onEnd }) {
-  const [phase, setPhase] = useState(0);
-  const rgb = themeRgb || '0,212,255';
-
-  useEffect(() => {
-    const timers = [
-      setTimeout(() => setPhase(1), 80),
-      setTimeout(() => setPhase(2), 880),
-      setTimeout(() => setPhase(3), 1680),
-      setTimeout(() => setPhase(4), 2480),
-      setTimeout(() => setPhase(5), 3500),
-      setTimeout(() => onEnd && onEnd(), 4100),
-    ];
-    return () => timers.forEach(clearTimeout);
-  }, [onEnd]);
-
-  const countdown = phase >= 1 && phase <= 3 ? 4 - phase : null;
-
-  return (
-    <div
-      className={`rqs-overlay rqs-phase-${phase}`}
-      style={{ '--rqs-rgb': rgb }}
-    >
-      {/* Arka plan efektleri */}
-      {countdown !== null && (
-        <>
-          <div className="rqs-flash" key={`flash-${phase}`} />
-          <div className="rqs-lines">
-            <div className="rqs-line" />
-            <div className="rqs-line" />
-            <div className="rqs-line" />
-          </div>
-        </>
-      )}
-      {phase === 4 && <div className="rqs-bg-text" />}
-
-      {/* İçerik */}
-      {countdown !== null && (
-        <span className="rqs-count" key={`count-${phase}`}>
-          {countdown}
-        </span>
-      )}
-      {phase === 4 && (
-        <div className="rqs-text-wrap">
-          <div className="rqs-brand">REMİKS İSTANBUL</div>
-          <div className="rqs-sub">✦ ALTIN SAATLER ✦</div>
-          <div className="rqs-title">İSTEKLER AÇILDI</div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 function NowPlayingBar({ req, lang }) {
   const [flash, setFlash] = useState(false);
   const prevId = useRef(null);
@@ -1227,8 +1173,6 @@ export default function DisplayPage() {
   const [eventLogo, setEventLogo] = useState('');
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
-  const [requestStartAnim, setRequestStartAnim] = useState(false);
-  const prevEventStatus = useRef(null);
 
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
@@ -1254,7 +1198,6 @@ export default function DisplayPage() {
       const eventData = await eventRes.json();
       const reqData = await reqRes.json();
       setEvent(eventData);
-      prevEventStatus.current = eventData.status || null;
       setLang(eventData.language || 'tr');
       setBrandText(eventData.brand_text || '');
       setTickerTexts(eventData.ticker_texts || '');
@@ -1311,10 +1254,6 @@ export default function DisplayPage() {
     });
 
     socket.on('event-status', ({ status, countdown_end }) => {
-      if (status === 'active' && prevEventStatus.current !== 'active') {
-        setRequestStartAnim(true);
-      }
-      prevEventStatus.current = status;
       setEvent(prev => {
         if (status === 'ended') {
           fetch(`${API}/api/events/${slug}/requests?all=true`)
@@ -1659,13 +1598,6 @@ export default function DisplayPage() {
 
       {showConfetti && <Confetti />}
 
-      {requestStartAnim && (
-        <RequestStartOverlay
-          themeRgb={tc.rgb}
-          eventName={event?.name}
-          onEnd={() => setRequestStartAnim(false)}
-        />
-      )}
 
       {!socketConnected && (
         <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi' : '⚠ Disconnected'}</div>
