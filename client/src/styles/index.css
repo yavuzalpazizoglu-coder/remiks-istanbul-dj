@@ -3545,6 +3545,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 .dj-table {
   width: 100%;
+  table-layout: fixed;   /* kolon genişlikleri sabit kalır, reflow yok */
   border-collapse: separate;
   border-spacing: 0 2px;
 }
@@ -3574,12 +3575,37 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dj-table-rank {
   font-family: var(--font-display);
   font-weight: 800; font-size: 14px;
-  text-align: center; width: 32px;
+  text-align: center;
+  width: 28px;
+  min-width: 28px;
+  max-width: 28px;
   color: var(--rb-text-dim, var(--text-muted));
+  overflow: hidden;
 }
 .dj-table-rank.top-1 { color: var(--rb-orange, var(--neon-pink)); }
 .dj-table-rank.top-2 { color: var(--rb-blue, var(--neon-cyan)); }
 .dj-table-rank.top-3 { color: var(--rb-accent, var(--neon-purple)); }
+
+/* Albüm art kolonu — sabit */
+.dj-table-art {
+  width: 38px;
+  min-width: 38px;
+  max-width: 38px;
+  padding: 4px !important;
+  overflow: hidden;
+}
+/* Şarkı adı kolonu — kalan alanı doldurur, taşmaz */
+.dj-table-name {
+  overflow: hidden;
+  max-width: 0; /* table-layout:fixed ile flex gibi çalışır */
+}
+.dj-table-name .dj-table-song,
+.dj-table-name .dj-table-artist,
+.dj-table-name .dj-table-played-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .dj-table-song { font-weight: 600; font-size: 13px; color: #e0e0e8; }
 .dj-table-artist { color: var(--rb-text-dim, var(--text-secondary)); font-size: 11px; }
@@ -3587,11 +3613,22 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-family: var(--font-display);
   font-weight: 800; font-size: 16px;
   text-align: center;
+  width: 28px;
+  min-width: 28px;
+  max-width: 28px;
   color: var(--rb-green, var(--neon-cyan));
+  overflow: hidden;
 }
 .dj-table-votes.is-hot { color: var(--rb-orange, var(--neon-pink)); }
 
-.dj-table-actions { white-space: nowrap; }
+.dj-table-actions {
+  white-space: nowrap;
+  width: 62px;
+  min-width: 62px;
+  max-width: 62px;
+  text-align: right;
+  overflow: hidden;
+}
 .dj-table-actions .btn { padding: 5px 10px; font-size: 11px; }
 
 .dj-table-row-pending td:first-child {

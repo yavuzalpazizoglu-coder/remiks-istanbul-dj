@@ -1086,13 +1086,13 @@ export default function DJPanel() {
                               layout initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                               transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
                               <td className="dj-table-rank">{idx + 1}</td>
-                              <td style={{ width: 36, padding: '4px' }}>
+                              <td className="dj-table-art">
                                 {req.album_art
                                   ? <img src={req.album_art} alt="" style={{ width: 30, height: 30, borderRadius: 5, objectFit: 'cover', display: 'block' }} />
                                   : <div style={{ width: 30, height: 30, borderRadius: 5, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🎵</div>
                                 }
                               </td>
-                              <td>
+                              <td className="dj-table-name">
                                 <div className="dj-table-song">{req.song_name}</div>
                                 {req.artist && <div className="dj-table-artist">{req.artist}</div>}
                               </td>
@@ -1129,13 +1129,13 @@ export default function DJPanel() {
                               layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
                               transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
                               <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>{req._djPlayed ? '♫' : idx + 1}</td>
-                              <td style={{ width: 36, padding: '4px' }}>
+                              <td className="dj-table-art">
                                 {req.album_art
                                   ? <img src={req.album_art} alt="" style={{ width: 30, height: 30, borderRadius: 5, objectFit: 'cover', display: 'block' }} />
                                   : <div style={{ width: 30, height: 30, borderRadius: 5, background: 'var(--bg-glass-strong)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🎵</div>
                                 }
                               </td>
-                              <td>
+                              <td className="dj-table-name">
                                 <div className="dj-table-song">{req.song_name}</div>
                                 {req.artist && <div className="dj-table-artist">{req.artist}</div>}
                                 {req._djPlayed && <div className="dj-table-played-label">{lang === 'tr' ? '● ÇALINDI — Display\'de görünüyor' : '● PLAYED — Visible on display'}</div>}
