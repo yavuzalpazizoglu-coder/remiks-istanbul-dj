@@ -4188,35 +4188,43 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   flex-shrink: 0;
 }
 
-/* Sol: Logo kutusu */
+/* Sol: Logo */
 .dsp-topbar-left {
   flex: 0 0 auto;
+  position: relative;
 }
 .dsp-logo-inline {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(6px, 0.9vh, 14px) clamp(12px, 1.4vw, 28px);
-  background: rgba(0,0,0,0.52);
-  border: 1px solid rgba(var(--theme-rgb), 0.28);
-  border-radius: clamp(8px, 0.8vw, 16px);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  min-width: clamp(90px, 11vw, 200px);
+  padding: clamp(4px, 0.5vh, 8px);
+  min-width: clamp(70px, 9vw, 160px);
+}
+.dsp-logo-inline::after {
+  content: '';
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  height: clamp(12px, 2vh, 28px);
+  background: radial-gradient(ellipse at center, rgba(var(--theme-rgb), 0.22) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(4px);
 }
 .dsp-logo-inline-img {
-  height: clamp(30px, 5vh, 72px);
-  max-width: clamp(100px, 13vw, 240px);
+  height: clamp(28px, 5vh, 76px);
+  max-width: clamp(90px, 13vw, 240px);
   object-fit: contain;
   display: block;
 }
 .dsp-logo-inline-text {
-  font-size: clamp(18px, 2.8vh, 40px);
+  font-size: clamp(14px, 2vw, 30px);
   font-weight: 800;
   line-height: 1;
   display: inline-flex;
   align-items: baseline;
   gap: 1px;
+  opacity: 0.6;
 }
 
 /* Merkez: Etkinlik adı */
@@ -4244,17 +4252,17 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-brand-logo .login-logo-box { color: #FFFFFF; font-weight: 900; }
 .dsp-brand-motto {
   font-family: var(--font-display);
-  font-size: clamp(7px, 0.85vh, 14px); font-weight: 600;
-  letter-spacing: clamp(2px, 0.4vw, 10px); text-transform: uppercase;
+  font-size: clamp(8px, 1vw, 16px); font-weight: 600;
+  letter-spacing: clamp(3px, 0.5vw, 10px); text-transform: uppercase;
   color: var(--text-secondary);
   white-space: nowrap;
 }
 
 .dsp-event-name {
   font-family: var(--font-display);
-  font-size: clamp(14px, 3.4vh, 52px);
+  font-size: clamp(20px, 3.8vw, 64px);
   font-weight: 900; text-transform: uppercase;
-  letter-spacing: clamp(2px, 0.4vw, 10px);
+  letter-spacing: clamp(2px, 0.5vw, 10px);
   background: linear-gradient(90deg, var(--theme-primary), rgba(255,255,255,0.9), var(--theme-primary));
   background-size: 300% 100%;
   background-clip: text; -webkit-background-clip: text;
@@ -4369,6 +4377,15 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   flex-shrink: 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
   margin-bottom: clamp(2px, 0.3vh, 7px);
+}
+.dsp-card-title-altinsaatler {
+  text-align: center;
+  font-size: clamp(8px, 1vw, 16px);
+  font-weight: 600;
+  letter-spacing: clamp(3px, 0.5vw, 10px);
+  text-transform: uppercase;
+  color: var(--theme-primary, #00d4ff);
+  opacity: 0.75;
 }
 
 .dsp-table-empty {
@@ -4574,6 +4591,13 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   100% { background: transparent; }
 }
 .dtable-vote-flash { animation: voteFlashGreen 1.2s ease-out forwards; }
+
+/* 1 dakika sonra satır solar */
+@keyframes dtfRowFadeOut {
+  0%   { opacity: 1; }
+  100% { opacity: 0; pointer-events: none; }
+}
+.dtf-row-fadeout { animation: dtfRowFadeOut 2s ease-out forwards; }
 .dsp-qr-card {
   flex: 0 0 30%;
   max-width: 30%;
@@ -4810,24 +4834,31 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .display-live-badge {
-  display: flex; align-items: center; gap: clamp(4px, 0.5vh, 8px);
-  padding: clamp(4px, 0.55vh, 9px) clamp(8px, 1vw, 18px);
+  display: flex; align-items: center; gap: clamp(5px, 0.6vw, 12px);
+  padding: clamp(5px, 0.6vw, 12px) clamp(10px, 1.2vw, 22px);
   background: rgba(255,0,0,0.1);
-  border: 1px solid rgba(255,0,0,0.25);
-  border-radius: clamp(10px, 1.2vh, 22px);
-  font-size: clamp(9px, 1vh, 14px); font-weight: 700;
+  border: 1px solid rgba(255,0,0,0.28);
+  border-radius: clamp(12px, 1.5vw, 28px);
+  font-size: clamp(20px, 3.8vw, 64px);
+  font-weight: 900;
+  letter-spacing: clamp(2px, 0.4vw, 8px);
+  white-space: nowrap;
 }
 
 .live-dot {
-  width: clamp(5px, 0.6vh, 10px); height: clamp(5px, 0.6vh, 10px);
+  width: clamp(8px, 0.9vw, 18px); height: clamp(8px, 0.9vw, 18px);
   background: #ff0000;
   border-radius: 50%;
   animation: pulse 1.5s ease infinite;
-  box-shadow: 0 0 clamp(3px, 0.4vh, 8px) rgba(255,0,0,0.6);
+  box-shadow: 0 0 clamp(4px, 0.6vw, 12px) rgba(255,0,0,0.7);
+  flex-shrink: 0;
 }
 
 .live-count {
-  color: var(--text-secondary); font-size: clamp(8px, 0.85vh, 13px);
+  color: rgba(255,255,255,0.55);
+  font-size: clamp(10px, 1.2vw, 22px);
+  font-weight: 400;
+  letter-spacing: 0;
   margin-left: clamp(2px, 0.2vw, 5px);
 }
 
@@ -8869,16 +8900,12 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 .stage-minimal .dsp-event-name {
   font-weight: 200;
   letter-spacing: 8px;
-  text-transform: uppercase;
-  font-size: clamp(20px, 2.5vw, 44px);
   color: rgba(255,255,255,0.9);
   text-shadow: none;
 }
 .stage-minimal .dsp-brand-motto {
   letter-spacing: 8px;
-  font-size: clamp(7px, 0.7vw, 12px);
   opacity: 0.35;
-  text-transform: uppercase;
   font-weight: 300;
 }
 .stage-minimal .display-ticker-bar {
@@ -9151,7 +9178,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 6px;
-  font-size: clamp(26px, 4vw, 64px);
   background: linear-gradient(
     90deg,
     #ff3c64,
@@ -9175,8 +9201,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 .stage-festival .dsp-brand-motto {
   font-weight: 900;
   letter-spacing: 8px;
-  text-transform: uppercase;
-  font-size: clamp(10px, 1.2vw, 18px);
   background: linear-gradient(90deg, var(--theme-primary), #ff8c00);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -9253,7 +9277,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
   font-weight: 400;
   letter-spacing: 4px;
   opacity: 0.45;
-  text-transform: uppercase;
 }
 .stage-corporate .display-ticker-bar {
   background: rgba(var(--theme-rgb), 0.02);

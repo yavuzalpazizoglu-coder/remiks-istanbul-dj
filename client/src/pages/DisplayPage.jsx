@@ -810,9 +810,11 @@ function SongRow({ req, rank, lang, isPlayed }) {
   const [delta, setDelta]           = useState(0);
   const [showDelta, setShowDelta]   = useState(false);
   const [rankFlash, setRankFlash]   = useState(null); // 'up'|'down'|null
+  const [fadingOut, setFadingOut]   = useState(false);
   const prevVotes   = useRef(req.votes);
   const prevRank    = useRef(rank);
   const deltaTimer  = useRef(null);
+  const fadeTimer   = useRef(null);
   const isTop3      = rank <= 3;
 
   useEffect(() => {
@@ -834,11 +836,23 @@ function SongRow({ req, rank, lang, isPlayed }) {
     prevRank.current = rank;
   }, [rank]);
 
+  /* 1 dakika sonra satır solar */
+  useEffect(() => {
+    clearTimeout(fadeTimer.current);
+    if (isPlayed) {
+      setFadingOut(false);
+      fadeTimer.current = setTimeout(() => setFadingOut(true), 58000);
+    } else {
+      setFadingOut(false);
+    }
+    return () => clearTimeout(fadeTimer.current);
+  }, [isPlayed]);
+
   const tier = rank <= 3 ? rank : 'rest';
 
   return (
     <motion.tr
-      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${isPlayed ? 'dtable-played' : ''} ${voteFlash ? 'dtable-vote-flash' : ''}`}
+      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${isPlayed ? 'dtable-played' : ''} ${voteFlash ? 'dtable-vote-flash' : ''} ${fadingOut ? 'dtf-row-fadeout' : ''}`}
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       initial={{ opacity: 0, x: -20 }}
@@ -871,7 +885,7 @@ function SongRow({ req, rank, lang, isPlayed }) {
       <td className="dtf-name-cell">
         <div className={`dtf-song-name ${isTop3 ? 'dtf-song-top' : ''}`}>{req.song_name}</div>
         {req.artist && <div className="dtf-artist">{req.artist}</div>}
-        {isPlayed && <div className="dtf-live-label">● LIVE</div>}
+        {isPlayed && <div className="dtf-live-label">● ÇALINIYOR</div>}
       </td>
 
       {/* ── Oy sayısı — "fiyat" ── */}
@@ -1552,8 +1566,8 @@ export default function DisplayPage() {
 
               {/* RIGHT: Song Table (geniş) */}
               <div className="dsp-card dsp-list-card-wide">
-                <div className="dsp-card-title">
-                  <span className="fire-icon">🔥</span> {T('display.hot_requests')}
+                <div className="dsp-card-title dsp-card-title-altinsaatler">
+                  Remiks İstanbul · Altın Saatler
                 </div>
                 {requests.length === 0 ? (
                   <div className="dsp-table-empty">
