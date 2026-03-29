@@ -3896,8 +3896,33 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #0b0e17 0%, #0f1923 50%, #0b1a2a 100%);
+  background: #050810;
   overflow: hidden;
+}
+
+/* ─── Arka plan görseli — program ekran görüntüsü ─── */
+.login-page-bg-img {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/logos/dj-login-bg.jpg');
+  background-size: cover;
+  background-position: center center;
+  filter: blur(12px) brightness(0.28) saturate(1.4);
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+/* Üst karartma katmanı */
+.login-page-bg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,180,255,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 100%, rgba(0,0,0,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 0%, rgba(0,0,0,0.45) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 /* Grid overlay — login */
@@ -3907,26 +3932,21 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   top: 0; left: 0;
   width: 100vw; height: 100vh;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   background-image:
     repeating-linear-gradient(
       0deg,
-      rgba(var(--rb-cyan-rgb), 0.06) 0px,
-      rgba(var(--rb-cyan-rgb), 0.06) var(--rb-grid-line),
+      rgba(var(--rb-cyan-rgb), 0.04) 0px,
+      rgba(var(--rb-cyan-rgb), 0.04) var(--rb-grid-line),
       transparent var(--rb-grid-line),
       transparent 60px
     ),
     repeating-linear-gradient(
       90deg,
-      rgba(var(--rb-cyan-rgb), 0.06) 0px,
-      rgba(var(--rb-cyan-rgb), 0.06) var(--rb-grid-line),
+      rgba(var(--rb-cyan-rgb), 0.04) 0px,
+      rgba(var(--rb-cyan-rgb), 0.04) var(--rb-grid-line),
       transparent var(--rb-grid-line),
       transparent 60px
-    ),
-    radial-gradient(
-      circle var(--rb-dot-size) at 0px 0px,
-      rgba(var(--rb-cyan-rgb), 0.12) 100%,
-      transparent 100%
     );
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 70%);
@@ -3941,7 +3961,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   top: 0; left: 0;
   width: 100%; height: 1px;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -3955,7 +3975,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 @keyframes loginGridPulse {
   0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.3; }
+  50% { opacity: 0.30; }
 }
 
 @keyframes loginScanLine {
@@ -3963,9 +3983,9 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   100% { transform: translateY(110vh); }
 }
 
-/* Animated background — kept for orb effects */
+/* Animated background — orb effects */
 .login-bg {
-  position: absolute; inset: 0; z-index: 0; overflow: hidden;
+  position: absolute; inset: 0; z-index: 1; overflow: hidden;
 }
 .login-grid {
   display: none;

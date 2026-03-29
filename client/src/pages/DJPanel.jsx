@@ -631,6 +631,8 @@ export default function DJPanel() {
     if (!djUser) {
       return (
         <div className="login-page">
+          <div className="login-page-bg-img" />
+          <div className="login-page-bg-overlay" />
           {loginBg}
           <div className="login-content">
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -687,6 +689,8 @@ export default function DJPanel() {
     // Step 2: Create / Connect (logged in)
     return (
       <div className="login-page">
+        <div className="login-page-bg-img" />
+        <div className="login-page-bg-overlay" />
         {loginBg}
         <div className="login-content">
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
