@@ -66,6 +66,8 @@ export default function DJPanel() {
   const eventConnectedRef = useRef(null);
   const requestTimeStart = useRef(null);
   const requestTimeAccum = useRef(0);
+  const [playedDJSong, setPlayedDJSong] = useState(null);
+  const playedDJTimer = useRef(null);
 
   useEffect(() => {
     if (panelTheme === 'pioneer') {
@@ -146,6 +148,12 @@ export default function DJPanel() {
     socket.on('vote-updated', () => fetchRequests(slug));
     socket.on('list-updated', (list) => setRequests(list));
 
+    socket.on('request-played', (req) => {
+      setPlayedDJSong(req);
+      clearTimeout(playedDJTimer.current);
+      playedDJTimer.current = setTimeout(() => setPlayedDJSong(null), 62000);
+    });
+
     socket.on('event-status', ({ status }) => {
       setEvent(prev => prev ? { ...prev, status } : prev);
     });
@@ -164,6 +172,8 @@ export default function DJPanel() {
       socket.off('request-added');
       socket.off('vote-updated');
       socket.off('list-updated');
+      socket.off('request-played');
+      clearTimeout(playedDJTimer.current);
       socket.off('event-status');
       socket.off('music-mode');
       socket.off('room-count');
@@ -759,6 +769,10 @@ export default function DJPanel() {
 
   const waitingRequests = requests.filter(r => r.status === 'pending');
   const approvedRequests = requests.filter(r => r.status === 'approved' || r.status === 'playing');
+  // Played song: 62s boyunca listede "ÇALINDI" olarak göster, display ile sync
+  const displayApproved = playedDJSong
+    ? [{ ...playedDJSong, _djPlayed: true }, ...approvedRequests.filter(r => r.id !== playedDJSong.id)]
+    : approvedRequests;
   const allActiveRequests = [...waitingRequests, ...approvedRequests];
   const rejectedCount = requests.filter(r => r.status === 'rejected').length;
   const totalVotes = requests.reduce((sum, r) => sum + r.votes, 0);
@@ -1096,7 +1110,7 @@ export default function DJPanel() {
                 </div>
               </div>
 
-              {/* SAĞ: Onaylananlar (approved + playing) */}
+              {/* SAĞ: Onaylananlar (approved + playing + played 62s) */}
               <div className="dj-list-col dj-list-col-approved">
                 <div className="dj-list-col-header">
                   <span className="dj-list-col-icon">✅</span>
@@ -1104,17 +1118,17 @@ export default function DJPanel() {
                   <span className="dj-list-col-count">{approvedRequests.length}</span>
                 </div>
                 <div className="dj-list-scroll">
-                  {approvedRequests.length === 0 ? (
+                  {displayApproved.length === 0 ? (
                     <div className="dj-list-empty">{lang === 'tr' ? 'Onaylanan istek yok' : 'No approved requests'}</div>
                   ) : (
                     <table className="dj-table">
                       <AnimatePresence>
                         <tbody>
-                          {[...approvedRequests].sort((a, b) => b.votes - a.votes).map((req, idx) => (
-                            <motion.tr key={req.id} className={`dj-table-row ${req.status === 'playing' ? 'dj-table-row-playing' : ''}`}
+                          {displayApproved.map((req, idx) => (
+                            <motion.tr key={req.id} className={`dj-table-row ${req.status === 'playing' ? 'dj-table-row-playing' : ''} ${req._djPlayed ? 'dj-table-row-played-live' : ''}`}
                               layout initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
                               transition={{ type: 'spring', stiffness: 350, damping: 28 }}>
-                              <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>{idx + 1}</td>
+                              <td className={`dj-table-rank ${idx === 0 ? 'top-1' : idx === 1 ? 'top-2' : idx === 2 ? 'top-3' : ''}`}>{req._djPlayed ? '♫' : idx + 1}</td>
                               <td style={{ width: 36, padding: '4px' }}>
                                 {req.album_art
                                   ? <img src={req.album_art} alt="" style={{ width: 30, height: 30, borderRadius: 5, objectFit: 'cover', display: 'block' }} />
@@ -1124,13 +1138,14 @@ export default function DJPanel() {
                               <td>
                                 <div className="dj-table-song">{req.song_name}</div>
                                 {req.artist && <div className="dj-table-artist">{req.artist}</div>}
+                                {req._djPlayed && <div className="dj-table-played-label">{lang === 'tr' ? '● ÇALINDI — Display\'de görünüyor' : '● PLAYED — Visible on display'}</div>}
                               </td>
                               <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
                               <td className="dj-table-actions">
-                                {req.status === 'approved' && (
+                                {!req._djPlayed && req.status === 'approved' && (
                                   <button className="btn btn-small btn-primary" onClick={() => updateRequestStatus(req.id, 'playing')} title={lang === 'tr' ? 'Şimdi Çal' : 'Play Now'}>▶</button>
                                 )}
-                                {req.status === 'playing' && (
+                                {!req._djPlayed && req.status === 'playing' && (
                                   <button className="btn btn-small btn-played" onClick={() => updateRequestStatus(req.id, 'played')} title={lang === 'tr' ? 'Çalındı' : 'Played'}>♫</button>
                                 )}
                                 <button className="btn btn-small btn-danger" onClick={() => updateRequestStatus(req.id, 'rejected')} title={lang === 'tr' ? 'Reddet' : 'Reject'}>✕</button>

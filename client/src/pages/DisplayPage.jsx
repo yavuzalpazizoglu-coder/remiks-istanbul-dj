@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
@@ -805,16 +805,36 @@ function VoteFloat({ count }) {
   ));
 }
 
-function SongRow({ req, rank, lang, isPlayed }) {
+function NowPlayingBar({ req, lang }) {
+  if (!req) return null;
+  return (
+    <div className="dsp-now-playing-bar">
+      <div className="dsp-np-pulse" />
+      {req.album_art
+        ? <img src={req.album_art} alt="" className="dsp-np-art" />
+        : <div className="dsp-np-art-ph">♪</div>
+      }
+      <div className="dsp-np-info">
+        <div className="dsp-np-tag">{lang === 'tr' ? '▶ ŞU AN ÇALINIYOR' : '▶ NOW PLAYING'}</div>
+        <div className="dsp-np-song">{req.song_name}</div>
+        {req.artist && <div className="dsp-np-artist">{req.artist}</div>}
+      </div>
+      <div className="dsp-np-votes">
+        <span className="dsp-np-votes-num">{req.votes}</span>
+        <span className="dsp-np-votes-lbl">OY</span>
+      </div>
+    </div>
+  );
+}
+
+function SongRow({ req, rank, lang }) {
   const [voteFlash, setVoteFlash]   = useState(false);
   const [delta, setDelta]           = useState(0);
   const [showDelta, setShowDelta]   = useState(false);
-  const [rankFlash, setRankFlash]   = useState(null); // 'up'|'down'|null
-  const [fadingOut, setFadingOut]   = useState(false);
+  const [rankFlash, setRankFlash]   = useState(null);
   const prevVotes   = useRef(req.votes);
   const prevRank    = useRef(rank);
   const deltaTimer  = useRef(null);
-  const fadeTimer   = useRef(null);
   const isTop3      = rank <= 3;
 
   useEffect(() => {
@@ -836,23 +856,11 @@ function SongRow({ req, rank, lang, isPlayed }) {
     prevRank.current = rank;
   }, [rank]);
 
-  /* 1 dakika sonra satır solar */
-  useEffect(() => {
-    clearTimeout(fadeTimer.current);
-    if (isPlayed) {
-      setFadingOut(false);
-      fadeTimer.current = setTimeout(() => setFadingOut(true), 58000);
-    } else {
-      setFadingOut(false);
-    }
-    return () => clearTimeout(fadeTimer.current);
-  }, [isPlayed]);
-
   const tier = rank <= 3 ? rank : 'rest';
 
   return (
     <motion.tr
-      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${isPlayed ? 'dtable-played' : ''} ${voteFlash ? 'dtable-vote-flash' : ''} ${fadingOut ? 'dtf-row-fadeout' : ''}`}
+      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${voteFlash ? 'dtable-vote-flash' : ''}`}
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       initial={{ opacity: 0, x: -20 }}
@@ -860,17 +868,12 @@ function SongRow({ req, rank, lang, isPlayed }) {
     >
       {/* ── # Sıra ── */}
       <td className="dtf-rank-cell">
-        {isPlayed
-          ? <span className="dtf-playing-dot" />
-          : <>
-              <span className={`dtf-rank-num dtf-rank-${tier}`}>{rank}</span>
-              {rankFlash && (
-                <span className={`dtf-rank-arrow dtf-arrow-${rankFlash}`}>
-                  {rankFlash === 'up' ? '▲' : '▼'}
-                </span>
-              )}
-            </>
-        }
+        <span className={`dtf-rank-num dtf-rank-${tier}`}>{rank}</span>
+        {rankFlash && (
+          <span className={`dtf-rank-arrow dtf-arrow-${rankFlash}`}>
+            {rankFlash === 'up' ? '▲' : '▼'}
+          </span>
+        )}
       </td>
 
       {/* ── Albüm kapağı (Spotify) ── */}
@@ -885,7 +888,6 @@ function SongRow({ req, rank, lang, isPlayed }) {
       <td className="dtf-name-cell">
         <div className={`dtf-song-name ${isTop3 ? 'dtf-song-top' : ''}`}>{req.song_name}</div>
         {req.artist && <div className="dtf-artist">{req.artist}</div>}
-        {isPlayed && <div className="dtf-live-label">● ÇALINIYOR</div>}
       </td>
 
       {/* ── Oy sayısı — "fiyat" ── */}
@@ -1338,15 +1340,15 @@ export default function DisplayPage() {
 
   if (!event) return <div className="display-page"><div className="display-bg" /></div>;
 
-  // Played şarkı her zaman listenin başında göster, requests'ten çıkar (duplicate önle)
+  // Played şarkı ayrı NowPlayingBar'da gösterilir — ana listede yer almaz
   const baseList = playedSong
-    ? [playedSong, ...requests.filter(r => r.id !== playedSong.id)]
+    ? requests.filter(r => r.id !== playedSong.id)
     : requests;
   const top15 = baseList.slice(0, 15);
-  // Soldan sağa sıralı: sol = 1..8, sağ = 9..15
-  const half     = Math.ceil(top15.length / 2);
-  const listLeft  = top15.slice(0, half);
-  const listRight = top15.slice(half);
+  // 3 kolon: 1-5 | 6-10 | 11-15
+  const col1 = top15.slice(0, 5);
+  const col2 = top15.slice(5, 10);
+  const col3 = top15.slice(10, 15);
   const displayName = brandText || event.name;
 
   const themeColors = {
@@ -1629,58 +1631,43 @@ export default function DisplayPage() {
                 </div>
               </div>
 
-              {/* Merkez: Altın Saatler + Şarkı Listesi */}
+              {/* Merkez: Altın Saatler + Şimdi Çalıyor + Şarkı Listesi */}
               <div className="dsp-beatbox-songs">
                 <div className="dsp-card-title dsp-card-title-altinsaatler">
                   <span className="dtf-brand-full">REMİKSBOX — ⭐ ALTIN SAATLER ⭐</span>
                 </div>
+                <NowPlayingBar req={playedSong} lang={lang} />
                 {requests.length === 0 ? (
                   <div className="dsp-table-empty">
                     <span>🎵</span> {T('display.no_requests')}
                   </div>
                 ) : (
-                  <div className="dsp-table-wrap dsp-table-2col">
-                    <div className="dsp-table-col">
-                      <table className="dsp-table">
-                        <thead>
-                          <tr className="dtf-thead-row">
-                            <th className="dtf-th dtf-th-rank">#</th>
-                            <th className="dtf-th" />
-                            <th className="dtf-th">{lang === 'tr' ? 'ŞARKI' : 'SONG'}</th>
-                            <th className="dtf-th dtf-th-num">OY</th>
-                            <th className="dtf-th dtf-th-num">DEĞ</th>
-                          </tr>
-                        </thead>
-                        <AnimatePresence>
-                          <tbody>
-                            {listLeft.map((req, idx) => (
-                              <SongRow key={req.id} req={req} rank={idx + 1} lang={lang} isPlayed={playedId === req.id} />
-                            ))}
-                          </tbody>
-                        </AnimatePresence>
-                      </table>
-                    </div>
-                    <div className="dsp-table-col-divider" />
-                    <div className="dsp-table-col">
-                      <table className="dsp-table">
-                        <thead>
-                          <tr className="dtf-thead-row">
-                            <th className="dtf-th dtf-th-rank">#</th>
-                            <th className="dtf-th" />
-                            <th className="dtf-th">{lang === 'tr' ? 'ŞARKI' : 'SONG'}</th>
-                            <th className="dtf-th dtf-th-num">OY</th>
-                            <th className="dtf-th dtf-th-num">DEĞ</th>
-                          </tr>
-                        </thead>
-                        <AnimatePresence>
-                          <tbody>
-                            {listRight.map((req, idx) => (
-                              <SongRow key={req.id} req={req} rank={half + idx + 1} lang={lang} isPlayed={playedId === req.id} />
-                            ))}
-                          </tbody>
-                        </AnimatePresence>
-                      </table>
-                    </div>
+                  <div className="dsp-table-wrap dsp-table-3col">
+                    {[col1, col2, col3].map((colData, ci) => (
+                      <React.Fragment key={ci}>
+                        {ci > 0 && <div className="dsp-table-col-divider" />}
+                        <div className="dsp-table-col">
+                          <table className="dsp-table">
+                            <thead>
+                              <tr className="dtf-thead-row">
+                                <th className="dtf-th dtf-th-rank">#</th>
+                                <th className="dtf-th" />
+                                <th className="dtf-th">{lang === 'tr' ? 'ŞARKI' : 'SONG'}</th>
+                                <th className="dtf-th dtf-th-num">OY</th>
+                                <th className="dtf-th dtf-th-num">DEĞ</th>
+                              </tr>
+                            </thead>
+                            <AnimatePresence>
+                              <tbody>
+                                {colData.map((req, idx) => (
+                                  <SongRow key={req.id} req={req} rank={ci * 5 + idx + 1} lang={lang} />
+                                ))}
+                              </tbody>
+                            </AnimatePresence>
+                          </table>
+                        </div>
+                      </React.Fragment>
+                    ))}
                   </div>
                 )}
               </div>
