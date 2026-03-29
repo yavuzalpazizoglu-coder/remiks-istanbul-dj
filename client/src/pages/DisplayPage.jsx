@@ -806,30 +806,69 @@ function VoteFloat({ count }) {
 }
 
 function NowPlayingBar({ req, lang }) {
-  if (!req) return null;
+  const [flash, setFlash] = useState(false);
+  const prevId = useRef(null);
+
+  useEffect(() => {
+    if (req && req.id !== prevId.current) {
+      setFlash(true);
+      prevId.current = req.id;
+      setTimeout(() => setFlash(false), 1800);
+    } else if (!req) {
+      prevId.current = null;
+    }
+  }, [req]);
+
   return (
-    <div className="dsp-np-bottom-bar">
-      <div className="dsp-np-bottom-left">
-        {req.album_art
-          ? <img src={req.album_art} alt="" className="dsp-np-bottom-art" />
-          : <div className="dsp-np-bottom-art-ph">♪</div>
-        }
-        <div className="dsp-np-bottom-info">
-          <div className="dsp-np-bottom-song">{req.song_name}</div>
-          {req.artist && <div className="dsp-np-bottom-artist">{req.artist}</div>}
+    <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''}`}>
+      {/* Sol: Albüm + Şarkı */}
+      <div className="dsp-np-stage-left">
+        {req ? (
+          req.album_art
+            ? <img src={req.album_art} alt="" className="dsp-np-stage-art" />
+            : <div className="dsp-np-stage-art-ph">♪</div>
+        ) : (
+          <div className="dsp-np-stage-art-empty">
+            <span className="dsp-np-stage-wait-icon">⏸</span>
+          </div>
+        )}
+        <div className="dsp-np-stage-info">
+          {req ? (
+            <>
+              <div className="dsp-np-stage-song">{req.song_name}</div>
+              {req.artist && <div className="dsp-np-stage-artist">{req.artist}</div>}
+            </>
+          ) : (
+            <div className="dsp-np-stage-waiting-text">
+              {lang === 'tr' ? 'Şarkı bekleniyor...' : 'Waiting for a song...'}
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="dsp-np-bottom-center">
-        <div className="dsp-np-bottom-tag">{lang === 'tr' ? '▶  ŞU AN ÇALINIYOR' : '▶  NOW PLAYING'}</div>
-        <div className="dsp-np-bottom-bars">
+      {/* Merkez: Etiket + Equalizer */}
+      <div className="dsp-np-stage-center">
+        <div className="dsp-np-stage-label">
+          {req
+            ? (lang === 'tr' ? '▶  ŞU AN ÇALINIYOR' : '▶  NOW PLAYING')
+            : (lang === 'tr' ? '♬  DJ SAHNESİ' : '♬  DJ STAGE')
+          }
+        </div>
+        <div className={`dsp-np-stage-bars ${req ? '' : 'dsp-np-bars-idle'}`}>
           {[1,2,3,4,5].map(i => <span key={i} className={`dsp-np-eq-bar dsp-np-eq-bar-${i}`} />)}
         </div>
       </div>
 
-      <div className="dsp-np-bottom-right">
-        <span className="dsp-np-bottom-votes-num">{req.votes}</span>
-        <span className="dsp-np-bottom-votes-lbl">OY</span>
+      {/* Sağ: Oy */}
+      <div className="dsp-np-stage-right">
+        {req ? (
+          <>
+            <span className="dsp-np-stage-votes-num">{req.votes}</span>
+            <span className="dsp-np-stage-votes-lbl">OY</span>
+          </>
+        ) : (
+          <span className="dsp-np-stage-votes-empty">—</span>
+        )}
       </div>
     </div>
   );
@@ -1635,11 +1674,15 @@ export default function DisplayPage() {
                 </div>
               </div>
 
-              {/* Merkez: Altın Saatler + Şarkı Listesi + Alt Oynatıcı Bar */}
+              {/* Merkez: Altın Saatler + NOW PLAYING + Şarkı Grid */}
               <div className="dsp-beatbox-songs">
                 <div className="dsp-card-title dsp-card-title-altinsaatler">
                   <span className="dtf-brand-full">REMİKSBOX — ⭐ ALTIN SAATLER ⭐</span>
                 </div>
+
+                {/* NOW PLAYING — sabit çerçeve, her zaman görünür */}
+                <NowPlayingBar req={playedSong} lang={lang} />
+
                 {requests.length === 0 ? (
                   <div className="dsp-table-empty">
                     <span>🎵</span> {T('display.no_requests')}
@@ -1653,7 +1696,6 @@ export default function DisplayPage() {
                     </AnimatePresence>
                   </div>
                 )}
-                <NowPlayingBar req={playedSong} lang={lang} />
               </div>
 
               {/* Sağ QR + Sağ İstatistikler */}
