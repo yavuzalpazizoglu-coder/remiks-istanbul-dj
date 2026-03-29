@@ -39,6 +39,7 @@ export default function DJPanel() {
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [selectedDJs, setSelectedDJs] = useState([]);
   const [panelTheme, setPanelTheme] = useState(() => localStorage.getItem('remiks_panel_theme') || 'classic');
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [connectedCount, setConnectedCount] = useState(0);
   const [spotifyEnabled, setSpotifyEnabled] = useState(false);
   const brandTimer = useRef(null);
@@ -1147,8 +1148,17 @@ export default function DJPanel() {
 
           {/* ═══ Settings & Appearance ═══ */}
             <div className="djc-settings-bottom">
-            <div className="djc-settings-bottom-divider" />
+            <div className="djc-settings-bottom-divider">
+              <button
+                className={`djc-settings-toggle-btn ${settingsOpen ? 'open' : ''}`}
+                onClick={() => setSettingsOpen(v => !v)}
+              >
+                <span>{lang === 'tr' ? '⚙ Ayarlar & Görünüm' : '⚙ Settings & Appearance'}</span>
+                <span className="djc-settings-toggle-arrow">{settingsOpen ? '▲' : '▼'}</span>
+              </button>
+            </div>
 
+            {settingsOpen && (
                 <div className="djc-settings-main">
                   <div className="djc-settings-split-row">
                     {/* ─── Left: Ayarlar ─── */}
@@ -1257,6 +1267,7 @@ export default function DJPanel() {
                     </div>
                   </div>
                 </div>
+            )}
           </div>
         </div>
 
