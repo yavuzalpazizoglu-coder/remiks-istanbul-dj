@@ -806,91 +806,102 @@ function VoteFloat({ count }) {
 }
 
 function SongRow({ req, rank, lang, isPlayed }) {
-  const [shaking, setShaking] = useState(false);
-  const [voteFlash, setVoteFlash] = useState(false);
-  const [rankFlash, setRankFlash] = useState(null); // 'up' | 'down' | null
-  const [delta, setDelta] = useState(0);
-  const prevVotes = useRef(req.votes);
-  const prevRank  = useRef(rank);
-  const isTop3    = rank <= 3;
+  const [voteFlash, setVoteFlash]   = useState(false);
+  const [delta, setDelta]           = useState(0);
+  const [showDelta, setShowDelta]   = useState(false);
+  const [rankFlash, setRankFlash]   = useState(null); // 'up'|'down'|null
+  const prevVotes   = useRef(req.votes);
+  const prevRank    = useRef(rank);
+  const deltaTimer  = useRef(null);
+  const isTop3      = rank <= 3;
 
   useEffect(() => {
     if (req.votes > prevVotes.current) {
-      setDelta(req.votes - prevVotes.current);
-      setShaking(true);
+      const d = req.votes - prevVotes.current;
+      setDelta(d);
+      setShowDelta(true);
       setVoteFlash(true);
-      setTimeout(() => setShaking(false), 500);
+      clearTimeout(deltaTimer.current);
+      deltaTimer.current = setTimeout(() => { setShowDelta(false); setDelta(0); }, 6000);
       setTimeout(() => setVoteFlash(false), 1200);
-      setTimeout(() => setDelta(0), 1500);
     }
     prevVotes.current = req.votes;
   }, [req.votes]);
 
   useEffect(() => {
-    if (rank < prevRank.current) {
-      setRankFlash('up');
-      setTimeout(() => setRankFlash(null), 2000);
-    } else if (rank > prevRank.current) {
-      setRankFlash('down');
-      setTimeout(() => setRankFlash(null), 2000);
-    }
+    if (rank < prevRank.current)      { setRankFlash('up');   setTimeout(() => setRankFlash(null), 2500); }
+    else if (rank > prevRank.current) { setRankFlash('down'); setTimeout(() => setRankFlash(null), 2500); }
     prevRank.current = rank;
   }, [rank]);
 
-  const rankChangeVal = prevRank.current !== rank ? Math.abs(prevRank.current - rank) : 0;
+  const tier = rank <= 3 ? rank : 'rest';
 
   return (
     <motion.tr
-      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${shaking ? 'animate-shake' : ''} ${isPlayed ? 'dtable-played' : ''} ${voteFlash ? 'dtable-vote-flash' : ''}`}
+      className={`dtable-row ${isTop3 ? 'dtable-top3' : ''} ${rank === 1 ? 'dtable-first' : ''} ${isPlayed ? 'dtable-played' : ''} ${voteFlash ? 'dtable-vote-flash' : ''}`}
       layout
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-      initial={{ opacity: 0, x: -30 }}
+      initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
     >
-      {/* ── Rank Badge (NYSE tarzı) ── */}
-      <td className={`dtable-rank-cell rank-${rank}`}>
-        {isPlayed ? (
-          <span className="dtable-playing-indicator">►</span>
-        ) : (
-          <div className="dtable-rank-badge-wrap">
-            <div className={`dtable-rank-badge rank-badge-${rank <= 3 ? rank : 'rest'}`}>
-              <span className="dtable-rank-num">{rank}</span>
-            </div>
-            <div className="dtable-rank-chg">
-              {rankFlash === 'up'   && <span className="dtable-chg-up">▲{rankChangeVal > 1 ? rankChangeVal : ''}</span>}
-              {rankFlash === 'down' && <span className="dtable-chg-down">▼{rankChangeVal > 1 ? rankChangeVal : ''}</span>}
-            </div>
-          </div>
-        )}
-      </td>
-
-      <td className="dtable-art-cell">
-        {req.album_art
-          ? <img src={req.album_art} alt="" className="dtable-art" />
-          : <div className="dtable-art-ph"><span className="dtable-art-note">♪</span></div>
+      {/* ── # Sıra ── */}
+      <td className="dtf-rank-cell">
+        {isPlayed
+          ? <span className="dtf-playing-dot" />
+          : <>
+              <span className={`dtf-rank-num dtf-rank-${tier}`}>{rank}</span>
+              {rankFlash && (
+                <span className={`dtf-rank-arrow dtf-arrow-${rankFlash}`}>
+                  {rankFlash === 'up' ? '▲' : '▼'}
+                </span>
+              )}
+            </>
         }
       </td>
-      <td className="dtable-info-cell">
-        <div className={`dtable-song ${isTop3 ? 'dtable-song-lg' : ''}`}>{req.song_name}</div>
-        {req.artist && <div className="dtable-artist">{req.artist}</div>}
-        {isPlayed && <div className="dtable-now-playing-label">{lang === 'tr' ? 'ÇALINIYOR' : 'PLAYING'}</div>}
+
+      {/* ── Albüm kapağı (Spotify) ── */}
+      <td className="dtf-art-cell">
+        {req.album_art
+          ? <img src={req.album_art} alt="" className="dtf-art" />
+          : <div className="dtf-art-ph">♪</div>
+        }
       </td>
-      <td className="dtable-votes-cell">
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <VoteFloat count={req.votes} />
-          <motion.span className={`dtable-votes ${isTop3 ? 'dtable-votes-lg' : ''}`}
-            key={req.votes} initial={{ scale: 1.3 }} animate={{ scale: 1 }}>
-            {req.votes}
-          </motion.span>
-          {delta > 0 && (
-            <motion.span className="dtable-delta"
-              initial={{ opacity: 1, y: 0 }} animate={{ opacity: 0, y: -18 }}
-              transition={{ duration: 1.2 }}>
-              +{delta}
-            </motion.span>
-          )}
-        </div>
-        <span className="dtable-vote-label">{t(lang, 'request.votes')}</span>
+
+      {/* ── Şarkı adı + Sanatçı ── */}
+      <td className="dtf-name-cell">
+        <div className={`dtf-song-name ${isTop3 ? 'dtf-song-top' : ''}`}>{req.song_name}</div>
+        {req.artist && <div className="dtf-artist">{req.artist}</div>}
+        {isPlayed && <div className="dtf-live-label">● LIVE</div>}
+      </td>
+
+      {/* ── Oy sayısı — "fiyat" ── */}
+      <td className="dtf-votes-cell">
+        <VoteFloat count={req.votes} />
+        <motion.span
+          className={`dtf-votes-num ${isTop3 ? 'dtf-votes-top' : ''}`}
+          key={req.votes}
+          initial={{ scale: 1.25 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.35 }}
+        >
+          {req.votes}
+        </motion.span>
+        <span className="dtf-votes-label">OY</span>
+      </td>
+
+      {/* ── Değişim — "% change" ── */}
+      <td className="dtf-chg-cell">
+        {showDelta && delta > 0
+          ? <motion.span className="dtf-chg-pill dtf-chg-green"
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >+{delta}</motion.span>
+          : rankFlash === 'up'
+            ? <span className="dtf-chg-pill dtf-chg-up">▲</span>
+            : rankFlash === 'down'
+              ? <span className="dtf-chg-pill dtf-chg-dn">▼</span>
+              : <span className="dtf-chg-flat">—</span>
+        }
       </td>
     </motion.tr>
   );
@@ -1547,6 +1558,15 @@ export default function DisplayPage() {
                   <div className="dsp-table-wrap dsp-table-2col">
                     <div className="dsp-table-col">
                       <table className="dsp-table">
+                        <thead>
+                          <tr className="dtf-thead-row">
+                            <th className="dtf-th dtf-th-rank">#</th>
+                            <th className="dtf-th" />
+                            <th className="dtf-th">{lang === 'tr' ? 'ŞARKI' : 'SONG'}</th>
+                            <th className="dtf-th dtf-th-num">OY</th>
+                            <th className="dtf-th dtf-th-num">DEĞ</th>
+                          </tr>
+                        </thead>
                         <AnimatePresence>
                           <tbody>
                             {listLeft.map((req, idx) => (
@@ -1559,6 +1579,15 @@ export default function DisplayPage() {
                     <div className="dsp-table-col-divider" />
                     <div className="dsp-table-col">
                       <table className="dsp-table">
+                        <thead>
+                          <tr className="dtf-thead-row">
+                            <th className="dtf-th dtf-th-rank">#</th>
+                            <th className="dtf-th" />
+                            <th className="dtf-th">{lang === 'tr' ? 'ŞARKI' : 'SONG'}</th>
+                            <th className="dtf-th dtf-th-num">OY</th>
+                            <th className="dtf-th dtf-th-num">DEĞ</th>
+                          </tr>
+                        </thead>
                         <AnimatePresence>
                           <tbody>
                             {listRight.map((req, idx) => (
