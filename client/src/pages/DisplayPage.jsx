@@ -1338,10 +1338,9 @@ export default function DisplayPage() {
 
   if (!event) return <div className="display-page"><div className="display-bg" /></div>;
 
-  // Eğer çalınan şarkı artık approved listesinde yoksa üste enjekte et
-  const playedInList = playedSong && requests.some(r => r.id === playedSong.id);
-  const baseList = playedSong && !playedInList
-    ? [playedSong, ...requests]
+  // Played şarkı her zaman listenin başında göster, requests'ten çıkar (duplicate önle)
+  const baseList = playedSong
+    ? [playedSong, ...requests.filter(r => r.id !== playedSong.id)]
     : requests;
   const top15 = baseList.slice(0, 15);
   // Soldan sağa sıralı: sol = 1..8, sağ = 9..15

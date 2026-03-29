@@ -267,17 +267,12 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
     if (event) {
       if (status === 'played' && beforeUpdate) {
         io.to(event.slug).emit('request-played', beforeUpdate);
-        setTimeout(() => {
-          const requests = db.getRequests(event.id);
-          io.to(event.slug).emit('list-updated', requests);
-        }, 40000);
-      } else {
-        if (status === 'playing') {
-          io.to(event.slug).emit('now-playing', updated);
-        }
-        const requests = db.getRequests(event.id);
-        io.to(event.slug).emit('list-updated', requests);
       }
+      if (status === 'playing') {
+        io.to(event.slug).emit('now-playing', updated);
+      }
+      const requests = db.getRequests(event.id);
+      io.to(event.slug).emit('list-updated', requests);
     }
 
     res.json(updated);
@@ -326,7 +321,7 @@ app.put('/api/events/:slug/animation', djAuth, (req, res) => {
 app.put('/api/events/:slug/stage-design', djAuth, (req, res) => {
   try {
     const { design } = req.body;
-    const valid = ['classic', 'minimal', 'elegant', 'club', 'festival', 'corporate'];
+    const valid = ['classic', 'minimal', 'elegant', 'club', 'festival', 'corporate', 'cyber', 'lounge', 'rave', 'cinema'];
     if (!valid.includes(design)) return res.status(400).json({ error: 'Invalid design' });
     const event = db.updateStageDesign(req.params.slug, design);
     io.to(req.params.slug).emit('stage-design-changed', { design });
