@@ -4834,32 +4834,31 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .display-live-badge {
-  display: flex; align-items: center; gap: clamp(5px, 0.6vw, 12px);
-  padding: clamp(5px, 0.6vw, 12px) clamp(10px, 1.2vw, 22px);
+  display: flex; align-items: center; gap: clamp(4px, 0.4vw, 8px);
+  padding: clamp(3px, 0.4vh, 7px) clamp(7px, 0.8vw, 14px);
   background: rgba(255,0,0,0.1);
   border: 1px solid rgba(255,0,0,0.28);
-  border-radius: clamp(12px, 1.5vw, 28px);
-  font-size: clamp(20px, 3.8vw, 64px);
-  font-weight: 900;
-  letter-spacing: clamp(2px, 0.4vw, 8px);
+  border-radius: clamp(8px, 1vw, 18px);
+  font-size: clamp(9px, 0.85vw, 14px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
   white-space: nowrap;
 }
 
 .live-dot {
-  width: clamp(8px, 0.9vw, 18px); height: clamp(8px, 0.9vw, 18px);
+  width: clamp(5px, 0.55vw, 10px); height: clamp(5px, 0.55vw, 10px);
   background: #ff0000;
   border-radius: 50%;
   animation: pulse 1.5s ease infinite;
-  box-shadow: 0 0 clamp(4px, 0.6vw, 12px) rgba(255,0,0,0.7);
+  box-shadow: 0 0 clamp(3px, 0.4vw, 8px) rgba(255,0,0,0.7);
   flex-shrink: 0;
 }
 
 .live-count {
   color: rgba(255,255,255,0.55);
-  font-size: clamp(10px, 1.2vw, 22px);
+  font-size: clamp(8px, 0.75vw, 12px);
   font-weight: 400;
   letter-spacing: 0;
-  margin-left: clamp(2px, 0.2vw, 5px);
 }
 
 /* Main area: list left, QR right */
