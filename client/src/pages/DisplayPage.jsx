@@ -389,55 +389,6 @@ function FestivalWaves({ themeRgb }) {
   );
 }
 
-function MinimalScanLine({ themeRgb }) {
-  return <div className="minimal-scanline" style={{ background: `linear-gradient(90deg, transparent, rgba(${themeRgb},0.3), transparent)` }} />;
-}
-
-function MinimalPulseRing({ themeRgb }) {
-  return (
-    <div className="minimal-pulse-rings">
-      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.2)`, animationDelay: '0s' }} />
-      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.15)`, animationDelay: '2s' }} />
-      <div className="minimal-pulse-ring" style={{ borderColor: `rgba(${themeRgb},0.1)`, animationDelay: '4s' }} />
-    </div>
-  );
-}
-
-function CorporateDataStreams({ themeRgb }) {
-  const streams = useMemo(() =>
-    Array.from({ length: 8 }, (_, i) => ({
-      id: i,
-      left: 8 + (i * 12),
-      duration: 6 + Math.random() * 6,
-      delay: Math.random() * 5,
-      opacity: 0.1 + Math.random() * 0.1,
-    })), []);
-
-  return (
-    <div className="corporate-streams">
-      {streams.map(s => (
-        <div key={s.id} className="corporate-stream" style={{
-          left: `${s.left}%`,
-          background: `linear-gradient(180deg, transparent, rgba(${themeRgb},${s.opacity}) 40%, rgba(${themeRgb},${s.opacity}) 60%, transparent)`,
-          animationDuration: `${s.duration}s`,
-          animationDelay: `${s.delay}s`,
-        }} />
-      ))}
-    </div>
-  );
-}
-
-function CorporateGrid() {
-  return <div className="corporate-grid" />;
-}
-
-function CorporateAccentLine({ themeRgb }) {
-  return (
-    <div className="corporate-accent-line" style={{
-      background: `linear-gradient(90deg, transparent, rgba(${themeRgb},0.6), transparent)`,
-    }} />
-  );
-}
 
 function OpeningOverlay({ lang, brandText, countdown, ceremonyEnd }) {
   const name = brandText || 'Remiks İstanbul';
@@ -1169,7 +1120,7 @@ export default function DisplayPage() {
   const [playedCount, setPlayedCount] = useState(0);
   const [theme, setTheme] = useState('cyan');
   const [animLevel, setAnimLevel] = useState('high');
-  const [stageDesign, setStageDesign] = useState('classic');
+  const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
@@ -1203,7 +1154,7 @@ export default function DisplayPage() {
       setTickerTexts(eventData.ticker_texts || '');
       setTheme(eventData.theme || 'cyan');
       setAnimLevel(eventData.animation_level || 'high');
-      setStageDesign(eventData.stage_design || 'classic');
+      setStageDesign(eventData.stage_design || 'elegant');
       setEventLogo(eventData.event_logo || '');
       setRequests((reqData.requests || []).filter(r => r.status === 'approved'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
@@ -1509,27 +1460,6 @@ export default function DisplayPage() {
       {!isPreview && null /* logo artık topbar-left içinde */}
       {/* ─── SAHNE TASARIMLARI (animLevel: low/medium/high) ─── */}
 
-      {/* Classic: disco ball — animLevel kontrolü */}
-      {stageDesign === 'classic' && <>
-        <div className="display-bg" />
-        <div className="floating-particles" aria-hidden="true" />
-        <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
-        {/* LOW: sadece ışık serpintisi */}
-        {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb={tc.rgb} count={8} /></>}
-        {/* MEDIUM: geometrik şekiller + ışıklar */}
-        {animLevel === 'medium' && <><NeonOrbs themeRgb={tc.rgb} /><GeoShapes themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={18} /></>}
-        {/* HIGH: full sahne */}
-        {animLevel === 'high' && <><DiscoParticles themeRgb={tc.rgb} /><LightBeams themeColor={tc.primary} /><GeoShapes themeRgb={tc.rgb} /><ClubEqualizer themeRgb={tc.rgb} /><Sparkles themeRgb={tc.rgb} count={30} /></>}
-      </>}
-
-      {/* Minimal: scanline + pulse rings — animLevel kontrolü */}
-      {stageDesign === 'minimal' && <>
-        <img src="/logos/remiksbox_logo_transparent.png" alt="" className="stage-bg-img stage-bg-minimal" />
-        {animLevel === 'low' && <><AmbientGlow /><MinimalPulseRing themeRgb="0,220,180" /></>}
-        {animLevel === 'medium' && <><MinimalScanLine themeRgb="0,220,180" /><MinimalPulseRing themeRgb="0,220,180" /><GeoShapes themeRgb="0,200,180" /></>}
-        {animLevel === 'high' && <><MinimalScanLine themeRgb="0,220,180" /><MinimalPulseRing themeRgb="0,220,180" /><NeonOrbs themeRgb="0,200,160" /><ClubEqualizer themeRgb="0,220,180" /><Sparkles themeRgb="0,255,200" count={15} /></>}
-      </>}
-
       {/* Elegant: kadife bordo + gül altını bokeh + şimmer */}
       {stageDesign === 'elegant' && <>
         <div className="display-bg" />
@@ -1557,28 +1487,12 @@ export default function DisplayPage() {
         {animLevel === 'high' && <><FestivalSpotlights themeRgb="255,80,0" /><FestivalConfetti /><FestivalColorBars themeRgb="255,120,0" /><FestivalWaves themeRgb="255,100,0" /><ClubEqualizer themeRgb="255,160,0" /><Sparkles themeRgb="255,200,0" count={25} /></>}
       </>}
 
-      {/* Corporate/Obsidian: çelik mavi veri akışları */}
-      {stageDesign === 'corporate' && <>
-        <img src="/logos/remiksbox_logo_horizontal.png" alt="" className="stage-bg-img stage-bg-corporate" />
-        {animLevel === 'low' && <><CorporateGrid /><CorporateAccentLine themeRgb="60,120,255" /></>}
-        {animLevel === 'medium' && <><CorporateGrid /><CorporateDataStreams themeRgb="60,120,255" /><CorporateAccentLine themeRgb="80,160,255" /></>}
-        {animLevel === 'high' && <><CorporateGrid /><CorporateDataStreams themeRgb="60,120,255" /><CorporateAccentLine themeRgb="80,160,255" /><ClubEqualizer themeRgb="60,140,255" /><NeonOrbs themeRgb="100,180,255" /></>}
-      </>}
-
       {/* Cyber: neon pembe/magenta grid + cyan detaylar */}
       {stageDesign === 'cyber' && <>
         <div className="display-bg" />
         {animLevel === 'low' && <><div className="floating-particles" aria-hidden="true" /><AmbientGlow /></>}
         {animLevel === 'medium' && <><div className="floating-particles" aria-hidden="true" /><GeoShapes themeRgb="255,0,160" /><Sparkles themeRgb="255,0,160" count={12} /></>}
         {animLevel === 'high' && <><div className="floating-particles" aria-hidden="true" /><GeoShapes themeRgb="255,0,160" /><NeonOrbs themeRgb="0,220,255" /><ClubEqualizer themeRgb="255,0,160" /><Sparkles themeRgb="0,220,255" count={22} /></>}
-      </>}
-
-      {/* Lounge: sıcak amber + bokeh */}
-      {stageDesign === 'lounge' && <>
-        <div className="display-bg" />
-        {animLevel === 'low' && <><AmbientGlow /><div className="floating-particles" aria-hidden="true" /></>}
-        {animLevel === 'medium' && <><AmbientGlow /><div className="floating-particles" aria-hidden="true" /><Sparkles themeRgb="255,140,60" count={10} /><GeoShapes themeRgb="255,120,40" /></>}
-        {animLevel === 'high' && <><AmbientGlow /><div className="floating-particles" aria-hidden="true" /><ElegantBokeh themeRgb="255,140,60" /><ClubEqualizer themeRgb="255,160,60" /><Sparkles themeRgb="255,180,80" count={20} /></>}
       </>}
 
       {/* Rave: UV mor + neon yeşil partiküller + strobe */}

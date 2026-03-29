@@ -33,7 +33,7 @@ export default function DJPanel() {
   const [requestLimit, setRequestLimit] = useState(2);
   const [theme, setTheme] = useState('cyan');
   const [animationLevel, setAnimationLevel] = useState('high');
-  const [stageDesign, setStageDesign] = useState('classic');
+  const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
   const [eventHistory, setEventHistory] = useState([]);
   const [activeMusicMode, setActiveMusicMode] = useState(null);
@@ -123,7 +123,7 @@ export default function DJPanel() {
       setRequestLimit(data.request_limit || 2);
       setTheme(data.theme || 'cyan');
       setAnimationLevel(data.animation_level || 'high');
-      setStageDesign(data.stage_design || 'classic');
+      setStageDesign(data.stage_design || 'elegant');
       setEventLogo(data.event_logo || '');
       await fetchRequests(eventSlug);
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
