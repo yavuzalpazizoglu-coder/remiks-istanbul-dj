@@ -4301,22 +4301,126 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dtable-top3 td { padding: clamp(3px, 0.4vw, 10px) clamp(3px, 0.4vw, 10px); }
 .dtable-row td:first-child {
-  width: clamp(22px, 2.5vw, 56px); text-align: center;
+  width: clamp(36px, 3.8vw, 76px); text-align: center;
   border-left: clamp(2px, 0.2vw, 5px) solid transparent;
   border-radius: clamp(3px, 0.3vw, 8px) 0 0 clamp(3px, 0.3vw, 8px);
 }
 .dtable-top3 td:first-child { border-left-color: var(--theme-primary, var(--neon-cyan)); }
 .dtable-first td:first-child { border-left-color: var(--theme-primary, var(--neon-pink)); }
 
-.dtable-rank {
-  font-family: var(--font-display);
-  font-weight: 800; font-size: clamp(9px, 1vw, 20px);
-  color: var(--text-muted);
+/* ── NYSE-style Rank Badge ── */
+.dtable-rank-cell {
+  text-align: center;
+  vertical-align: middle;
+  padding: clamp(2px, 0.3vw, 6px) clamp(4px, 0.5vw, 10px) !important;
 }
-.dtable-rank.rank-1 { color: var(--theme-primary, var(--neon-pink)); }
-.dtable-rank.rank-2 { color: var(--theme-primary, var(--neon-cyan)); }
-.dtable-rank.rank-3 { color: var(--theme-primary, var(--neon-purple)); }
-.dtable-medal { font-size: clamp(11px, 1.3vw, 28px); }
+.dtable-rank-badge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.dtable-rank-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: clamp(3px, 0.35vw, 7px);
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  transition: box-shadow 0.3s;
+}
+
+/* #1 — büyük, parlak, tema rengi */
+.dtable-rank-badge.rank-badge-1 {
+  width: clamp(28px, 3vw, 58px);
+  height: clamp(28px, 3vw, 58px);
+  font-size: clamp(14px, 1.6vw, 34px);
+  background: rgba(var(--theme-rgb), 0.18);
+  border: clamp(1.5px, 0.15vw, 3px) solid rgba(var(--theme-rgb), 0.7);
+  color: var(--theme-primary, #00d4ff);
+  box-shadow: 0 0 clamp(6px, 0.8vw, 18px) rgba(var(--theme-rgb), 0.45);
+}
+/* #2 — orta boy */
+.dtable-rank-badge.rank-badge-2 {
+  width: clamp(24px, 2.5vw, 50px);
+  height: clamp(24px, 2.5vw, 50px);
+  font-size: clamp(12px, 1.35vw, 28px);
+  background: rgba(var(--theme-rgb), 0.10);
+  border: clamp(1px, 0.12vw, 2.5px) solid rgba(var(--theme-rgb), 0.45);
+  color: var(--theme-primary, #00d4ff);
+  opacity: 0.9;
+}
+/* #3 — biraz daha küçük */
+.dtable-rank-badge.rank-badge-3 {
+  width: clamp(22px, 2.2vw, 44px);
+  height: clamp(22px, 2.2vw, 44px);
+  font-size: clamp(11px, 1.2vw, 24px);
+  background: rgba(var(--theme-rgb), 0.07);
+  border: clamp(1px, 0.1vw, 2px) solid rgba(var(--theme-rgb), 0.3);
+  color: var(--theme-primary, #00d4ff);
+  opacity: 0.8;
+}
+/* #4-15 — compact, soluk */
+.dtable-rank-badge.rank-badge-rest {
+  width: clamp(18px, 1.8vw, 34px);
+  height: clamp(18px, 1.8vw, 34px);
+  font-size: clamp(9px, 0.95vw, 18px);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.45);
+}
+
+/* ── Rank değişim okları (NYSE yeşil/kırmızı) ── */
+.dtable-rank-chg {
+  height: clamp(8px, 0.85vw, 16px);
+  display: flex; align-items: center; justify-content: center;
+}
+.dtable-chg-up {
+  font-size: clamp(7px, 0.65vw, 12px);
+  font-weight: 900;
+  color: #4ade80;
+  animation: rankChgFade 2s ease-out forwards;
+  letter-spacing: -0.5px;
+}
+.dtable-chg-down {
+  font-size: clamp(7px, 0.65vw, 12px);
+  font-weight: 900;
+  color: #f87171;
+  animation: rankChgFade 2s ease-out forwards;
+  letter-spacing: -0.5px;
+}
+@keyframes rankChgFade {
+  0%   { opacity: 1; transform: translateY(0); }
+  60%  { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-4px); }
+}
+
+/* ── Çalınıyor göstergesi ── */
+.dtable-playing-indicator {
+  font-size: clamp(10px, 1.1vw, 22px);
+  color: var(--theme-primary, #00d4ff);
+  animation: playingPulse 1s ease-in-out infinite alternate;
+  display: block; text-align: center;
+}
+@keyframes playingPulse {
+  from { opacity: 0.5; }
+  to   { opacity: 1; }
+}
+.dtable-now-playing-label {
+  font-size: clamp(6px, 0.6vw, 10px);
+  color: var(--theme-primary, #00d4ff);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+/* ── Albüm kapağı placeholder (müzik notu) ── */
+.dtable-art-note {
+  font-size: clamp(9px, 1vw, 20px);
+  color: rgba(255,255,255,0.25);
+}
 
 .dtable-art-cell { width: clamp(22px, 2.5vw, 52px); padding: clamp(2px, 0.2vw, 5px) clamp(3px, 0.3vw, 6px) !important; }
 .dtable-art {
@@ -4363,7 +4467,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dtable-badge-cell { width: clamp(20px, 2vw, 48px); text-align: center; }
 
-/* Borsa: vote flash, rank arrow, delta */
+/* Borsa: vote flash, delta */
 @keyframes voteFlashGreen {
   0%   { background: rgba(74,222,128,0.18); box-shadow: inset 0 0 20px rgba(74,222,128,0.1); }
   60%  { background: rgba(74,222,128,0.08); }
@@ -8003,10 +8107,10 @@ tr.dtable-row.dtable-played td {
 }
 .display-mode-winamp .dtable-top3 td:first-child,
 .display-mode-winamp .dtable-first td:first-child { border-left-color: var(--wmp-accent, #007000); }
-.display-mode-winamp .dtable-rank { color: var(--wmp-text-dim, #888888); }
-.display-mode-winamp .dtable-rank.rank-1 { color: var(--wmp-accent, #007000); }
-.display-mode-winamp .dtable-rank.rank-2 { color: var(--wmp-accent-light, #008000); }
-.display-mode-winamp .dtable-rank.rank-3 { color: var(--wmp-accent, #007000); }
+.display-mode-winamp .dtable-rank-badge { border-color: rgba(0,112,0,0.4); color: var(--wmp-text-dim, #888888); background: rgba(0,112,0,0.08); }
+.display-mode-winamp .dtable-rank-badge.rank-badge-1 { color: var(--wmp-accent, #007000); border-color: rgba(0,112,0,0.7); }
+.display-mode-winamp .dtable-rank-badge.rank-badge-2 { color: var(--wmp-accent-light, #008000); }
+.display-mode-winamp .dtable-rank-badge.rank-badge-3 { color: var(--wmp-accent, #007000); }
 .display-mode-winamp .dtable-row td { border-bottom-color: var(--wmp-border, #2F2F2F); }
 
 /* Winamp Bento — card title separator */

@@ -808,12 +808,11 @@ function VoteFloat({ count }) {
 function SongRow({ req, rank, lang, isPlayed }) {
   const [shaking, setShaking] = useState(false);
   const [voteFlash, setVoteFlash] = useState(false);
+  const [rankFlash, setRankFlash] = useState(null); // 'up' | 'down' | null
   const [delta, setDelta] = useState(0);
   const prevVotes = useRef(req.votes);
-  const prevRank = useRef(rank);
-  const isTop3 = rank <= 3;
-  const rankUp = rank < prevRank.current;
-  const rankDown = rank > prevRank.current;
+  const prevRank  = useRef(rank);
+  const isTop3    = rank <= 3;
 
   useEffect(() => {
     if (req.votes > prevVotes.current) {
@@ -828,8 +827,17 @@ function SongRow({ req, rank, lang, isPlayed }) {
   }, [req.votes]);
 
   useEffect(() => {
+    if (rank < prevRank.current) {
+      setRankFlash('up');
+      setTimeout(() => setRankFlash(null), 2000);
+    } else if (rank > prevRank.current) {
+      setRankFlash('down');
+      setTimeout(() => setRankFlash(null), 2000);
+    }
     prevRank.current = rank;
   }, [rank]);
+
+  const rankChangeVal = prevRank.current !== rank ? Math.abs(prevRank.current - rank) : 0;
 
   return (
     <motion.tr
@@ -839,22 +847,33 @@ function SongRow({ req, rank, lang, isPlayed }) {
       initial={{ opacity: 0, x: -30 }}
       animate={{ opacity: 1, x: 0 }}
     >
-      <td className={`dtable-rank rank-${rank}`}>
-        {isPlayed
-          ? <span className="played-badge">🔥 {lang === 'tr' ? 'ÇALINIYOR' : 'PLAYING'}</span>
-          : rank <= 3 ? <span className="dtable-medal">{rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}</span> : rank}
-        {!isPlayed && rankUp && <span className="dtable-rank-arrow dtable-rank-up">▲</span>}
-        {!isPlayed && rankDown && <span className="dtable-rank-arrow dtable-rank-down">▼</span>}
+      {/* ── Rank Badge (NYSE tarzı) ── */}
+      <td className={`dtable-rank-cell rank-${rank}`}>
+        {isPlayed ? (
+          <span className="dtable-playing-indicator">►</span>
+        ) : (
+          <div className="dtable-rank-badge-wrap">
+            <div className={`dtable-rank-badge rank-badge-${rank <= 3 ? rank : 'rest'}`}>
+              <span className="dtable-rank-num">{rank}</span>
+            </div>
+            <div className="dtable-rank-chg">
+              {rankFlash === 'up'   && <span className="dtable-chg-up">▲{rankChangeVal > 1 ? rankChangeVal : ''}</span>}
+              {rankFlash === 'down' && <span className="dtable-chg-down">▼{rankChangeVal > 1 ? rankChangeVal : ''}</span>}
+            </div>
+          </div>
+        )}
       </td>
+
       <td className="dtable-art-cell">
         {req.album_art
           ? <img src={req.album_art} alt="" className="dtable-art" />
-          : <div className="dtable-art-ph">🎵</div>
+          : <div className="dtable-art-ph"><span className="dtable-art-note">♪</span></div>
         }
       </td>
       <td className="dtable-info-cell">
         <div className={`dtable-song ${isTop3 ? 'dtable-song-lg' : ''}`}>{req.song_name}</div>
         {req.artist && <div className="dtable-artist">{req.artist}</div>}
+        {isPlayed && <div className="dtable-now-playing-label">{lang === 'tr' ? 'ÇALINIYOR' : 'PLAYING'}</div>}
       </td>
       <td className="dtable-votes-cell">
         <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -873,11 +892,6 @@ function SongRow({ req, rank, lang, isPlayed }) {
         </div>
         <span className="dtable-vote-label">{t(lang, 'request.votes')}</span>
       </td>
-      {rank === 1 && req.votes >= 5 && !isPlayed && (
-        <td className="dtable-badge-cell">
-          <span className="badge badge-hot"><span className="fire-icon">🔥</span></span>
-        </td>
-      )}
     </motion.tr>
   );
 }
