@@ -923,21 +923,19 @@ function EventSummary({ requests, lang, eventName }) {
         ))}
       </div>
 
-      <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+      {/* ── EN ÜSTTE: Etkinlik Adı + Tarih ── */}
+      <motion.div className="summary-event-header"
+        initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+        {eventName && <div className="summary-event-name">{eventName}</div>}
+        <div className="summary-event-date">{today}</div>
+      </motion.div>
+
+      {/* ── Gecenin Özeti başlığı ── */}
+      <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }}>
         <div className="summary-title">{t(lang, 'display.summary_title')}</div>
       </motion.div>
 
-      <div className="closing-stats-grid" style={{ marginBottom: 'clamp(10px, 1.5vw, 30px)' }}>
-        <div className="closing-stat-card">
-          <div className="closing-stat-number">{totalRequests}</div>
-          <div className="closing-stat-label">{lang === 'tr' ? 'şarkı istendi' : 'songs requested'}</div>
-        </div>
-        <div className="closing-stat-card">
-          <div className="closing-stat-number">{totalVotes}</div>
-          <div className="closing-stat-label">{lang === 'tr' ? 'oy kullanıldı' : 'votes cast'}</div>
-        </div>
-      </div>
-
+      {/* ── Top 3 ── */}
       {top3.length > 0 && (
         <motion.div className="summary-top3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}>
           <div className="summary-top3-title">{lang === 'tr' ? '🏆 EN ÇOK OY ALAN ŞARKILAR' : '🏆 MOST VOTED SONGS'}</div>
@@ -958,14 +956,24 @@ function EventSummary({ requests, lang, eventName }) {
         </motion.div>
       )}
 
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
-        className="summary-footer-info">
-        <div className="closing-thankyou-text" style={{ fontSize: 'clamp(18px, 2.5vw, 48px)' }}>
-          {lang === 'tr' ? 'TEŞEKKÜRLER!' : 'THANK YOU!'}
+      {/* ── ALTTA: İstatistikler ── */}
+      <motion.div className="summary-stats-bottom"
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.6 }}>
+        <div className="summary-stat-item">
+          <span className="summary-stat-num">{totalRequests}</span>
+          <span className="summary-stat-lbl">{lang === 'tr' ? 'şarkı istendi' : 'songs requested'}</span>
         </div>
-        {eventName && <div className="closing-event-name">{eventName}</div>}
-        <div className="closing-event-date">{today}</div>
+        <div className="summary-stat-divider" />
+        <div className="summary-stat-item">
+          <span className="summary-stat-num">{totalVotes}</span>
+          <span className="summary-stat-lbl">{lang === 'tr' ? 'oy kullanıldı' : 'votes cast'}</span>
+        </div>
+        <div className="summary-stat-divider" />
+        <div className="summary-stat-item">
+          <span className="summary-stat-num summary-stat-thanks">{lang === 'tr' ? 'TEŞEKKÜRLER!' : 'THANK YOU!'}</span>
+        </div>
       </motion.div>
+
     </div>
   );
 }

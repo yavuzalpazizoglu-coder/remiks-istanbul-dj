@@ -4940,10 +4940,86 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   background: linear-gradient(135deg, rgba(10,10,14,0.97), rgba(20,20,30,0.97));
   z-index: 50;
   display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: clamp(12px, 1.5vw, 30px);
+  flex-direction: column; gap: clamp(8px, 1vw, 20px);
   animation: fadeIn 0.6s ease;
   overflow: hidden;
-  padding: clamp(16px, 2vw, 40px);
+  padding: clamp(16px, 2vw, 40px) clamp(20px, 3vw, 60px);
+}
+
+/* ── En üstte: etkinlik adı + tarih ── */
+.summary-event-header {
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+  gap: clamp(3px, 0.4vw, 8px);
+  padding-bottom: clamp(6px, 0.8vw, 16px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  width: 100%; max-width: clamp(400px, 60vw, 1000px);
+}
+.summary-event-name {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.2vw, 64px);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: clamp(2px, 0.4vw, 8px);
+  text-transform: uppercase;
+  text-shadow: 0 0 clamp(12px, 2vw, 40px) rgba(var(--theme-rgb, 0,212,255), 0.5);
+}
+.summary-event-date {
+  font-size: clamp(11px, 1.2vw, 22px);
+  color: rgba(255,255,255,0.45);
+  letter-spacing: clamp(1px, 0.3vw, 5px);
+  text-transform: uppercase;
+}
+
+.summary-title {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.8vw, 32px); font-weight: 800;
+  background: var(--gradient-main);
+  background-clip: text; -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+/* ── Alt istatistik satırı ── */
+.summary-stats-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2vw, 40px);
+  padding-top: clamp(6px, 0.8vw, 16px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  width: 100%; max-width: clamp(400px, 60vw, 1000px);
+}
+.summary-stat-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.summary-stat-num {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.8vw, 54px);
+  font-weight: 900;
+  color: var(--theme-primary, #00d4ff);
+  line-height: 1;
+}
+.summary-stat-lbl {
+  font-size: clamp(9px, 0.9vw, 16px);
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: clamp(1px, 0.2vw, 3px);
+  white-space: nowrap;
+}
+.summary-stat-divider {
+  width: 1px; height: clamp(28px, 3vw, 56px);
+  background: rgba(255,255,255,0.1);
+}
+.summary-stat-thanks {
+  font-size: clamp(14px, 1.6vw, 30px) !important;
+  color: #ffffff !important;
+  letter-spacing: clamp(1px, 0.3vw, 5px);
+}
+
+.summary-footer-info {
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: clamp(4px, 0.5vw, 10px);
 }
 .summary-title {
   font-family: var(--font-display);
