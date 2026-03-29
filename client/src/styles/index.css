@@ -4696,6 +4696,181 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-weight: 600;
 }
 
+/* ─── Song Card Grid ─── */
+.dsp-song-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(3px, 0.45vh, 7px) clamp(4px, 0.5vw, 8px);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding: clamp(2px, 0.3vh, 5px) 0;
+  align-content: start;
+}
+.dsp-song-card {
+  display: flex;
+  align-items: center;
+  gap: clamp(4px, 0.55vw, 9px);
+  padding: clamp(6px, 0.95vh, 14px) clamp(6px, 0.65vw, 12px);
+  border-radius: clamp(4px, 0.5vw, 8px);
+  border: 1px solid rgba(255,255,255,0.055);
+  background: rgba(255,255,255,0.025);
+  transition: background 0.15s;
+  overflow: hidden;
+  min-width: 0;
+}
+/* Top-3 farklı arka planlar */
+.dsp-card-gold {
+  background: linear-gradient(135deg, rgba(255,200,0,0.17) 0%, rgba(255,155,0,0.07) 100%);
+  border-color: rgba(255,200,0,0.3);
+  box-shadow: inset 0 0 clamp(8px, 1.2vw, 18px) rgba(255,200,0,0.06);
+}
+.dsp-card-silver {
+  background: linear-gradient(135deg, rgba(192,210,230,0.15) 0%, rgba(155,175,200,0.06) 100%);
+  border-color: rgba(192,210,230,0.24);
+  box-shadow: inset 0 0 clamp(8px, 1.2vw, 18px) rgba(200,220,240,0.05);
+}
+.dsp-card-bronze {
+  background: linear-gradient(135deg, rgba(210,130,50,0.16) 0%, rgba(180,105,30,0.07) 100%);
+  border-color: rgba(210,130,50,0.26);
+  box-shadow: inset 0 0 clamp(8px, 1.2vw, 18px) rgba(210,130,50,0.06);
+}
+/* Oy flash efekti */
+.dsp-card-vote-flash {
+  animation: voteFlashGreen 0.9s ease-out;
+}
+/* Rank */
+.dsp-card-rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 1;
+  flex-shrink: 0;
+  width: clamp(22px, 3.8vh, 48px);
+}
+.dsp-card-rank-1 {
+  font-size: clamp(18px, 3.3vh, 40px);
+  color: #ffc800;
+  text-shadow: 0 0 clamp(6px, 1.1vh, 16px) rgba(255,200,0,0.65);
+  animation: rankOnePulse 2.8s ease-in-out infinite;
+}
+.dsp-card-rank-2 {
+  font-size: clamp(16px, 2.8vh, 34px);
+  color: #c8d8e8;
+  text-shadow: 0 0 clamp(5px, 0.9vh, 12px) rgba(200,216,230,0.45);
+}
+.dsp-card-rank-3 {
+  font-size: clamp(14px, 2.4vh, 30px);
+  color: #d28030;
+  text-shadow: 0 0 clamp(4px, 0.8vh, 10px) rgba(210,128,48,0.45);
+}
+.dsp-card-rank-rest {
+  font-size: clamp(11px, 1.7vh, 22px);
+  color: rgba(255,255,255,0.28);
+}
+.dsp-card-rarrow {
+  display: block;
+  font-size: clamp(6px, 0.65vh, 9px);
+  line-height: 1;
+  margin-top: 1px;
+}
+.dsp-rarrow-up  { color: #4ade80; animation: dtfFade 2.5s ease-out forwards; }
+.dsp-rarrow-dn  { color: #f87171; animation: dtfFade 2.5s ease-out forwards; }
+/* Albüm */
+.dsp-card-art {
+  width: clamp(28px, 5vh, 60px);
+  height: clamp(28px, 5vh, 60px);
+  border-radius: clamp(3px, 0.4vw, 7px);
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+.dsp-card-art-ph {
+  width: clamp(28px, 5vh, 60px);
+  height: clamp(28px, 5vh, 60px);
+  border-radius: clamp(3px, 0.4vw, 7px);
+  background: rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(14px, 2.2vh, 26px);
+  flex-shrink: 0;
+  color: rgba(255,255,255,0.2);
+}
+/* İsim + sanatçı */
+.dsp-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1px, 0.15vh, 2px);
+}
+.dsp-card-song {
+  font-size: clamp(11px, 1.7vh, 22px);
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+}
+.dsp-card-song-top {
+  font-size: clamp(12px, 1.9vh, 25px);
+  font-weight: 800;
+  color: #fff;
+}
+.dsp-card-artist {
+  font-size: clamp(8px, 1.05vh, 14px);
+  color: rgba(255,255,255,0.42);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Oy */
+.dsp-card-votes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: clamp(1px, 0.12vh, 2px);
+}
+.dsp-card-votes-num {
+  font-family: var(--font-mono, monospace);
+  font-size: clamp(14px, 2.3vh, 28px);
+  font-weight: 700;
+  color: var(--theme-primary, #00d4ff);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.dsp-card-votes-top {
+  font-size: clamp(16px, 2.6vh, 32px);
+}
+.dsp-card-votes-lbl {
+  font-size: clamp(6px, 0.62vh, 8px);
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.3);
+  font-weight: 600;
+  text-align: right;
+}
+.dsp-card-chg {
+  height: clamp(10px, 1.4vh, 18px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.dsp-chg-pill {
+  font-size: clamp(7px, 0.82vh, 11px);
+  font-weight: 700;
+  padding: 0 clamp(2px, 0.3vw, 5px);
+  border-radius: 3px;
+}
+.dsp-chg-green { color: #4ade80; background: rgba(74,222,128,0.12); }
+.dsp-chg-up    { color: #4ade80; }
+.dsp-chg-dn    { color: #f87171; }
+
 /* ── Finansal Ticker Tablo (DTF) ── */
 .dsp-table-wrap {
   flex: 1; min-height: 0; overflow-y: auto;
