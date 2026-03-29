@@ -4183,16 +4183,18 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-topbar {
   display: flex;
   align-items: center;
-  gap: clamp(8px, 1.2vw, 24px);
+  gap: clamp(6px, 0.8vw, 16px);
   padding: clamp(10px, 1.2vh, 20px) 0;
   flex-shrink: 0;
   border-bottom: 1px solid rgba(var(--theme-rgb), 0.15);
   position: relative;
 }
 
-/* Sol: Logo */
+/* Sol: Logo — QR sütunuyla aynı genişlikte */
 .dsp-topbar-left {
-  flex: 0 0 auto;
+  flex: 0 0 18%;
+  max-width: 18%;
+  min-width: 0;
   position: relative;
   display: flex;
   align-items: center;
@@ -4200,9 +4202,9 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-logo-inline {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: clamp(3px, 0.4vh, 6px);
-  min-width: clamp(150px, 18vw, 315px);
+  width: 100%;
 }
 .dsp-logo-inline::after {
   content: '';
@@ -4398,18 +4400,51 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   margin-bottom: clamp(2px, 0.3vh, 7px);
 }
 .dsp-card-title-altinsaatler {
-  text-align: center;
-  font-size: clamp(9px, 1.1vw, 18px);
-  font-weight: 800;
-  letter-spacing: clamp(4px, 0.7vw, 14px);
-  text-transform: uppercase;
-  background: linear-gradient(90deg, var(--theme-primary), rgba(255,255,255,0.95), #ffd700, rgba(255,255,255,0.9), var(--theme-primary));
-  background-size: 400% 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 0.5vw, 10px);
+  font-family: var(--font-display);
+  font-size: clamp(9px, 1.1vh, 16px);
+  padding: clamp(2px, 0.25vh, 5px) 0 clamp(4px, 0.5vh, 9px);
+  border-bottom: 1px solid rgba(var(--theme-rgb), 0.12);
+  margin-bottom: clamp(2px, 0.3vh, 6px);
+  flex-shrink: 0;
+}
+.dtf-brand-logo-r {
+  color: #00d060;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0;
+  -webkit-text-fill-color: #00d060;
+}
+.dtf-brand-logo-b {
+  color: #ffffff;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  -webkit-text-fill-color: #ffffff;
+}
+.dtf-brand-sep {
+  color: rgba(255,255,255,0.2);
+  font-weight: 200;
+  font-size: 0.8em;
+  margin: 0 clamp(2px, 0.3vw, 6px);
+  -webkit-text-fill-color: rgba(255,255,255,0.2);
+}
+.dtf-brand-gold {
+  background: linear-gradient(90deg, #c8860a, #ffd700, #ffe066, #ffd700, #c8860a);
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: brandGradientH 6s ease infinite;
-  filter: drop-shadow(0 0 4px rgba(var(--theme-rgb), 0.2));
+  animation: brandGradientH 4s ease infinite;
+  font-weight: 700;
+  letter-spacing: clamp(2px, 0.4vw, 8px);
+  text-transform: uppercase;
+}
+.dtf-brand-star {
+  font-size: 0.75em;
+  opacity: 0.7;
 }
 
 .dsp-table-empty {
@@ -5056,10 +5091,10 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 /* Ticker (bottom scrolling text) */
 .display-ticker {
   flex-shrink: 0;
-  border-top: 1px solid rgba(0, 200, 220, 0.08);
-  border-bottom: 1px solid rgba(0, 200, 220, 0.08);
-  background: rgba(0, 0, 0, 0.25);
-  padding: clamp(4px, 0.5vh, 14px) 0;
+  border-top: 1px solid rgba(0, 200, 220, 0.12);
+  border-bottom: 1px solid rgba(0, 200, 220, 0.12);
+  background: rgba(0, 0, 0, 0.35);
+  padding: clamp(5px, 0.65vh, 15px) 0;
   margin-bottom: clamp(4px, 0.5vh, 14px);
   overflow: hidden;
   position: relative;
@@ -5085,7 +5120,19 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 .ticker-item .ticker-emoji { font-size: clamp(9px, 1.1vw, 24px); }
-.ticker-item .ticker-song { color: var(--text-primary); font-weight: 600; }
+.ticker-item .ticker-rank {
+  color: rgba(255,255,255,0.35);
+  font-size: 0.8em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.ticker-item .ticker-song { color: #ffffff; font-weight: 700; }
+.ticker-item .ticker-artist { color: #7ecfff; font-weight: 400; }
+.ticker-item .ticker-votes {
+  color: #4dfa8a;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
 .ticker-item .ticker-dot {
   color: var(--theme-primary, var(--neon-purple));
   font-size: clamp(10px, 1.2vw, 22px);
@@ -6883,14 +6930,12 @@ body.theme-pioneer-gold .crew-chat-send:hover {
 
 /* "Altın Saatler" başlığı — gradient override (display-page .dsp-card-title renk kuralını geçersiz kıl) */
 .display-page .dsp-card-title.dsp-card-title-altinsaatler {
-  color: transparent;
-  background: linear-gradient(90deg, var(--theme-primary), rgba(255,255,255,0.95), #ffd700, rgba(255,255,255,0.9), var(--theme-primary));
-  background-size: 400% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: brandGradientH 6s ease infinite;
-  filter: drop-shadow(0 0 4px rgba(var(--theme-rgb), 0.25));
+  color: unset;
+  background: none;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  animation: none;
+  filter: none;
 }
 
 .display-page .dtable-top3 {

@@ -1028,31 +1028,35 @@ function Ticker({ requests, lang, tickerTexts }) {
 
   const items = hasRequests ? reqItems : textItems;
   const doubled = [...items, ...items];
-  const duration = Math.max(20, items.length * 4);
+  const duration = Math.max(24, items.length * 4.5);
 
-  const separatorEmojis = ['🎶', '◆', '🎵', '◆', '✦', '◆'];
+  const separatorEmojis = ['🎶', '◆', '🎵', '◆', '✦', '◆', '🎸', '◆'];
 
   return (
     <div className="display-ticker">
       <div className="ticker-track" style={{ '--ticker-duration': `${duration}s` }}>
-        {doubled.map((item, i) => (
-          <div key={`ticker-${i}`} className="ticker-item">
-            {hasRequests ? (
-              <>
-                <span className="ticker-emoji">🎵</span>
-                <span className="ticker-song">{item.song_name}</span>
-                {item.artist && <span>- {item.artist}</span>}
-                <span style={{ color: 'var(--neon-cyan)', fontWeight: 700 }}>({item.votes} {t(lang, 'request.votes')})</span>
-              </>
-            ) : (
-              <>
-                <span className="ticker-emoji">✨</span>
-                <span className="ticker-song">{item}</span>
-              </>
-            )}
-            <span className="ticker-dot">{separatorEmojis[i % separatorEmojis.length]}</span>
-          </div>
-        ))}
+        {doubled.map((item, i) => {
+          const rank = (i % items.length) + 1;
+          return (
+            <div key={`ticker-${i}`} className="ticker-item">
+              {hasRequests ? (
+                <>
+                  <span className="ticker-emoji">🎵</span>
+                  <span className="ticker-rank">#{rank}</span>
+                  <span className="ticker-song">{item.song_name}</span>
+                  {item.artist && <span className="ticker-artist">· {item.artist}</span>}
+                  <span className="ticker-votes">⬆ {item.votes} oy</span>
+                </>
+              ) : (
+                <>
+                  <span className="ticker-emoji">✨</span>
+                  <span className="ticker-song">{item}</span>
+                </>
+              )}
+              <span className="ticker-dot">{separatorEmojis[i % separatorEmojis.length]}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -1569,7 +1573,11 @@ export default function DisplayPage() {
               {/* RIGHT: Song Table (geniş) */}
               <div className="dsp-card dsp-list-card-wide">
                 <div className="dsp-card-title dsp-card-title-altinsaatler">
-                  Remiks İstanbul · Altın Saatler
+                  <span className="dtf-brand-logo-r">Remiks</span><span className="dtf-brand-logo-b">Box</span>
+                  <span className="dtf-brand-sep">—</span>
+                  <span className="dtf-brand-star">⭐</span>
+                  <span className="dtf-brand-gold">Altın Saatler</span>
+                  <span className="dtf-brand-star">⭐</span>
                 </div>
                 {requests.length === 0 ? (
                   <div className="dsp-table-empty">
