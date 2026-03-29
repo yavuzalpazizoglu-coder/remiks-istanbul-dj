@@ -808,20 +808,28 @@ function VoteFloat({ count }) {
 function NowPlayingBar({ req, lang }) {
   if (!req) return null;
   return (
-    <div className="dsp-now-playing-bar">
-      <div className="dsp-np-pulse" />
-      {req.album_art
-        ? <img src={req.album_art} alt="" className="dsp-np-art" />
-        : <div className="dsp-np-art-ph">♪</div>
-      }
-      <div className="dsp-np-info">
-        <div className="dsp-np-tag">{lang === 'tr' ? '▶ ŞU AN ÇALINIYOR' : '▶ NOW PLAYING'}</div>
-        <div className="dsp-np-song">{req.song_name}</div>
-        {req.artist && <div className="dsp-np-artist">{req.artist}</div>}
+    <div className="dsp-np-bottom-bar">
+      <div className="dsp-np-bottom-left">
+        {req.album_art
+          ? <img src={req.album_art} alt="" className="dsp-np-bottom-art" />
+          : <div className="dsp-np-bottom-art-ph">♪</div>
+        }
+        <div className="dsp-np-bottom-info">
+          <div className="dsp-np-bottom-song">{req.song_name}</div>
+          {req.artist && <div className="dsp-np-bottom-artist">{req.artist}</div>}
+        </div>
       </div>
-      <div className="dsp-np-votes">
-        <span className="dsp-np-votes-num">{req.votes}</span>
-        <span className="dsp-np-votes-lbl">OY</span>
+
+      <div className="dsp-np-bottom-center">
+        <div className="dsp-np-bottom-tag">{lang === 'tr' ? '▶  ŞU AN ÇALINIYOR' : '▶  NOW PLAYING'}</div>
+        <div className="dsp-np-bottom-bars">
+          {[1,2,3,4,5].map(i => <span key={i} className={`dsp-np-eq-bar dsp-np-eq-bar-${i}`} />)}
+        </div>
+      </div>
+
+      <div className="dsp-np-bottom-right">
+        <span className="dsp-np-bottom-votes-num">{req.votes}</span>
+        <span className="dsp-np-bottom-votes-lbl">OY</span>
       </div>
     </div>
   );
@@ -1164,12 +1172,19 @@ export default function DisplayPage() {
       setRequests(list.filter(r => r.status === 'approved'));
     });
 
+    // DJ ▶ Çal tıkladığında — bar hemen açılır, listeden çıkar
+    socket.on('now-playing', (req) => {
+      setPlayedSong(req);
+      setPlayedId(req.id);
+      clearTimeout(playedSongTimer.current);
+    });
+
     socket.on('request-played', (req) => {
       setPlayedId(req.id);
       setPlayedSong(req);
       setPlayedCount(c => c + 1);
       clearTimeout(playedSongTimer.current);
-      // 60 sn sonra hem fade hem temizlik
+      // 62 sn sonra bar kapanır
       playedSongTimer.current = setTimeout(() => {
         setPlayedId(null);
         setPlayedSong(null);
@@ -1264,6 +1279,7 @@ export default function DisplayPage() {
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
+      socket.off('now-playing');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('ceremony'); socket.off('music-mode');
       socket.off('crew-chat');
@@ -1619,12 +1635,11 @@ export default function DisplayPage() {
                 </div>
               </div>
 
-              {/* Merkez: Altın Saatler + Şimdi Çalıyor + Şarkı Listesi */}
+              {/* Merkez: Altın Saatler + Şarkı Listesi + Alt Oynatıcı Bar */}
               <div className="dsp-beatbox-songs">
                 <div className="dsp-card-title dsp-card-title-altinsaatler">
                   <span className="dtf-brand-full">REMİKSBOX — ⭐ ALTIN SAATLER ⭐</span>
                 </div>
-                <NowPlayingBar req={playedSong} lang={lang} />
                 {requests.length === 0 ? (
                   <div className="dsp-table-empty">
                     <span>🎵</span> {T('display.no_requests')}
@@ -1638,6 +1653,7 @@ export default function DisplayPage() {
                     </AnimatePresence>
                   </div>
                 )}
+                <NowPlayingBar req={playedSong} lang={lang} />
               </div>
 
               {/* Sağ QR + Sağ İstatistikler */}

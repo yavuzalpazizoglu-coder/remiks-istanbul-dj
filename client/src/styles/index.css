@@ -4374,7 +4374,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   min-width: 0;
   display: flex;
   flex-direction: column;
-  padding: clamp(4px, 0.6vh, 10px) clamp(6px, 0.8vw, 14px);
+  padding: clamp(4px, 0.6vh, 10px) clamp(6px, 0.8vw, 14px) 0;
   overflow: hidden;
 }
 
@@ -4599,66 +4599,60 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   gap: clamp(6px, 0.8vw, 18px); color: var(--text-muted); font-size: clamp(12px, 1.4vw, 32px);
 }
 
-/* ─── Now Playing Bar ─── */
-.dsp-now-playing-bar {
+/* ─── Now Playing — Alt Medya Oynatıcı Bar ─── */
+.dsp-np-bottom-bar {
   display: flex;
   align-items: center;
-  gap: clamp(6px, 0.9vw, 14px);
-  padding: clamp(5px, 0.65vh, 9px) clamp(8px, 1vw, 16px);
-  margin: clamp(3px, 0.4vh, 6px) 0;
-  background: linear-gradient(90deg, rgba(var(--theme-rgb),0.18) 0%, rgba(var(--theme-rgb),0.06) 100%);
-  border-left: clamp(2px, 0.3vw, 4px) solid var(--theme-primary, #00d4ff);
-  border-radius: clamp(4px, 0.5vw, 8px);
-  box-shadow: 0 0 clamp(10px, 1.5vw, 24px) rgba(var(--theme-rgb), 0.12);
+  gap: clamp(8px, 1.1vw, 18px);
+  padding: clamp(6px, 0.85vh, 12px) clamp(10px, 1.2vw, 20px);
+  margin-top: clamp(3px, 0.4vh, 6px);
+  background: linear-gradient(90deg,
+    rgba(var(--theme-rgb), 0.22) 0%,
+    rgba(0,0,0,0.55) 50%,
+    rgba(var(--theme-rgb), 0.12) 100%);
+  border-top: 1px solid rgba(var(--theme-rgb), 0.3);
+  border-radius: 0 0 clamp(8px, 1vw, 16px) clamp(8px, 1vw, 16px);
   flex-shrink: 0;
+  box-shadow: 0 -2px clamp(12px, 2vw, 28px) rgba(var(--theme-rgb), 0.1);
 }
-.dsp-np-pulse {
-  width: clamp(6px, 0.8vh, 10px);
-  height: clamp(6px, 0.8vh, 10px);
-  border-radius: 50%;
-  background: var(--theme-primary, #00d4ff);
-  box-shadow: 0 0 clamp(4px, 0.7vh, 8px) rgba(var(--theme-rgb), 0.8);
-  animation: dotPulse 0.85s ease-in-out infinite alternate;
-  flex-shrink: 0;
+.dsp-np-bottom-left {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 0.8vw, 14px);
+  flex: 1;
+  min-width: 0;
 }
-.dsp-np-art {
-  width: clamp(30px, 5.5vh, 60px);
-  height: clamp(30px, 5.5vh, 60px);
+.dsp-np-bottom-art {
+  width: clamp(32px, 5.5vh, 62px);
+  height: clamp(32px, 5.5vh, 62px);
   border-radius: clamp(3px, 0.4vw, 7px);
   object-fit: cover;
   display: block;
   flex-shrink: 0;
+  box-shadow: 0 0 clamp(6px, 1vw, 14px) rgba(var(--theme-rgb), 0.35);
 }
-.dsp-np-art-ph {
-  width: clamp(30px, 5.5vh, 60px);
-  height: clamp(30px, 5.5vh, 60px);
+.dsp-np-bottom-art-ph {
+  width: clamp(32px, 5.5vh, 62px);
+  height: clamp(32px, 5.5vh, 62px);
   border-radius: clamp(3px, 0.4vw, 7px);
-  background: rgba(var(--theme-rgb), 0.12);
+  background: rgba(var(--theme-rgb), 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(14px, 2.2vh, 26px);
+  font-size: clamp(16px, 2.4vh, 28px);
   flex-shrink: 0;
+  color: rgba(255,255,255,0.3);
 }
-.dsp-np-info {
+.dsp-np-bottom-info {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: clamp(1px, 0.15vh, 2px);
+  gap: clamp(1px, 0.15vh, 3px);
 }
-.dsp-np-tag {
+.dsp-np-bottom-song {
   font-family: var(--font-display);
-  font-size: clamp(6px, 0.72vh, 9px);
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--theme-primary, #00d4ff);
-  opacity: 0.85;
-}
-.dsp-np-song {
-  font-family: var(--font-display);
-  font-size: clamp(11px, 1.7vh, 20px);
+  font-size: clamp(12px, 1.85vh, 22px);
   font-weight: 800;
   color: #fff;
   white-space: nowrap;
@@ -4666,34 +4660,74 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   text-overflow: ellipsis;
   line-height: 1.1;
 }
-.dsp-np-artist {
-  font-size: clamp(8px, 0.95vh, 12px);
-  color: rgba(255,255,255,0.5);
+.dsp-np-bottom-artist {
+  font-size: clamp(9px, 1.05vh, 13px);
+  color: rgba(255,255,255,0.48);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.dsp-np-votes {
+/* Merkez — etiket + equalizer çubukları */
+.dsp-np-bottom-center {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1px;
+  gap: clamp(3px, 0.4vh, 6px);
   flex-shrink: 0;
-  padding-left: clamp(6px, 0.8vw, 12px);
-  border-left: 1px solid rgba(var(--theme-rgb), 0.2);
 }
-.dsp-np-votes-num {
-  font-family: var(--font-mono);
-  font-size: clamp(14px, 2.2vh, 26px);
+.dsp-np-bottom-tag {
+  font-family: var(--font-display);
+  font-size: clamp(7px, 0.78vh, 10px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--theme-primary, #00d4ff);
+  white-space: nowrap;
+}
+.dsp-np-bottom-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(2px, 0.3vw, 4px);
+  height: clamp(14px, 2.2vh, 26px);
+}
+.dsp-np-eq-bar {
+  display: inline-block;
+  width: clamp(3px, 0.35vw, 5px);
+  background: var(--theme-primary, #00d4ff);
+  border-radius: 2px 2px 0 0;
+  opacity: 0.75;
+}
+.dsp-np-eq-bar-1 { animation: eqBounce 0.7s ease-in-out infinite alternate; animation-delay: 0s;    height: 60%; }
+.dsp-np-eq-bar-2 { animation: eqBounce 0.7s ease-in-out infinite alternate; animation-delay: 0.14s; height: 90%; }
+.dsp-np-eq-bar-3 { animation: eqBounce 0.7s ease-in-out infinite alternate; animation-delay: 0.28s; height: 40%; }
+.dsp-np-eq-bar-4 { animation: eqBounce 0.7s ease-in-out infinite alternate; animation-delay: 0.42s; height: 80%; }
+.dsp-np-eq-bar-5 { animation: eqBounce 0.7s ease-in-out infinite alternate; animation-delay: 0.56s; height: 55%; }
+@keyframes eqBounce {
+  from { transform: scaleY(0.35); opacity: 0.5; }
+  to   { transform: scaleY(1);    opacity: 0.9; }
+}
+/* Sağ — oy sayısı */
+.dsp-np-bottom-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  padding-left: clamp(8px, 1vw, 16px);
+  border-left: 1px solid rgba(var(--theme-rgb), 0.22);
+}
+.dsp-np-bottom-votes-num {
+  font-family: var(--font-mono, monospace);
+  font-size: clamp(18px, 2.8vh, 34px);
   font-weight: 700;
   color: var(--theme-primary, #00d4ff);
   line-height: 1;
 }
-.dsp-np-votes-lbl {
+.dsp-np-bottom-votes-lbl {
   font-size: clamp(6px, 0.65vh, 8px);
-  letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.3);
   font-weight: 600;
+  text-align: right;
 }
 
 /* ─── Song Card Grid ─── */
