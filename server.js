@@ -27,75 +27,133 @@ async function sendEventReport(event, allRequests) {
   const toEmails = (process.env.REPORT_TO_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean);
   if (!toEmails.length) return;
 
-  const played    = allRequests.filter(r => r.status === 'playing' || r.status === 'played');
-  const approved  = allRequests.filter(r => r.status === 'approved');
-  const rejected  = allRequests.filter(r => r.status === 'rejected');
-  const pending   = allRequests.filter(r => r.status === 'pending');
+  const played   = allRequests.filter(r => ['playing','played'].includes(r.status)).sort((a,b) => (b.votes||0)-(a.votes||0));
+  const approved = allRequests.filter(r => r.status === 'approved').sort((a,b) => (b.votes||0)-(a.votes||0));
+  const rejected = allRequests.filter(r => r.status === 'rejected').sort((a,b) => (b.votes||0)-(a.votes||0));
+  const pending  = allRequests.filter(r => r.status === 'pending').sort((a,b) => (b.votes||0)-(a.votes||0));
   const totalVotes = allRequests.reduce((s, r) => s + (r.votes || 0), 0);
+  const dateStr = new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
 
-  const songRow = (r, i) => `
-    <tr style="background:${i % 2 === 0 ? '#1a1a2e' : '#16213e'}">
-      <td style="padding:8px 12px;color:#aaa;text-align:center">${i + 1}</td>
-      <td style="padding:8px 12px;color:#fff">${r.song_name || r.title || '-'}</td>
-      <td style="padding:8px 12px;color:#ccc">${r.artist || '-'}</td>
-      <td style="padding:8px 12px;color:#00d4ff;text-align:center;font-weight:700">${r.votes || 0}</td>
-      <td style="padding:8px 12px;color:#888;text-align:center">${r.status}</td>
-    </tr>`;
+  /* ── Yardımcılar ── */
+  const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  const tableSection = (title, color, rows) => rows.length === 0 ? '' : `
-    <h3 style="color:${color};margin:28px 0 8px;font-size:15px;text-transform:uppercase;letter-spacing:2px">${title} (${rows.length})</h3>
-    <table style="width:100%;border-collapse:collapse;font-size:13px">
-      <thead><tr style="background:#0d0d1a">
-        <th style="padding:8px;color:#666">#</th>
-        <th style="padding:8px;color:#666;text-align:left">Şarkı</th>
-        <th style="padding:8px;color:#666;text-align:left">Sanatçı</th>
-        <th style="padding:8px;color:#666">Oy</th>
-        <th style="padding:8px;color:#666">Durum</th>
-      </tr></thead>
-      <tbody>${rows.map((r, i) => songRow(r, i)).join('')}</tbody>
-    </table>`;
+  const statBox = (num, label, color) => `
+    <td width="20%" style="padding:0 6px 0 0;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f8f9fa;border:2px solid ${color};border-radius:8px;">
+        <tr><td style="padding:14px 8px;text-align:center;">
+          <div style="font-size:28px;font-weight:900;color:${color};line-height:1;">${num}</div>
+          <div style="font-size:10px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-family:Arial,sans-serif;">${label}</div>
+        </td></tr>
+      </table>
+    </td>`;
 
-  const html = `
-  <!DOCTYPE html>
-  <html lang="tr">
-  <head><meta charset="UTF-8"><style>
-    body{margin:0;padding:0;background:#0d0d1a;font-family:Arial,sans-serif;color:#fff}
-    .wrap{max-width:700px;margin:0 auto;padding:32px 24px}
-    .header{text-align:center;padding:32px 0 24px;border-bottom:1px solid #1e2a3a}
-    .logo{font-size:11px;letter-spacing:4px;color:#00d4ff;text-transform:uppercase}
-    .title{font-size:28px;font-weight:900;margin:8px 0 4px;color:#fff}
-    .sub{font-size:14px;color:#888}
-    .stat-grid{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}
-    .stat{flex:1;min-width:120px;background:#1a1a2e;border:1px solid #1e2a3a;border-radius:8px;padding:16px;text-align:center}
-    .stat-num{font-size:32px;font-weight:900;color:#00d4ff}
-    .stat-lbl{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-    .footer{margin-top:40px;padding-top:20px;border-top:1px solid #1e2a3a;text-align:center;font-size:11px;color:#444}
-  </style></head>
-  <body><div class="wrap">
-    <div class="header">
-      <div class="logo">REMİKS İSTANBUL</div>
-      <div class="title">${event.name || 'Etkinlik'}</div>
-      <div class="sub">Etkinlik Sonu Raporu &nbsp;·&nbsp; ${new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat"><div class="stat-num">${allRequests.length}</div><div class="stat-lbl">Toplam İstek</div></div>
-      <div class="stat"><div class="stat-num">${played.length}</div><div class="stat-lbl">Çalınan Şarkı</div></div>
-      <div class="stat"><div class="stat-num">${totalVotes}</div><div class="stat-lbl">Toplam Oy</div></div>
-      <div class="stat"><div class="stat-num">${approved.length}</div><div class="stat-lbl">Onaylanan</div></div>
-      <div class="stat"><div class="stat-num">${rejected.length}</div><div class="stat-lbl">Reddedilen</div></div>
-    </div>
-    ${tableSection('✅ Çalınan Şarkılar', '#00ff88', played.sort((a,b) => (b.votes||0)-(a.votes||0)))}
-    ${tableSection('⏳ Onaylanan (Çalınmadı)', '#ffaa00', approved.sort((a,b) => (b.votes||0)-(a.votes||0)))}
-    ${tableSection('❌ Reddedilen İstekler', '#ff4466', rejected.sort((a,b) => (b.votes||0)-(a.votes||0)))}
-    ${tableSection('📋 Bekleyen İstekler', '#888', pending.sort((a,b) => (b.votes||0)-(a.votes||0)))}
-    <div class="footer">Bu rapor otomatik olarak Remiks İstanbul DJ Sistemi tarafından gönderilmiştir.</div>
-  </div></body></html>`;
+  const sectionHeader = (emoji, title, count, color) => `
+    <tr><td style="padding:28px 0 0;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td style="border-left:4px solid ${color};padding:4px 0 4px 14px;">
+            <span style="font-size:16px;font-weight:700;color:#1a1a1a;font-family:Arial,sans-serif;">${emoji} ${esc(title)}</span>
+            <span style="font-size:13px;color:#888;margin-left:8px;font-family:Arial,sans-serif;">(${count} şarkı)</span>
+          </td>
+        </tr>
+      </table>
+    </td></tr>`;
+
+  const songTable = (rows) => {
+    if (!rows.length) return '';
+    const rowsHtml = rows.map((r, i) => `
+      <tr style="background:${i % 2 === 0 ? '#ffffff' : '#f8f9fa'};">
+        <td width="36" style="padding:10px 12px;text-align:center;font-size:13px;font-weight:700;color:#999;font-family:Arial,sans-serif;border-bottom:1px solid #eee;">${i + 1}</td>
+        <td style="padding:10px 12px;font-size:14px;font-weight:600;color:#1a1a1a;font-family:Arial,sans-serif;border-bottom:1px solid #eee;">${esc(r.song_name || r.title || '-')}</td>
+        <td style="padding:10px 12px;font-size:13px;color:#555;font-family:Arial,sans-serif;border-bottom:1px solid #eee;">${esc(r.artist || '-')}</td>
+        <td width="60" style="padding:10px 12px;text-align:center;border-bottom:1px solid #eee;">
+          <span style="background:#e8f5ff;color:#0077cc;font-size:13px;font-weight:700;padding:3px 10px;border-radius:12px;font-family:Arial,sans-serif;">${r.votes || 0}</span>
+        </td>
+      </tr>`).join('');
+    return `
+      <tr><td style="padding:10px 0 0;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+          <thead>
+            <tr style="background:#f1f3f5;">
+              <th width="36" style="padding:8px 12px;font-size:11px;color:#888;text-align:center;font-family:Arial,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:1px;">#</th>
+              <th style="padding:8px 12px;font-size:11px;color:#888;text-align:left;font-family:Arial,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Şarkı Adı</th>
+              <th style="padding:8px 12px;font-size:11px;color:#888;text-align:left;font-family:Arial,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Sanatçı</th>
+              <th width="60" style="padding:8px 12px;font-size:11px;color:#888;text-align:center;font-family:Arial,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Oy</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </td></tr>`;
+  };
+
+  const html = `<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Etkinlik Raporu</title>
+</head>
+<body style="margin:0;padding:0;background:#f0f2f5;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f2f5;">
+  <tr><td align="center" style="padding:32px 16px;">
+
+    <!-- KART -->
+    <table width="620" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+
+      <!-- HEADER -->
+      <tr>
+        <td style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);padding:32px 32px 28px;text-align:center;">
+          <div style="font-size:10px;letter-spacing:5px;color:#00d4ff;text-transform:uppercase;font-family:Arial,sans-serif;margin-bottom:10px;">REMİKS İSTANBUL</div>
+          <div style="font-size:26px;font-weight:900;color:#ffffff;font-family:Arial,sans-serif;margin-bottom:6px;">${esc(event.name || 'Etkinlik')}</div>
+          <div style="font-size:13px;color:#94a3b8;font-family:Arial,sans-serif;">Etkinlik Sonu Raporu &nbsp;·&nbsp; ${dateStr}</div>
+        </td>
+      </tr>
+
+      <!-- İSTATİSTİKLER -->
+      <tr>
+        <td style="padding:24px 32px 8px;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              ${statBox(allRequests.length, 'Toplam İstek', '#6366f1')}
+              ${statBox(played.length,      'Çalınan',      '#22c55e')}
+              ${statBox(totalVotes,          'Toplam Oy',    '#0ea5e9')}
+              ${statBox(approved.length,     'Onaylanan',    '#f59e0b')}
+              ${statBox(rejected.length,     'Reddedilen',   '#ef4444')}
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- İÇERİK -->
+      <tr><td style="padding:8px 32px 32px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+          ${played.length ? sectionHeader('✅', 'Çalınan Şarkılar', played.length, '#22c55e') + songTable(played) : ''}
+          ${approved.length ? sectionHeader('⏳', 'Onaylanan — Çalınmadı', approved.length, '#f59e0b') + songTable(approved) : ''}
+          ${rejected.length ? sectionHeader('❌', 'Reddedilen İstekler', rejected.length, '#ef4444') + songTable(rejected) : ''}
+          ${pending.length  ? sectionHeader('📋', 'Bekleyen İstekler',   pending.length,  '#94a3b8') + songTable(pending)  : ''}
+
+        </table>
+      </td></tr>
+
+      <!-- FOOTER -->
+      <tr>
+        <td style="background:#f8f9fa;border-top:1px solid #e5e7eb;padding:16px 32px;text-align:center;">
+          <span style="font-size:11px;color:#94a3b8;font-family:Arial,sans-serif;">Bu rapor otomatik olarak Remiks İstanbul DJ Sistemi tarafından oluşturulmuştur.</span>
+        </td>
+      </tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
 
   try {
     await gmailTransporter.sendMail({
       from: `"Remiks İstanbul DJ" <${process.env.GMAIL_USER}>`,
       to: toEmails.join(', '),
-      subject: `🎧 Etkinlik Raporu: ${event.name || 'Gecenin Özeti'} — ${new Date().toLocaleDateString('tr-TR')}`,
+      subject: `🎧 Etkinlik Raporu: ${event.name || 'Gecenin Özeti'} — ${dateStr}`,
       html,
     });
     console.log(`📧 Etkinlik raporu gönderildi → ${toEmails.join(', ')}`);
