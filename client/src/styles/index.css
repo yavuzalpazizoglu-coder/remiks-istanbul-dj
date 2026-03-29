@@ -9391,8 +9391,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
    STAGE DESIGNS — Display Page Overrides
    ═══════════════════════════════════════════════════ */
 
-/* ─── 1. CLASSIC — default, no overrides needed ─── */
-
 /* ═══ STAGE COMPONENT STYLES ═══ */
 
 /* ─── Club: Equalizer ─── */
@@ -9741,46 +9739,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
    Club & Festival korundu — diğerleri yeniden tasarlandı + 4 yeni
    ══════════════════════════════════════════════════════════════ */
 
-/* ─── 2. AURORA (was Minimal) — northern lights, deep space ─── */
-/* ─── 2. AURORA (was Minimal) — northern lights, teal glow ─── */
-.display-page.stage-minimal { background: #060810; }
-.display-page.stage-minimal .display-disco-img,
-.display-page.stage-minimal .geo-shapes,
-.display-page.stage-minimal .neon-orbs { display: none !important; }
-.display-page.stage-minimal .floating-particles { opacity: 0.18; filter: hue-rotate(160deg) saturate(2); }
-.display-page.stage-minimal::before {
-  content: ''; position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 200% 32% at 50% 30%, rgba(0,210,180,0.22) 0%, transparent 65%),
-    radial-gradient(ellipse 140% 22% at 20% 52%, rgba(0,150,220,0.16) 0%, transparent 55%),
-    radial-gradient(ellipse 120% 18% at 80% 62%, rgba(0,200,160,0.14) 0%, transparent 50%),
-    radial-gradient(ellipse 90% 12% at 50% 72%, rgba(40,180,200,0.10) 0%, transparent 50%);
-  pointer-events: none; z-index: 0;
-  animation: auroraWave 14s ease-in-out infinite;
-}
-@keyframes auroraWave {
-  0%, 100% { transform: translateY(0) scaleX(1); opacity: 0.75; }
-  33%  { transform: translateY(-18px) scaleX(1.04); opacity: 1; }
-  66%  { transform: translateY(12px) scaleX(0.96); opacity: 0.85; }
-}
-.display-page.stage-minimal::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 55% at 50% 50%, rgba(0,210,180,0.06) 0%, transparent 70%);
-  pointer-events: none; z-index: 0;
-  animation: none;
-}
-.display-page.stage-minimal .dsp-topbar { border-bottom: 1px solid rgba(0,210,180,0.12); background: rgba(6,8,16,0.55); }
-.display-page.stage-minimal .dsp-event-name { font-weight: 200; letter-spacing: 8px; color: rgba(200,240,230,0.92); text-shadow: 0 0 20px rgba(0,210,180,0.25); }
-.display-page.stage-minimal .dsp-brand-motto { letter-spacing: 6px; opacity: 0.45; font-weight: 300; color: rgba(160,230,220,0.7); }
-.display-page.stage-minimal .display-ticker-bar { background: rgba(0,20,18,0.3); border-top: 1px solid rgba(0,210,180,0.08); border-bottom: 1px solid rgba(0,210,180,0.08); }
-.display-page.stage-minimal .dtable-row { border-color: rgba(0,210,180,0.08); background: transparent; }
-.display-page.stage-minimal .dtable-row:hover { background: rgba(0,210,180,0.05); }
-.display-page.stage-minimal .dsp-card, .display-page.stage-minimal .dsp-qr-wrap {
-  background: rgba(0,12,14,0.55); border: 1px solid rgba(0,210,180,0.12);
-  backdrop-filter: blur(8px); border-radius: 8px;
-}
-.display-page.stage-minimal .dtable-votes-lg { color: rgba(0,210,180,0.9); text-shadow: 0 0 8px rgba(0,210,180,0.3); font-weight: 300; }
-
 /* ─── 3. VELVET (was Elegant) — warm bokeh, candlelight, deep burgundy ─── */
 .display-page.stage-elegant { background: linear-gradient(160deg, #0d0609 0%, #110718 40%, #0a0512 100%); }
 .display-page.stage-elegant::before {
@@ -10049,43 +10007,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
     0 0 20px rgba(var(--theme-rgb), 0.05);
 }
 
-/* ─── 6. OBSIDIAN (was Corporate) — dark slate, electric cyan line, tech grid ─── */
-.display-page.stage-corporate { background: linear-gradient(170deg, #070b11 0%, #050810 50%, #060910 100%); }
-.display-page.stage-corporate .display-bg,
-.display-page.stage-corporate .floating-particles,
-.display-page.stage-corporate .display-disco-img,
-.display-page.stage-corporate .sparkle-field,
-.display-page.stage-corporate .geo-shapes,
-.display-page.stage-corporate .neon-orbs { display: none !important; }
-.display-page.stage-corporate::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #00b4d8 20%, #00d4ff 50%, #00b4d8 80%, transparent 100%);
-  opacity: 0.9; z-index: 1;
-  box-shadow: 0 0 14px rgba(0,180,220,0.6), 0 0 32px rgba(0,180,220,0.25);
-  animation: none;
-}
-.display-page.stage-corporate::after {
-  content: ''; position: absolute; inset: 0;
-  background:
-    repeating-linear-gradient(90deg, transparent 0px, transparent 39px, rgba(0,180,220,0.022) 39px, rgba(0,180,220,0.022) 40px),
-    repeating-linear-gradient(0deg, transparent 0px, transparent 39px, rgba(0,180,220,0.015) 39px, rgba(0,180,220,0.015) 40px),
-    radial-gradient(ellipse 60% 50% at 50% 45%, rgba(0,180,220,0.07) 0%, transparent 70%);
-  pointer-events: none; z-index: 0;
-  animation: none;
-}
-.display-page.stage-corporate .dsp-topbar { background: rgba(5,8,16,0.85); border-bottom: 1px solid rgba(0,180,220,0.15); }
-.display-page.stage-corporate .dsp-event-name { font-weight: 300; letter-spacing: 4px; color: rgba(200,230,245,0.95); text-shadow: 0 0 16px rgba(0,180,220,0.18); }
-.display-page.stage-corporate .dsp-brand-motto { font-weight: 400; letter-spacing: 5px; opacity: 0.45; color: rgba(150,200,225,0.7); }
-.display-page.stage-corporate .display-ticker-bar { background: rgba(5,8,16,0.5); border-top: 1px solid rgba(0,180,220,0.1); border-bottom: 1px solid rgba(0,180,220,0.1); }
-.display-page.stage-corporate .dtable-row { background: rgba(0,180,220,0.018); border-color: rgba(0,180,220,0.09); }
-.display-page.stage-corporate .dtable-row:hover { background: rgba(0,180,220,0.05); }
-.display-page.stage-corporate .dsp-card, .display-page.stage-corporate .dsp-qr-wrap {
-  background: rgba(5,8,16,0.88); border: 1px solid rgba(0,180,220,0.14);
-  backdrop-filter: blur(16px); box-shadow: 0 2px 30px rgba(0,0,0,0.4); border-radius: 4px;
-}
-.display-page.stage-corporate .dtable-votes-lg { color: #00d4ff; text-shadow: 0 0 8px rgba(0,180,220,0.35); font-weight: 500; }
-
 /* ─── 7. CYBER — neon grid, magenta rain, cyberpunk ─── */
 .display-page.stage-cyber { background: #020004; }
 .display-page.stage-cyber .display-bg,
@@ -10125,44 +10046,6 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
   box-shadow: 0 0 28px rgba(255,0,160,0.07), inset 0 0 40px rgba(255,0,160,0.02); border-radius: 0;
 }
 .display-page.stage-cyber .dtable-votes-lg { color: #ff00a0; text-shadow: 0 0 10px rgba(255,0,160,0.55); }
-
-/* ─── 8. LOUNGE — warm amber spotlights, jazz club ─── */
-.display-page.stage-lounge { background: linear-gradient(180deg, #0c0a06 0%, #0a0804 50%, #0e0b07 100%); }
-.display-page.stage-lounge .display-disco-img,
-.display-page.stage-lounge .geo-shapes,
-.display-page.stage-lounge .neon-orbs { display: none !important; }
-.display-page.stage-lounge .floating-particles { opacity: 0.25; filter: sepia(1) saturate(1.5) hue-rotate(15deg); }
-.display-page.stage-lounge .display-bg { background: radial-gradient(circle at 50% 50%, rgba(200,140,30,0.08) 0%, transparent 50%); }
-.display-page.stage-lounge::before {
-  content: ''; position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 40% 85% at 25% 0%, rgba(220,150,40,0.26) 0%, transparent 60%),
-    radial-gradient(ellipse 35% 75% at 75% 0%, rgba(200,130,30,0.22) 0%, transparent 55%),
-    radial-gradient(ellipse 25% 55% at 50% 0%, rgba(240,170,60,0.18) 0%, transparent 50%);
-  pointer-events: none; z-index: 0;
-  animation: loungeSpot 8s ease-in-out infinite;
-}
-@keyframes loungeSpot {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; }
-}
-.display-page.stage-lounge::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 85% 45% at 50% 100%, rgba(180,100,20,0.12) 0%, transparent 60%);
-  pointer-events: none; z-index: 0;
-  animation: none;
-}
-.display-page.stage-lounge .dsp-topbar { background: linear-gradient(180deg, rgba(14,10,6,0.8) 0%, transparent 100%); border-bottom: 1px solid rgba(200,140,40,0.15); }
-.display-page.stage-lounge .dsp-event-name { font-weight: 300; letter-spacing: 5px; color: rgba(250,220,160,0.92); text-shadow: 0 0 20px rgba(200,140,40,0.25); }
-.display-page.stage-lounge .dsp-brand-motto { font-weight: 300; letter-spacing: 5px; opacity: 0.5; color: rgba(220,180,100,0.7); }
-.display-page.stage-lounge .display-ticker-bar { background: rgba(14,10,6,0.45); border-top: 1px solid rgba(200,140,40,0.12); border-bottom: 1px solid rgba(200,140,40,0.12); }
-.display-page.stage-lounge .dtable-row { border-color: rgba(200,140,40,0.09); background: rgba(180,120,30,0.04); }
-.display-page.stage-lounge .dtable-row:hover { background: rgba(200,140,40,0.08); }
-.display-page.stage-lounge .dsp-card, .display-page.stage-lounge .dsp-qr-wrap {
-  background: rgba(10,8,4,0.72); border: 1px solid rgba(200,140,40,0.18);
-  box-shadow: 0 8px 40px rgba(0,0,0,0.45); border-radius: 10px;
-}
-.display-page.stage-lounge .dtable-votes-lg { color: rgba(240,180,80,0.95); text-shadow: 0 0 8px rgba(200,140,40,0.35); }
 
 /* ─── 9. RAVE — UV blacklight, fluorescent streaks, psychedelic ─── */
 .display-page.stage-rave { background: #050008; }

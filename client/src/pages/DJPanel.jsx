@@ -1264,14 +1264,10 @@ export default function DJPanel() {
                           <label className="djc-field-label">{lang === 'tr' ? 'Sahne Tasarımı' : 'Stage Design'}</label>
                           <div className="djc-stage-design-grid">
                             {[
-                              { id: 'classic',   tr: 'Klasik',   en: 'Classic',  gradient: 'linear-gradient(135deg, #1a1a2e 0%, #0a0a1a 100%)', accent: '#00d4ff' },
-                              { id: 'minimal',   tr: 'Aurora',   en: 'Aurora',   gradient: 'linear-gradient(135deg, #060810 0%, #0a1418 100%)', accent: '#00d4c8' },
                               { id: 'elegant',   tr: 'Velvet',   en: 'Velvet',   gradient: 'linear-gradient(135deg, #0d0609 0%, #110718 100%)', accent: '#c05070' },
                               { id: 'club',      tr: 'Club',     en: 'Club',     gradient: 'linear-gradient(135deg, #1a0005 0%, #000820 100%)', accent: '#ff2060' },
                               { id: 'festival',  tr: 'Festival', en: 'Festival', gradient: 'linear-gradient(135deg, #1a1000 0%, #001020 100%)', accent: '#ff8c00' },
-                              { id: 'corporate', tr: 'Obsidian', en: 'Obsidian', gradient: 'linear-gradient(135deg, #070b11 0%, #050810 100%)', accent: '#00d4ff' },
                               { id: 'cyber',     tr: 'Cyber',    en: 'Cyber',    gradient: 'linear-gradient(135deg, #020004 0%, #100010 100%)', accent: '#ff00a0' },
-                              { id: 'lounge',    tr: 'Lounge',   en: 'Lounge',   gradient: 'linear-gradient(135deg, #0c0a06 0%, #0a0804 100%)', accent: '#c88c28' },
                               { id: 'rave',      tr: 'Rave',     en: 'Rave',     gradient: 'linear-gradient(135deg, #050008 0%, #0a0020 100%)', accent: '#8c00dc' },
                               { id: 'cinema',    tr: 'Cinema',   en: 'Cinema',   gradient: 'linear-gradient(135deg, #030303 0%, #080808 100%)', accent: '#ffffff' },
                             ].map(d => (
