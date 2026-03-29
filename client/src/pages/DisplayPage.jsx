@@ -1017,7 +1017,7 @@ function EventSummary({ requests, lang, eventName }) {
   );
 }
 
-function LiveStat({ icon, value, label }) {
+function LiveStat({ value, label }) {
   const [flash, setFlash] = useState(false);
   const prevVal = useRef(value);
   useEffect(() => {
@@ -1030,7 +1030,6 @@ function LiveStat({ icon, value, label }) {
   }, [value]);
   return (
     <div className={`dsp-live-stat${flash ? ' dsp-live-stat-flash' : ''}`}>
-      <span className="dsp-live-stat-icon">{icon}</span>
       <span className="dsp-live-stat-val">{value}</span>
       <span className="dsp-live-stat-lbl">{label}</span>
     </div>
@@ -1579,18 +1578,18 @@ export default function DisplayPage() {
           return (
           <div className="dsp-beatbox">
             {/* Sol QR + Sol İstatistikler */}
-            <div className="dsp-beatbox-qr">
-              <div className="dsp-beatbox-stats">
-                <LiveStat icon="👥" value={connectedCount} label={lang === 'tr' ? 'Canlı' : 'Live'} />
-                <LiveStat icon="📋" value={requests.length} label={lang === 'tr' ? 'İstek' : 'Requests'} />
-                <LiveStat icon="🗳️" value={totalVotesStat} label={lang === 'tr' ? 'Oy' : 'Votes'} />
+              <div className="dsp-beatbox-qr">
+                <div className="dsp-beatbox-qr-wrap">
+                  <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
+                </div>
+                <div className="dsp-beatbox-qr-lbl">{lang === 'tr' ? 'QR ile Tara' : 'Scan QR'}</div>
+                <div className="dsp-beatbox-qr-sub">{lang === 'tr' ? 'İsteğini Gönder!' : 'Send Request!'}</div>
+                <div className="dsp-beatbox-stats">
+                  <LiveStat value={connectedCount} label={lang === 'tr' ? 'Canlı' : 'Live'} />
+                  <LiveStat value={requests.length} label={lang === 'tr' ? 'İstek' : 'Requests'} />
+                  <LiveStat value={totalVotesStat} label={lang === 'tr' ? 'Oy' : 'Votes'} />
+                </div>
               </div>
-              <div className="dsp-beatbox-qr-wrap">
-                <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
-              </div>
-              <div className="dsp-beatbox-qr-lbl">{lang === 'tr' ? 'QR ile Tara' : 'Scan QR'}</div>
-              <div className="dsp-beatbox-qr-sub">{lang === 'tr' ? 'İsteğini Gönder!' : 'Send Request!'}</div>
-            </div>
 
               {/* Merkez: Altın Saatler + Şarkı Listesi */}
               <div className="dsp-beatbox-songs">
@@ -1650,15 +1649,15 @@ export default function DisplayPage() {
 
               {/* Sağ QR + Sağ İstatistikler */}
               <div className="dsp-beatbox-qr">
-                <div className="dsp-beatbox-stats">
-                  <LiveStat icon="🎵" value={playedCount} label={lang === 'tr' ? 'Çalındı' : 'Played'} />
-                  <LiveStat icon="🏆" value={topVotesStat} label={lang === 'tr' ? '1. Sıra' : 'Top'} />
-                </div>
                 <div className="dsp-beatbox-qr-wrap">
                   <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
                 <div className="dsp-beatbox-qr-lbl">{lang === 'tr' ? 'QR ile Tara' : 'Scan QR'}</div>
                 <div className="dsp-beatbox-qr-sub">{lang === 'tr' ? 'İsteğini Gönder!' : 'Send Request!'}</div>
+                <div className="dsp-beatbox-stats">
+                  <LiveStat value={playedCount} label={lang === 'tr' ? 'Çalındı' : 'Played'} />
+                  <LiveStat value={topVotesStat} label={lang === 'tr' ? '1. Sıra' : 'Top'} />
+                </div>
               </div>
             </div>
           );
