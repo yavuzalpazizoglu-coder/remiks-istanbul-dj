@@ -1556,7 +1556,7 @@ export default function DisplayPage() {
               {/* LEFT: QR (sade, küçük) */}
               <div className="dsp-qr-side">
                 <div className="dsp-qr-side-box">
-                  <QRCodeSVG value={requestUrl} size={160} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
+                  <QRCodeSVG value={requestUrl} size={180} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
                 <div className="dsp-qr-side-label">
                   {lang === 'tr' ? 'QR ile Tara' : 'Scan QR Code'}

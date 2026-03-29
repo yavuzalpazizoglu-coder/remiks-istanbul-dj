@@ -4201,8 +4201,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(4px, 0.5vh, 8px);
-  min-width: clamp(200px, 24vw, 420px);
+  padding: clamp(3px, 0.4vh, 6px);
+  min-width: clamp(150px, 18vw, 315px);
 }
 .dsp-logo-inline::after {
   content: '';
@@ -4210,19 +4210,19 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   bottom: -8px; left: 50%;
   transform: translateX(-50%);
   width: 85%;
-  height: clamp(12px, 2vh, 28px);
+  height: clamp(10px, 1.5vh, 20px);
   background: radial-gradient(ellipse at center, rgba(var(--theme-rgb), 0.22) 0%, transparent 70%);
   pointer-events: none;
   filter: blur(4px);
 }
 .dsp-logo-inline-img {
-  height: clamp(80px, 14vh, 200px);
-  max-width: clamp(250px, 32vw, 600px);
+  height: clamp(60px, 10.5vh, 150px);
+  max-width: clamp(188px, 24vw, 450px);
   object-fit: contain;
   display: block;
 }
 .dsp-logo-inline-text {
-  font-size: clamp(40px, 5.5vw, 80px);
+  font-size: clamp(30px, 4.1vw, 60px);
   font-weight: 800;
   line-height: 1;
   display: inline-flex;
@@ -4306,17 +4306,27 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(6px, 1vh, 14px);
+  gap: clamp(8px, 1.2vh, 18px);
   background: rgba(255,255,255,0.025);
   border: 1px solid rgba(var(--theme-rgb), 0.1);
   border-radius: clamp(8px, 1vw, 20px);
-  padding: clamp(10px, 1.5vh, 24px) clamp(8px, 0.8vw, 16px);
+  padding: clamp(12px, 2vh, 28px) clamp(8px, 0.8vw, 16px);
 }
 .dsp-qr-side-box {
-  padding: clamp(5px, 0.8vh, 12px);
+  width: min(80%, 180px);
+  aspect-ratio: 1;
+  padding: clamp(6px, 0.9vh, 14px);
   background: #fff;
   border-radius: clamp(6px, 0.6vw, 14px);
-  box-shadow: 0 0 clamp(10px, 1.5vw, 32px) rgba(var(--theme-rgb), 0.15);
+  box-shadow: 0 0 clamp(10px, 1.5vw, 32px) rgba(var(--theme-rgb), 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dsp-qr-svg {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
 }
 .dsp-qr-side-label {
   font-family: var(--font-display);
