@@ -167,7 +167,34 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const server = createServer(app);
 
-const allowedOrigin = process.env.APP_URL || '*';
+/* ── Etkinlik sonu JSON yedek ── */
+function saveEventBackup(event, allRequests) {
+  try {
+    const backupDir = path.join(__dirname, 'backups');
+    if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
+    const dateStr = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const filename = `${event.slug}_${dateStr}.json`;
+    const data = JSON.stringify({ event, requests: allRequests, exportedAt: new Date().toISOString() }, null, 2);
+    fs.writeFileSync(path.join(backupDir, filename), data, 'utf8');
+    console.log(`✅ Etkinlik yedeği kaydedildi: backups/${filename}`);
+  } catch (err) {
+    console.error('❌ Yedek kaydedilemedi:', err.message);
+  }
+}
+
+/* ── Global hata yakalama ── */
+process.on('uncaughtException', (err) => {
+  console.error('❌ uncaughtException:', err.message, err.stack);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('❌ unhandledRejection:', reason);
+});
+
+const isProduction = process.env.NODE_ENV === 'production';
+if (isProduction && !process.env.APP_URL) {
+  console.warn('⚠️  UYARI: APP_URL env değişkeni tanımlı değil — CORS tüm originlere açık!');
+}
+const allowedOrigin = process.env.APP_URL || (isProduction ? false : '*');
 const io = new Server(server, {
   cors: { origin: allowedOrigin, methods: ['GET', 'POST'] },
 });
@@ -274,6 +301,7 @@ app.put('/api/events/:slug/status', djAuth, (req, res) => {
     if (status === 'ended') {
       const allRequests = db.getAllRequests(event.id);
       sendEventReport(event, allRequests);
+      saveEventBackup(event, allRequests);
     }
 
     res.json(event);
@@ -388,7 +416,7 @@ app.get('/api/events/:slug/requests', (req, res) => {
 
 // Votes
 app.post('/api/requests/:id/vote', (req, res) => {
-  if (!rateLimit(req.ip, 60)) return res.status(429).json({ error: 'Too many votes' });
+  if (!rateLimit(req.ip, 10)) return res.status(429).json({ error: 'Too many votes' });
 
   try {
     const { deviceId } = req.body;
@@ -498,7 +526,7 @@ const logoUpload = multer({
       cb(null, `${req.params.slug}${ext}`);
     },
   }),
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowed = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'];
     const ext = path.extname(file.originalname).toLowerCase();
