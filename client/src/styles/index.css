@@ -4847,12 +4847,14 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   align-items: center;
   gap: clamp(8px, 1vw, 16px);
   padding: clamp(7px, 1vh, 14px) clamp(10px, 1.2vw, 20px);
-  margin: clamp(3px, 0.45vh, 7px) 0;
+  margin: clamp(3px, 0.45vh, 7px) auto;
   border-radius: clamp(6px, 0.7vw, 12px);
   border: 1px solid rgba(var(--theme-rgb), 0.18);
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
+  width: clamp(220px, 58%, 100%);
+  align-self: center;
   box-shadow:
     0 clamp(3px,0.5vh,7px) clamp(12px,1.8vw,28px) rgba(0,0,0,0.45),
     inset 0 1px 0 rgba(255,255,255,0.06),
@@ -5331,45 +5333,37 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-family: var(--font-display);
   font-weight: 900;
   line-height: 1;
-  width:  clamp(22px, 3.5vh, 42px);
-  height: clamp(22px, 3.5vh, 42px);
+  width:  clamp(18px, 2.8vh, 34px);
+  height: clamp(18px, 2.8vh, 34px);
   border-radius: 50%;
   flex-shrink: 0;
 }
 .dsp-rank-badge-1 {
-  font-size: clamp(15px, 2.8vh, 34px);
+  font-size: clamp(12px, 2.2vh, 26px);
   background: radial-gradient(circle at 38% 34%, #ffe160 0%, #d4a400 55%, #7a5500 100%);
   color: #3a2600;
   box-shadow:
-    0 0 clamp(6px,1.2vh,16px) rgba(255,200,0,0.65),
-    0 0 clamp(12px,2.4vh,32px) rgba(255,150,0,0.30),
-    inset 0 1px 1px rgba(255,255,220,0.55);
-  animation: rankOnePulse 2.8s ease-in-out infinite,
-             badgeGoldSpin 12s linear infinite;
-  border: 2px solid rgba(255,230,80,0.55);
+    0 0 clamp(5px,1vh,12px) rgba(255,200,0,0.50),
+    inset 0 1px 1px rgba(255,255,220,0.45);
+  border: 2px solid rgba(255,230,80,0.45);
 }
 .dsp-rank-badge-2 {
-  font-size: clamp(13px, 2.4vh, 28px);
+  font-size: clamp(11px, 1.9vh, 22px);
   background: radial-gradient(circle at 38% 34%, #e8f0f8 0%, #94afc8 50%, #3a5068 100%);
   color: #1a2c40;
   box-shadow:
-    0 0 clamp(4px,0.9vh,12px) rgba(140,190,240,0.50),
-    inset 0 1px 1px rgba(255,255,255,0.50);
-  border: 2px solid rgba(180,215,250,0.40);
+    0 0 clamp(4px,0.9vh,10px) rgba(140,190,240,0.40),
+    inset 0 1px 1px rgba(255,255,255,0.45);
+  border: 2px solid rgba(180,215,250,0.35);
 }
 .dsp-rank-badge-3 {
-  font-size: clamp(12px, 2.1vh, 24px);
+  font-size: clamp(10px, 1.7vh, 20px);
   background: radial-gradient(circle at 38% 34%, #e8a86a 0%, #b06020 55%, #5a2c00 100%);
   color: #2a1200;
   box-shadow:
-    0 0 clamp(4px,0.9vh,12px) rgba(200,120,40,0.50),
-    inset 0 1px 1px rgba(255,200,120,0.45);
-  border: 2px solid rgba(210,130,50,0.40);
-}
-@keyframes badgeGoldSpin {
-  0%   { box-shadow: 0 0 clamp(6px,1.2vh,16px) rgba(255,200,0,0.65), 0 0 clamp(14px,2.8vh,36px) rgba(255,150,0,0.28), inset 0 1px 1px rgba(255,255,220,0.55); }
-  50%  { box-shadow: 0 0 clamp(12px,2.4vh,30px) rgba(255,220,0,0.85), 0 0 clamp(24px,4.8vh,60px) rgba(255,160,0,0.42), inset 0 1px 1px rgba(255,255,200,0.70); }
-  100% { box-shadow: 0 0 clamp(6px,1.2vh,16px) rgba(255,200,0,0.65), 0 0 clamp(14px,2.8vh,36px) rgba(255,150,0,0.28), inset 0 1px 1px rgba(255,255,220,0.55); }
+    0 0 clamp(3px,0.7vh,9px) rgba(200,120,40,0.40),
+    inset 0 1px 1px rgba(255,200,120,0.40);
+  border: 2px solid rgba(210,130,50,0.35);
 }
 
 /* Satır grubu rank renkleri */
