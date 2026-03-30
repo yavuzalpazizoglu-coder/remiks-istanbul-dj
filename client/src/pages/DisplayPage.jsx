@@ -920,13 +920,14 @@ function SongCard({ req, rank, lang }) {
       <div className="dsp-card-votes">
         <VoteFloat count={req.votes} />
         <div className="dsp-card-votes-box">
+          <span className={`dsp-votes-arrow ${voteFlash ? 'dsp-votes-arrow-flash' : ''}`}>↑</span>
           <motion.span
             className={`dsp-card-votes-num ${isTop3 ? 'dsp-card-votes-top' : ''}`}
             key={req.votes}
-            initial={{ scale: 1.3 }}
+            initial={{ scale: 1.2 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 0.35 }}
-          >{req.votes}</motion.span>
+            transition={{ duration: 0.3 }}
+          >{String(req.votes).padStart(3, '0')}</motion.span>
         </div>
         <div className="dsp-card-chg">
           {showDelta && delta > 0
