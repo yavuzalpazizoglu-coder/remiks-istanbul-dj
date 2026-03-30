@@ -30,6 +30,7 @@ export default function DJPanel() {
   const [brandSaving, setBrandSaving] = useState(false);
   const [tickerTexts, setTickerTexts] = useState('');
   const [tickerSaving, setTickerSaving] = useState(false);
+  const [tickerFontSize, setTickerFontSize] = useState(0);
   const [requestLimit, setRequestLimit] = useState(2);
   const [theme, setTheme] = useState('cyan');
   const [animationLevel, setAnimationLevel] = useState('high');
@@ -1232,6 +1233,12 @@ export default function DJPanel() {
                               <input type="file" accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp" hidden
                                 onChange={handleLogoUpload} />
                             </label>
+                            {/* Ticker punto ayarlayıcı */}
+                            <div className="djc-font-size-ctrl" title={lang === 'tr' ? 'Kayan yazı punto' : 'Ticker font size'}>
+                              <button className="djc-font-sz-btn" onClick={() => { const v = Math.max(-4, tickerFontSize - 1); setTickerFontSize(v); socketRef.current?.emit('ticker-font-size', { delta: v }); }}>A−</button>
+                              <span className="djc-font-sz-val">{tickerFontSize > 0 ? `+${tickerFontSize}` : tickerFontSize}</span>
+                              <button className="djc-font-sz-btn" onClick={() => { const v = Math.min(8, tickerFontSize + 1); setTickerFontSize(v); socketRef.current?.emit('ticker-font-size', { delta: v }); }}>A+</button>
+                            </div>
                           </div>
                         </div>
                       </div>

@@ -3489,6 +3489,41 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   color: rgba(255,255,255,0.9);
 }
 
+/* ─── Ticker punto ayarlayıcı ─── */
+.djc-font-size-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 4px;
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.03);
+  overflow: hidden;
+}
+.djc-font-sz-btn {
+  padding: 5px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1;
+}
+.djc-font-sz-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.9);
+}
+.djc-font-sz-val {
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  min-width: 18px;
+  text-align: center;
+  line-height: 1;
+}
+
 /* ─── Event Logo on Display ─── */
 .dsp-event-logo {
   max-height: 48px;
@@ -5110,6 +5145,27 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-card-gold .dsp-card-rank    { border-right-color: rgba(200,150,0,0.3); }
 .dsp-card-gold .dsp-card-votes   { border-left-color: rgba(200,150,0,0.25); }
 
+/* #1 ALTIN — çerçeve alev glow (::after, sadece opacity animasyonu) */
+.dsp-card-gold::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 2px solid rgba(255,185,0,0.0);
+  box-shadow:
+    0 0 8px  3px rgba(255,160,0,0.55),
+    0 0 18px 5px rgba(255,120,0,0.35),
+    0 0 32px 8px rgba(255,80,0,0.18);
+  opacity: 0.5;
+  animation: glowGold 2s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes glowGold {
+  0%   { opacity: 0.35; }
+  100% { opacity: 1;    }
+}
+
 /* ─ #2 GÜMÜŞ ─ */
 .dsp-card-silver {
   background: linear-gradient(135deg,
@@ -5148,6 +5204,26 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-card-silver .dsp-card-rank    { border-right-color: rgba(100,160,210,0.28); }
 .dsp-card-silver .dsp-card-votes   { border-left-color: rgba(100,160,210,0.22); }
 
+/* #2 GÜMÜŞ — çerçeve alev glow */
+.dsp-card-silver::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  box-shadow:
+    0 0 6px  2px rgba(160,210,255,0.45),
+    0 0 14px 4px rgba(100,170,240,0.28),
+    0 0 24px 6px rgba(60,120,200,0.14);
+  opacity: 0.4;
+  animation: glowSilver 3s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes glowSilver {
+  0%   { opacity: 0.25; }
+  100% { opacity: 0.80; }
+}
+
 /* ─ #3 BRONZ ─ */
 .dsp-card-bronze {
   background: linear-gradient(135deg,
@@ -5185,6 +5261,26 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-card-bronze .dsp-card-votes-num { color: #d08040; }
 .dsp-card-bronze .dsp-card-rank    { border-right-color: rgba(180,100,30,0.28); }
 .dsp-card-bronze .dsp-card-votes   { border-left-color: rgba(180,100,30,0.22); }
+
+/* #3 BRONZ — çerçeve alev glow (en hafif) */
+.dsp-card-bronze::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  box-shadow:
+    0 0 5px  2px rgba(210,120,40,0.38),
+    0 0 12px 3px rgba(180,90,20,0.22),
+    0 0 20px 5px rgba(140,60,10,0.12);
+  opacity: 0.35;
+  animation: glowBronze 4.5s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes glowBronze {
+  0%   { opacity: 0.20; }
+  100% { opacity: 0.65; }
+}
 
 /* ── Rank rozeti — sıralama pozisyonu, oy sayısından görsel olarak ayrı ── */
 .dsp-card-rank {
@@ -6055,11 +6151,11 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 .ticker-item {
   display: inline-flex; align-items: center; gap: clamp(3px, 0.4vw, 10px);
-  font-size: clamp(6px, 0.8vw, 22px); color: var(--text-secondary);
+  font-size: clamp(10px, 1.2vw, 26px); color: var(--text-secondary);
   flex-shrink: 0;
 }
 
-.ticker-item .ticker-emoji { font-size: clamp(7px, 0.9vw, 20px); }
+.ticker-item .ticker-emoji { font-size: clamp(11px, 1.3vw, 24px); }
 .ticker-item .ticker-rank {
   color: rgba(255,255,255,0.35);
   font-size: 0.8em;

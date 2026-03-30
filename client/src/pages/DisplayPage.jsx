@@ -890,10 +890,7 @@ function SongCard({ req, rank, lang }) {
       {/* Rank — sıralama rozeti */}
       <div className={`dsp-card-rank dsp-card-rank-${tier}`}>
         {isTop3 ? (
-          <>
-            <span className={`flame-icon flame-${rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze'}`} />
-            <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
-          </>
+          <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
         ) : (
           <>
             <span className="dsp-card-rank-label">#</span>
@@ -1084,7 +1081,7 @@ function Ticker({ requests, lang, tickerTexts }) {
         {doubled.map((item, i) => {
           const rank = (i % items.length) + 1;
           return (
-            <div key={`ticker-${i}`} className="ticker-item">
+            <div key={`ticker-${i}`} className="ticker-item" style={tickerFontDelta !== 0 ? { fontSize: `calc(clamp(10px, 1.2vw, 26px) + ${tickerFontDelta}px)` } : undefined}>
               {hasRequests ? (
                 <>
                   <span className="ticker-emoji">🎵</span>
@@ -1125,6 +1122,7 @@ export default function DisplayPage() {
   const [connectedCount, setConnectedCount] = useState(0);
   const [brandText, setBrandText] = useState('');
   const [tickerTexts, setTickerTexts] = useState('');
+  const [tickerFontDelta, setTickerFontDelta] = useState(0);
   const [allRequests, setAllRequests] = useState([]);
   const [playedId, setPlayedId] = useState(null);
   const [playedSong, setPlayedSong] = useState(null);   // tam nesne — listeden çıksa da göster
@@ -1248,6 +1246,7 @@ export default function DisplayPage() {
     socket.on('language-changed', ({ language }) => setLang(language));
     socket.on('brand-updated', ({ brand_text }) => setBrandText(brand_text || ''));
     socket.on('ticker-updated', ({ ticker_texts }) => setTickerTexts(ticker_texts || ''));
+    socket.on('ticker-font-size', ({ delta }) => setTickerFontDelta(delta));
     socket.on('theme-changed', ({ theme }) => setTheme(theme));
     socket.on('animation-changed', ({ level }) => setAnimLevel(level));
     socket.on('stage-design-changed', ({ design }) => setStageDesign(design));
@@ -1306,6 +1305,7 @@ export default function DisplayPage() {
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('now-playing');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
+      socket.off('ticker-font-size');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('ceremony'); socket.off('music-mode');
       socket.off('crew-chat');
       clearTimeout(playedSongTimer.current);
