@@ -756,7 +756,7 @@ function VoteFloat({ count }) {
   ));
 }
 
-function NowPlayingBar({ req, lang }) {
+function NowPlayingBar({ req, lang, fading }) {
   const [flash, setFlash] = useState(false);
   const [slotActive, setSlotActive] = useState(false);
   const [slotLanded, setSlotLanded] = useState(false);
@@ -780,7 +780,7 @@ function NowPlayingBar({ req, lang }) {
   }, [req]);
 
   return (
-    <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''} ${slotLanded ? 'slot-landed' : ''}`}>
+    <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''} ${slotLanded ? 'slot-landed' : ''} ${fading ? 'dsp-np-stage-fadeout' : ''}`}>
 
       {/* Sol: LIVE badge + Albüm + Şarkı Bilgisi */}
       <div className="dsp-np-stage-left">
@@ -1127,6 +1127,7 @@ export default function DisplayPage() {
   const [allRequests, setAllRequests] = useState([]);
   const [playedId, setPlayedId] = useState(null);
   const [playedSong, setPlayedSong] = useState(null);   // tam nesne — listeden çıksa da göster
+  const [playedSongFading, setPlayedSongFading] = useState(false);
   const playedSongTimer = useRef(null);
   const [playedCount, setPlayedCount] = useState(0);
   const [theme, setTheme] = useState('cyan');
@@ -1199,6 +1200,7 @@ export default function DisplayPage() {
     // DJ ▶ Çal tıkladığında — bar hemen açılır, listeden çıkar
     socket.on('now-playing', (req) => {
       setPlayedSong(req);
+      setPlayedSongFading(false);
       setPlayedId(req.id);
       clearTimeout(playedSongTimer.current);
     });
@@ -1206,13 +1208,18 @@ export default function DisplayPage() {
     socket.on('request-played', (req) => {
       setPlayedId(req.id);
       setPlayedSong(req);
+      setPlayedSongFading(false);
       setPlayedCount(c => c + 1);
       clearTimeout(playedSongTimer.current);
-      // 62 sn sonra bar kapanır
+      // 57sn sonra fade başlar, 60sn'de tamamen silinir (3sn geçiş)
       playedSongTimer.current = setTimeout(() => {
-        setPlayedId(null);
-        setPlayedSong(null);
-      }, 60000);
+        setPlayedSongFading(true);
+        setTimeout(() => {
+          setPlayedId(null);
+          setPlayedSong(null);
+          setPlayedSongFading(false);
+        }, 3000);
+      }, 57000);
     });
 
     socket.on('event-status', ({ status, countdown_end }) => {
@@ -1638,7 +1645,7 @@ export default function DisplayPage() {
                 </div>
 
                 {/* NOW PLAYING — sabit çerçeve, her zaman görünür */}
-                <NowPlayingBar req={playedSong} lang={lang} />
+                <NowPlayingBar req={playedSong} lang={lang} fading={playedSongFading} />
 
                 {requests.length === 0 ? (
                   <div className="dsp-table-empty">

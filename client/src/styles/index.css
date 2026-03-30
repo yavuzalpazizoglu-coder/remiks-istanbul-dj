@@ -4859,6 +4859,11 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
     0 clamp(3px,0.5vh,7px) clamp(12px,1.8vw,28px) rgba(0,0,0,0.45),
     inset 0 1px 0 rgba(255,255,255,0.06),
     inset 0 -1px 0 rgba(0,0,0,0.3);
+  transition: opacity 3s ease-out;
+}
+.dsp-np-stage-fadeout {
+  opacity: 0;
+  pointer-events: none;
 }
 /* Waiting — çift border + parlama animasyonu */
 .dsp-np-stage-waiting {
