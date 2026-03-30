@@ -758,6 +758,8 @@ function VoteFloat({ count }) {
 
 function NowPlayingBar({ req, lang }) {
   const [flash, setFlash] = useState(false);
+  const [slotActive, setSlotActive] = useState(false);
+  const [slotLanded, setSlotLanded] = useState(false);
   const prevId = useRef(null);
 
   useEffect(() => {
@@ -765,13 +767,20 @@ function NowPlayingBar({ req, lang }) {
       setFlash(true);
       prevId.current = req.id;
       setTimeout(() => setFlash(false), 1800);
+
+      // Slot efekti
+      setSlotActive(false);
+      setSlotLanded(false);
+      requestAnimationFrame(() => requestAnimationFrame(() => setSlotActive(true)));
+      setTimeout(() => { setSlotLanded(true); }, 1200);
+      setTimeout(() => { setSlotLanded(false); setSlotActive(false); }, 1800);
     } else if (!req) {
       prevId.current = null;
     }
   }, [req]);
 
   return (
-    <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''}`}>
+    <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''} ${slotLanded ? 'slot-landed' : ''}`}>
 
       {/* Sol: LIVE badge + Albüm + Şarkı Bilgisi */}
       <div className="dsp-np-stage-left">
@@ -809,10 +818,10 @@ function NowPlayingBar({ req, lang }) {
         {/* Şarkı adı + sanatçı */}
         <div className="dsp-np-stage-info">
           {req ? (
-            <>
+            <div className={slotActive ? 'dsp-np-slot-spin' : ''}>
               <div className="dsp-np-stage-song">{req.song_name}</div>
               {req.artist && <div className="dsp-np-stage-artist">{req.artist}</div>}
-            </>
+            </div>
           ) : (
             <div className="dsp-np-stage-waiting-text">
               {lang === 'tr' ? 'Şarkı bekleniyor...' : 'Waiting for a song...'}
@@ -881,7 +890,10 @@ function SongCard({ req, rank, lang }) {
       {/* Rank — sıralama rozeti */}
       <div className={`dsp-card-rank dsp-card-rank-${tier}`}>
         {isTop3 ? (
-          <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
+          <>
+            <span className={`flame-icon flame-${rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze'}`} />
+            <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
+          </>
         ) : (
           <>
             <span className="dsp-card-rank-label">#</span>
