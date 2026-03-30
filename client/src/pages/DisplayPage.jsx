@@ -1484,7 +1484,7 @@ export default function DisplayPage() {
       {/* Club: gece mavisi + cyan equalizer + lazer + strobe */}
       {stageDesign === 'club' && <>
         <div className="display-bg" />
-        <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
+        <img src="/logos/disco-ball-bg-opt.jpg" alt="" className="display-disco-img" />
         {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb="0,180,255" count={10} /></>}
         {animLevel === 'medium' && <><ClubEqualizer themeRgb="0,180,255" /><GeoShapes themeRgb="0,160,255" /><DiscoParticles themeRgb="0,200,255" /></>}
         {animLevel === 'high' && <><ClubEqualizer themeRgb="0,180,255" /><ClubLasers themeRgb="0,200,255" /><ClubStrobe /><DiscoParticles themeRgb="0,200,255" /><Sparkles themeRgb="0,220,255" count={30} /></>}
@@ -1493,7 +1493,7 @@ export default function DisplayPage() {
       {/* Festival: sıcak turuncu/altın spotlar + konfeti + dalgalar */}
       {stageDesign === 'festival' && <>
         <div className="display-bg" />
-        <img src="/logos/disco-ball-bg.png" alt="" className="display-disco-img" />
+        <img src="/logos/disco-ball-bg-opt.jpg" alt="" className="display-disco-img" />
         {animLevel === 'low' && <><FestivalSpotlights themeRgb="255,120,0" /><Sparkles themeRgb="255,160,0" count={10} /></>}
         {animLevel === 'medium' && <><FestivalSpotlights themeRgb="255,100,0" /><FestivalColorBars themeRgb="255,140,0" /><ClubEqualizer themeRgb="255,160,0" /><Sparkles themeRgb="255,200,0" count={18} /></>}
         {animLevel === 'high' && <><FestivalSpotlights themeRgb="255,80,0" /><FestivalConfetti /><FestivalColorBars themeRgb="255,120,0" /><FestivalWaves themeRgb="255,100,0" /><ClubEqualizer themeRgb="255,160,0" /><Sparkles themeRgb="255,200,0" count={25} /></>}
