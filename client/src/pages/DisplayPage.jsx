@@ -1060,7 +1060,7 @@ function LiveStat({ value, label }) {
   );
 }
 
-function Ticker({ requests, lang, tickerTexts }) {
+function Ticker({ requests, lang, tickerTexts, fontDelta = 0 }) {
   const hasRequests = requests.length > 0;
   const customLines = (tickerTexts || '').split('\n').map(s => s.trim()).filter(Boolean);
 
@@ -1081,7 +1081,7 @@ function Ticker({ requests, lang, tickerTexts }) {
         {doubled.map((item, i) => {
           const rank = (i % items.length) + 1;
           return (
-            <div key={`ticker-${i}`} className="ticker-item" style={tickerFontDelta !== 0 ? { fontSize: `calc(clamp(10px, 1.2vw, 26px) + ${tickerFontDelta}px)` } : undefined}>
+            <div key={`ticker-${i}`} className="ticker-item" style={fontDelta !== 0 ? { fontSize: `calc(clamp(10px, 1.2vw, 26px) + ${fontDelta}px)` } : undefined}>
               {hasRequests ? (
                 <>
                   <span className="ticker-emoji">🎵</span>
@@ -1567,7 +1567,7 @@ export default function DisplayPage() {
         </div>
 
         {/* ─── Ticker (always visible) ─── */}
-        <Ticker requests={requests} lang={lang} tickerTexts={tickerTexts} />
+        <Ticker requests={requests} lang={lang} tickerTexts={tickerTexts} fontDelta={tickerFontDelta} />
 
         {/* ─── WAITING ─── */}
         {event.status === 'waiting' && (
