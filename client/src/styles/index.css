@@ -5019,12 +5019,12 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dsp-np-stage-song {
   font-family: var(--font-display);
-  font-size: clamp(13px, 2vh, 24px);
+  font-size: clamp(10px, 1.55vh, 19px);
   font-weight: 800; color: #fff;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.1;
 }
 .dsp-np-stage-artist {
-  font-size: clamp(9px, 1.1vh, 14px); color: rgba(255,255,255,0.5);
+  font-size: clamp(7px, 0.92vh, 12px); color: rgba(255,255,255,0.5);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .dsp-np-stage-waiting-text {
@@ -5402,7 +5402,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-size: clamp(10px, 1.55vh, 19px); font-weight: 700; color: rgba(255,255,255,0.92);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.15;
 }
-.dsp-card-song-top { font-size: clamp(11px, 1.7vh, 21px); font-weight: 800; color: #fff; }
+.dsp-card-song-top { font-size: clamp(10px, 1.55vh, 19px); font-weight: 800; color: #fff; }
 .dsp-card-artist {
   font-size: clamp(7px, 0.92vh, 12px); color: rgba(255,255,255,0.4);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
