@@ -596,9 +596,11 @@ function emitRoomCount(eventSlug) {
 }
 
 io.on('connection', (socket) => {
-  socket.on('join-event', ({ eventSlug, role }) => {
+  socket.on('join-event', ({ eventSlug, role } = {}) => {
+    if (!eventSlug || typeof eventSlug !== 'string') return;
+    const safeRole = ['dj', 'reji', 'display', 'request'].includes(role) ? role : 'guest';
     socket.join(eventSlug);
-    socket.data.role = role;
+    socket.data.role = safeRole;
     socket.data.eventSlug = eventSlug;
     emitRoomCount(eventSlug);
 
