@@ -668,6 +668,13 @@ io.on('connection', (socket) => {
     io.to(eventSlug).emit('crew-chat', payload);
   });
 
+  socket.on('ticker-font-size', ({ delta }) => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug) return;
+    const safeDelta = Math.min(8, Math.max(-4, Number(delta) || 0));
+    io.to(eventSlug).emit('ticker-font-size', { delta: safeDelta });
+  });
+
   socket.on('display-card', (data) => {
     const { eventSlug } = socket.data;
     if (!eventSlug) return;

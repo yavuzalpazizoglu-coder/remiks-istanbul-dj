@@ -1235,9 +1235,9 @@ export default function DJPanel() {
                             </label>
                             {/* Ticker punto ayarlayıcı */}
                             <div className="djc-font-size-ctrl" title={lang === 'tr' ? 'Kayan yazı punto' : 'Ticker font size'}>
-                              <button className="djc-font-sz-btn" onClick={() => { const v = Math.max(-4, tickerFontSize - 1); setTickerFontSize(v); socketRef.current?.emit('ticker-font-size', { delta: v }); }}>A−</button>
+                              <button className="djc-font-sz-btn" onClick={() => { const v = Math.max(-4, tickerFontSize - 1); setTickerFontSize(v); socket.emit('ticker-font-size', { delta: v }); }}>A−</button>
                               <span className="djc-font-sz-val">{tickerFontSize > 0 ? `+${tickerFontSize}` : tickerFontSize}</span>
-                              <button className="djc-font-sz-btn" onClick={() => { const v = Math.min(8, tickerFontSize + 1); setTickerFontSize(v); socketRef.current?.emit('ticker-font-size', { delta: v }); }}>A+</button>
+                              <button className="djc-font-sz-btn" onClick={() => { const v = Math.min(8, tickerFontSize + 1); setTickerFontSize(v); socket.emit('ticker-font-size', { delta: v }); }}>A+</button>
                             </div>
                           </div>
                         </div>

@@ -49,13 +49,13 @@ export default function RejiPage() {
   useEffect(() => {
     fetchData();
     socket.connect();
-    socket.emit('join-event', slug);
+    socket.emit('join-event', { eventSlug: slug, role: 'reji' });
 
     socket.on('event-status',  ({ status }) => setEvent(p => p ? { ...p, status } : p));
     socket.on('room-count',    ({ count })  => setConnectedCount(count));
     socket.on('list-updated',  (list)       => setRequests((list || []).filter(r => r.status === 'approved')));
-    socket.on('vote-updated',  ({ id, votes }) =>
-      setRequests(p => p.map(r => r.id === id ? { ...r, votes } : r)));
+    socket.on('vote-updated',  ({ requestId, votes }) =>
+      setRequests(p => p.map(r => r.id === requestId ? { ...r, votes } : r)));
     socket.on('music-mode',    ({ mode, active }) => setActiveMusicMode(active ? mode : null));
     socket.on('ceremony',      ({ type, active }) => {
       if (type === 'opening') setOpeningActive(active);
