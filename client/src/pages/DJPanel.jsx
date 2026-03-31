@@ -1162,6 +1162,13 @@ export default function DJPanel() {
                               </td>
                               <td className={`dj-table-votes ${req.votes >= 10 ? 'is-hot' : ''}`}>{req.votes}</td>
                               <td className="dj-table-actions">
+                                {req._djPlayed && (
+                                  <button className="btn btn-small btn-danger" onClick={() => {
+                                    socket.emit('clear-playing');
+                                    setPlayedDJSong(null);
+                                    clearTimeout(playedDJTimer.current);
+                                  }} title={lang === 'tr' ? 'Display\'den kapat' : 'Close on display'}>■</button>
+                                )}
                                 {!req._djPlayed && req.status === 'approved' && (
                                   <button className="btn btn-small btn-primary" onClick={() => updateRequestStatus(req.id, 'playing')} title={lang === 'tr' ? 'Şimdi Çal' : 'Play Now'}>▶</button>
                                 )}

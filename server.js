@@ -705,6 +705,12 @@ io.on('connection', (socket) => {
     io.to(eventSlug).emit('ticker-font-size', { delta: safeDelta });
   });
 
+  socket.on('clear-playing', () => {
+    const { eventSlug } = socket.data;
+    if (!eventSlug) return;
+    io.to(eventSlug).emit('clear-playing');
+  });
+
   socket.on('display-card', (data) => {
     const { eventSlug } = socket.data;
     if (!eventSlug) return;

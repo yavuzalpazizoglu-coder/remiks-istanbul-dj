@@ -1203,6 +1203,15 @@ export default function DisplayPage() {
       setPlayedSongFading(false);
       setPlayedId(req.id);
       clearTimeout(playedSongTimer.current);
+      // 57sn sonra fade başlar, 60sn'de tamamen silinir
+      playedSongTimer.current = setTimeout(() => {
+        setPlayedSongFading(true);
+        setTimeout(() => {
+          setPlayedId(null);
+          setPlayedSong(null);
+          setPlayedSongFading(false);
+        }, 3000);
+      }, 57000);
     });
 
     socket.on('request-played', (req) => {
@@ -1220,6 +1229,17 @@ export default function DisplayPage() {
           setPlayedSongFading(false);
         }, 3000);
       }, 57000);
+    });
+
+    // DJ manuel olarak kapattığında anında fade-out başlar
+    socket.on('clear-playing', () => {
+      clearTimeout(playedSongTimer.current);
+      setPlayedSongFading(true);
+      setTimeout(() => {
+        setPlayedId(null);
+        setPlayedSong(null);
+        setPlayedSongFading(false);
+      }, 3000);
     });
 
     socket.on('event-status', ({ status, countdown_end }) => {
@@ -1311,7 +1331,7 @@ export default function DisplayPage() {
     return () => {
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
-      socket.off('now-playing');
+      socket.off('now-playing'); socket.off('clear-playing');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('ticker-font-size');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('ceremony'); socket.off('music-mode');
