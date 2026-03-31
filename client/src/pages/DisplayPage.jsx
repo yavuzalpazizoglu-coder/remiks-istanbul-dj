@@ -1646,6 +1646,7 @@ export default function DisplayPage() {
           <div className="dsp-beatbox">
             {/* Sol QR + Sol İstatistikler */}
               <div className="dsp-beatbox-qr">
+                <div className="dsp-qr-motto">{lang === 'tr' ? 'Hayalleriniz büyük, playlist\'imiz sınırlı — ama aşkla çalıyoruz ♡' : 'Your dreams are big, our playlist is limited — but we play with love ♡'}</div>
                 <div className="dsp-beatbox-qr-wrap">
                   <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
@@ -1684,6 +1685,7 @@ export default function DisplayPage() {
 
               {/* Sağ QR + Sağ İstatistikler */}
               <div className="dsp-beatbox-qr">
+                <div className="dsp-qr-motto">{lang === 'tr' ? 'Hayalleriniz büyük, playlist\'imiz sınırlı — ama aşkla çalıyoruz ♡' : 'Your dreams are big, our playlist is limited — but we play with love ♡'}</div>
                 <div className="dsp-beatbox-qr-wrap">
                   <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>

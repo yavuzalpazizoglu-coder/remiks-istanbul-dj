@@ -4585,6 +4585,27 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border-right: none;
   border-left: 1px solid rgba(var(--theme-rgb), 0.1);
 }
+.dsp-qr-motto {
+  font-size: clamp(7px, 0.85vh, 12px);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.35;
+  text-align: center;
+  color: transparent;
+  background: linear-gradient(90deg, rgba(var(--theme-rgb), 0.9), rgba(255,255,255,0.85), rgba(var(--theme-rgb), 0.9));
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: mottoShimmer 6s ease infinite;
+  padding: clamp(4px, 0.5vh, 8px) clamp(6px, 0.8vw, 12px);
+  margin-bottom: clamp(4px, 0.5vh, 8px);
+  max-width: 90%;
+  opacity: 0.85;
+}
+@keyframes mottoShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 .dsp-beatbox-qr-wrap {
   width: min(85%, 145px);
   aspect-ratio: 1;
