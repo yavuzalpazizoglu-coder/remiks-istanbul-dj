@@ -4732,7 +4732,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .dsp-np-stage-waiting-text {
-  font-size: clamp(13px, 1.8vh, 22px); color: rgba(var(--theme-rgb), 0.7);
+  font-size: clamp(13px, 1.8vh, 22px); color: #f472b6;
   font-style: italic; letter-spacing: 0.06em;
   font-weight: 600;
   animation: npWaitTextPulse 2.8s ease-in-out infinite;
