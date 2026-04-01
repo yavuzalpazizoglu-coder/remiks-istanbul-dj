@@ -4271,7 +4271,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border-left: 1px solid rgba(var(--theme-rgb), 0.1);
 }
 .dsp-qr-motto {
-  font-size: clamp(9px, 1.1vh, 16px);
+  font-size: clamp(12px, 1.65vh, 23px);
   font-weight: 700;
   letter-spacing: 0.03em;
   line-height: 1.35;
