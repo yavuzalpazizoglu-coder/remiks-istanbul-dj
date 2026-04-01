@@ -601,7 +601,7 @@ function NowPlayingBar({ req, lang, fading }) {
             </div>
           ) : (
             <div className="dsp-np-stage-waiting-text">
-              {lang === 'tr' ? 'Şarkı bekleniyor...' : 'Waiting for a song...'}
+              {lang === 'tr' ? 'Sıradaki parça için hazırız 🎵' : 'Ready for the next track 🎵'}
             </div>
           )}
         </div>
