@@ -4271,7 +4271,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border-left: 1px solid rgba(var(--theme-rgb), 0.1);
 }
 .dsp-qr-motto {
-  font-size: clamp(14px, 1.7vh, 24px);
+  font-size: clamp(9px, 1.1vh, 16px);
   font-weight: 600;
   letter-spacing: 0.03em;
   line-height: 1.35;
@@ -4302,10 +4302,14 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dsp-beatbox-qr-sub {
   font-size: clamp(12px, 1.65vh, 23px);
-  color: var(--theme-primary, var(--neon-cyan));
-  font-weight: 600;
+  color: #f472b6;
+  font-weight: 700;
   text-align: center;
-  animation: pulse 2s ease infinite;
+  animation: qrSubGlow 1.8s ease-in-out infinite;
+}
+@keyframes qrSubGlow {
+  0%, 100% { opacity: 0.5; text-shadow: 0 0 4px rgba(244,114,182,0.3); }
+  50%      { opacity: 1;   text-shadow: 0 0 12px rgba(244,114,182,0.7), 0 0 24px rgba(244,114,182,0.3); }
 }
 
 .dsp-beatbox-songs {
