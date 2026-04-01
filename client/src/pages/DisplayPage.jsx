@@ -158,27 +158,6 @@ function Sparkles({ themeRgb, count = 20 }) {
   );
 }
 
-function Confetti() {
-  const pieces = useMemo(() =>
-    Array.from({ length: 50 }, (_, i) => ({
-      id: i, left: Math.random() * 100,
-      delay: Math.random() * 2, duration: 2 + Math.random() * 3,
-      color: ['#00d4ff', '#b829dd', '#ff0080', '#ff6b35', '#008D4B'][Math.floor(Math.random() * 5)],
-      size: 6 + Math.random() * 10,
-    })), []);
-  return (
-    <div className="confetti-container">
-      {pieces.map(p => (
-        <div key={p.id} className="confetti-piece" style={{
-          left: `${p.left}%`, width: p.size, height: p.size,
-          background: p.color, borderRadius: Math.random() > 0.5 ? '50%' : '2px',
-          animationDuration: `${p.duration}s`, animationDelay: `${p.delay}s`,
-        }} />
-      ))}
-    </div>
-  );
-}
-
 /* ═══ STAGE-SPECIFIC VISUAL COMPONENTS ═══ */
 
 function ClubEqualizer({ themeRgb }) {
@@ -389,208 +368,6 @@ function FestivalWaves({ themeRgb }) {
   );
 }
 
-
-function OpeningOverlay({ lang, brandText, countdown, ceremonyEnd }) {
-  const name = brandText || 'Remiks İstanbul';
-  const [phase, setPhase] = useState(1);
-
-  useEffect(() => {
-    if (!ceremonyEnd) return;
-    const totalMs = ceremonyEnd - Date.now();
-    if (totalMs <= 0) return;
-
-    const p2 = totalMs * 0.15;
-    const p3 = totalMs * 0.40;
-    const p4 = totalMs * 0.70;
-
-    const t2 = setTimeout(() => setPhase(2), p2);
-    const t3 = setTimeout(() => setPhase(3), p3);
-    const t4 = setTimeout(() => setPhase(4), p4);
-    return () => { clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
-  }, [ceremonyEnd]);
-
-  const letters = name.split('');
-
-  return (
-    <motion.div className={`ceremony-overlay opening-overlay opening-phase-${phase}`}
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
-
-      {/* Phase 1: Darkness + ambient */}
-      <div className="opening-ambient" />
-      <div className="opening-grid-overlay" />
-
-      {/* Phase 1 particles */}
-      <div className="opening-particles">
-        {Array.from({ length: 30 }, (_, i) => (
-          <div key={i} className="opening-particle" style={{
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 8}s`,
-            animationDuration: `${6 + Math.random() * 8}s`,
-          }} />
-        ))}
-      </div>
-
-      {/* Phase 2: Logo reveal */}
-      <div className="opening-logo-wrap">
-        <span className="opening-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
-        <div className="opening-powered">POWERED BY REMiKS iSTANBUL</div>
-      </div>
-
-      {/* Phase 3: Event name letter-by-letter */}
-      <div className="opening-event-block">
-        <div className="opening-event-name" aria-label={name}>
-          {letters.map((ch, i) => (
-            <span key={i} className="opening-letter" style={{ animationDelay: `${i * 0.06}s` }}>
-              {ch === ' ' ? '\u00A0' : ch}
-            </span>
-          ))}
-        </div>
-        <div className="opening-motto">REQUEST · VOTE · DANCE</div>
-      </div>
-
-      {/* Phase 4: Neon finale */}
-      <div className="opening-finale">
-        <div className="opening-neon-text">
-          {lang === 'tr' ? 'İYİ EĞLENCELER!' : 'ENJOY THE SHOW!'}
-        </div>
-        {countdown && <div className="opening-countdown">{countdown}</div>}
-      </div>
-    </motion.div>
-  );
-}
-
-function useCountUp(target, duration = 2000, active = false) {
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (!active || target <= 0) { setVal(0); return; }
-    const start = performance.now();
-    let raf;
-    const tick = (now) => {
-      const p = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setVal(Math.round(eased * target));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration, active]);
-  return val;
-}
-
-function ClosingOverlay({ lang, brandText, countdown, ceremonyEnd, requests, eventName }) {
-  const name = brandText || eventName || 'Remiks İstanbul';
-  const [phase, setPhase] = useState(1);
-
-  useEffect(() => {
-    if (!ceremonyEnd) return;
-    const totalMs = ceremonyEnd - Date.now();
-    if (totalMs <= 0) return;
-    const p2 = totalMs * 0.40;
-    const p3 = totalMs * 0.75;
-    const t2 = setTimeout(() => setPhase(2), p2);
-    const t3 = setTimeout(() => setPhase(3), p3);
-    return () => { clearTimeout(t2); clearTimeout(t3); };
-  }, [ceremonyEnd]);
-
-  const totalRequests = requests?.length || 0;
-  const totalVotes = (requests || []).reduce((sum, r) => sum + (r.votes || 0), 0);
-  const sorted = [...(requests || [])].sort((a, b) => (b.votes || 0) - (a.votes || 0));
-  const topSong = sorted[0];
-  const today = new Date().toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-
-  const countReq = useCountUp(totalRequests, 2000, phase >= 1);
-  const countVotes = useCountUp(totalVotes, 2000, phase >= 1);
-
-  const confettiColors = ['var(--theme-primary, #00d4ff)', '#ffffff', '#FFD700', '#ff0080', '#008D4B'];
-
-  const albumArts = (requests || []).filter(r => r.album_art).map(r => r.album_art);
-
-  return (
-    <motion.div className={`ceremony-overlay closing-overlay closing-phase-${phase}`}
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1.5 } }}>
-
-      {albumArts.length > 0 && (
-        <div className="closing-album-grid">
-          {albumArts.map((art, i) => (
-            <div key={i} className="closing-album-tile" style={{ backgroundImage: `url(${art})` }} />
-          ))}
-        </div>
-      )}
-
-      <div className="closing-stars">
-        {Array.from({ length: 40 }, (_, i) => (
-          <div key={i} className="closing-star" style={{
-            left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 6}s`, animationDuration: `${4 + Math.random() * 4}s`,
-            width: 2 + Math.random() * 3, height: 2 + Math.random() * 3,
-          }} />
-        ))}
-      </div>
-
-      {/* Phase 1: Statistics */}
-      <div className="closing-phase-block closing-stats-block">
-        <div className="closing-stats-grid">
-          <div className="closing-stat-card">
-            <div className="closing-stat-number">{countReq}</div>
-            <div className="closing-stat-label">{lang === 'tr' ? 'şarkı istendi' : 'songs requested'}</div>
-          </div>
-          <div className="closing-stat-card">
-            <div className="closing-stat-number">{countVotes}</div>
-            <div className="closing-stat-label">{lang === 'tr' ? 'oy kullanıldı' : 'votes cast'}</div>
-          </div>
-          {topSong && (
-            <div className="closing-stat-card closing-stat-wide">
-              <div className="closing-stat-icon">🔥</div>
-              <div className="closing-stat-song">{topSong.song_name}</div>
-              <div className="closing-stat-artist">{topSong.artist}</div>
-              <div className="closing-stat-label">{lang === 'tr' ? 'en çok oy alan istek' : 'most voted request'}</div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Phase 2: Thank you */}
-      <div className="closing-phase-block closing-thankyou-block">
-        <div className="closing-thankyou-text">
-          {lang === 'tr' ? 'TEŞEKKÜRLER!' : 'THANK YOU!'}
-        </div>
-        <div className="closing-event-name">{name}</div>
-        <div className="closing-event-date">{today}</div>
-        <div className="closing-confetti">
-          {Array.from({ length: 20 }, (_, i) => (
-            <div key={i} className="closing-confetti-piece" style={{
-              left: `${5 + Math.random() * 90}%`,
-              '--fall-duration': `${5 + Math.random() * 5}s`,
-              '--fall-delay': `${Math.random() * 4}s`,
-              background: confettiColors[i % confettiColors.length],
-              borderRadius: Math.random() > 0.5 ? '50%' : '2px',
-            }} />
-          ))}
-        </div>
-      </div>
-
-      {/* Phase 3: Logo + Instagram */}
-      <div className="closing-phase-block closing-final-block">
-        <span className="closing-final-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
-        <div className="closing-social-row">
-          <div className="closing-social-info">
-            <svg className="closing-ig-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" />
-              <circle cx="12" cy="12" r="5" />
-              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-            </svg>
-            <div className="closing-ig-handle">@remiks.istanbul</div>
-            <div className="closing-ig-cta">{lang === 'tr' ? 'Bizi Takip Edin' : 'Follow Us'}</div>
-          </div>
-          <div className="closing-ig-qr">
-            <QRCodeSVG value="https://instagram.com/remiks.istanbul" size={200} bgColor="transparent" fgColor="#ffffff" />
-          </div>
-        </div>
-        {countdown && <div className="closing-countdown">{countdown}</div>}
-      </div>
-    </motion.div>
-  );
-}
 
 const MUSIC_MODE_CONFIG = {
   arabesk: {
@@ -1113,33 +890,25 @@ export default function DisplayPage() {
   const [requests, setRequests] = useState([]);
   const [showFullscreenHint, setShowFullscreenHint] = useState(true);
   const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
-  const [showConfetti, setShowConfetti] = useState(false);
   const [countdownEnd, setCountdownEnd] = useState(null);
   const [countdownDisplay, setCountdownDisplay] = useState('');
-  const [openingActive, setOpeningActive] = useState(false);
-  const [closingActive, setClosingActive] = useState(false);
-  const [ceremonyEnd, setCeremonyEnd] = useState(null);
-  const [ceremonyCountdown, setCeremonyCountdown] = useState('');
+  const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [connectedCount, setConnectedCount] = useState(0);
   const [brandText, setBrandText] = useState('');
   const [tickerTexts, setTickerTexts] = useState('');
   const [tickerFontDelta, setTickerFontDelta] = useState(0);
   const [allRequests, setAllRequests] = useState([]);
-  const [playedId, setPlayedId] = useState(null);
   const [playedSong, setPlayedSong] = useState(null);   // tam nesne — listeden çıksa da göster
   const [playedSongFading, setPlayedSongFading] = useState(false);
   const playedSongTimer = useRef(null);
+  const playedFadeTimer = useRef(null);
   const [playedCount, setPlayedCount] = useState(0);
   const [theme, setTheme] = useState('cyan');
   const [animLevel, setAnimLevel] = useState('high');
   const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
-  const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
 
-  const [chatMessages, setChatMessages] = useState([]);
-  const [chatInput, setChatInput] = useState('');
-  const chatEndRef = useRef(null);
   const [blackout, setBlackout] = useState(false);
   const [spotlightText, setSpotlightText] = useState('');
   const [rejiCountdown, setRejiCountdown] = useState(0);
@@ -1170,6 +939,12 @@ export default function DisplayPage() {
       setEventLogo(eventData.event_logo || '');
       setRequests((reqData.requests || []).filter(r => r.status === 'approved'));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
+      if (eventData.status === 'ended') {
+        fetch(`${API}/api/events/${slug}/requests?all=true`)
+          .then(r => r.ok ? r.json() : null)
+          .then(d => { if (d?.requests) setAllRequests(d.requests); })
+          .catch(() => {});
+      }
     } catch (err) { console.warn('DisplayPage fetchData failed:', err); }
   }, [slug]);
 
@@ -1201,13 +976,11 @@ export default function DisplayPage() {
     socket.on('now-playing', (req) => {
       setPlayedSong(req);
       setPlayedSongFading(false);
-      setPlayedId(req.id);
       clearTimeout(playedSongTimer.current);
-      // 57sn sonra fade başlar, 60sn'de tamamen silinir
+      clearTimeout(playedFadeTimer.current);
       playedSongTimer.current = setTimeout(() => {
         setPlayedSongFading(true);
-        setTimeout(() => {
-          setPlayedId(null);
+        playedFadeTimer.current = setTimeout(() => {
           setPlayedSong(null);
           setPlayedSongFading(false);
         }, 3000);
@@ -1215,28 +988,25 @@ export default function DisplayPage() {
     });
 
     socket.on('request-played', (req) => {
-      setPlayedId(req.id);
       setPlayedSong(req);
       setPlayedSongFading(false);
       setPlayedCount(c => c + 1);
       clearTimeout(playedSongTimer.current);
-      // 57sn sonra fade başlar, 60sn'de tamamen silinir (3sn geçiş)
+      clearTimeout(playedFadeTimer.current);
       playedSongTimer.current = setTimeout(() => {
         setPlayedSongFading(true);
-        setTimeout(() => {
-          setPlayedId(null);
+        playedFadeTimer.current = setTimeout(() => {
           setPlayedSong(null);
           setPlayedSongFading(false);
         }, 3000);
       }, 57000);
     });
 
-    // DJ manuel olarak kapattığında anında fade-out başlar
     socket.on('clear-playing', () => {
       clearTimeout(playedSongTimer.current);
+      clearTimeout(playedFadeTimer.current);
       setPlayedSongFading(true);
-      setTimeout(() => {
-        setPlayedId(null);
+      playedFadeTimer.current = setTimeout(() => {
         setPlayedSong(null);
         setPlayedSongFading(false);
       }, 3000);
@@ -1255,22 +1025,6 @@ export default function DisplayPage() {
       if (countdown_end) setCountdownEnd(countdown_end);
     });
 
-    socket.on('ceremony', ({ type, active, endTime }) => {
-      if (type === 'opening') {
-        setOpeningActive(active);
-        if (active) setClosingActive(false);
-        setCeremonyEnd(active && endTime ? endTime : null);
-        if (active) { setShowConfetti(true); setTimeout(() => setShowConfetti(false), 10000); }
-      }
-      if (type === 'closing') {
-        setClosingActive(active);
-        if (active) setOpeningActive(false);
-        setCeremonyEnd(active && endTime ? endTime : null);
-        if (active) { setShowConfetti(true); setTimeout(() => setShowConfetti(false), 10000); }
-      }
-      if (!active) setCeremonyEnd(null);
-    });
-
     socket.on('language-changed', ({ language }) => setLang(language));
     socket.on('brand-updated', ({ brand_text }) => setBrandText(brand_text || ''));
     socket.on('ticker-updated', ({ ticker_texts }) => setTickerTexts(ticker_texts || ''));
@@ -1286,10 +1040,6 @@ export default function DisplayPage() {
     });
 
     socket.on('room-count', ({ count }) => setConnectedCount(count));
-
-    socket.on('crew-chat', (msg) => {
-      setChatMessages(prev => [...prev.slice(-50), msg]);
-    });
 
     socket.on('reji-blackout', ({ active }) => setBlackout(active));
 
@@ -1334,12 +1084,12 @@ export default function DisplayPage() {
       socket.off('now-playing'); socket.off('clear-playing');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('ticker-font-size');
-      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('ceremony'); socket.off('music-mode');
-      socket.off('crew-chat');
+      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('music-mode');
       clearTimeout(playedSongTimer.current);
+      clearTimeout(playedFadeTimer.current);
+      if (rejiCountdownTimer.current) clearInterval(rejiCountdownTimer.current);
       socket.off('reji-blackout'); socket.off('reji-spotlight'); socket.off('reji-countdown');
       socket.off('display-card'); socket.off('dismiss-card');
-      socket.disconnect();
     };
   }, [slug]);
 
@@ -1355,44 +1105,6 @@ export default function DisplayPage() {
     return () => clearInterval(interval);
   }, [countdownEnd, event?.status]);
 
-  useEffect(() => {
-    if (!ceremonyEnd) { setCeremonyCountdown(''); return; }
-    const interval = setInterval(() => {
-      const diff = ceremonyEnd - Date.now();
-      if (diff <= 0) {
-        setCeremonyCountdown('00:00');
-        setOpeningActive(false);
-        setClosingActive(false);
-        setCeremonyEnd(null);
-        clearInterval(interval);
-        return;
-      }
-      const m = Math.floor(diff / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      setCeremonyCountdown(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [ceremonyEnd]);
-
-  useEffect(() => {
-    if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [chatMessages.length]);
-
-  const sendChat = (sender) => {
-    if (!chatInput.trim()) return;
-    const EMOJI_MAP = { ':)':'😊',':D':'😄',':(':'😢',';)':'😉',':P':'😛',':O':'😮','<3':'❤️',':*':'😘',
-      ':fire:':'🔥',':ok:':'👍',':no:':'👎',':clap:':'👏',':mic:':'🎤',':music:':'🎵',':headphones:':'🎧',
-      ':star:':'⭐',':check:':'✅',':x:':'❌',':warning:':'⚠️',':eyes:':'👀',':100:':'💯',':rocket:':'🚀',
-      ':wave:':'👋',':pray:':'🙏',':party:':'🎉',':dj:':'🎧',':camera:':'🎬',':speaker:':'🔊',':stop:':'⏹',
-      ':play:':'▶️',':pause:':'⏸',':next:':'⏭',':prev:':'⏮',':up:':'⬆️',':down:':'⬇️',':cool:':'😎',
-      ':think:':'🤔',':sad:':'😞',':angry:':'😡',':love:':'😍',':lol:':'🤣',':wow:':'🤩',':sleep:':'😴',
-      ':thumbsup:':'👍',':thumbsdown:':'👎',':raised:':'🙌',':time:':'⏰',':light:':'💡',':ready:':'🟢',
-      ':wait:':'🟡',':alert:':'🔴' };
-    let msg = chatInput.trim();
-    Object.entries(EMOJI_MAP).forEach(([k, v]) => { msg = msg.split(k).join(v); });
-    socket.emit('crew-chat', { message: msg, sender });
-    setChatInput('');
-  };
 
   const goFullscreen = () => {
     setShowFullscreenHint(false);
@@ -1418,11 +1130,6 @@ export default function DisplayPage() {
   };
   const tc = themeColors[theme] || themeColors.cyan;
 
-  const MUSIC_MODE_LABELS = {
-    arabesk: 'Arabesk', rock: 'Rock', '90s-pop': '90s Pop',
-    'turkish-delight': 'Turkish Delight', tech: 'Tech/EDM',
-    latino: 'Latino', rap: 'Rap/HipHop', winamp: 'Winamp', pioneer: 'Pioneer'
-  };
 
   return (
     <div className={`display-page stage-${stageDesign}`} style={{ '--theme-primary': tc.primary, '--theme-glow': tc.glow, '--theme-rgb': tc.rgb }}>
@@ -1550,8 +1257,6 @@ export default function DisplayPage() {
         {animLevel === 'high' && <><ClubEqualizer themeRgb="220,220,200" /><LightBeams themeColor="#e0e0cc" /><Sparkles themeRgb="255,255,220" count={15} /></>}
       </>}
 
-      {showConfetti && <Confetti />}
-
 
       {!socketConnected && (
         <div className="socket-warning">{lang === 'tr' ? '⚠ Bağlantı kesildi' : '⚠ Disconnected'}</div>
@@ -1631,22 +1336,15 @@ export default function DisplayPage() {
           </div>
         )}
 
-        {/* ─── OPENING OVERLAY ─── */}
-        <AnimatePresence>
-          {openingActive && (
-            <OpeningOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} ceremonyEnd={ceremonyEnd} />
-          )}
-        </AnimatePresence>
-
         {/* ─── ACTIVE: Beatbox layout (QR sol | liste merkez | QR sağ) ─── */}
-        {event.status === 'active' && !openingActive && (() => {
+        {event.status === 'active' && (() => {
           const totalVotesStat = requests.reduce((s, r) => s + (r.votes || 0), 0);
           const topVotesStat = requests[0]?.votes || 0;
           return (
           <div className="dsp-beatbox">
             {/* Sol QR + Sol İstatistikler */}
               <div className="dsp-beatbox-qr">
-                <div className="dsp-qr-motto">{lang === 'tr' ? 'Hayalleriniz büyük, playlist\'imiz sınırlı — ama aşkla çalıyoruz ♡' : 'Your dreams are big, our playlist is limited — but we play with love ♡'}</div>
+                <div className="dsp-qr-motto">{lang === 'tr' ? 'Hayalleriniz büyük, playlist\'imiz sınırlı — ama aşkla çalıyoruz ❤️' : 'Your dreams are big, our playlist is limited — but we play with love ❤️'}</div>
                 <div className="dsp-beatbox-qr-wrap">
                   <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
@@ -1685,7 +1383,7 @@ export default function DisplayPage() {
 
               {/* Sağ QR + Sağ İstatistikler */}
               <div className="dsp-beatbox-qr">
-                <div className="dsp-qr-motto">{lang === 'tr' ? 'Hayalleriniz büyük, playlist\'imiz sınırlı — ama aşkla çalıyoruz ♡' : 'Your dreams are big, our playlist is limited — but we play with love ♡'}</div>
+                <div className="dsp-qr-motto">{lang === 'tr' ? 'Hayalleriniz büyük, playlist\'imiz sınırlı — ama aşkla çalıyoruz ❤️' : 'Your dreams are big, our playlist is limited — but we play with love ❤️'}</div>
                 <div className="dsp-beatbox-qr-wrap">
                   <QRCodeSVG value={requestUrl} size={153} bgColor="#ffffff" fgColor="#000000" level="M" className="dsp-qr-svg" />
                 </div>
@@ -1712,22 +1410,15 @@ export default function DisplayPage() {
           </div>
         )}
 
-        {/* ─── CLOSING OVERLAY ─── */}
-        <AnimatePresence>
-          {closingActive && (
-            <ClosingOverlay lang={lang} brandText={displayName} countdown={ceremonyCountdown} ceremonyEnd={ceremonyEnd} requests={requests} eventName={event?.name} />
-          )}
-        </AnimatePresence>
-
         {/* ─── MUSIC MODE OVERLAY ─── */}
         <AnimatePresence>
-          {activeMusicMode && !openingActive && !closingActive && (
+          {activeMusicMode && (
             <MusicModeOverlay mode={activeMusicMode} lang={lang} djPhotos={modeDJPhotos} />
           )}
         </AnimatePresence>
 
-        {/* ─── ENDED (summary after closing) ─── */}
-        {event.status === 'ended' && !closingActive && (
+        {/* ─── ENDED ─── */}
+        {event.status === 'ended' && (
           <EventSummary requests={allRequests.length > 0 ? allRequests : requests} lang={lang} eventName={event?.name} />
         )}
       </div>

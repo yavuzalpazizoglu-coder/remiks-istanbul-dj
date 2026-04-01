@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import socket from '../socket.js';
 
-const API = import.meta.env.VITE_API_URL || '';
+const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
 
 export default function RejiPage() {
   const { slug } = useParams();
@@ -11,14 +11,11 @@ export default function RejiPage() {
   const [connectedCount, setConnectedCount] = useState(0);
   const [requests, setRequests]         = useState([]);
   const [activeMusicMode, setActiveMusicMode] = useState(null);
-  const [openingActive, setOpeningActive] = useState(false);
-  const [closingActive, setClosingActive] = useState(false);
 
   // Kontroller
   const [rejiBrand, setRejiBrand]       = useState('');
   const [rejiTicker, setRejiTicker]     = useState('');
   const [rejiSpotInput, setRejiSpotInput] = useState('');
-  const [rejiCeremonyMin, setRejiCeremonyMin] = useState(5);
   const [blackout, setBlackout]         = useState(false);
 
   // Chat
@@ -55,21 +52,16 @@ export default function RejiPage() {
     socket.on('room-count',    ({ count })  => setConnectedCount(count));
     socket.on('list-updated',  (list)       => setRequests((list || []).filter(r => r.status === 'approved')));
     socket.on('vote-updated',  ({ requestId, votes }) =>
-      setRequests(p => p.map(r => r.id === requestId ? { ...r, votes } : r)));
+      setRequests(p => p.map(r => r.id === requestId ? { ...r, votes } : r).sort((a, b) => (b.votes || 0) - (a.votes || 0))));
     socket.on('music-mode',    ({ mode, active }) => setActiveMusicMode(active ? mode : null));
-    socket.on('ceremony',      ({ type, active }) => {
-      if (type === 'opening') setOpeningActive(active);
-      if (type === 'closing') setClosingActive(active);
-    });
     socket.on('reji-blackout', ({ active }) => setBlackout(active));
     socket.on('crew-chat',     (msg)        => setChatMessages(p => [...p.slice(-60), msg]));
 
     return () => {
       socket.off('event-status'); socket.off('room-count');
       socket.off('list-updated'); socket.off('vote-updated');
-      socket.off('music-mode');   socket.off('ceremony');
+      socket.off('music-mode');
       socket.off('reji-blackout'); socket.off('crew-chat');
-      socket.disconnect();
     };
   }, [slug, fetchData]);
 
@@ -120,8 +112,6 @@ export default function RejiPage() {
         <span className="reji-sb-stat">👥 {connectedCount}</span>
         <span className="reji-sb-stat">🎵 {requests.length}</span>
         {activeMusicMode && <span className="reji-sb-mode">{activeMusicMode}</span>}
-        {openingActive && <span className="reji-sb-ceremony">🎬 AÇILIŞ</span>}
-        {closingActive && <span className="reji-sb-ceremony">🎬 KAPANIŞ</span>}
         {blackout && <span className="reji-sb-blackout">🔲 KARARTMA</span>}
       </div>
 

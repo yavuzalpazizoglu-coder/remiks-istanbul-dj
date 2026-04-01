@@ -79,7 +79,7 @@ export default function RequestPage() {
 
   useEffect(() => {
     socket.connect();
-    socket.emit('join-event', { eventSlug: slug, role: 'audience' });
+    socket.emit('join-event', { eventSlug: slug, role: 'request' });
 
     socket.on('request-added', (req) => {
       if (req.status !== 'approved') return;
@@ -117,7 +117,6 @@ export default function RequestPage() {
       socket.off('language-changed');
       socket.off('theme-changed');
       socket.off('logo-changed');
-      socket.disconnect();
     };
   }, [slug, fetchData]);
 

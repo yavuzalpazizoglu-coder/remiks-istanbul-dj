@@ -175,8 +175,9 @@ function saveEventBackup(event, allRequests) {
     const dateStr = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const filename = `${event.slug}_${dateStr}.json`;
     const data = JSON.stringify({ event, requests: allRequests, exportedAt: new Date().toISOString() }, null, 2);
-    fs.writeFileSync(path.join(backupDir, filename), data, 'utf8');
-    console.log(`✅ Etkinlik yedeği kaydedildi: backups/${filename}`);
+    fs.promises.writeFile(path.join(backupDir, filename), data, 'utf8')
+      .then(() => console.log(`✅ Etkinlik yedeği kaydedildi: backups/${filename}`))
+      .catch(err => console.error('❌ Yedek kaydedilemedi:', err.message));
   } catch (err) {
     console.error('❌ Yedek kaydedilemedi:', err.message);
   }
@@ -185,6 +186,7 @@ function saveEventBackup(event, allRequests) {
 /* ── Global hata yakalama ── */
 process.on('uncaughtException', (err) => {
   console.error('❌ uncaughtException:', err.message, err.stack);
+  if (isProduction) process.exit(1);
 });
 process.on('unhandledRejection', (reason) => {
   console.error('❌ unhandledRejection:', reason);
@@ -204,7 +206,7 @@ app.use(express.json());
 
 function sanitize(str) {
   if (typeof str !== 'string') return '';
-  return str.replace(/[<>]/g, '').trim().slice(0, 200);
+  return str.replace(/[<>&"']/g, '').trim().slice(0, 200);
 }
 app.use('/logos', express.static(path.join(__dirname, 'public/logos')));
 app.use('/modes', express.static(path.join(__dirname, 'public/modes')));
@@ -213,9 +215,16 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/dist')));
 }
 
-// ─── Rate Limiting (simple in-memory) ───
+// ─── Rate Limiting (simple in-memory with periodic cleanup) ───
 
 const requestCounts = new Map();
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of requestCounts) {
+    if (now - entry.start > 120000) requestCounts.delete(key);
+  }
+}, 60000);
+
 function rateLimit(ip, max = 30, windowMs = 60000) {
   const now = Date.now();
   const key = ip;
@@ -232,7 +241,7 @@ function rateLimit(ip, max = 30, windowMs = 60000) {
 
 function djAuth(req, res, next) {
   const password = req.headers['x-dj-password'];
-  if (password !== process.env.DJ_PASSWORD) {
+  if (!process.env.DJ_PASSWORD || password !== process.env.DJ_PASSWORD) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   next();
@@ -296,6 +305,7 @@ app.put('/api/events/:slug/status', djAuth, (req, res) => {
       return res.status(400).json({ error: 'Invalid status' });
     }
     const event = db.updateEventStatus(req.params.slug, status);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('event-status', { status: event.status, countdown_end: event.countdown_end });
 
     if (status === 'ended') {
@@ -317,6 +327,7 @@ app.put('/api/events/:slug/language', djAuth, (req, res) => {
       return res.status(400).json({ error: 'Invalid language' });
     }
     const event = db.updateEventLanguage(req.params.slug, language);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('language-changed', { language });
     res.json(event);
   } catch (err) {
@@ -328,6 +339,7 @@ app.put('/api/events/:slug/ticker', djAuth, (req, res) => {
   try {
     const tickerTexts = (req.body.tickerTexts || '').split('\n').map(l => sanitize(l)).join('\n');
     const event = db.updateTickerTexts(req.params.slug, tickerTexts);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('ticker-updated', { ticker_texts: event.ticker_texts });
     res.json(event);
   } catch (err) {
@@ -339,6 +351,7 @@ app.put('/api/events/:slug/brand', djAuth, (req, res) => {
   try {
     const brandText = sanitize(req.body.brandText || '');
     const event = db.updateBrandText(req.params.slug, brandText);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('brand-updated', { brand_text: event.brand_text });
     res.json(event);
   } catch (err) {
@@ -351,6 +364,7 @@ app.post('/api/events/:slug/countdown', djAuth, (req, res) => {
     const { minutes } = req.body;
     const countdownEnd = Date.now() + (minutes || 10) * 60 * 1000;
     const event = db.setCountdownEnd(req.params.slug, countdownEnd);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('event-status', {
       status: 'countdown',
       countdown_end: countdownEnd,
@@ -449,6 +463,7 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
 
     const beforeUpdate = (status === 'played') ? db.getRequestById(req.params.id) : null;
     const updated = db.updateRequestStatus(req.params.id, status);
+    if (!updated) return res.status(404).json({ error: 'Request not found' });
     const event = db.getEventById(updated.event_id);
 
     if (event) {
@@ -473,6 +488,7 @@ app.put('/api/events/:slug/limit', djAuth, (req, res) => {
     const { requestLimit } = req.body;
     if (![1, 2, 3, 5].includes(requestLimit)) return res.status(400).json({ error: 'Limit must be 1, 2, 3 or 5' });
     const event = db.updateRequestLimit(req.params.slug, requestLimit);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     res.json(event);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -485,6 +501,7 @@ app.put('/api/events/:slug/theme', djAuth, (req, res) => {
     const valid = ['cyan', 'purple', 'pink', 'green', 'orange', 'red'];
     if (!valid.includes(theme)) return res.status(400).json({ error: 'Invalid theme' });
     const event = db.updateTheme(req.params.slug, theme);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('theme-changed', { theme });
     res.json(event);
   } catch (err) {
@@ -498,6 +515,7 @@ app.put('/api/events/:slug/animation', djAuth, (req, res) => {
     const valid = ['low', 'medium', 'high'];
     if (!valid.includes(level)) return res.status(400).json({ error: 'Invalid level' });
     const event = db.updateAnimationLevel(req.params.slug, level);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('animation-changed', { level });
     res.json(event);
   } catch (err) {
@@ -511,6 +529,7 @@ app.put('/api/events/:slug/stage-design', djAuth, (req, res) => {
     const valid = ['classic', 'minimal', 'elegant', 'club', 'festival', 'corporate', 'cyber', 'lounge', 'rave', 'cinema'];
     if (!valid.includes(design)) return res.status(400).json({ error: 'Invalid design' });
     const event = db.updateStageDesign(req.params.slug, design);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('stage-design-changed', { design });
     res.json(event);
   } catch (err) {
@@ -518,10 +537,13 @@ app.put('/api/events/:slug/stage-design', djAuth, (req, res) => {
   }
 });
 
+const SAFE_SLUG = /^[a-zA-Z0-9_-]+$/;
+
 const logoUpload = multer({
   storage: multer.diskStorage({
     destination: path.join(__dirname, 'public/logos/events'),
     filename: (req, file, cb) => {
+      if (!SAFE_SLUG.test(req.params.slug)) return cb(new Error('Invalid slug'));
       const ext = path.extname(file.originalname).toLowerCase();
       cb(null, `${req.params.slug}${ext}`);
     },
@@ -551,29 +573,12 @@ app.delete('/api/events/:slug/logo', djAuth, (req, res) => {
     const event = db.getEventBySlug(req.params.slug);
     if (event?.event_logo) {
       const filePath = path.join(__dirname, 'public', event.event_logo);
-      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      const safeDir = path.join(__dirname, 'public/logos/events');
+      if (filePath.startsWith(safeDir) && fs.existsSync(filePath)) fs.unlinkSync(filePath);
     }
     const updated = db.updateEventLogo(req.params.slug, '');
     io.to(req.params.slug).emit('logo-changed', { logo: '' });
     res.json(updated);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/api/events/:slug/ceremony', djAuth, (req, res) => {
-  try {
-    const { type, active, minutes } = req.body;
-    if (!['opening', 'closing'].includes(type)) return res.status(400).json({ error: 'Invalid type' });
-    const endTime = active && minutes ? Date.now() + minutes * 60 * 1000 : null;
-    const payload = { type, active: !!active, endTime };
-    if (active) {
-      activeCeremonies.set(req.params.slug, payload);
-    } else {
-      activeCeremonies.delete(req.params.slug);
-    }
-    io.to(req.params.slug).emit('ceremony', payload);
-    res.json({ ok: true, ...payload });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -614,7 +619,6 @@ app.get('/api/spotify/search', async (req, res) => {
 
 // ─── Socket.io ───
 
-const activeCeremonies = new Map();
 const activeMusicModes = new Map();
 
 function emitRoomCount(eventSlug) {
@@ -632,19 +636,19 @@ io.on('connection', (socket) => {
     socket.data.eventSlug = eventSlug;
     emitRoomCount(eventSlug);
 
-    const ceremony = activeCeremonies.get(eventSlug);
-    if (ceremony && ceremony.endTime > Date.now()) {
-      socket.emit('ceremony', ceremony);
-    }
     const musicMode = activeMusicModes.get(eventSlug);
     if (musicMode && musicMode.active) {
       socket.emit('music-mode', musicMode);
     }
   });
 
+  function requireRole(socket, ...roles) {
+    return roles.includes(socket.data.role);
+  }
+
   socket.on('reji-brand', ({ text }) => {
     const { eventSlug } = socket.data;
-    if (!eventSlug) return;
+    if (!eventSlug || !requireRole(socket, 'dj', 'reji')) return;
     const brandText = sanitize((text || '').slice(0, 200));
     try { db.updateBrandText(eventSlug, brandText); } catch {}
     io.to(eventSlug).emit('brand-updated', { brand_text: brandText });
@@ -652,47 +656,38 @@ io.on('connection', (socket) => {
 
   socket.on('reji-ticker', ({ text }) => {
     const { eventSlug } = socket.data;
-    if (!eventSlug) return;
+    if (!eventSlug || !requireRole(socket, 'dj', 'reji')) return;
     const tickerTexts = (text || '').split('\n').map(l => sanitize(l)).join('\n').slice(0, 500);
     try { db.updateTickerTexts(eventSlug, tickerTexts); } catch {}
     io.to(eventSlug).emit('ticker-updated', { ticker_texts: tickerTexts });
   });
 
-  socket.on('reji-ceremony', ({ type, active, minutes }) => {
-    const { eventSlug } = socket.data;
-    if (!eventSlug || !['opening', 'closing'].includes(type)) return;
-    const endTime = active && minutes ? Date.now() + minutes * 60 * 1000 : null;
-    const payload = { type, active: !!active, endTime };
-    if (active) { activeCeremonies.set(eventSlug, payload); } else { activeCeremonies.delete(eventSlug); }
-    io.to(eventSlug).emit('ceremony', payload);
-  });
-
   socket.on('reji-spotlight', ({ text }) => {
     const { eventSlug } = socket.data;
-    if (!eventSlug || !text) return;
+    if (!eventSlug || !text || !requireRole(socket, 'dj', 'reji')) return;
     io.to(eventSlug).emit('reji-spotlight', { text: sanitize(text.slice(0, 120)), timestamp: Date.now() });
   });
 
   socket.on('reji-blackout', ({ active }) => {
     const { eventSlug } = socket.data;
-    if (!eventSlug) return;
+    if (!eventSlug || !requireRole(socket, 'dj', 'reji')) return;
     io.to(eventSlug).emit('reji-blackout', { active: !!active });
   });
 
   socket.on('reji-countdown', ({ seconds }) => {
     const { eventSlug } = socket.data;
-    if (!eventSlug) return;
+    if (!eventSlug || !requireRole(socket, 'dj', 'reji')) return;
     const sec = Math.min(Math.max(Number(seconds) || 5, 3), 10);
     io.to(eventSlug).emit('reji-countdown', { seconds: sec, timestamp: Date.now() });
   });
 
-  socket.on('crew-chat', ({ message, sender }) => {
-    const { eventSlug } = socket.data;
-    if (!eventSlug || !message) return;
+  socket.on('crew-chat', ({ message }) => {
+    const { eventSlug, role } = socket.data;
+    if (!eventSlug || !message || !requireRole(socket, 'dj', 'reji')) return;
     const payload = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       message: message.slice(0, 200),
-      sender: sender || 'unknown',
+      sender: role === 'dj' ? 'DJ' : 'Reji',
       timestamp: Date.now(),
     };
     io.to(eventSlug).emit('crew-chat', payload);
@@ -700,7 +695,7 @@ io.on('connection', (socket) => {
 
   socket.on('ticker-font-size', ({ delta }) => {
     const { eventSlug } = socket.data;
-    if (!eventSlug) return;
+    if (!eventSlug || !requireRole(socket, 'dj', 'reji')) return;
     const safeDelta = Math.min(8, Math.max(-4, Number(delta) || 0));
     io.to(eventSlug).emit('ticker-font-size', { delta: safeDelta });
   });
