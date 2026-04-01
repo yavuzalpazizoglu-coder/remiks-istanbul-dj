@@ -1288,28 +1288,28 @@ export default function DJPanel() {
                               <button key={l.id}
                                 className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
                                 onClick={() => changeAnimationLevel(l.id)}>
+                                <span className="djc-fx-led" />
                                 {l.label}
                               </button>
                             ))}
                           </div>
                         </div>
-                        <div className="djc-field">
+                        <div className="djc-field djc-field-inline">
                           <label className="djc-field-label">{lang === 'tr' ? 'Sahne Tasarımı' : 'Stage Design'}</label>
-                          <div className="djc-stage-design-grid">
+                          <div className="djc-fx-toggle">
                             {[
-                              { id: 'elegant',   tr: 'Velvet',   en: 'Velvet',   gradient: 'linear-gradient(135deg, #0d0609 0%, #110718 100%)', accent: '#c05070' },
-                              { id: 'club',      tr: 'Club',     en: 'Club',     gradient: 'linear-gradient(135deg, #1a0005 0%, #000820 100%)', accent: '#ff2060' },
-                              { id: 'festival',  tr: 'Festival', en: 'Festival', gradient: 'linear-gradient(135deg, #1a1000 0%, #001020 100%)', accent: '#ff8c00' },
-                              { id: 'cyber',     tr: 'Cyber',    en: 'Cyber',    gradient: 'linear-gradient(135deg, #020004 0%, #100010 100%)', accent: '#ff00a0' },
-                              { id: 'rave',      tr: 'Rave',     en: 'Rave',     gradient: 'linear-gradient(135deg, #050008 0%, #0a0020 100%)', accent: '#8c00dc' },
-                              { id: 'cinema',    tr: 'Cinema',   en: 'Cinema',   gradient: 'linear-gradient(135deg, #030303 0%, #080808 100%)', accent: '#ffffff' },
+                              { id: 'elegant',   label: 'Velvet' },
+                              { id: 'club',      label: 'Club' },
+                              { id: 'festival',  label: 'Festival' },
+                              { id: 'cyber',     label: 'Cyber' },
+                              { id: 'rave',      label: 'Rave' },
+                              { id: 'cinema',    label: 'Cinema' },
                             ].map(d => (
                               <button key={d.id}
-                                className={`djc-stage-btn ${stageDesign === d.id ? 'active' : ''} djc-stage-${d.id}`}
-                                style={{ '--stage-gradient': d.gradient, '--stage-accent': d.accent }}
+                                className={`djc-fx-btn ${stageDesign === d.id ? 'active' : ''}`}
                                 onClick={() => changeStageDesign(d.id)}>
-                                <span className="djc-stage-preview" />
-                                <span className="djc-stage-name">{lang === 'tr' ? d.tr : d.en}</span>
+                                <span className="djc-fx-led" />
+                                {d.label}
                               </button>
                             ))}
                           </div>
