@@ -4337,15 +4337,15 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1px, 0.15vh, 3px);
-  padding: clamp(3px, 0.45vh, 7px) 0;
+  gap: clamp(0px, 0.08vh, 2px);
+  padding: clamp(2px, 0.25vh, 4px) 0;
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .dsp-live-stat:last-child {
   border-bottom: none;
 }
 .dsp-live-stat-lbl {
-  font-size: clamp(10px, 1.35vh, 18px);
+  font-size: clamp(5px, 0.68vh, 9px);
   font-weight: 700;
   color: rgba(255,255,255,0.38);
   text-transform: uppercase;
@@ -4355,7 +4355,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dsp-live-stat-val {
   font-family: var(--font-display);
-  font-size: clamp(24px, 3.6vh, 54px);
+  font-size: clamp(12px, 1.8vh, 27px);
   font-weight: 900;
   font-variant-numeric: tabular-nums;
   color: var(--theme-primary, #00d4ff);
