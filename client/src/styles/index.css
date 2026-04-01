@@ -4272,14 +4272,15 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dsp-qr-motto {
   font-size: clamp(9px, 1.1vh, 16px);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.03em;
   line-height: 1.35;
   text-align: center;
-  color: rgba(255, 255, 255, 0.85);
+  color: #f472b6;
   padding: clamp(4px, 0.5vh, 8px) clamp(6px, 0.8vw, 12px);
   margin-bottom: clamp(4px, 0.5vh, 8px);
   max-width: 90%;
+  animation: qrSubGlow 1.8s ease-in-out infinite;
 }
 
 .dsp-beatbox-qr-wrap {
@@ -4308,8 +4309,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   animation: qrSubGlow 1.8s ease-in-out infinite;
 }
 @keyframes qrSubGlow {
-  0%, 100% { opacity: 0.5; text-shadow: 0 0 4px rgba(244,114,182,0.3); }
-  50%      { opacity: 1;   text-shadow: 0 0 12px rgba(244,114,182,0.7), 0 0 24px rgba(244,114,182,0.3); }
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 1; }
 }
 
 .dsp-beatbox-songs {
