@@ -374,12 +374,12 @@ input, textarea { font-family: inherit; }
   object-fit: contain;
   border-radius: 4px;
 }
-.request-brand-logo {
-  display: flex; align-items: baseline; justify-content: center;
-  font-size: 22px; font-weight: 800; letter-spacing: -0.5px; line-height: 1;
+.request-brand-logo-img {
+  height: clamp(26px, 5.5vw, 34px);
+  width: auto;
+  display: block;
+  object-fit: contain;
 }
-.request-brand-logo .login-logo-remiks { color: var(--neon-cyan, #008D4B); font-style: italic; }
-.request-brand-logo .login-logo-box { color: #FFFFFF; font-weight: 900; }
 .request-header .logo { height: 32px; margin-bottom: 14px; }
 .request-header h1 {
   font-family: var(--font-display);
@@ -1054,14 +1054,12 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   display: flex; align-items: center; gap: 6px;
   flex-shrink: 0;
 }
-.djc-remiksbox-logo {
-  display: flex; align-items: baseline;
-  font-size: 22px; font-weight: 800; letter-spacing: -0.5px; line-height: 1;
+.djc-remiksbox-logo-img {
+  height: 30px;
+  width: auto;
+  display: block;
+  object-fit: contain;
 }
-.djc-remiksbox-logo .login-logo-remiks { color: #008D4B; font-style: italic; }
-.djc-remiksbox-logo .login-logo-box { color: #FFFFFF; font-weight: 900; }
-body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-remiks { color: #FFCC00; }
-body.theme-pioneer-gold .djc-remiksbox-logo .login-logo-box { color: #FFFFFF; }
 .djc-row1-divider {
   width: 1px; height: 32px;
   background: var(--border-glass);
@@ -2929,8 +2927,14 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 /* Pioneer Gold: mm-winamp and mm-pioneer use base .djc-mmode-tag overrides */
 
 /* ═══ Limit Toggle ═══ */
+.djc-limit-row {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
 .djc-limit-toggle {
   display: flex; align-items: center; gap: 4px;
+}
+.djc-limit-sep {
+  font-size: 11px; color: rgba(255,255,255,0.18); user-select: none; padding: 0 1px;
 }
 .djc-limit-label {
   font-size: 10px; color: var(--rb-text-dim); font-weight: 600;
@@ -3719,11 +3723,21 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .login-remiksbox-logo {
   display: block;
-  height: 140px;
+  height: auto;
+  max-height: 128px;
   width: auto;
+  max-width: min(280px, 82vw);
   margin: 0 auto 12px;
+  object-fit: contain;
   filter: none;
   animation: none;
+}
+.login-footer-logo-mark {
+  display: block;
+  height: 22px;
+  width: auto;
+  opacity: 0.88;
+  margin-bottom: 4px;
 }
 .login-logo-text {
   margin: 0 0 12px;
@@ -3895,6 +3909,15 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .login-footer-links span:not(.login-footer-sep):hover {
   color: #bbb;
+}
+.login-footer-link {
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.login-footer-link:hover {
+  color: #5dd;
+  text-decoration: underline;
 }
 .login-footer-sep { color: #555; }
 .login-footer-legal {
@@ -4437,58 +4460,23 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-family: var(--font-display);
   font-size: clamp(12px, 1.35vw, 34px);
   padding: clamp(3px, 0.35vh, 7px) 0 clamp(5px, 0.6vh, 11px);
-  border-bottom: 1px solid rgba(255,215,0,0.2);
+  border-bottom: 1px solid rgba(120, 60, 220, 0.25);
   margin-bottom: clamp(2px, 0.3vh, 6px);
   flex-shrink: 0;
 }
 .dtf-brand-full {
   font-family: var(--font-display);
   font-size: inherit;
-  font-weight: 800;
-  letter-spacing: clamp(2px, 0.4vw, 8px);
+  font-weight: 900;
+  letter-spacing: clamp(3px, 0.55vw, 12px);
   text-transform: uppercase;
-  background: linear-gradient(90deg, #c8860a, #ffd700, #ffe066, #ffd700, #c8860a);
+  background: linear-gradient(90deg, #00b4ff, #7b2fff, #ff00cc, #7b2fff, #00b4ff);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: brandGradientH 4s ease infinite;
   white-space: nowrap;
-}
-.dtf-brand-logo-r {
-  color: #00d060;
-  font-style: italic;
-  font-weight: 900;
-  letter-spacing: 0;
-  -webkit-text-fill-color: #00d060;
-}
-.dtf-brand-logo-b {
-  color: #ffffff;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  -webkit-text-fill-color: #ffffff;
-}
-.dtf-brand-sep {
-  color: rgba(255,255,255,0.2);
-  font-weight: 200;
-  font-size: 0.8em;
-  margin: 0 clamp(2px, 0.3vw, 6px);
-  -webkit-text-fill-color: rgba(255,255,255,0.2);
-}
-.dtf-brand-gold {
-  background: linear-gradient(90deg, #c8860a, #ffd700, #ffe066, #ffd700, #c8860a);
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: brandGradientH 4s ease infinite;
-  font-weight: 700;
-  letter-spacing: clamp(2px, 0.4vw, 8px);
-  text-transform: uppercase;
-}
-.dtf-brand-star {
-  font-size: 0.75em;
-  opacity: 0.7;
 }
 
 .dsp-table-empty {
@@ -4755,24 +4743,102 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-song-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(3px, 0.45vh, 7px) clamp(4px, 0.5vw, 8px);
+  gap: clamp(2px, 0.38vh, 6px) clamp(3px, 0.42vw, 7px);
   overflow-y: auto;
   flex: 1;
   min-height: 0;
-  padding: clamp(2px, 0.3vh, 5px) 0;
+  padding: clamp(2px, 0.25vh, 4px) 0;
   align-content: start;
 }
 .dsp-song-card {
   display: flex;
   align-items: center;
-  gap: clamp(4px, 0.55vw, 9px);
-  padding: clamp(5px, 0.85vh, 12px) clamp(5px, 0.6vw, 10px);
-  border-radius: clamp(4px, 0.5vw, 8px);
+  gap: clamp(3px, 0.45vw, 7px);
+  padding: clamp(4px, 0.65vh, 9px) clamp(4px, 0.5vw, 8px);
+  border-radius: clamp(4px, 0.45vw, 7px);
   border: 1px solid rgba(255,255,255,0.06);
   background: rgba(255,255,255,0.028);
   transition: background 0.15s;
   overflow: hidden;
   min-width: 0;
+}
+
+/* ─── Liste boyutu modları ─── */
+
+/* 30 mod: 3 sütun korunur, kartlar 4'ten itibaren kompakt */
+.dsp-song-grid--n30 {
+  gap: clamp(1px, 0.25vh, 4px) clamp(2px, 0.3vw, 5px);
+}
+.dsp-song-grid--n30 > *:nth-child(n+4) {
+  padding: clamp(2px, 0.4vh, 5px) clamp(3px, 0.38vw, 6px);
+}
+.dsp-song-grid--n30 > *:nth-child(n+4) .dsp-card-art,
+.dsp-song-grid--n30 > *:nth-child(n+4) .dsp-card-art-ph {
+  width:  clamp(16px, 2.6vh, 30px);
+  height: clamp(16px, 2.6vh, 30px);
+}
+.dsp-song-grid--n30 > *:nth-child(n+4) .dsp-card-song {
+  font-size: clamp(6px, 0.9vh, 11px);
+}
+.dsp-song-grid--n30 > *:nth-child(n+4) .dsp-card-artist {
+  font-size: clamp(5px, 0.68vh, 9px);
+}
+.dsp-song-grid--n30 > *:nth-child(n+4) .dsp-card-votes-num {
+  font-size: clamp(8px, 1.1vh, 14px);
+}
+.dsp-song-grid--n30 > *:nth-child(n+4) .dsp-card-rank {
+  width: clamp(14px, 2.2vh, 26px);
+}
+.dsp-song-grid--n30 > *:nth-child(n+4) .dsp-card-rank-num {
+  font-size: clamp(7px, 1.05vh, 13px);
+}
+/* 10-30 aralığı daha soluk */
+.dsp-song-grid--n30 > *:nth-child(n+10):nth-child(-n+18) {
+  background: rgba(255,255,255,0.022);
+  border-color: rgba(255,255,255,0.045);
+}
+.dsp-song-grid--n30 > *:nth-child(n+19) {
+  background: rgba(255,255,255,0.013);
+  border-color: rgba(255,255,255,0.03);
+}
+
+/* 40 mod: 5 sütun, çok kompakt */
+.dsp-song-grid--n40 {
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(1px, 0.2vh, 3px) clamp(2px, 0.25vw, 4px);
+}
+.dsp-song-grid--n40 > *:nth-child(n+4) {
+  padding: clamp(2px, 0.35vh, 4px) clamp(2px, 0.3vw, 5px);
+}
+.dsp-song-grid--n40 > *:nth-child(n+4) .dsp-card-art,
+.dsp-song-grid--n40 > *:nth-child(n+4) .dsp-card-art-ph {
+  width:  clamp(14px, 2.2vh, 26px);
+  height: clamp(14px, 2.2vh, 26px);
+}
+.dsp-song-grid--n40 > *:nth-child(n+4) .dsp-card-song {
+  font-size: clamp(5px, 0.78vh, 10px);
+}
+.dsp-song-grid--n40 > *:nth-child(n+4) .dsp-card-artist {
+  font-size: clamp(4px, 0.6vh, 8px);
+}
+.dsp-song-grid--n40 > *:nth-child(n+4) .dsp-card-votes-num {
+  font-size: clamp(7px, 0.95vh, 12px);
+}
+.dsp-song-grid--n40 > *:nth-child(n+4) .dsp-card-rank {
+  width: clamp(12px, 1.9vh, 22px);
+}
+.dsp-song-grid--n40 > *:nth-child(n+4) .dsp-card-rank-num {
+  font-size: clamp(6px, 0.9vh, 11px);
+}
+/* 10-25 soluk */
+.dsp-song-grid--n40 > *:nth-child(n+10):nth-child(-n+25) {
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.04);
+}
+/* 26-40 çok soluk */
+.dsp-song-grid--n40 > *:nth-child(n+26) {
+  background: rgba(255,255,255,0.01);
+  border-color: rgba(255,255,255,0.025);
 }
 
 /* ══════════════════════════════════════════════
@@ -4962,8 +5028,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: clamp(24px, 3.8vh, 46px);
-  padding-right: clamp(3px, 0.35vw, 6px);
+  width: clamp(20px, 3.2vh, 40px);
+  padding-right: clamp(2px, 0.3vw, 5px);
   border-right: 1px solid rgba(255,255,255,0.06);
   gap: 1px;
   position: relative; z-index: 2;
@@ -4984,17 +5050,18 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   display: block;
 }
 .dsp-card-rank-1 .dsp-card-rank-num {
-  font-size: clamp(17px, 3vh, 36px);
+  font-size: clamp(14px, 2.55vh, 30px);
   color: #ffc800;
   text-shadow: 0 0 clamp(6px, 1.1vh, 14px) rgba(255,200,0,0.6);
   animation: rankOnePulse 2.8s ease-in-out infinite;
 }
-.dsp-card-rank-2 .dsp-card-rank-num { font-size: clamp(15px, 2.6vh, 30px); color: #b8cfe0; }
-.dsp-card-rank-3 .dsp-card-rank-num { font-size: clamp(13px, 2.2vh, 26px); color: #c07830; }
-.dsp-card-rank-rest .dsp-card-rank-num { font-size: clamp(10px, 1.55vh, 20px); color: rgba(255,255,255,0.28); }
-.dsp-card-rarrow { display: block; font-size: clamp(6px, 0.6vh, 8px); line-height: 1; margin-top: 1px; }
-.dsp-rarrow-up { color: #4ade80; animation: dtfFade 2.5s ease-out forwards; }
-.dsp-rarrow-dn { color: #f87171; animation: dtfFade 2.5s ease-out forwards; }
+.dsp-card-rank-2 .dsp-card-rank-num { font-size: clamp(13px, 2.2vh, 26px); color: #b8cfe0; }
+.dsp-card-rank-3 .dsp-card-rank-num { font-size: clamp(11px, 1.9vh, 22px); color: #c07830; }
+.dsp-card-rank-rest .dsp-card-rank-num { font-size: clamp(9px, 1.35vh, 17px); color: rgba(255,255,255,0.28); }
+@keyframes rankOnePulse {
+  0%,100% { text-shadow: 0 0 clamp(4px,0.8vh,12px) rgba(var(--theme-rgb),0.4); }
+  50%     { text-shadow: 0 0 clamp(8px,1.5vh,20px) rgba(var(--theme-rgb),0.65); }
+}
 
 /* ── Top 3 rozet badge ── */
 .dsp-rank-badge {
@@ -5004,13 +5071,13 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-family: var(--font-display);
   font-weight: 900;
   line-height: 1;
-  width:  clamp(18px, 2.8vh, 34px);
-  height: clamp(18px, 2.8vh, 34px);
+  width:  clamp(16px, 2.4vh, 30px);
+  height: clamp(16px, 2.4vh, 30px);
   border-radius: 50%;
   flex-shrink: 0;
 }
 .dsp-rank-badge-1 {
-  font-size: clamp(12px, 2.2vh, 26px);
+  font-size: clamp(10px, 1.9vh, 22px);
   background: radial-gradient(circle at 38% 34%, #ffe160 0%, #d4a400 55%, #7a5500 100%);
   color: #3a2600;
   box-shadow:
@@ -5019,7 +5086,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border: 2px solid rgba(255,230,80,0.45);
 }
 .dsp-rank-badge-2 {
-  font-size: clamp(11px, 1.9vh, 22px);
+  font-size: clamp(10px, 1.65vh, 19px);
   background: radial-gradient(circle at 38% 34%, #e8f0f8 0%, #94afc8 50%, #3a5068 100%);
   color: #1a2c40;
   box-shadow:
@@ -5028,7 +5095,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border: 2px solid rgba(180,215,250,0.35);
 }
 .dsp-rank-badge-3 {
-  font-size: clamp(10px, 1.7vh, 20px);
+  font-size: clamp(9px, 1.5vh, 17px);
   background: radial-gradient(circle at 38% 34%, #e8a86a 0%, #b06020 55%, #5a2c00 100%);
   color: #2a1200;
   box-shadow:
@@ -5047,17 +5114,17 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 /* Albüm */
 .dsp-card-art {
-  width: clamp(26px, 4.35vh, 50px); height: clamp(26px, 4.35vh, 50px);
-  border-radius: clamp(4px, 0.5vw, 8px); object-fit: cover;
+  width: clamp(22px, 3.75vh, 44px); height: clamp(22px, 3.75vh, 44px);
+  border-radius: clamp(3px, 0.42vw, 7px); object-fit: cover;
   display: block; flex-shrink: 0;
   position: relative; z-index: 2;
   filter: none !important;
 }
 .dsp-card-art-ph {
-  width: clamp(26px, 4.35vh, 50px); height: clamp(26px, 4.35vh, 50px);
-  border-radius: clamp(4px, 0.5vw, 8px); background: rgba(255,255,255,0.06);
+  width: clamp(22px, 3.75vh, 44px); height: clamp(22px, 3.75vh, 44px);
+  border-radius: clamp(3px, 0.42vw, 7px); background: rgba(255,255,255,0.06);
   display: flex; align-items: center; justify-content: center;
-  font-size: clamp(13px, 2vh, 24px); flex-shrink: 0; color: rgba(255,255,255,0.35);
+  font-size: clamp(11px, 1.75vh, 20px); flex-shrink: 0; color: rgba(255,255,255,0.35);
   position: relative; z-index: 2;
 }
 
@@ -5067,12 +5134,12 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   position: relative; z-index: 2;
 }
 .dsp-card-song {
-  font-size: clamp(8px, 1.3vh, 17px); font-weight: 700; color: rgba(255,255,255,0.92);
+  font-size: clamp(7px, 1.15vh, 15px); font-weight: 700; color: rgba(255,255,255,0.92);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.15;
 }
-.dsp-card-song-top { font-size: clamp(8px, 1.3vh, 17px); font-weight: 800; color: #fff; }
+.dsp-card-song-top { font-size: clamp(7px, 1.15vh, 15px); font-weight: 800; color: #fff; }
 .dsp-card-artist {
-  font-size: clamp(7px, 0.92vh, 12px); color: rgba(255,255,255,0.4);
+  font-size: clamp(6px, 0.82vh, 11px); color: rgba(255,255,255,0.4);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
@@ -5081,9 +5148,9 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   display: flex; flex-direction: column; align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  padding-left: clamp(4px, 0.5vw, 8px);
+  padding-left: clamp(3px, 0.42vw, 7px);
   border-left: 1px solid rgba(255,255,255,0.07);
-  min-width: clamp(38px, 5.2vw, 62px);
+  min-width: clamp(32px, 4.5vw, 54px);
   position: relative; z-index: 2;
   gap: 1px;
 }
@@ -5093,43 +5160,13 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dsp-card-votes-num {
   font-family: var(--font-mono, 'Courier New', monospace);
-  font-size: clamp(12px, 1.7vh, 22px); font-weight: 700;
+  font-size: clamp(10px, 1.45vh, 19px); font-weight: 700;
   color: var(--theme-primary, #00d4ff); line-height: 1;
   letter-spacing: 0.06em; text-align: center; width: 100%;
   min-width: 0;
+  font-variant-numeric: tabular-nums;
 }
-.dsp-card-votes-top { font-size: clamp(13px, 1.9vh, 24px); }
-
-/* ↑ Ok ikonu — sabit, yeni oy gelince flash */
-.dsp-votes-arrow {
-  font-size: clamp(9px, 1.2vh, 14px);
-  color: var(--theme-primary, #00d4ff);
-  opacity: 0.35;
-  line-height: 1;
-  display: block;
-  text-align: center;
-  transition: opacity 0.15s;
-  will-change: opacity;
-}
-.dsp-votes-arrow-flash {
-  animation: voteArrowFlash 0.7s ease-out forwards;
-}
-@keyframes voteArrowFlash {
-  0%   { opacity: 1;    color: #ffffff; transform: translateY(-2px); }
-  40%  { opacity: 0.9;  color: var(--theme-primary, #00d4ff); transform: translateY(0); }
-  100% { opacity: 0.35; color: var(--theme-primary, #00d4ff); transform: translateY(0); }
-}
-.dsp-card-chg {
-  height: clamp(10px, 1.4vh, 18px); display: flex;
-  align-items: center; justify-content: center; width: 100%;
-}
-.dsp-chg-pill {
-  font-size: clamp(7px, 0.82vh, 11px); font-weight: 700;
-  padding: 0 clamp(2px, 0.3vw, 5px); border-radius: 3px;
-}
-.dsp-chg-green { color: #4ade80; background: rgba(74,222,128,0.12); }
-.dsp-chg-up    { color: #4ade80; }
-.dsp-chg-dn    { color: #f87171; }
+.dsp-card-votes-top { font-size: clamp(11px, 1.6vh, 21px); }
 
 /* ══════════════════════════════════════════════
    Kademeli şeffaflık: sıra 4'ten itibaren
@@ -5150,238 +5187,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border-color: rgba(255,255,255,0.04);
 }
 
-/* Oy flash efekti */
-.dsp-card-vote-flash { animation: voteFlashGreen 0.9s ease-out; }
-
-/* ── Finansal Ticker Tablo (DTF) ── */
-.dsp-table-wrap {
-  flex: 1; min-height: 0; overflow-y: auto;
-}
-.dsp-table-2col {
-  display: flex;
-  gap: 0;
-  height: 100%;
-  overflow: hidden;
-}
-.dsp-table-3col {
-  display: flex;
-  gap: 0;
-  height: 100%;
-  overflow: hidden;
-}
-.dsp-table-col {
-  flex: 1;
-  min-width: 0;
-  overflow-y: auto;
-}
-/* 3-col kompakt satır — biraz daha sıkışık padding */
-.dsp-table-3col .dtable-row td {
-  padding: clamp(1px, 0.32vh, 4px) clamp(1px, 0.2vw, 4px);
-}
-.dsp-table-3col .dtf-art-cell {
-  width: clamp(14px, 2.8vh, 32px);
-  padding: clamp(1px, 0.15vh, 2px) clamp(1px, 0.15vw, 3px) !important;
-}
-.dsp-table-3col .dtf-art {
-  width: clamp(12px, 2.6vh, 30px);
-  height: clamp(12px, 2.6vh, 30px);
-}
-.dsp-table-3col .dtf-art-ph {
-  width: clamp(12px, 2.6vh, 30px);
-  height: clamp(12px, 2.6vh, 30px);
-  font-size: clamp(8px, 1.2vh, 14px);
-}
-.dsp-table-col-divider {
-  width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(var(--theme-rgb), 0.15), transparent);
-  flex-shrink: 0;
-  margin: clamp(4px, 0.5vh, 10px) clamp(4px, 0.5vw, 8px);
-}
-.dsp-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
-}
-
-/* Thead başlık satırı */
-.dtf-thead-row {
-  border-bottom: 1px solid rgba(var(--theme-rgb), 0.18);
-}
-.dtf-th {
-  font-size: clamp(6px, 0.65vh, 9px);
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.22);
-  padding: clamp(2px, 0.35vh, 5px) clamp(2px, 0.3vw, 5px);
-  text-align: left;
-  white-space: nowrap;
-}
-.dtf-th-rank { text-align: center; width: clamp(28px, 4.5vh, 52px); }
-.dtf-th-num  { text-align: right; }
-
-/* Satır stilleri */
-.dtable-row {
-  background: transparent;
-  transition: background 0.12s;
-}
-.dtable-row:nth-child(even) { background: rgba(255,255,255,0.012); }
-.dtable-row:hover           { background: rgba(255,255,255,0.028); }
-.dtable-top3 {}
-.dtable-first {}
-.dtable-top3 td:first-child {
-  border-left: clamp(2px, 0.28vh, 4px) solid rgba(var(--theme-rgb), 0.55);
-}
-.dtable-first td:first-child {
-  border-left: clamp(2px, 0.32vh, 4px) solid var(--theme-primary, #00d4ff);
-}
-.dtable-row td {
-  padding: clamp(1px, 0.48vh, 6px) clamp(2px, 0.3vw, 6px);
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  vertical-align: middle;
-}
-
-/* Sıra numarası hücresi */
-.dtf-rank-cell {
-  text-align: center;
-  width: clamp(28px, 4.5vh, 52px);
-  padding: 0 clamp(2px, 0.3vw, 5px) !important;
-  white-space: nowrap;
-}
-.dtf-rank-num {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-.dtf-rank-1    { font-size: clamp(12px, 2.2vh, 27px); color: var(--theme-primary, #00d4ff); text-shadow: 0 0 clamp(5px, 1vh, 14px) rgba(var(--theme-rgb), 0.55); animation: rankOnePulse 2.8s ease-in-out infinite; }
-.dtf-rank-2    { font-size: clamp(11px, 1.9vh, 23px); color: var(--theme-primary, #00d4ff); opacity: 0.82; }
-.dtf-rank-3    { font-size: clamp(10px, 1.65vh, 20px); color: var(--theme-primary, #00d4ff); opacity: 0.65; }
-.dtf-rank-rest { font-size: clamp(8px, 1.2vh, 15px); color: rgba(255,255,255,0.28); }
-@keyframes rankOnePulse {
-  0%,100% { text-shadow: 0 0 clamp(4px,0.8vh,12px) rgba(var(--theme-rgb),0.4); }
-  50%     { text-shadow: 0 0 clamp(8px,1.5vh,20px) rgba(var(--theme-rgb),0.65); }
-}
-.dtf-rank-arrow {
-  display: block;
-  font-size: clamp(6px, 0.65vh, 9px);
-  line-height: 1;
-}
-.dtf-arrow-up   { color: #4ade80; animation: dtfFade 2.5s ease-out forwards; }
-.dtf-arrow-down { color: #f87171; animation: dtfFade 2.5s ease-out forwards; }
-@keyframes dtfFade {
-  0%  { opacity: 1; } 65% { opacity: 0.8; } 100% { opacity: 0; }
-}
-.dtf-playing-dot {
-  display: inline-block;
-  width: clamp(6px, 0.95vh, 12px); height: clamp(6px, 0.95vh, 12px);
-  border-radius: 50%;
-  background: var(--theme-primary, #00d4ff);
-  box-shadow: 0 0 clamp(4px, 0.8vh, 10px) rgba(var(--theme-rgb), 0.7);
-  animation: dotPulse 0.85s ease-in-out infinite alternate;
-}
-@keyframes dotPulse {
-  from { opacity: 0.35; transform: scale(0.75); }
-  to   { opacity: 1;   transform: scale(1);    }
-}
-
-/* Albüm kapağı */
-.dtf-art-cell {
-  width: clamp(18px, 3.8vh, 44px);
-  padding: clamp(1px, 0.2vh, 3px) clamp(2px, 0.25vw, 4px) !important;
-}
-.dtf-art {
-  width: clamp(16px, 3.6vh, 42px); height: clamp(16px, 3.6vh, 42px);
-  border-radius: clamp(2px, 0.3vh, 5px);
-  object-fit: cover; display: block;
-}
-.dtf-art-ph {
-  width: clamp(16px, 3.6vh, 42px); height: clamp(16px, 3.6vh, 42px);
-  background: rgba(255,255,255,0.04);
-  border-radius: clamp(2px, 0.3vh, 5px);
-  display: flex; align-items: center; justify-content: center;
-  font-size: clamp(8px, 1vh, 12px); color: rgba(255,255,255,0.18);
-}
-
-/* Şarkı adı + sanatçı */
-.dtf-name-cell {
-  min-width: 0;
-  padding: 0 clamp(3px, 0.4vw, 7px) !important;
-  overflow: hidden;
-}
-.dtf-song-name {
-  font-weight: 600; font-size: clamp(11px, 1.45vh, 18px);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  line-height: 1.3; color: rgba(255,255,255,0.88);
-}
-.dtf-song-top { font-weight: 700; font-size: clamp(10px, 1.35vh, 18px); color: #fff; }
-.dtf-artist {
-  font-size: clamp(9px, 1.0vh, 13px); color: rgba(255,255,255,0.35);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  line-height: 1.2; font-style: italic;
-}
-.dtf-live-label {
-  font-size: clamp(8px, 0.85vh, 11px); font-weight: 800;
-  color: var(--theme-primary, #00d4ff); letter-spacing: 0.15em; line-height: 1.4;
-  text-shadow: 0 0 8px rgba(var(--theme-rgb), 0.6);
-}
-
-/* Oy sayısı — "borsa fiyatı" */
-.dtf-votes-cell {
-  text-align: right; width: clamp(32px, 5vh, 62px);
-  padding: 0 clamp(3px, 0.35vw, 6px) !important; white-space: nowrap;
-}
-.dtf-votes-num {
-  display: block;
-  font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(12px, 1.65vh, 22px); line-height: 1.1;
-  color: rgba(255,255,255,0.78); text-align: right; letter-spacing: -0.02em;
-}
-.dtf-votes-top { font-size: clamp(12px, 1.7vh, 22px); color: var(--theme-primary, #00d4ff); }
-.dtf-votes-label {
-  display: block; font-size: clamp(5px, 0.58vh, 8px);
-  color: rgba(255,255,255,0.2); letter-spacing: 0.12em;
-  text-transform: uppercase; text-align: right;
-}
-
-/* Değişim — "%change pill" */
-.dtf-chg-cell {
-  text-align: right; width: clamp(26px, 4.2vh, 52px);
-  padding: 0 clamp(2px, 0.3vw, 5px) !important;
-}
-.dtf-chg-pill {
-  display: inline-block; font-size: clamp(7px, 0.85vh, 11px); font-weight: 700;
-  border-radius: clamp(3px, 0.4vh, 5px);
-  padding: clamp(1px, 0.2vh, 2px) clamp(3px, 0.35vw, 5px);
-  white-space: nowrap; line-height: 1.3;
-}
-.dtf-chg-green {
-  color: #fff; background: rgba(74,222,128,0.22); border: 1px solid rgba(74,222,128,0.45);
-}
-.dtf-chg-up {
-  color: #4ade80; background: rgba(74,222,128,0.10); border: 1px solid rgba(74,222,128,0.28);
-  animation: dtfFade 2.5s ease-out forwards;
-}
-.dtf-chg-dn {
-  color: #f87171; background: rgba(248,113,113,0.10); border: 1px solid rgba(248,113,113,0.28);
-  animation: dtfFade 2.5s ease-out forwards;
-}
-.dtf-chg-flat { font-size: clamp(7px, 0.8vh, 10px); color: rgba(255,255,255,0.10); }
-
-/* Vote flash */
-@keyframes voteFlashGreen {
-  0%   { background: rgba(74,222,128,0.13); }
-  100% { background: transparent; }
-}
-.dtable-vote-flash { animation: voteFlashGreen 1.2s ease-out forwards; }
-
-/* 1 dakika sonra satır solar */
-@keyframes dtfRowFadeOut {
-  0%   { opacity: 1; }
-  100% { opacity: 0; pointer-events: none; }
-}
-.dtf-row-fadeout { animation: dtfRowFadeOut 2s ease-out forwards; }
 .dsp-qr-card {
   flex: 0 0 30%;
   max-width: 30%;
@@ -7624,13 +7429,12 @@ body.theme-pioneer-gold .crew-chat-send:hover {
 .display-page .dsp-brand-motto,
 .display-page .dsp-card-title,
 .display-page .dsp-qr-label,
-.display-page .dtable-votes-lg,
 .display-page .countdown-timer,
 .display-page .display-live-badge .live-count {
   color: var(--theme-primary);
 }
 
-/* "Altın Saatler" başlığı — gradient override (display-page .dsp-card-title renk kuralını geçersiz kıl) */
+/* "DJ SİZSİNİZ" başlığı — gradient override */
 .display-page .dsp-card-title.dsp-card-title-altinsaatler {
   color: unset;
   background: none;
@@ -7640,17 +7444,13 @@ body.theme-pioneer-gold .crew-chat-send:hover {
   filter: none;
 }
 .display-page .dsp-card-title-altinsaatler .dtf-brand-full {
-  background: linear-gradient(90deg, #b8860b, #ffd700, #fff5b0, #ffd700, #b8860b);
+  background: linear-gradient(90deg, #00b4ff, #9b30ff, #ff00cc, #9b30ff, #00b4ff);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: brandGradientH 3s ease infinite;
-  filter: drop-shadow(0 0 3px rgba(255,215,0,0.25)) drop-shadow(0 0 7px rgba(255,180,0,0.12));
-}
-
-.display-page .dtable-top3 {
-  border-color: var(--theme-primary);
+  animation: brandGradientH 3.5s ease infinite;
+  filter: drop-shadow(0 0 6px rgba(0,180,255,0.45)) drop-shadow(0 0 12px rgba(155,48,255,0.25));
 }
 
 /* ─── Event History (DJ Panel Login) ─── */
@@ -7843,29 +7643,6 @@ body.theme-pioneer-gold .crew-chat-send:hover {
 
 .djc-limit-toggle .djc-preset.active {
   animation: phosphorPulse 2s ease-in-out infinite;
-}
-
-/* ─── Played Animation: Fire Effect ─── */
-
-/* ─── Played Card: Flickering Flame Border ─── */
-/* ─── Played Card: 3px Flickering Flame Border + Badge ─── */
-tr.dtable-row.dtable-played,
-.dtable-played {
-  background: rgba(var(--theme-rgb), 0.12) !important;
-  border-left: 3px solid var(--theme-primary, #00d4ff) !important;
-}
-tr.dtable-row.dtable-played td {
-  border-bottom-color: rgba(var(--theme-rgb), 0.08) !important;
-}
-tr.dtable-row.dtable-played .dtf-song-name {
-  color: var(--theme-primary, #00d4ff);
-  font-weight: 700;
-}
-tr.dtable-row.dtable-played .dtf-votes-num {
-  color: var(--theme-primary, #00d4ff);
-}
-tr.dtable-row.dtable-played .dtf-rank-cell {
-  border-left-color: var(--theme-primary, #00d4ff) !important;
 }
 
 /* ─── Socket Warning ─── */
@@ -8153,37 +7930,11 @@ tr.dtable-row.dtable-played .dtf-rank-cell {
 .display-mode-winamp .dsp-brand-motto { color: var(--wmp-text-dim, #888888); }
 .display-mode-winamp .display-live-badge { color: var(--wmp-text, #D4D4D4); }
 
-/* Winamp Bento — table rows (flat, zebra-striped) */
-.display-mode-winamp .dtable-row { background: transparent; transition: background 150ms ease; }
-.display-mode-winamp .dtable-row:nth-child(even) { background: var(--wmp-surface-alt, #1E1E1E); }
-.display-mode-winamp .dtable-row:hover { background: #2E2E2E; }
-.display-mode-winamp .dtable-top3 {
-  background: var(--wmp-selected, #222222);
-  border-color: rgb(51, 51, 51);
-}
-.display-mode-winamp .dtable-first {
-  background: var(--wmp-selected, #222222);
-  border-color: rgb(51, 51, 51);
-}
-.display-mode-winamp .dtable-top3 td:first-child,
-.display-mode-winamp .dtable-first td:first-child { border-left-color: var(--wmp-accent, #007000); }
-.display-mode-winamp .dtf-rank-num { color: var(--wmp-text-dim, #888888); }
-.display-mode-winamp .dtf-rank-1 { color: var(--wmp-accent, #007000); text-shadow: none; }
-.display-mode-winamp .dtf-rank-2 { color: var(--wmp-accent-light, #008000); }
-.display-mode-winamp .dtf-rank-3 { color: var(--wmp-accent, #007000); }
-.display-mode-winamp .dtable-row td { border-bottom-color: var(--wmp-border, #2F2F2F); }
-
 /* Winamp Bento — card title separator */
 .display-mode-winamp .dsp-card-title { border-bottom-color: var(--wmp-border, #2F2F2F); }
 
 /* Winamp Bento — QR card */
 .display-mode-winamp .dsp-qr-card { background: var(--wmp-surface, #2A2A2A); border-color: var(--wmp-border, #2F2F2F); }
-
-/* Winamp Bento — scrollbar inside cards */
-.display-mode-winamp .dsp-table-wrap::-webkit-scrollbar { width: 8px; }
-.display-mode-winamp .dsp-table-wrap::-webkit-scrollbar-track { background: #1A1A1A; }
-.display-mode-winamp .dsp-table-wrap::-webkit-scrollbar-thumb { background: #4A4A4A; border-radius: 4px; }
-.display-mode-winamp .dsp-table-wrap::-webkit-scrollbar-thumb:hover { background: #5A5A5A; }
 
 /* Winamp Bento — performance/paused equalizer */
 .display-mode-winamp .performance-equalizer span { background: #4cff4c; }
@@ -8992,10 +8743,7 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 .display-page.stage-elegant .dsp-event-name { font-weight: 200; letter-spacing: 5px; font-style: italic; -webkit-text-fill-color: #f0b0c8; color: #f0b0c8; filter: drop-shadow(0 0 18px rgba(220,100,140,0.70)) drop-shadow(0 2px 6px rgba(0,0,0,0.95)); }
 .display-page.stage-elegant .dsp-brand-motto { font-style: italic; opacity: 0.55; letter-spacing: 5px; font-weight: 300; color: rgba(240,176,200,0.8); }
 .display-page.stage-elegant .display-ticker-bar { background: rgba(10,2,8,0.45); border-top: 1px solid rgba(180,60,100,0.25); border-bottom: 1px solid rgba(180,60,100,0.25); }
-.display-page.stage-elegant .dtable-row { border-color: rgba(180,60,100,0.10); background: rgba(100,20,40,0.06); }
-.display-page.stage-elegant .dtable-row:hover { background: rgba(180,60,100,0.08); }
 .display-page.stage-elegant .dsp-card, .display-page.stage-elegant .dsp-qr-wrap { background: rgba(14,3,10,0.80); border: 1px solid rgba(200,80,120,0.35); box-shadow: 0 0 28px rgba(160,40,80,0.10); border-radius: 14px; }
-.display-page.stage-elegant .dtable-votes-lg { color: #e090b0; text-shadow: 0 0 10px rgba(200,80,140,0.50); }
 
 /* ─── CLUB — Gece mavisi, elektrik cyan ─── */
 .display-page.stage-club { background: #000d1a; }
@@ -9039,11 +8787,7 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 .display-page.stage-club .dsp-event-name { font-weight: 900; text-transform: uppercase; letter-spacing: 6px; -webkit-text-fill-color: #a0e8ff; color: #a0e8ff; filter: drop-shadow(0 0 16px rgba(0,200,255,0.80)) drop-shadow(0 2px 6px rgba(0,0,0,0.95)); }
 .display-page.stage-club .dsp-brand-motto { text-transform: uppercase; letter-spacing: 8px; font-weight: 800; color: #00d4ff; text-shadow: none; }
 .display-page.stage-club .display-ticker-bar { background: rgba(0,180,255,0.03); border-top: 1px solid rgba(0,180,255,0.30); border-bottom: 1px solid rgba(0,180,255,0.30); box-shadow: 0 0 15px rgba(0,180,255,0.05); }
-.display-page.stage-club .dtable-row { border-color: rgba(0,180,255,0.10); background: rgba(0,100,180,0.04); }
-.display-page.stage-club .dtable-row:hover { background: rgba(0,180,255,0.08); box-shadow: inset 0 0 20px rgba(0,180,255,0.05); }
-.display-page.stage-club .dtable-top3 { text-shadow: none; }
 .display-page.stage-club .dsp-card, .display-page.stage-club .dsp-qr-wrap { background: rgba(0,8,20,0.78); border: 1px solid rgba(0,180,255,0.35); box-shadow: 0 0 28px rgba(0,180,255,0.10), inset 0 0 40px rgba(0,180,255,0.03); }
-.display-page.stage-club .dtable-votes-lg { color: #00d4ff; text-shadow: 0 0 10px rgba(0,200,255,0.60); }
 
 /* ─── FESTIVAL — Sıcak turuncu/altın, şenlik ─── */
 .display-page.stage-festival { background: #0f0500; }
@@ -9089,10 +8833,7 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 @keyframes festRainbow { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
 .display-page.stage-festival .dsp-brand-motto { font-weight: 900; letter-spacing: 8px; background: linear-gradient(90deg, #ffaa00, #ff6600); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .display-page.stage-festival .display-ticker-bar { background: rgba(255,80,0,0.04); border-top: 1px solid rgba(255,100,0,0.30); border-bottom: 1px solid rgba(255,100,0,0.30); }
-.display-page.stage-festival .dtable-row { border-color: rgba(255,100,0,0.10); background: rgba(80,30,0,0.05); border-radius: 8px; margin-bottom: 3px; transition: all 0.3s ease; }
-.display-page.stage-festival .dtable-row:hover { transform: scale(1.01); background: rgba(255,100,0,0.07); }
 .display-page.stage-festival .dsp-card, .display-page.stage-festival .dsp-qr-wrap { background: rgba(20,6,0,0.82); border: 1px solid rgba(255,120,0,0.40); box-shadow: 0 0 28px rgba(255,80,0,0.10); border-radius: 16px; }
-.display-page.stage-festival .dtable-votes-lg { color: #ffaa00; text-shadow: 0 0 10px rgba(255,160,0,0.60); }
 
 /* ─── CYBER — Neon pembe/magenta, siber grid ─── */
 .display-page.stage-cyber { background: #020004; }
@@ -9125,10 +8866,7 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 .display-page.stage-cyber .dsp-event-name { font-weight: 900; letter-spacing: 6px; -webkit-text-fill-color: #ff66d0; color: #ff66d0; filter: drop-shadow(0 0 16px rgba(255,0,160,0.80)) drop-shadow(0 2px 6px rgba(0,0,0,0.95)); }
 .display-page.stage-cyber .dsp-brand-motto { letter-spacing: 8px; font-weight: 700; color: rgba(255,0,160,0.80); text-shadow: none; }
 .display-page.stage-cyber .display-ticker-bar { background: rgba(2,0,4,0.60); border-top: 1px solid rgba(255,0,160,0.35); border-bottom: 1px solid rgba(255,0,160,0.35); }
-.display-page.stage-cyber .dtable-row { border-color: rgba(255,0,160,0.12); background: rgba(255,0,160,0.025); }
-.display-page.stage-cyber .dtable-row:hover { background: rgba(255,0,160,0.07); }
 .display-page.stage-cyber .dsp-card, .display-page.stage-cyber .dsp-qr-wrap { background: rgba(2,0,8,0.82); border: 1px solid rgba(255,0,160,0.40); box-shadow: 0 0 28px rgba(255,0,160,0.10), inset 0 0 40px rgba(255,0,160,0.03); border-radius: 0; }
-.display-page.stage-cyber .dtable-votes-lg { color: #ff00a0; text-shadow: 0 0 12px rgba(255,0,160,0.70); }
 
 /* ─── RAVE — UV mor, neon yeşil ─── */
 .display-page.stage-rave { background: #05001a; }
@@ -9162,10 +8900,7 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 .display-page.stage-rave .dsp-event-name { font-weight: 900; letter-spacing: 4px; -webkit-text-fill-color: #cc88ff; color: #cc88ff; filter: drop-shadow(0 0 14px rgba(120,0,255,0.90)) drop-shadow(0 2px 6px rgba(0,0,0,0.95)); }
 .display-page.stage-rave .dsp-brand-motto { letter-spacing: 6px; font-weight: 700; color: rgba(0,255,120,0.85); text-shadow: 0 0 8px rgba(0,255,120,0.40); }
 .display-page.stage-rave .display-ticker-bar { background: rgba(5,0,8,0.50); border-top: 1px solid rgba(120,0,255,0.30); border-bottom: 1px solid rgba(120,0,255,0.30); }
-.display-page.stage-rave .dtable-row { border-color: rgba(120,0,255,0.12); background: rgba(120,0,255,0.03); }
-.display-page.stage-rave .dtable-row:hover { background: rgba(120,0,255,0.08); }
 .display-page.stage-rave .dsp-card, .display-page.stage-rave .dsp-qr-wrap { background: rgba(3,0,12,0.82); border: 1px solid rgba(120,0,255,0.40); box-shadow: 0 0 32px rgba(120,0,255,0.10); border-radius: 6px; }
-.display-page.stage-rave .dtable-votes-lg { color: #00ff78; text-shadow: 0 0 12px rgba(0,255,120,0.70); }
 
 /* ─── CINEMA — Noir siyah, beyaz spotlight ─── */
 .display-page.stage-cinema { background: #000000; }
@@ -9190,10 +8925,7 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #FFCC00; border-bottom-
 .display-page.stage-cinema .dsp-event-name { font-weight: 300; letter-spacing: 8px; -webkit-text-fill-color: #ffffff; color: #ffffff; filter: drop-shadow(0 0 20px rgba(255,255,200,0.55)) drop-shadow(0 2px 6px rgba(0,0,0,0.95)); }
 .display-page.stage-cinema .dsp-brand-motto { font-weight: 300; letter-spacing: 8px; opacity: 0.40; color: rgba(200,200,200,0.7); }
 .display-page.stage-cinema .display-ticker-bar { background: rgba(0,0,0,0.70); border-top: 1px solid rgba(255,255,255,0.12); border-bottom: 1px solid rgba(255,255,255,0.12); }
-.display-page.stage-cinema .dtable-row { border-color: rgba(255,255,255,0.06); background: transparent; }
-.display-page.stage-cinema .dtable-row:hover { background: rgba(255,255,255,0.04); }
 .display-page.stage-cinema .dsp-card, .display-page.stage-cinema .dsp-qr-wrap { background: rgba(5,5,5,0.90); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 0 30px rgba(0,0,0,0.60); border-radius: 0; }
-.display-page.stage-cinema .dtable-votes-lg { color: #ffffff; text-shadow: 0 0 10px rgba(255,255,200,0.40); font-weight: 300; }
 
 /* ═══════════════════════════════════════════════════════════════
    ALEV İKONU — Top 3 sıra rozeti yanında CSS alev (GPU-hafif)

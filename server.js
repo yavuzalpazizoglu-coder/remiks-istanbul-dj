@@ -193,10 +193,13 @@ process.on('unhandledRejection', (reason) => {
 });
 
 const isProduction = process.env.NODE_ENV === 'production';
-if (isProduction && !process.env.APP_URL) {
-  console.warn('⚠️  UYARI: APP_URL env değişkeni tanımlı değil — CORS tüm originlere açık!');
-}
 const allowedOrigin = process.env.APP_URL || (isProduction ? false : '*');
+if (isProduction && !process.env.APP_URL) {
+  console.warn('⚠️  UYARI: APP_URL tanımlı değil — CORS kökeni kapalı (false). İstemci ile API aynı host’ta olmalı; QR ve tam URL için APP_URL şart.');
+}
+if (isProduction && process.env.TRUST_PROXY !== '0') {
+  app.set('trust proxy', Number(process.env.TRUST_PROXY) || 1);
+}
 const io = new Server(server, {
   cors: { origin: allowedOrigin, methods: ['GET', 'POST'] },
 });
@@ -210,8 +213,11 @@ function sanitize(str) {
 }
 app.use('/logos', express.static(path.join(__dirname, 'public/logos')));
 app.use('/modes', express.static(path.join(__dirname, 'public/modes')));
+app.use('/legal', express.static(path.join(__dirname, 'public/legal')));
 
-if (process.env.NODE_ENV === 'production') {
+const clientDistIndex = path.join(__dirname, 'client/dist/index.html');
+const serveClient = isProduction || fs.existsSync(clientDistIndex);
+if (serveClient) {
   app.use(express.static(path.join(__dirname, 'client/dist')));
 }
 
@@ -509,6 +515,19 @@ app.put('/api/events/:slug/theme', djAuth, (req, res) => {
   }
 });
 
+app.put('/api/events/:slug/list-size', djAuth, (req, res) => {
+  try {
+    const { size } = req.body;
+    if (![15, 30, 40].includes(size)) return res.status(400).json({ error: 'Invalid size' });
+    const event = db.updateListSize(req.params.slug, size);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    io.to(req.params.slug).emit('list-size-changed', { size });
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.put('/api/events/:slug/animation', djAuth, (req, res) => {
   try {
     const { level } = req.body;
@@ -730,10 +749,10 @@ io.on('connection', (socket) => {
   });
 });
 
-// SPA fallback
-if (process.env.NODE_ENV === 'production') {
+// SPA fallback (build sonrası `node server.js` ile NODE_ENV olmadan da /dj vb. çalışır)
+if (serveClient) {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/dist/index.html'));
+    res.sendFile(clientDistIndex);
   });
 }
 

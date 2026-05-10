@@ -8,6 +8,12 @@ import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
 
+function sortApprovedDisplay(a, b) {
+  const dv = (b.votes || 0) - (a.votes || 0);
+  if (dv !== 0) return dv;
+  return String(a.created_at || '').localeCompare(String(b.created_at || ''));
+}
+
 function AmbientGlow() {
   return <div className="ambient-glow" />;
 }
@@ -512,27 +518,6 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
   );
 }
 
-function VoteFloat({ count }) {
-  const [floats, setFloats] = useState([]);
-  const prevCount = useRef(count);
-  useEffect(() => {
-    if (count > prevCount.current) {
-      const id = Date.now();
-      setFloats(prev => [...prev, id]);
-      setTimeout(() => setFloats(prev => prev.filter(f => f !== id)), 1000);
-    }
-    prevCount.current = count;
-  }, [count]);
-  return floats.map(id => (
-    <motion.span key={id}
-      initial={{ opacity: 1, y: 0, scale: 1 }}
-      animate={{ opacity: 0, y: -30, scale: 1.4 }}
-      transition={{ duration: 0.7 }}
-      style={{ position: 'absolute', top: -8, color: 'var(--neon-cyan)', fontWeight: 900, fontSize: 14, pointerEvents: 'none' }}
-    >+1</motion.span>
-  ));
-}
-
 function NowPlayingBar({ req, lang, fading }) {
   const [flash, setFlash] = useState(false);
   const [slotActive, setSlotActive] = useState(false);
@@ -625,46 +610,24 @@ function NowPlayingBar({ req, lang, fading }) {
   );
 }
 
-function SongCard({ req, rank, lang }) {
-  const [voteFlash, setVoteFlash] = useState(false);
-  const [delta, setDelta]         = useState(0);
-  const [showDelta, setShowDelta] = useState(false);
-  const [rankFlash, setRankFlash] = useState(null);
-  const prevVotes  = useRef(req.votes);
-  const prevRank   = useRef(rank);
-  const deltaTimer = useRef(null);
-  const isTop3     = rank <= 3;
-  const tier       = rank <= 3 ? rank : 'rest';
-
-  useEffect(() => {
-    if (req.votes > prevVotes.current) {
-      const d = req.votes - prevVotes.current;
-      setDelta(d); setShowDelta(true); setVoteFlash(true);
-      clearTimeout(deltaTimer.current);
-      deltaTimer.current = setTimeout(() => { setShowDelta(false); setDelta(0); }, 6000);
-      setTimeout(() => setVoteFlash(false), 1200);
-    }
-    prevVotes.current = req.votes;
-  }, [req.votes]);
-
-  useEffect(() => {
-    if (rank < prevRank.current)      { setRankFlash('up');   setTimeout(() => setRankFlash(null), 2500); }
-    else if (rank > prevRank.current) { setRankFlash('down'); setTimeout(() => setRankFlash(null), 2500); }
-    prevRank.current = rank;
-  }, [rank]);
-
+function SongCard({ req, rank, listSize = 15 }) {
+  const isTop3 = rank <= 3;
+  const tier = rank <= 3 ? rank : 'rest';
   const tierClass = rank === 1 ? 'dsp-card-gold' : rank === 2 ? 'dsp-card-silver' : rank === 3 ? 'dsp-card-bronze' : '';
-  const rowGroup  = rank <= 3 ? 'dsp-row-t1' : rank <= 6 ? 'dsp-row-t2' : rank <= 9 ? 'dsp-row-t3' : 'dsp-row-t4';
+  const t3Start = listSize >= 30 ? 10 : 7;
+  const t4Start = listSize >= 30 ? 19 : 10;
+  const rowGroup = rank <= 3 ? 'dsp-row-t1'
+    : rank < t3Start ? 'dsp-row-t2'
+    : rank < t4Start ? 'dsp-row-t3'
+    : 'dsp-row-t4';
 
   return (
     <motion.div
-      className={`dsp-song-card ${tierClass} ${rowGroup} ${voteFlash ? 'dsp-card-vote-flash' : ''}`}
-      layout
-      transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-      initial={{ opacity: 0, scale: 0.92 }}
-      animate={{ opacity: 1, scale: 1 }}
+      className={`dsp-song-card ${tierClass} ${rowGroup}`}
+      initial={false}
+      exit={{ opacity: 0 }}
+      transition={{ opacity: { duration: 0.18 } }}
     >
-      {/* Rank — sıralama rozeti */}
       <div className={`dsp-card-rank dsp-card-rank-${tier}`}>
         {isTop3 ? (
           <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
@@ -674,49 +637,23 @@ function SongCard({ req, rank, lang }) {
             <span className="dsp-card-rank-num">{rank}</span>
           </>
         )}
-        {rankFlash && (
-          <span className={rankFlash === 'up' ? 'dsp-card-rarrow dsp-rarrow-up' : 'dsp-card-rarrow dsp-rarrow-dn'}>
-            {rankFlash === 'up' ? '▲' : '▼'}
-          </span>
-        )}
       </div>
 
-      {/* Albüm */}
       {req.album_art
         ? <img src={req.album_art} alt="" className="dsp-card-art" />
         : <div className="dsp-card-art-ph">♪</div>
       }
 
-      {/* Şarkı + Sanatçı */}
       <div className="dsp-card-info">
         <div className={`dsp-card-song ${isTop3 ? 'dsp-card-song-top' : ''}`}>{req.song_name}</div>
         {req.artist && <div className="dsp-card-artist">{req.artist}</div>}
       </div>
 
-      {/* Oy */}
       <div className="dsp-card-votes">
-        <VoteFloat count={req.votes} />
         <div className="dsp-card-votes-box">
-          <span className={`dsp-votes-arrow ${voteFlash ? 'dsp-votes-arrow-flash' : ''}`}>↑</span>
-          <motion.span
-            className={`dsp-card-votes-num ${isTop3 ? 'dsp-card-votes-top' : ''}`}
-            key={req.votes}
-            initial={{ scale: 1.2 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >{String(req.votes).padStart(3, '0')}</motion.span>
-        </div>
-        <div className="dsp-card-chg">
-          {showDelta && delta > 0
-            ? <motion.span className="dsp-chg-pill dsp-chg-green"
-                initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              >+{delta}</motion.span>
-            : rankFlash === 'up'
-              ? <span className="dsp-chg-pill dsp-chg-up">▲</span>
-              : rankFlash === 'down'
-                ? <span className="dsp-chg-pill dsp-chg-dn">▼</span>
-                : null
-          }
+          <span className={`dsp-card-votes-num ${isTop3 ? 'dsp-card-votes-top' : ''}`}>
+            {String(req.votes).padStart(3, '0')}
+          </span>
         </div>
       </div>
     </motion.div>
@@ -908,6 +845,7 @@ export default function DisplayPage() {
   const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
+  const [listSize, setListSize] = useState(15);
 
   const [blackout, setBlackout] = useState(false);
   const [spotlightText, setSpotlightText] = useState('');
@@ -915,6 +853,7 @@ export default function DisplayPage() {
   const [displayCard, setDisplayCard] = useState(null);
   const displayCardTimer = useRef(null);
   const rejiCountdownTimer = useRef(null);
+  const voteResortTimerRef = useRef(null);
 
   const socketConnected = useSocketStatus();
   const T = useCallback((key) => t(lang, key), [lang]);
@@ -937,7 +876,8 @@ export default function DisplayPage() {
       setAnimLevel(eventData.animation_level || 'high');
       setStageDesign(eventData.stage_design || 'elegant');
       setEventLogo(eventData.event_logo || '');
-      setRequests((reqData.requests || []).filter(r => r.status === 'approved'));
+      setListSize(eventData.display_list_size || 15);
+      setRequests((reqData.requests || []).filter(r => r.status === 'approved').sort(sortApprovedDisplay));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
       if (eventData.status === 'ended') {
         fetch(`${API}/api/events/${slug}/requests?all=true`)
@@ -956,20 +896,24 @@ export default function DisplayPage() {
 
     socket.on('request-added', (req) => {
       if (req.status !== 'approved') return;
+      clearTimeout(voteResortTimerRef.current);
       setRequests(prev => {
         if (prev.find(r => r.id === req.id)) return prev;
-        return [...prev, req].sort((a, b) => b.votes - a.votes);
+        return [...prev, req].sort(sortApprovedDisplay);
       });
     });
 
     socket.on('vote-updated', ({ requestId, votes }) => {
-      setRequests(prev =>
-        prev.map(r => r.id === requestId ? { ...r, votes } : r).sort((a, b) => b.votes - a.votes)
-      );
+      setRequests(prev => prev.map(r => (r.id === requestId ? { ...r, votes } : r)));
+      clearTimeout(voteResortTimerRef.current);
+      voteResortTimerRef.current = setTimeout(() => {
+        setRequests(prev => [...prev].sort(sortApprovedDisplay));
+      }, 480);
     });
 
     socket.on('list-updated', (list) => {
-      setRequests(list.filter(r => r.status === 'approved'));
+      clearTimeout(voteResortTimerRef.current);
+      setRequests(list.filter(r => r.status === 'approved').sort(sortApprovedDisplay));
     });
 
     // DJ ▶ Çal tıkladığında — bar hemen açılır, listeden çıkar
@@ -1031,6 +975,7 @@ export default function DisplayPage() {
     socket.on('ticker-font-size', ({ delta }) => setTickerFontDelta(delta));
     socket.on('theme-changed', ({ theme }) => setTheme(theme));
     socket.on('animation-changed', ({ level }) => setAnimLevel(level));
+    socket.on('list-size-changed', ({ size }) => setListSize(size));
     socket.on('stage-design-changed', ({ design }) => setStageDesign(design));
     socket.on('logo-changed', ({ logo }) => setEventLogo(logo));
 
@@ -1079,12 +1024,15 @@ export default function DisplayPage() {
     });
 
     return () => {
+      clearTimeout(voteResortTimerRef.current);
       socket.off('request-added'); socket.off('vote-updated'); socket.off('list-updated');
       socket.off('event-status'); socket.off('language-changed'); socket.off('brand-updated');
       socket.off('now-playing'); socket.off('clear-playing');
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('ticker-font-size');
-      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed'); socket.off('logo-changed'); socket.off('music-mode');
+      socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed');
+      socket.off('list-size-changed');
+      socket.off('logo-changed'); socket.off('music-mode');
       clearTimeout(playedSongTimer.current);
       clearTimeout(playedFadeTimer.current);
       if (rejiCountdownTimer.current) clearInterval(rejiCountdownTimer.current);
@@ -1117,7 +1065,7 @@ export default function DisplayPage() {
   const baseList = playedSong
     ? requests.filter(r => r.id !== playedSong.id)
     : requests;
-  const top15 = baseList.slice(0, 15);
+  const topN = baseList.slice(0, listSize);
   const displayName = brandText || event.name;
 
   const themeColors = {
@@ -1210,7 +1158,7 @@ export default function DisplayPage() {
       {/* Elegant: kadife bordo + gül altını bokeh + şimmer */}
       {stageDesign === 'elegant' && <>
         <div className="display-bg" />
-        <img src="/logos/remiksbox_logo_square.png" alt="" className="stage-bg-img stage-bg-elegant" />
+        <img src="/logos/remiksbox_marka_transparent_hr.png" alt="" className="stage-bg-img stage-bg-elegant" />
         {animLevel === 'low' && <><AmbientGlow /><Sparkles themeRgb="200,80,120" count={8} /></>}
         {animLevel === 'medium' && <><ElegantBokeh themeRgb="200,80,120" /><GeoShapes themeRgb="180,60,100" /><Sparkles themeRgb="220,100,140" count={15} /></>}
         {animLevel === 'high' && <><ElegantShimmerCurtain themeRgb="200,80,120" /><ElegantBokeh themeRgb="200,80,120" /><ElegantDust themeRgb="220,100,140" /><ClubEqualizer themeRgb="200,80,120" /><AmbientGlow /><Sparkles themeRgb="240,120,160" count={25} /></>}
@@ -1273,11 +1221,13 @@ export default function DisplayPage() {
         <div className="dsp-topbar">
           {/* Sol: Organizasyon logosu (sadece gerçek logo yüklüyse göster) */}
           <div className="dsp-topbar-left">
-            {eventLogo && (
-              <div className="dsp-logo-inline">
-                <img src={eventLogo} alt="Logo" className="dsp-logo-inline-img" />
-              </div>
-            )}
+            <div className="dsp-logo-inline">
+              <img
+                src={eventLogo || '/logos/remiksbox_marka_transparent_hr.png'}
+                alt={eventLogo ? 'Logo' : 'RemiksBox'}
+                className="dsp-logo-inline-img"
+              />
+            </div>
           </div>
 
           {/* Merkez: Etkinlik adı + motto */}
@@ -1360,7 +1310,7 @@ export default function DisplayPage() {
               {/* Merkez: Altın Saatler + NOW PLAYING + Şarkı Grid */}
               <div className="dsp-beatbox-songs">
                 <div className="dsp-card-title dsp-card-title-altinsaatler">
-                  <span className="dtf-brand-full">REMİKSBOX — ⭐ ALTIN SAATLER ⭐</span>
+                  <span className="dtf-brand-full">🎧 DJ SİZSİNİZ</span>
                 </div>
 
                 {/* NOW PLAYING — sabit çerçeve, her zaman görünür */}
@@ -1371,10 +1321,10 @@ export default function DisplayPage() {
                     <span>🎵</span> {T('display.no_requests')}
                   </div>
                 ) : (
-                  <div className="dsp-song-grid">
+                  <div className={`dsp-song-grid dsp-song-grid--n${listSize}`}>
                     <AnimatePresence>
-                      {top15.map((req, idx) => (
-                        <SongCard key={req.id} req={req} rank={idx + 1} lang={lang} />
+                      {topN.map((req, idx) => (
+                        <SongCard key={req.id} req={req} rank={idx + 1} listSize={listSize} />
                       ))}
                     </AnimatePresence>
                   </div>

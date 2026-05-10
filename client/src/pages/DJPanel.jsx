@@ -42,6 +42,8 @@ export default function DJPanel() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [connectedCount, setConnectedCount] = useState(0);
   const [spotifyEnabled, setSpotifyEnabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [listSize, setListSize] = useState(15);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
   const previewMonitorRef = useRef(null);
@@ -125,6 +127,7 @@ export default function DJPanel() {
       setAnimationLevel(data.animation_level || 'high');
       setStageDesign(data.stage_design || 'elegant');
       setEventLogo(data.event_logo || '');
+      setListSize(data.display_list_size || 15);
       await fetchRequests(eventSlug);
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
     } catch (err) {
@@ -515,6 +518,17 @@ export default function DJPanel() {
     } catch (err) { console.warn('toggleMusicMode failed:', err); }
   };
 
+  const changeListSize = async (size) => {
+    setListSize(size);
+    try {
+      await fetch(`${API}/api/events/${slug}/list-size`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
+        body: JSON.stringify({ size }),
+      });
+    } catch (err) { console.warn('changeListSize failed:', err); }
+  };
+
   const changeAnimationLevel = async (level) => {
     setAnimationLevel(level);
     try {
@@ -602,18 +616,21 @@ export default function DJPanel() {
       </>
     );
 
+    const privacyHref = lang === 'tr' ? '/legal/tr-gizlilik.html' : '/legal/en-privacy.html';
+    const termsHref = lang === 'tr' ? '/legal/tr-kullanim.html' : '/legal/en-terms.html';
+
     const loginFooter = (
       <footer className="login-footer">
         <div className="login-footer-brand">
-          <span className="login-footer-logo-text"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
+          <img className="login-footer-logo-mark" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
           <span className="login-footer-by">by Remiks İstanbul</span>
         </div>
         <div className="login-footer-links">
           <span>{lang === 'tr' ? 'Tüm hakları saklıdır.' : 'All rights reserved.'} &copy; {new Date().getFullYear()}</span>
           <span className="login-footer-sep">|</span>
-          <span>{lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}</span>
+          <a className="login-footer-link" href={privacyHref} target="_blank" rel="noopener noreferrer">{lang === 'tr' ? 'Gizlilik Politikası' : 'Privacy Policy'}</a>
           <span className="login-footer-sep">|</span>
-          <span>{lang === 'tr' ? 'Kullanım Koşulları' : 'Terms of Use'}</span>
+          <a className="login-footer-link" href={termsHref} target="_blank" rel="noopener noreferrer">{lang === 'tr' ? 'Kullanım Koşulları' : 'Terms of Use'}</a>
         </div>
         <div className="login-footer-legal">
           <p>{lang === 'tr'
@@ -637,7 +654,7 @@ export default function DJPanel() {
           {loginBg}
           <div className="login-content">
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <h1 className="login-logo-text"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></h1>
+              <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
               <p className="login-tagline">{lang === 'tr' ? 'DJ Etkinlik Yönetim Sistemi' : 'DJ Event Management System'}</p>
               <div className="login-badge-row">
                 <span className="login-badge">Real-Time</span>
@@ -695,7 +712,7 @@ export default function DJPanel() {
         {loginBg}
         <div className="login-content">
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="login-logo-text"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></h1>
+            <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
             <div className="login-user-chip">
               <span className="login-user-avatar">{djUser.name?.charAt(0) || 'D'}</span>
               <span className="login-user-name">{djUser.name}</span>
@@ -792,7 +809,7 @@ export default function DJPanel() {
       {/* ─── Top Header Bar ─── */}
       <div className="djc-row1">
         <div className="djc-brand-block">
-          <span className="djc-remiksbox-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
+          <img className="djc-remiksbox-logo-img" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
         </div>
         <div className="djc-row1-divider" />
         <span className="djc-event-name">{event.name}</span>
@@ -1033,11 +1050,21 @@ export default function DJPanel() {
               <span className="djc-sec-title"><strong>{lang === 'tr' ? 'LİMİT' : 'LIMIT'}</strong> · {lang === 'tr' ? 'Sınır' : 'Limit'}</span>
             </div>
             <div className="djc-sec-body">
-              <div className="djc-limit-toggle">
-                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
-                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
-                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
-                <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
+              <div className="djc-limit-row">
+                <div className="djc-limit-toggle">
+                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 1 ? 'active' : ''}`} onClick={() => updateRequestLimit(1)}>1</button>
+                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 2 ? 'active' : ''}`} onClick={() => updateRequestLimit(2)}>2</button>
+                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
+                  <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
+                </div>
+                <span className="djc-limit-sep">|</span>
+                <div className="djc-limit-toggle">
+                  {[15, 30, 40].map(n => (
+                    <button key={n}
+                      className={`preset-btn djc-preset djc-preset-eq ${listSize === n ? 'active' : ''}`}
+                      onClick={() => changeListSize(n)}>{n}</button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

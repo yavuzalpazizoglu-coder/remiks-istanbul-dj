@@ -124,6 +124,18 @@ try {
   db.exec("ALTER TABLE requests ADD COLUMN genre TEXT DEFAULT ''");
 }
 
+try {
+  db.prepare("SELECT display_list_style FROM events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE events ADD COLUMN display_list_style TEXT DEFAULT 'cards'");
+}
+
+try {
+  db.prepare("SELECT display_list_size FROM events LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE events ADD COLUMN display_list_size INTEGER DEFAULT 15");
+}
+
 // ─── Events ───
 
 export function createEvent(name, djPassword) {
@@ -281,6 +293,11 @@ export function updateStageDesign(slug, design) {
 
 export function updateEventLogo(slug, logoPath) {
   db.prepare('UPDATE events SET event_logo = ? WHERE slug = ?').run(logoPath, slug);
+  return getEventBySlug(slug);
+}
+
+export function updateListSize(slug, size) {
+  db.prepare('UPDATE events SET display_list_size = ? WHERE slug = ?').run(size, slug);
   return getEventBySlug(slug);
 }
 
