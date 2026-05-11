@@ -303,7 +303,7 @@ export default function RequestPage() {
           <div className="request-header">
         <div className="request-header-logos">
           {eventLogo && <img src={eventLogo} alt="Event" className="request-event-logo" />}
-          <span className="request-brand-logo"><span className="login-logo-remiks">Remiks</span><span className="login-logo-box">Box</span></span>
+          <img className="request-brand-logo-img" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
         </div>
         <h1>{T('request.title')}</h1>
         {event.status === 'countdown' && countdownDisplay && (

@@ -171,6 +171,12 @@ export function setCountdownEnd(slug, timestamp) {
   return getEventBySlug(slug);
 }
 
+export function cancelCountdown(slug) {
+  db.prepare('UPDATE events SET countdown_end = NULL, status = ? WHERE slug = ?')
+    .run('waiting', slug);
+  return getEventBySlug(slug);
+}
+
 export function updateBrandText(slug, brandText) {
   db.prepare('UPDATE events SET brand_text = ? WHERE slug = ?').run(brandText, slug);
   return getEventBySlug(slug);

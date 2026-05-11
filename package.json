@@ -1,8 +1,11 @@
 {
   "name": "remiks-istanbul-dj-request",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Remiks İstanbul - Canlı DJ İstek & Oylama Sistemi",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "server:dev": "node --watch server.js",
@@ -10,7 +13,9 @@
     "postinstall": "cd client && npm install",
     "build": "cd client && npm run build",
     "start": "NODE_ENV=production node server.js",
-    "setup": "npm install && cd client && npm install"
+    "setup": "npm install && cd client && npm install",
+    "tanitim:render": "node tanitim/render-tanitim-banner.mjs",
+    "tanitim:social": "node tanitim/social/render-social.mjs"
   },
   "dependencies": {
     "better-sqlite3": "^11.7.0",
@@ -23,7 +28,6 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2",
-    "puppeteer": "^24.40.0"
+    "concurrently": "^9.1.2"
   }
 }

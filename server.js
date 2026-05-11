@@ -365,6 +365,17 @@ app.put('/api/events/:slug/brand', djAuth, (req, res) => {
   }
 });
 
+app.delete('/api/events/:slug/countdown', djAuth, (req, res) => {
+  try {
+    const event = db.cancelCountdown(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    io.to(req.params.slug).emit('event-status', { status: 'waiting', countdown_end: null });
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/events/:slug/countdown', djAuth, (req, res) => {
   try {
     const { minutes } = req.body;

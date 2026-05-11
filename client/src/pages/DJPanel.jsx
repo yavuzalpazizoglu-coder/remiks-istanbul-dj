@@ -407,6 +407,15 @@ export default function DJPanel() {
     } catch (err) { showToast(err.message); }
   };
 
+  const stopCountdown = async () => {
+    try {
+      const res = await fetch(`${API}/api/events/${slug}/countdown`, { method: 'DELETE', headers });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setEvent(data);
+    } catch (err) { showToast(err.message); }
+  };
+
   const changeLang = async (newLang) => {
     try {
       const res = await fetch(`${API}/api/events/${slug}/language`, {
@@ -968,6 +977,14 @@ export default function DJPanel() {
                   title={lang === 'tr' ? 'Geri sayımlı başlat' : 'Start with countdown'}
                 >
                   ⏱
+                </button>
+                <button
+                  className="btn btn-ghost djc-ctrl-cd-btn djc-ctrl-cd-stop"
+                  onClick={stopCountdown}
+                  disabled={event.status !== 'countdown'}
+                  title={lang === 'tr' ? 'Geri sayımı durdur' : 'Stop countdown'}
+                >
+                  ⏹
                 </button>
               </div>
 

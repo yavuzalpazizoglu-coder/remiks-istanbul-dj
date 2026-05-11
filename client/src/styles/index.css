@@ -2341,6 +2341,8 @@ body.theme-pioneer-gold .djc-sec-title strong {
   opacity: 0.7;
 }
 .djc-ctrl-cd-btn:hover { opacity: 1; }
+.djc-ctrl-cd-stop:not(:disabled) { color: #ff4d4d; }
+.djc-ctrl-cd-stop:not(:disabled):hover { background: rgba(255,77,77,0.15) !important; }
 .djc-ctrl-status-dot {
   width: 7px; height: 7px;
   border-radius: 50%;
@@ -4541,7 +4543,83 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
     rgba(var(--theme-rgb), 0.18) 0%,
     #060810 45%,
     rgba(var(--theme-rgb), 0.10) 100%);
-  border-color: rgba(var(--theme-rgb), 0.45);
+  border-color: rgba(255, 100, 30, 0.6);
+  animation: firePulse 1.2s ease-in-out infinite;
+  box-shadow:
+    0 0 20px rgba(255, 80, 20, 0.3),
+    0 0 40px rgba(255, 120, 40, 0.15),
+    inset 0 1px 0 rgba(255, 200, 150, 0.1);
+}
+
+/* Alev efekti - üstten animasyonlu parlama */
+.dsp-np-stage-active::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 120, 40, 0.9),
+    rgba(255, 200, 80, 1),
+    rgba(255, 120, 40, 0.9),
+    transparent
+  );
+  border-radius: 2px;
+  animation: fireFlicker 0.8s ease-in-out infinite alternate;
+  filter: blur(1px);
+}
+
+/* NOW PLAYING alev ikonları — position:absolute, layout etkilemez */
+.dsp-np-flame {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(10px, 1.1vw, 26px);
+  pointer-events: none;
+  animation: npFlameFloat 0.9s ease-in-out infinite alternate;
+  z-index: 2;
+  line-height: 1;
+}
+.dsp-np-flame-l { left: clamp(4px, 0.5vw, 10px); animation-delay: 0s; }
+.dsp-np-flame-r { right: clamp(4px, 0.5vw, 10px); animation-delay: 0.45s; }
+@keyframes npFlameFloat {
+  0%   { transform: translateY(-55%) scale(0.9); opacity: 0.7; }
+  100% { transform: translateY(-45%) scale(1.1); opacity: 1; }
+}
+
+/* Alev pulse animasyonu */
+@keyframes firePulse {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(255, 80, 20, 0.3),
+      0 0 40px rgba(255, 120, 40, 0.15),
+      inset 0 1px 0 rgba(255, 200, 150, 0.1);
+    border-color: rgba(255, 100, 30, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(255, 100, 30, 0.5),
+      0 0 60px rgba(255, 140, 50, 0.25),
+      0 0 100px rgba(255, 160, 60, 0.1),
+      inset 0 1px 0 rgba(255, 220, 180, 0.15);
+    border-color: rgba(255, 130, 50, 0.8);
+  }
+}
+
+/* Alev flicker animasyonu */
+@keyframes fireFlicker {
+  0% {
+    opacity: 0.7;
+    transform: scaleY(0.8) scaleX(0.95);
+    filter: blur(1px) brightness(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1.2) scaleX(1.05);
+    filter: blur(2px) brightness(1.3);
+  }
 }
 @keyframes npStageFlash {
   0%   { box-shadow: 0 0 0 0 rgba(var(--theme-rgb), 0); }
@@ -7434,7 +7512,7 @@ body.theme-pioneer-gold .crew-chat-send:hover {
   color: var(--theme-primary);
 }
 
-/* "DJ SİZSİNİZ" başlığı — gradient override */
+/* ── DJ SİZSİNİZ başlığı — tema neon stilinde ── */
 .display-page .dsp-card-title.dsp-card-title-altinsaatler {
   color: unset;
   background: none;
@@ -7442,15 +7520,74 @@ body.theme-pioneer-gold .crew-chat-send:hover {
   background-clip: unset;
   animation: none;
   filter: none;
+  border-bottom: 1px solid rgba(0, 180, 255, 0.18);
+  gap: 0;
+  padding-bottom: clamp(4px, 0.5vh, 10px);
 }
 .display-page .dsp-card-title-altinsaatler .dtf-brand-full {
-  background: linear-gradient(90deg, #00b4ff, #9b30ff, #ff00cc, #9b30ff, #00b4ff);
+  background: none;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  animation: none;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(5px, 0.55vw, 14px);
+}
+.display-page .dtf-hp {
+  font-size: clamp(11px, 1.25vw, 32px);
+  animation: dtfHpPulse 2.4s ease-in-out infinite;
+  display: inline-block;
+  filter: drop-shadow(0 0 6px rgba(0, 180, 255, 0.7));
+}
+.display-page .dtf-hp-right {
+  transform: scaleX(-1);
+  animation-delay: 1.2s;
+}
+@keyframes dtfHpPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.12); }
+}
+.display-page .dtf-hp-right {
+  transform: scaleX(-1);
+}
+@keyframes dtfHpPulseR {
+  0%, 100% { opacity: 0.55; transform: scaleX(-1) scale(1); }
+  50%       { opacity: 1;    transform: scaleX(-1) scale(1.12); }
+}
+.display-page .dtf-hp-right { animation-name: dtfHpPulseR; }
+.display-page .dtf-dj {
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(13px, 1.55vw, 40px);
+  letter-spacing: clamp(1px, 0.15vw, 5px);
+  color: #00b4ff;
+  text-shadow:
+    0 0 8px rgba(0, 180, 255, 0.9),
+    0 0 22px rgba(0, 180, 255, 0.5),
+    0 0 40px rgba(0, 180, 255, 0.2);
+}
+.display-page .dtf-dot {
+  font-weight: 300;
+  font-size: clamp(10px, 1vw, 26px);
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0;
+}
+.display-page .dtf-sizsiniz {
+  font-style: normal;
+  font-weight: 900;
+  font-size: clamp(13px, 1.55vw, 40px);
+  letter-spacing: clamp(3px, 0.5vw, 13px);
+  background: linear-gradient(90deg, #7b2fff, #c840ff, #ff00cc, #c840ff, #7b2fff);
   background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: brandGradientH 3.5s ease infinite;
-  filter: drop-shadow(0 0 6px rgba(0,180,255,0.45)) drop-shadow(0 0 12px rgba(155,48,255,0.25));
+  animation: dtfSizsinizFlow 4s ease infinite;
+  filter: drop-shadow(0 0 8px rgba(180, 0, 255, 0.5));
+}
+@keyframes dtfSizsinizFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
 }
 
 /* ─── Event History (DJ Panel Login) ─── */

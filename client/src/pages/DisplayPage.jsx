@@ -544,6 +544,11 @@ function NowPlayingBar({ req, lang, fading }) {
   return (
     <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''} ${slotLanded ? 'slot-landed' : ''} ${fading ? 'dsp-np-stage-fadeout' : ''}`}>
 
+      {req && <>
+        <span className="dsp-np-flame dsp-np-flame-l">🔥</span>
+        <span className="dsp-np-flame dsp-np-flame-r">🔥</span>
+      </>}
+
       {/* Sol: LIVE badge + Albüm + Şarkı Bilgisi */}
       <div className="dsp-np-stage-left">
 
@@ -1310,7 +1315,13 @@ export default function DisplayPage() {
               {/* Merkez: Altın Saatler + NOW PLAYING + Şarkı Grid */}
               <div className="dsp-beatbox-songs">
                 <div className="dsp-card-title dsp-card-title-altinsaatler">
-                  <span className="dtf-brand-full">🎧 DJ SİZSİNİZ</span>
+                  <span className="dtf-brand-full">
+                    <span className="dtf-hp dtf-hp-left">🎧</span>
+                    <span className="dtf-dj">DJ</span>
+                    <span className="dtf-dot">·</span>
+                    <span className="dtf-sizsiniz">SİZSİNİZ</span>
+                    <span className="dtf-hp dtf-hp-right">🎧</span>
+                  </span>
                 </div>
 
                 {/* NOW PLAYING — sabit çerçeve, her zaman görünür */}

@@ -1,6 +1,6 @@
 node_modules/
 client/node_modules/
-# client/dist/ - included for Railway deploy
+# client/dist/ - Railway deploy için dahil edilir
 data/*.db
 .env
 .DS_Store

@@ -1,0 +1,14 @@
+node_modules/
+client/node_modules/
+data/
+backups/
+scripts/
+.env
+.DS_Store
+*.db
+*.db-shm
+*.db-wal
+RemiksBox Görseller/
+Remiks Logo/
+ALP.png
+derin.png
