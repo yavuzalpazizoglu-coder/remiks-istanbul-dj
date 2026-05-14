@@ -875,6 +875,7 @@ export default function DJPanel() {
           </svg>
           {lang === 'tr' ? 'REJİ' : 'CREW'}
         </button>
+        
         <div className="djc-topbar-timers">
           <div className="djc-topbar-timer">
             <span className="djc-topbar-timer-label">{lang === 'tr' ? 'ETKİNLİK' : 'EVENT'}</span>
