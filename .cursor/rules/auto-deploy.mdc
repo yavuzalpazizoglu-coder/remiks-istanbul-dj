@@ -10,6 +10,8 @@ Her kod değişikliği (JSX, CSS, JS, server.js, db.js) tamamlandıktan sonra **
 1. `cd client && npm run build`
 2. `pkill -f "node server.js" 2>/dev/null; sleep 1 && node server.js &`
 3. Sunucunun ayağa kalktığını doğrula (output'ta `localhost:3000` görünmeli)
+4. `railway up --detach` ile canlıya (Railway) deploy et ve healthcheck ile doğrula
+5. Değişiklikleri **onay almadan** git'e commit et ve `git push origin main` ile GitHub'a gönder (her yere otomatik yansısın)
 
 ## Proje Yolları
 
@@ -19,7 +21,8 @@ Her kod değişikliği (JSX, CSS, JS, server.js, db.js) tamamlandıktan sonra **
 
 ## Kurallar
 
-- Build veya deploy için kullanıcıdan onay **isteme**
+- Build, deploy, git commit ve git push için kullanıcıdan onay **isteme** — hepsi otomatik
 - Build hata verirse hatayı düzelt ve tekrar dene
 - Deploy sonrası sadece kısa "✓ Deploy tamam" benzeri bir not yaz, uzun açıklama yapma
-- Git commit için onay iste ama build/deploy için **asla** isteme
+- Commit mesajı kısa ve öz olsun, değişikliği özetlesin
+- `git push` başarısız olursa (conflict vb.) durumu bildir, force push **yapma**
