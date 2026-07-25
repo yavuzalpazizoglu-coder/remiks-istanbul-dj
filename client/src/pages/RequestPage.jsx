@@ -31,9 +31,6 @@ export default function RequestPage() {
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedSong, setSelectedSong] = useState(null);
-  const [showManual, setShowManual] = useState(false);
-  const [manualName, setManualName] = useState('');
-  const [manualArtist, setManualArtist] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState('');
   const [spotifyEnabled, setSpotifyEnabled] = useState(false);
@@ -161,9 +158,7 @@ export default function RequestPage() {
   };
 
   const handleSubmit = async () => {
-    const songName = selectedSong ? selectedSong.name : manualName.trim();
-    const artist = selectedSong ? selectedSong.artist : manualArtist.trim();
-    if (!songName) return;
+    if (!selectedSong) return;
 
     setSubmitting(true);
     try {
@@ -171,11 +166,11 @@ export default function RequestPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          songName,
-          artist,
-          albumArt: selectedSong?.albumArt || '',
-          spotifyId: selectedSong?.spotifyId || '',
-          genre: selectedSong?.genre || '',
+          songName: selectedSong.name,
+          artist: selectedSong.artist,
+          albumArt: selectedSong.albumArt || '',
+          spotifyId: selectedSong.spotifyId || '',
+          genre: selectedSong.genre || '',
           deviceId,
         }),
       });
@@ -184,11 +179,8 @@ export default function RequestPage() {
 
       setRequestCount(prev => prev + 1);
       setQuery('');
-      setManualName('');
-      setManualArtist('');
       setSelectedSong(null);
       setSearchResults([]);
-      setShowManual(false);
       showToast(T('request.success'));
     } catch (err) {
       showToast(err.message);
@@ -328,16 +320,14 @@ export default function RequestPage() {
         </button>
       </div>
 
-      {activeTab === 'request' && canRequest && (
+      {activeTab === 'request' && canRequest && spotifyEnabled && (
         <div className="search-section">
-          {spotifyEnabled && (
-            <input
-              className="input"
-              placeholder={T('request.search_placeholder')}
-              value={query}
-              onChange={(e) => handleSearch(e.target.value)}
-            />
-          )}
+          <input
+            className="input"
+            placeholder={T('request.search_placeholder')}
+            value={query}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
 
           {searching && <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: 12, fontSize: 13 }}>...</p>}
 
@@ -348,7 +338,7 @@ export default function RequestPage() {
                   <motion.div
                     key={song.spotifyId}
                     className={`search-result-item ${selectedSong?.spotifyId === song.spotifyId ? 'selected' : ''}`}
-                    onClick={() => { setSelectedSong(song); setShowManual(false); }}
+                    onClick={() => setSelectedSong(song)}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     whileTap={{ scale: 0.98 }}
@@ -365,34 +355,24 @@ export default function RequestPage() {
             )}
           </AnimatePresence>
 
-          <div className="manual-input">
-            <div className="manual-toggle" onClick={() => { setShowManual(!showManual); setSelectedSong(null); }}>
-              <span>─</span>
-              <span>{spotifyEnabled ? T('request.or_type_manually') : T('request.manual_placeholder')}</span>
-              <span>─</span>
-            </div>
-
-            <AnimatePresence>
-              {(showManual || !spotifyEnabled) && (
-                <motion.div className="manual-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
-                  <input className="input" placeholder={T('request.manual_placeholder')} value={manualName} onChange={(e) => setManualName(e.target.value)} />
-                  <input className="input" placeholder={T('request.artist_placeholder')} value={manualArtist} onChange={(e) => setManualArtist(e.target.value)} />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
           <div className="submit-section">
             <motion.button
               className="btn btn-primary"
               onClick={handleSubmit}
-              disabled={submitting || (!selectedSong && !manualName.trim())}
+              disabled={submitting || !selectedSong}
               whileTap={{ scale: 0.96 }}
-              style={{ opacity: submitting || (!selectedSong && !manualName.trim()) ? 0.5 : 1 }}
+              style={{ opacity: submitting || !selectedSong ? 0.5 : 1 }}
             >
               {submitting ? T('request.sending') : T('request.send')}
             </motion.button>
           </div>
+        </div>
+      )}
+
+      {activeTab === 'request' && canRequest && !spotifyEnabled && (
+        <div className="empty-state" style={{ marginTop: 24 }}>
+          <div className="icon">🛠️</div>
+          <p>{lang === 'tr' ? 'Şu an istek alınamıyor, sistem bakımda' : 'Requests unavailable right now, system under maintenance'}</p>
         </div>
       )}
 

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>RemiksBox — Sistem Şeması</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #07071a;
+    color: #fff;
+    min-height: 100vh;
+    padding: 40px 32px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #00d4ff;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.45);
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 48px;
+  }
+
+  /* ── AKIŞ ŞEMASI ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: nowrap;
+    margin-bottom: 56px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .flow-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 130px;
+  }
+  .node-box {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(0,212,255,0.3);
+    border-radius: 14px;
+    padding: 16px 14px;
+    text-align: center;
+    width: 124px;
+    transition: all .2s;
+  }
+  .node-box:hover { border-color: #00d4ff; background: rgba(0,212,255,0.08); }
+  .node-icon { font-size: 28px; margin-bottom: 6px; }
+  .node-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: #00d4ff; text-transform: uppercase; }
+  .node-sub { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 3px; line-height: 1.4; }
+
+  .flow-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 6px;
+    gap: 2px;
+  }
+  .arrow-line {
+    width: 36px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(0,212,255,0.3), rgba(0,212,255,0.8));
+    position: relative;
+  }
+  .arrow-line::after {
+    content: '';
+    position: absolute;
+    right: -1px; top: -4px;
+    border: 5px solid transparent;
+    border-left: 7px solid rgba(0,212,255,0.8);
+  }
+  .arrow-label { font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: .5px; margin-top: 4px; }
+
+  /* ── 3 PANEL GRID ── */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .panels-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .panel-card {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 22px 20px;
+  }
+  .panel-card.dj   { border-color: rgba(0,212,255,0.4); }
+  .panel-card.guest { border-color: rgba(184,41,221,0.4); }
+  .panel-card.display { border-color: rgba(255,107,53,0.4); }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .panel-head-icon { font-size: 22px; }
+  .panel-head-title { font-size: 13px; font-weight: 800; letter-spacing: 1px; }
+  .panel-head-url { font-size: 10px; color: rgba(255,255,255,0.35); font-family: monospace; margin-top: 2px; }
+
+  .panel-card.dj .panel-head-title { color: #00d4ff; }
+  .panel-card.guest .panel-head-title { color: #b829dd; }
+  .panel-card.display .panel-head-title { color: #ff6b35; }
+
+  .panel-items { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .panel-items li {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .panel-items li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: rgba(255,255,255,0.3);
+    font-size: 10px;
+    top: 1px;
+  }
+
+  /* ── İKİ KOLON: KURALLAR + GÜVENLİK ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+
+  .rules-card {
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 22px 20px;
+  }
+  .rules-card.user  { border-color: rgba(184,41,221,0.35); }
+  .rules-card.sec   { border-color: rgba(255,68,68,0.35); }
+
+  .rules-head {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rules-card.user .rules-head { color: #b829dd; }
+  .rules-card.sec  .rules-head { color: #ff4444; }
+
+  .rules-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .rules-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+  }
+  .rule-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: .5px;
+    margin-top: 1px;
+  }
+  .rules-card.user .rule-badge { background: rgba(184,41,221,0.25); color: #d05ee0; }
+  .rules-card.sec  .rule-badge { background: rgba(255,68,68,0.2); color: #ff6666; }
+
+  /* ── SOCKET EVENTS TABLE ── */
+  .events-section {
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 22px 20px;
+    margin-bottom: 32px;
+  }
+  .events-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .events-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .events-col-title { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: #00d4ff; margin-bottom: 8px; }
+  .event-item { font-size: 11px; color: rgba(255,255,255,0.6); padding: 5px 10px; background: rgba(255,255,255,0.04); border-radius: 6px; margin-bottom: 5px; font-family: monospace; }
+  .event-item span { color: rgba(255,255,255,0.35); margin-left: 6px; font-size: 10px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 2px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+</style>
+</head>
+<body>
+
+<h1>🎧 RemiksBox</h1>
+<div class="subtitle">SİSTEM ŞEMASI — DJ Akış & Kural Haritası</div>
+
+<!-- ── AKIŞ ── -->
+<div class="section-title">Veri Akışı</div>
+<div class="flow">
+
+  <div class="flow-node">
+    <div class="node-box">
+      <div class="node-icon">🎛️</div>
+      <div class="node-title">DJ Panel</div>
+      <div class="node-sub">/dj/:slug<br>Etkinlik oluştur</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="arrow-label">QR / Link</div>
+  </div>
+
+  <div class="flow-node">
+    <div class="node-box">
+      <div class="node-icon">📱</div>
+      <div class="node-title">Misafir</div>
+      <div class="node-sub">/request/:slug<br>QR ile gelir</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="arrow-label">Spotify ara</div>
+  </div>
+
+  <div class="flow-node">
+    <div class="node-box">
+      <div class="node-icon">🎵</div>
+      <div class="node-title">İstek</div>
+      <div class="node-sub">POST /api<br>Şarkı gönder</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="arrow-label">Socket.io</div>
+  </div>
+
+  <div class="flow-node">
+    <div class="node-box">
+      <div class="node-icon">⚡</div>
+      <div class="node-title">Sunucu</div>
+      <div class="node-sub">Express + SQLite<br>Anlık yayın</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="arrow-label">Onayla / Çal</div>
+  </div>
+
+  <div class="flow-node">
+    <div class="node-box">
+      <div class="node-icon">📺</div>
+      <div class="node-title">Display</div>
+      <div class="node-sub">/display/:slug<br>LED Ekran</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    <div class="arrow-line"></div>
+    <div class="arrow-label">Etkinlik biter</div>
+  </div>
+
+  <div class="flow-node">
+    <div class="node-box">
+      <div class="node-icon">📧</div>
+      <div class="node-title">Rapor</div>
+      <div class="node-sub">Gmail ile<br>otomatik mail</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── 3 PANEL ── -->
+<div class="section-title">Ekranlar & Roller</div>
+<div class="panels-grid">
+
+  <div class="panel-card dj">
+    <div class="panel-head">
+      <div class="panel-head-icon">🎛️</div>
+      <div>
+        <div class="panel-head-title">DJ PANELİ</div>
+        <div class="panel-head-url">/dj/:slug — Şifreli</div>
+      </div>
+    </div>
+    <ul class="panel-items">
+      <li>Etkinlik oluştur / bağlan</li>
+      <li>Başlat · Duraklat · Bitir</li>
+      <li>Geri sayımlı başlat (3–30 dk)</li>
+      <li>İstekleri onayla / reddet / çal</li>
+      <li>Şarkı limiti ayarla (1/2/3/5)</li>
+      <li>Tema, efekt, sahne tasarımı seç</li>
+      <li>Müzik modu aktifleştir (9 mod)</li>
+      <li>Ekran yazısı & kayan yazı yönet</li>
+      <li>Display card gönder</li>
+      <li>TR / EN dil değiştir (anlık)</li>
+      <li>Misafir & Display & Reji linki kopyala</li>
+      <li>Canlı önizleme (iFrame)</li>
+    </ul>
+  </div>
+
+  <div class="panel-card guest">
+    <div class="panel-head">
+      <div class="panel-head-icon">📱</div>
+      <div>
+        <div class="panel-head-title">MİSAFİR SAYFASI</div>
+        <div class="panel-head-url">/request/:slug — Açık</div>
+      </div>
+    </div>
+    <ul class="panel-items">
+      <li>QR veya link ile erişir</li>
+      <li>Spotify ile şarkı arar</li>
+      <li>Manuel şarkı adı yazabilir</li>
+      <li>Şarkı isteği gönderir</li>
+      <li>Oylama sekmesinde oy kullanır</li>
+      <li>Anlık sıralama görebilir</li>
+      <li>Kalan istek hakkı görünür</li>
+      <li>Dil otomatik DJ ile sync olur</li>
+      <li>Tema rengi DJ seçimiyle eşlenir</li>
+    </ul>
+  </div>
+
+  <div class="panel-card display">
+    <div class="panel-head">
+      <div class="panel-head-icon">📺</div>
+      <div>
+        <div class="panel-head-title">DISPLAY / REJİ</div>
+        <div class="panel-head-url">/display/:slug · /reji/:slug</div>
+      </div>
+    </div>
+    <ul class="panel-items">
+      <li>Canlı şarkı sıralaması (top 15)</li>
+      <li>Şu An Çalıyor bar (60 sn)</li>
+      <li>QR kod her iki yanda</li>
+      <li>Canlı istatistik sayaçları</li>
+      <li>Geri sayım ekranı</li>
+      <li>Müzik modu overlay (animasyonlu)</li>
+      <li>Reji: Blackout · Spotlight · Countdown</li>
+      <li>Reji: Kayan yazı & ekran yazısı değiştir</li>
+      <li>Reji ↔ DJ anlık chat</li>
+      <li>Etkinlik sonu özet ekranı</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ── KURALLAR + GÜVENLİK ── -->
+<div class="two-col">
+
+  <div class="rules-card user">
+    <div class="rules-head">📋 Kullanıcı Kuralları</div>
+    <ul class="rules-list">
+      <li>
+        <span class="rule-badge">LİMİT</span>
+        Kişi başı maksimum istek sayısı DJ tarafından belirlenir (1 / 2 / 3 / 5). Varsayılan: 2.
+      </li>
+      <li>
+        <span class="rule-badge">OY</span>
+        Her şarkıya yalnızca 1 kez oy verilebilir. Cihaz bazlı takip (localStorage UUID).
+      </li>
+      <li>
+        <span class="rule-badge">KOPYA</span>
+        Aynı şarkı (aynı isim + sanatçı) tekrar istenemez. Reddetme durumu hariç.
+      </li>
+      <li>
+        <span class="rule-badge">DURUM</span>
+        İstek gönderilebilmesi için etkinlik durumunun "active" veya "countdown" olması gerekir.
+      </li>
+      <li>
+        <span class="rule-badge">SIRA</span>
+        Oylama sıralaması: Çalınan → Onaylanan → Bekleyen. Eşit statüde oy sayısı belirler.
+      </li>
+      <li>
+        <span class="rule-badge">ONAY</span>
+        İstekler DJ onaylamadan display'e yansımaz. Bekleyen istekler misafirlere görünmez.
+      </li>
+    </ul>
+  </div>
+
+  <div class="rules-card sec">
+    <div class="rules-head">🔒 Güvenlik & Kontrol</div>
+    <ul class="rules-list">
+      <li>
+        <span class="rule-badge">ŞİFRE</span>
+        DJ paneli, tüm yönetim API'leri <code>x-dj-password</code> header'ı ile korunur. Şifresiz erişim 401 döner.
+      </li>
+      <li>
+        <span class="rule-badge">RATE</span>
+        İstek gönderme: dakikada 30 / IP. Oy: dakikada 10 / IP. Spotify arama: dakikada 20 / IP.
+      </li>
+      <li>
+        <span class="rule-badge">XSS</span>
+        Tüm kullanıcı girdileri sanitize edilir. <code>&lt; &gt; &amp; " '</code> karakterleri temizlenir. Max 200 karakter.
+      </li>
+      <li>
+        <span class="rule-badge">CORS</span>
+        Production'da yalnızca <code>APP_URL</code> origin'ine izin verilir. Geliştirmede <code>*</code>.
+      </li>
+      <li>
+        <span class="rule-badge">CİHAZ</span>
+        Her tarayıcıya benzersiz UUID atanır (localStorage). Limit & oy takibi bu ID üzerinden yapılır.
+      </li>
+      <li>
+        <span class="rule-badge">YEDEK</span>
+        Etkinlik bitişinde JSON yedek otomatik kaydedilir (<code>/backups/</code>). Gmail raporu gönderilir.
+      </li>
+      <li>
+        <span class="rule-badge">LOGO</span>
+        Logo yüklemeleri: max 2 MB, yalnızca png/jpg/gif/svg/webp. Yol traversal koruması aktif.
+      </li>
+      <li>
+        <span class="rule-badge">DB</span>
+        Tüm DB işlemleri <code>db.js</code> üzerinden prepared statements ile yapılır. SQL injection koruması.
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ── SOCKET EVENTS ── -->
+<div class="events-section">
+  <div class="events-title">⚡ Anlık İletişim — Socket.io Events</div>
+  <div class="events-grid">
+    <div>
+      <div class="events-col-title">CLIENT → SERVER</div>
+      <div class="event-item">join-event <span>Odaya katıl (dj/reji/display/request)</span></div>
+      <div class="event-item">crew-chat <span>DJ ↔ Reji mesajlaşma</span></div>
+      <div class="event-item">reji-brand <span>Ekran yazısını değiştir</span></div>
+      <div class="event-item">reji-ticker <span>Kayan yazıyı değiştir</span></div>
+      <div class="event-item">reji-spotlight <span>5 sn neon spotlight mesajı</span></div>
+      <div class="event-item">reji-blackout <span>LED ekranı karart / aç</span></div>
+      <div class="event-item">reji-countdown <span>3-10 sn geri sayım</span></div>
+      <div class="event-item">display-card <span>Özel kart gönder (doğum günü vb.)</span></div>
+      <div class="event-item">clear-playing <span>Şu An Çalıyor'u kapat</span></div>
+    </div>
+    <div>
+      <div class="events-col-title">SERVER → CLIENT</div>
+      <div class="event-item">request-added <span>Yeni istek geldi</span></div>
+      <div class="event-item">vote-updated <span>Oy sayısı güncellendi</span></div>
+      <div class="event-item">list-updated <span>İstek listesi değişti</span></div>
+      <div class="event-item">now-playing <span>Şarkı çalmaya başladı</span></div>
+      <div class="event-item">request-played <span>Şarkı çalındı olarak işaretlendi</span></div>
+      <div class="event-item">event-status <span>Etkinlik durumu değişti</span></div>
+      <div class="event-item">language-changed <span>TR/EN dil değişti</span></div>
+      <div class="event-item">theme-changed <span>Renk teması değişti</span></div>
+      <div class="event-item">music-mode <span>Müzik modu açıldı/kapandı</span></div>
+      <div class="event-item">room-count <span>Bağlı kullanıcı sayısı</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">REMİKS İSTANBUL — REMIKSBOX DJ SİSTEMİ &nbsp;·&nbsp; Node.js + Express + Socket.io + SQLite + React + Vite</div>
+
+</body>
+</html>

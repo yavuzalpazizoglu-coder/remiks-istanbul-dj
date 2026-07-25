@@ -43,7 +43,9 @@ export default function DJPanel() {
   const [connectedCount, setConnectedCount] = useState(0);
   const [spotifyEnabled, setSpotifyEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [listSize, setListSize] = useState(15);
+  const [bottomPanelOpen, setBottomPanelOpen] = useState(false);
+  const [requestStats, setRequestStats] = useState(null);
+  const [genreStats, setGenreStats] = useState(null);
   const brandTimer = useRef(null);
   const tickerTimer = useRef(null);
   const previewMonitorRef = useRef(null);
@@ -111,6 +113,17 @@ export default function DJPanel() {
     } catch (err) { console.warn('fetchRequests failed:', err); }
   }, []);
 
+  const fetchStats = useCallback(async (eventSlug) => {
+    try {
+      const [statsRes, genreRes] = await Promise.all([
+        fetch(`${API}/api/events/${eventSlug}/request-stats`, { headers: { 'x-dj-password': password } }),
+        fetch(`${API}/api/events/${eventSlug}/genre-stats`, { headers: { 'x-dj-password': password } }),
+      ]);
+      if (statsRes.ok) setRequestStats(await statsRes.json());
+      if (genreRes.ok) setGenreStats(await genreRes.json());
+    } catch (err) { console.warn('fetchStats failed:', err); }
+  }, [password]);
+
   const loadEvent = useCallback(async (eventSlug) => {
     setLoading(true);
     try {
@@ -127,15 +140,15 @@ export default function DJPanel() {
       setAnimationLevel(data.animation_level || 'high');
       setStageDesign(data.stage_design || 'elegant');
       setEventLogo(data.event_logo || '');
-      setListSize(data.display_list_size || 15);
       await fetchRequests(eventSlug);
+      fetchStats(eventSlug);
       if (!paramSlug) navigate(`/dj/${eventSlug}`, { replace: true });
     } catch (err) {
       showToast(err.message);
     } finally {
       setLoading(false);
     }
-  }, [fetchRequests, navigate, paramSlug]);
+  }, [fetchRequests, fetchStats, navigate, paramSlug]);
 
   useEffect(() => {
     if (paramSlug) loadEvent(paramSlug);
@@ -171,6 +184,9 @@ export default function DJPanel() {
       setChatMessages(prev => [...prev.slice(-50), msg]);
     });
 
+    socket.on('request-stats-updated', (stats) => setRequestStats(stats));
+    socket.on('genre-stats-updated', (stats) => setGenreStats(stats));
+
     return () => {
       socket.off('request-added');
       socket.off('vote-updated');
@@ -181,6 +197,8 @@ export default function DJPanel() {
       socket.off('music-mode');
       socket.off('room-count');
       socket.off('crew-chat');
+      socket.off('request-stats-updated');
+      socket.off('genre-stats-updated');
     };
   }, [slug, fetchRequests]);
 
@@ -525,17 +543,6 @@ export default function DJPanel() {
         body: JSON.stringify({ mode: modeId, active: !isActive, djPhotos: !isActive ? djPhotos : [] }),
       });
     } catch (err) { console.warn('toggleMusicMode failed:', err); }
-  };
-
-  const changeListSize = async (size) => {
-    setListSize(size);
-    try {
-      await fetch(`${API}/api/events/${slug}/list-size`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-dj-password': password },
-        body: JSON.stringify({ size }),
-      });
-    } catch (err) { console.warn('changeListSize failed:', err); }
   };
 
   const changeAnimationLevel = async (level) => {
@@ -1075,14 +1082,7 @@ export default function DJPanel() {
                   <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 3 ? 'active' : ''}`} onClick={() => updateRequestLimit(3)}>3</button>
                   <button className={`preset-btn djc-preset djc-preset-eq ${requestLimit === 5 ? 'active' : ''}`} onClick={() => updateRequestLimit(5)}>5</button>
                 </div>
-                <span className="djc-limit-sep">|</span>
-                <div className="djc-limit-toggle">
-                  {[15, 30, 40].map(n => (
-                    <button key={n}
-                      className={`preset-btn djc-preset djc-preset-eq ${listSize === n ? 'active' : ''}`}
-                      onClick={() => changeListSize(n)}>{n}</button>
-                  ))}
-                </div>
+              
               </div>
             </div>
           </div>
@@ -1232,258 +1232,380 @@ export default function DJPanel() {
               </div>
             </div>
           )}
-
-          {/* ═══ Settings & Appearance ═══ */}
-            <div className="djc-settings-bottom">
-            <div className="djc-settings-bottom-divider">
-              <button
-                className={`djc-settings-toggle-btn ${settingsOpen ? 'open' : ''}`}
-                onClick={() => setSettingsOpen(v => !v)}
-              >
-                <div className="djc-settings-toggle-label">
-                  <span className="djc-settings-toggle-dot" />
-                  <span>{lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings & Appearance'}</span>
-                </div>
-                <span className="djc-settings-toggle-arrow">{settingsOpen ? '▲' : '▼'}</span>
-              </button>
-            </div>
-
-            {settingsOpen && (
-                <div className="djc-settings-main">
-                  <div className="djc-settings-split-row">
-                    {/* ─── Left: Ayarlar ─── */}
-                    <div className="djc-settings-col">
-                      <div className="djc-sec-head">
-                        <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar' : 'Settings'}</span>
-                      </div>
-                      <div className="djc-settings-grid">
-                        <div className="djc-field">
-                          <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
-                          <div className="djc-field-input-wrap">
-                            <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
-                            {brandSaving && <span className="djc-field-status">...</span>}
-                          </div>
-                        </div>
-                        <div className="djc-field">
-                          <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
-                          <div className="djc-field-input-wrap">
-                            <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
-                            {tickerSaving && <span className="djc-field-status">...</span>}
-                          </div>
-                        </div>
-                        <div className="djc-field djc-field-inline">
-                          <label className="djc-field-label">{lang === 'tr' ? 'Logo' : 'Logo'}</label>
-                          <div className="djc-logo-upload-row">
-                            {eventLogo && (
-                              <div className="djc-logo-preview-wrap">
-                                <img src={eventLogo} alt="Logo" className="djc-logo-preview-img" />
-                                <button className="djc-logo-remove" onClick={removeEventLogo} title={lang === 'tr' ? 'Logoyu kaldır' : 'Remove logo'}>✕</button>
-                              </div>
-                            )}
-                            <label className="djc-logo-upload-btn">
-                              {eventLogo ? (lang === 'tr' ? 'Değiştir' : 'Change') : (lang === 'tr' ? '📁 Yükle' : '📁 Upload')}
-                              <input type="file" accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp" hidden
-                                onChange={handleLogoUpload} />
-                            </label>
-                            {/* Ticker punto ayarlayıcı */}
-                            <div className="djc-font-size-ctrl" title={lang === 'tr' ? 'Kayan yazı punto' : 'Ticker font size'}>
-                              <button className="djc-font-sz-btn" onClick={() => { const v = Math.max(-4, tickerFontSize - 1); setTickerFontSize(v); socket.emit('ticker-font-size', { delta: v }); }}>A−</button>
-                              <span className="djc-font-sz-val">{tickerFontSize > 0 ? `+${tickerFontSize}` : tickerFontSize}</span>
-                              <button className="djc-font-sz-btn" onClick={() => { const v = Math.min(8, tickerFontSize + 1); setTickerFontSize(v); socket.emit('ticker-font-size', { delta: v }); }}>A+</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* ─── Right: Görünüm ─── */}
-                    <div className="djc-settings-col">
-                      <div className="djc-sec-head">
-                        <span className="djc-sec-title">{lang === 'tr' ? 'Görünüm' : 'Appearance'}</span>
-                      </div>
-                      <div className="djc-settings-grid">
-                        <div className="djc-field djc-field-inline">
-                          <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
-                          <div className="djc-theme-picker">
-                            {[
-                              { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
-                              { id: 'purple', color: '#b829dd', label: 'Mor' },
-                              { id: 'pink', color: '#ff0080', label: 'Pembe' },
-                              { id: 'green', color: '#008D4B', label: 'Yeşil' },
-                              { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
-                              { id: 'red', color: '#ff4444', label: 'Kırmızı' },
-                            ].map(t => (
-                              <button key={t.id}
-                                className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
-                                style={{ background: t.color }}
-                                onClick={() => changeTheme(t.id)}
-                                title={t.label}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <div className="djc-field djc-field-inline">
-                          <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
-                          <div className="djc-fx-toggle">
-                            {[
-                              { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
-                              { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
-                              { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
-                            ].map(l => (
-                              <button key={l.id}
-                                className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
-                                onClick={() => changeAnimationLevel(l.id)}>
-                                <span className="djc-fx-led" />
-                                {l.label}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="djc-field djc-field-inline">
-                          <label className="djc-field-label">{lang === 'tr' ? 'Sahne Tasarımı' : 'Stage Design'}</label>
-                          <div className="djc-fx-toggle">
-                            {[
-                              { id: 'elegant',   label: 'Velvet' },
-                              { id: 'club',      label: 'Club' },
-                              { id: 'festival',  label: 'Festival' },
-                              { id: 'cyber',     label: 'Cyber' },
-                              { id: 'rave',      label: 'Rave' },
-                              { id: 'cinema',    label: 'Cinema' },
-                            ].map(d => (
-                              <button key={d.id}
-                                className={`djc-fx-btn ${stageDesign === d.id ? 'active' : ''}`}
-                                onClick={() => changeStageDesign(d.id)}>
-                                <span className="djc-fx-led" />
-                                {d.label}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            )}
-          </div>
         </div>
 
-        {/* ═══ RIGHT SIDEBAR: Display Card + Chat ═══ */}
-        <div className="djc-dcard-sidebar">
-          <div className="djc-dcard-sidebar-top">
-            <div className="djc-dcard-sidebar-title">📺 {lang === 'tr' ? 'EKRAN KARTI' : 'DISPLAY CARD'}</div>
-            <div className="djc-dcard-live-preview">
-              <div className="djc-dcard-lp-label">{lang === 'tr' ? 'ÖNİZLEME' : 'PREVIEW'}</div>
-              <div className={`djc-dcard-lp-card dcard-preview-${cardType}`}>
-                <div className="djc-dcard-lp-badge">
-                  {CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}
-                </div>
-                {cardSelectedSong?.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-lp-album" />}
-                {cardSelectedSong && <div className="djc-dcard-lp-song">{cardSelectedSong.name}</div>}
-                {cardSelectedSong?.artist && <div className="djc-dcard-lp-artist">{cardSelectedSong.artist}</div>}
-                {cardRecipient && <div className="djc-dcard-lp-recipient">{cardRecipient}</div>}
-                {cardMessage && <div className="djc-dcard-lp-message">"{cardMessage}"</div>}
-                {cardSender && <div className="djc-dcard-lp-sender">{lang === 'tr' ? 'İsteyen' : 'From'}: {cardSender}</div>}
-                {!cardSelectedSong && !cardRecipient && !cardMessage && !cardSender && (
-                  <div className="djc-dcard-lp-empty">{lang === 'tr' ? 'Formu doldurun...' : 'Fill the form...'}</div>
-                )}
-              </div>
+        {/* ═══ RIGHT SIDEBAR: Canlı Analiz Widget'ları ═══ */}
+        <div className="djc-analytics-sidebar">
+
+          {/* ─── Widget 1: İsteklerin Dağılımı ─── */}
+          <div className="djc-sec djc-analytics-sec">
+            <div className="djc-sec-head">
+              <span className="djc-sec-title"><strong>📊 {lang === 'tr' ? 'İSTEKLERİN' : 'REQUEST'}</strong> · {lang === 'tr' ? 'Dağılımı' : 'Distribution'}</span>
             </div>
-            <div className="djc-dcard-dropdown-wrap">
-              <button className="djc-dcard-dropdown-toggle" onClick={() => setCardTypeOpen(!cardTypeOpen)}>
-                <span>{CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}</span>
-                <span className={`djc-dcard-dropdown-arrow ${cardTypeOpen ? 'open' : ''}`}>▾</span>
-              </button>
-              {cardTypeOpen && (
-                <div className="djc-dcard-dropdown-menu">
-                  {CARD_TYPES.map(ct => (
-                    <button key={ct.id}
-                      className={`djc-dcard-dropdown-item ${cardType === ct.id ? 'active' : ''}`}
-                      onClick={() => { setCardType(ct.id); setCardTypeOpen(false); }}>
-                      {ct.icon} {lang === 'tr' ? ct.tr : ct.en}
-                    </button>
-                  ))}
-                </div>
+            <div className="djc-sec-body djc-dist-body">
+              {requestStats && requestStats.total > 0 ? (
+                <>
+                  <div className="djc-dist-funnel">
+                    {[
+                      { key: 'pending', label: lang === 'tr' ? 'Bekleyen' : 'Pending', color: '#f59e0b', val: requestStats.statusCounts.pending },
+                      { key: 'approved', label: lang === 'tr' ? 'Onaylanan' : 'Approved', color: '#00d4ff', val: requestStats.statusCounts.approved + requestStats.statusCounts.playing },
+                      { key: 'played', label: lang === 'tr' ? 'Çalınan' : 'Played', color: '#22c55e', val: requestStats.statusCounts.played },
+                    ].map(s => {
+                      const max = Math.max(1, requestStats.statusCounts.pending, requestStats.statusCounts.approved + requestStats.statusCounts.playing, requestStats.statusCounts.played);
+                      const pct = Math.round((s.val / max) * 100);
+                      return (
+                        <div key={s.key} className="djc-dist-row">
+                          <span className="djc-dist-row-label">{s.label}</span>
+                          <div className="djc-dist-bar-track"><div className="djc-dist-bar-fill" style={{ width: `${pct}%`, background: s.color }} /></div>
+                          <span className="djc-dist-row-val">{s.val}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="djc-dist-sparkline">
+                    <span className="djc-dist-sparkline-label">{lang === 'tr' ? 'SON 1 SAAT' : 'LAST 1H'}</span>
+                    <div className="djc-dist-spark-bars">
+                      {requestStats.volume.map((v, i) => (
+                        <div key={i} className="djc-dist-spark-bar-wrap" title={`${v}`}>
+                          <div className="djc-dist-spark-bar" style={{ height: `${Math.min(100, v * 22 + 6)}%` }} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {requestStats.topArtists.length > 0 && (
+                    <div className="djc-dist-top-artists">
+                      <div className="djc-dist-top-artists-title">{lang === 'tr' ? 'EN ÇOK İSTENEN' : 'TOP ARTISTS'}</div>
+                      {requestStats.topArtists.map((a, i) => (
+                        <div key={a.artist} className="djc-dist-artist-row">
+                          <span className="djc-dist-artist-rank">{i + 1}</span>
+                          <span className="djc-dist-artist-name">{a.artist}</span>
+                          <span className="djc-dist-artist-count">{a.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="djc-analytics-empty">{lang === 'tr' ? 'Henüz istek yok' : 'No requests yet'}</div>
               )}
             </div>
-            {spotifyEnabled && (
-              <div className="djc-dcard-field">
-                <input className="djc-dcard-input" placeholder={lang === 'tr' ? '🔍 Spotify ara...' : '🔍 Search...'}
-                  value={cardSearchQuery} onChange={e => handleCardSearch(e.target.value)} />
-                {cardSearching && <span className="djc-dcard-searching">...</span>}
-                {cardSearchResults.length > 0 && !cardSelectedSong && (
-                  <div className="djc-dcard-results">
-                    {cardSearchResults.slice(0, 5).map(song => (
-                      <div key={song.spotifyId} className="djc-dcard-result-item"
-                        onClick={() => { setCardSelectedSong(song); setCardSearchResults([]); setCardSearchQuery(song.name); }}>
-                        {song.albumArt && <img src={song.albumArt} alt="" className="djc-dcard-result-art" />}
-                        <div className="djc-dcard-result-info">
-                          <span className="djc-dcard-result-name">{song.name}</span>
-                          <span className="djc-dcard-result-artist">{song.artist}</span>
-                        </div>
+          </div>
+
+          {/* ─── Widget 2: Tarz Analizi ─── */}
+          <div className="djc-sec djc-analytics-sec">
+            <div className="djc-sec-head djc-sec-head-between">
+              <span className="djc-sec-title"><strong>🎧 {lang === 'tr' ? 'TARZ' : 'STYLE'}</strong> · {lang === 'tr' ? 'Analizi' : 'Analysis'}</span>
+              {genreStats?.velocity && (
+                <span className={`djc-genre-velocity djc-genre-velocity-${genreStats.velocity.level}`}>
+                  {lang === 'tr' ? 'Hız' : 'Speed'} {genreStats.velocity.count}/10dk
+                </span>
+              )}
+            </div>
+            <div className="djc-sec-body djc-genre-body">
+              {genreStats && genreStats.total > 0 ? (
+                <>
+                  {genreStats.trending && (
+                    <div className="djc-genre-headline">
+                      🔥 {lang === 'tr' ? 'Şu An Trend' : 'Trending Now'}: <strong>{genreStats.trending.genre}</strong> (%{genreStats.trending.percent})
+                    </div>
+                  )}
+
+                  <div className="djc-genre-bars">
+                    {genreStats.byGenre.slice(0, 8).map(g => (
+                      <div key={g.genre} className="djc-genre-row">
+                        <span className="djc-genre-row-label">{g.genre}</span>
+                        <div className="djc-genre-bar-track"><div className="djc-genre-bar-fill" style={{ width: `${g.percent}%` }} /></div>
+                        <span className="djc-genre-row-pct">%{g.percent}</span>
                       </div>
                     ))}
                   </div>
-                )}
-                {cardSelectedSong && (
-                  <div className="djc-dcard-selected">
-                    {cardSelectedSong.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-result-art" />}
-                    <div className="djc-dcard-result-info">
-                      <span className="djc-dcard-result-name">{cardSelectedSong.name}</span>
-                      <span className="djc-dcard-result-artist">{cardSelectedSong.artist}</span>
+
+                  {genreStats.recentByGenre.length > 0 && genreStats.dominant && (
+                    <div className="djc-genre-recent-badge">
+                      {lang === 'tr' ? 'Son 20 dk' : 'Last 20m'}: <strong>{genreStats.recentByGenre[0].genre}</strong> (%{genreStats.recentByGenre[0].percent})
+                      {genreStats.recentByGenre[0].genre !== genreStats.dominant.genre && <span className="djc-genre-trend-arrow"> ↑</span>}
                     </div>
-                    <button className="djc-dcard-remove" onClick={() => { setCardSelectedSong(null); setCardSearchQuery(''); }}>✕</button>
-                  </div>
-                )}
-              </div>
-            )}
-            <div className="djc-dcard-field">
-              <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'Kime?' : 'To whom?'}
-                value={cardRecipient} onChange={e => setCardRecipient(e.target.value)} maxLength={60} />
-            </div>
-            <div className="djc-dcard-field">
-              <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'Mesaj (max 120)' : 'Message (max 120)'}
-                value={cardMessage} onChange={e => setCardMessage(e.target.value)} maxLength={120} />
-            </div>
-            <div className="djc-dcard-field">
-              <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'İsteyen' : 'From'}
-                value={cardSender} onChange={e => setCardSender(e.target.value)} maxLength={40} />
-            </div>
-            <div className="djc-dcard-actions-col">
-              {!cardSent ? (
-                <button className="djc-dcard-btn djc-dcard-btn-send" onClick={sendDisplayCard}>
-                  📺 {lang === 'tr' ? 'Gönder' : 'Send'}
-                </button>
+                  )}
+
+                  {genreStats.dominant && genreStats.dominant.percent >= 40 && (
+                    <div className="djc-genre-suggestion">
+                      💡 {lang === 'tr'
+                        ? `Kalabalık şu an ${genreStats.dominant.genre} istiyor, bu tarzdan bir parça çalman iyi karşılanabilir.`
+                        : `The crowd is currently into ${genreStats.dominant.genre}, playing something in this style could land well.`}
+                    </div>
+                  )}
+                </>
               ) : (
-                <button className="djc-dcard-btn djc-dcard-btn-dismiss" onClick={dismissDisplayCard}>
-                  ❌ {lang === 'tr' ? 'Kapat' : 'Dismiss'}
-                </button>
+                <div className="djc-analytics-empty">{lang === 'tr' ? 'Henüz istek yok' : 'No requests yet'}</div>
               )}
-              <button className="djc-dcard-btn djc-dcard-btn-reset" onClick={resetCardForm}>
-                🔄
-              </button>
             </div>
           </div>
 
-          {/* ─── Chat Box (bottom of sidebar) ─── */}
-          <div className="djc-crew-chat-panel">
-            <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
-            <div className="djc-crew-chat-messages">
-              {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
-              {chatMessages.map(m => (
-                <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
-                  <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
-                  <span className="crew-chat-text">{m.message}</span>
-                </div>
-              ))}
-              <div ref={chatEndRef} />
+        </div>
+
+      </div>
+
+      {/* ═══ ALT ÇEKMECELER: Ayarlar + Ekran Kartı (birbirine yakın, okunabilir) ═══ */}
+      <div className="djc-bottom-drawers">
+
+        {/* ─── Çekmece 1: Ayarlar & Görünüm ─── */}
+        <div className="djc-bottom-drawer">
+          <button className={`djc-settings-toggle-btn djc-bottom-drawer-toggle ${settingsOpen ? 'open' : ''}`} onClick={() => setSettingsOpen(v => !v)}>
+            <div className="djc-settings-toggle-label">
+              <span className="djc-settings-toggle-dot" />
+              <span>⚙️ {lang === 'tr' ? 'Ayarlar & Görünüm' : 'Settings & Appearance'}</span>
             </div>
-            <div className="djc-crew-chat-input-row">
-              <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && sendChat()}
-                placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
-              <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
+            <span className="djc-settings-toggle-arrow">{settingsOpen ? '▲' : '▼'}</span>
+          </button>
+
+          {settingsOpen && (
+            <div className="djc-settings-main">
+              <div className="djc-settings-split-row">
+                {/* ─── Left: Ayarlar ─── */}
+                <div className="djc-settings-col">
+                  <div className="djc-sec-head">
+                    <span className="djc-sec-title">{lang === 'tr' ? 'Ayarlar' : 'Settings'}</span>
+                  </div>
+                  <div className="djc-settings-grid">
+                    <div className="djc-field">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Ekran Yazısı' : 'Screen Text'}</label>
+                      <div className="djc-field-input-wrap">
+                        <input className="input djc-field-input" placeholder={lang === 'tr' ? 'Organizasyon adı...' : 'Org name...'} value={brandText} onChange={(e) => handleBrandChange(e.target.value)} />
+                        {brandSaving && <span className="djc-field-status">...</span>}
+                      </div>
+                    </div>
+                    <div className="djc-field">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Kayan Yazı' : 'Ticker'}</label>
+                      <div className="djc-field-input-wrap">
+                        <textarea className="input djc-field-textarea" placeholder={lang === 'tr' ? 'Her satıra bir mesaj...' : 'One per line...'} value={tickerTexts} onChange={(e) => handleTickerChange(e.target.value)} rows={3} />
+                        {tickerSaving && <span className="djc-field-status">...</span>}
+                      </div>
+                    </div>
+                    <div className="djc-field djc-field-inline">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Logo' : 'Logo'}</label>
+                      <div className="djc-logo-upload-row">
+                        {eventLogo && (
+                          <div className="djc-logo-preview-wrap">
+                            <img src={eventLogo} alt="Logo" className="djc-logo-preview-img" />
+                            <button className="djc-logo-remove" onClick={removeEventLogo} title={lang === 'tr' ? 'Logoyu kaldır' : 'Remove logo'}>✕</button>
+                          </div>
+                        )}
+                        <label className="djc-logo-upload-btn">
+                          {eventLogo ? (lang === 'tr' ? 'Değiştir' : 'Change') : (lang === 'tr' ? '📁 Yükle' : '📁 Upload')}
+                          <input type="file" accept="image/png,image/jpeg,image/gif,image/svg+xml,image/webp" hidden
+                            onChange={handleLogoUpload} />
+                        </label>
+                        {/* Ticker punto ayarlayıcı */}
+                        <div className="djc-font-size-ctrl" title={lang === 'tr' ? 'Kayan yazı punto' : 'Ticker font size'}>
+                          <button className="djc-font-sz-btn" onClick={() => { const v = Math.max(-4, tickerFontSize - 1); setTickerFontSize(v); socket.emit('ticker-font-size', { delta: v }); }}>A−</button>
+                          <span className="djc-font-sz-val">{tickerFontSize > 0 ? `+${tickerFontSize}` : tickerFontSize}</span>
+                          <button className="djc-font-sz-btn" onClick={() => { const v = Math.min(8, tickerFontSize + 1); setTickerFontSize(v); socket.emit('ticker-font-size', { delta: v }); }}>A+</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ─── Right: Görünüm ─── */}
+                <div className="djc-settings-col">
+                  <div className="djc-sec-head">
+                    <span className="djc-sec-title">{lang === 'tr' ? 'Görünüm' : 'Appearance'}</span>
+                  </div>
+                  <div className="djc-settings-grid">
+                    <div className="djc-field djc-field-inline">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
+                      <div className="djc-theme-picker">
+                        {[
+                          { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
+                          { id: 'purple', color: '#b829dd', label: 'Mor' },
+                          { id: 'pink', color: '#ff0080', label: 'Pembe' },
+                          { id: 'green', color: '#008D4B', label: 'Yeşil' },
+                          { id: 'orange', color: '#ff6b35', label: 'Turuncu' },
+                          { id: 'red', color: '#ff4444', label: 'Kırmızı' },
+                        ].map(t => (
+                          <button key={t.id}
+                            className={`djc-theme-dot ${theme === t.id ? 'active' : ''}`}
+                            style={{ background: t.color }}
+                            onClick={() => changeTheme(t.id)}
+                            title={t.label}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="djc-field djc-field-inline">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Efekt' : 'Effects'}</label>
+                      <div className="djc-fx-toggle">
+                        {[
+                          { id: 'low', label: lang === 'tr' ? 'Düşük' : 'Low' },
+                          { id: 'medium', label: lang === 'tr' ? 'Orta' : 'Med' },
+                          { id: 'high', label: lang === 'tr' ? 'Yüksek' : 'High' },
+                        ].map(l => (
+                          <button key={l.id}
+                            className={`djc-fx-btn ${animationLevel === l.id ? 'active' : ''}`}
+                            onClick={() => changeAnimationLevel(l.id)}>
+                            <span className="djc-fx-led" />
+                            {l.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="djc-field djc-field-inline">
+                      <label className="djc-field-label">{lang === 'tr' ? 'Sahne Tasarımı' : 'Stage Design'}</label>
+                      <div className="djc-fx-toggle">
+                        {[
+                          { id: 'elegant',   label: 'Velvet' },
+                          { id: 'club',      label: 'Club' },
+                          { id: 'festival',  label: 'Festival' },
+                          { id: 'cyber',     label: 'Cyber' },
+                          { id: 'rave',      label: 'Rave' },
+                          { id: 'cinema',    label: 'Cinema' },
+                        ].map(d => (
+                          <button key={d.id}
+                            className={`djc-fx-btn ${stageDesign === d.id ? 'active' : ''}`}
+                            onClick={() => changeStageDesign(d.id)}>
+                            <span className="djc-fx-led" />
+                            {d.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ─── Çekmece 2: Ekran Kartı & Reji Chat ─── */}
+        <div className="djc-bottom-drawer">
+        <button className={`djc-settings-toggle-btn djc-bottom-drawer-toggle ${bottomPanelOpen ? 'open' : ''}`} onClick={() => setBottomPanelOpen(v => !v)}>
+          <div className="djc-settings-toggle-label">
+            <span className="djc-settings-toggle-dot" />
+            <span>📺 {lang === 'tr' ? 'Ekran Kartı & Reji Chat' : 'Display Card & Crew Chat'}</span>
+          </div>
+          <span className="djc-settings-toggle-arrow">{bottomPanelOpen ? '▲' : '▼'}</span>
+        </button>
+
+        {bottomPanelOpen && (
+          <div className="djc-bottom-drawer-grid">
+            <div className="djc-dcard-sidebar-top djc-bottom-drawer-col">
+              <div className="djc-dcard-sidebar-title">📺 {lang === 'tr' ? 'EKRAN KARTI' : 'DISPLAY CARD'}</div>
+              <div className="djc-dcard-live-preview">
+                <div className="djc-dcard-lp-label">{lang === 'tr' ? 'ÖNİZLEME' : 'PREVIEW'}</div>
+                <div className={`djc-dcard-lp-card dcard-preview-${cardType}`}>
+                  <div className="djc-dcard-lp-badge">
+                    {CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}
+                  </div>
+                  {cardSelectedSong?.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-lp-album" />}
+                  {cardSelectedSong && <div className="djc-dcard-lp-song">{cardSelectedSong.name}</div>}
+                  {cardSelectedSong?.artist && <div className="djc-dcard-lp-artist">{cardSelectedSong.artist}</div>}
+                  {cardRecipient && <div className="djc-dcard-lp-recipient">{cardRecipient}</div>}
+                  {cardMessage && <div className="djc-dcard-lp-message">"{cardMessage}"</div>}
+                  {cardSender && <div className="djc-dcard-lp-sender">{lang === 'tr' ? 'İsteyen' : 'From'}: {cardSender}</div>}
+                  {!cardSelectedSong && !cardRecipient && !cardMessage && !cardSender && (
+                    <div className="djc-dcard-lp-empty">{lang === 'tr' ? 'Formu doldurun...' : 'Fill the form...'}</div>
+                  )}
+                </div>
+              </div>
+              <div className="djc-dcard-dropdown-wrap">
+                <button className="djc-dcard-dropdown-toggle" onClick={() => setCardTypeOpen(!cardTypeOpen)}>
+                  <span>{CARD_TYPES.find(c => c.id === cardType)?.icon} {lang === 'tr' ? CARD_TYPES.find(c => c.id === cardType)?.tr : CARD_TYPES.find(c => c.id === cardType)?.en}</span>
+                  <span className={`djc-dcard-dropdown-arrow ${cardTypeOpen ? 'open' : ''}`}>▾</span>
+                </button>
+                {cardTypeOpen && (
+                  <div className="djc-dcard-dropdown-menu">
+                    {CARD_TYPES.map(ct => (
+                      <button key={ct.id}
+                        className={`djc-dcard-dropdown-item ${cardType === ct.id ? 'active' : ''}`}
+                        onClick={() => { setCardType(ct.id); setCardTypeOpen(false); }}>
+                        {ct.icon} {lang === 'tr' ? ct.tr : ct.en}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {spotifyEnabled && (
+                <div className="djc-dcard-field">
+                  <input className="djc-dcard-input" placeholder={lang === 'tr' ? '🔍 Spotify ara...' : '🔍 Search...'}
+                    value={cardSearchQuery} onChange={e => handleCardSearch(e.target.value)} />
+                  {cardSearching && <span className="djc-dcard-searching">...</span>}
+                  {cardSearchResults.length > 0 && !cardSelectedSong && (
+                    <div className="djc-dcard-results">
+                      {cardSearchResults.slice(0, 5).map(song => (
+                        <div key={song.spotifyId} className="djc-dcard-result-item"
+                          onClick={() => { setCardSelectedSong(song); setCardSearchResults([]); setCardSearchQuery(song.name); }}>
+                          {song.albumArt && <img src={song.albumArt} alt="" className="djc-dcard-result-art" />}
+                          <div className="djc-dcard-result-info">
+                            <span className="djc-dcard-result-name">{song.name}</span>
+                            <span className="djc-dcard-result-artist">{song.artist}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {cardSelectedSong && (
+                    <div className="djc-dcard-selected">
+                      {cardSelectedSong.albumArt && <img src={cardSelectedSong.albumArt} alt="" className="djc-dcard-result-art" />}
+                      <div className="djc-dcard-result-info">
+                        <span className="djc-dcard-result-name">{cardSelectedSong.name}</span>
+                        <span className="djc-dcard-result-artist">{cardSelectedSong.artist}</span>
+                      </div>
+                      <button className="djc-dcard-remove" onClick={() => { setCardSelectedSong(null); setCardSearchQuery(''); }}>✕</button>
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className="djc-dcard-field">
+                <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'Kime?' : 'To whom?'}
+                  value={cardRecipient} onChange={e => setCardRecipient(e.target.value)} maxLength={60} />
+              </div>
+              <div className="djc-dcard-field">
+                <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'Mesaj (max 120)' : 'Message (max 120)'}
+                  value={cardMessage} onChange={e => setCardMessage(e.target.value)} maxLength={120} />
+              </div>
+              <div className="djc-dcard-field">
+                <input className="djc-dcard-input" placeholder={lang === 'tr' ? 'İsteyen' : 'From'}
+                  value={cardSender} onChange={e => setCardSender(e.target.value)} maxLength={40} />
+              </div>
+              <div className="djc-dcard-actions-col">
+                {!cardSent ? (
+                  <button className="djc-dcard-btn djc-dcard-btn-send" onClick={sendDisplayCard}>
+                    📺 {lang === 'tr' ? 'Gönder' : 'Send'}
+                  </button>
+                ) : (
+                  <button className="djc-dcard-btn djc-dcard-btn-dismiss" onClick={dismissDisplayCard}>
+                    ❌ {lang === 'tr' ? 'Kapat' : 'Dismiss'}
+                  </button>
+                )}
+                <button className="djc-dcard-btn djc-dcard-btn-reset" onClick={resetCardForm}>
+                  🔄
+                </button>
+              </div>
+            </div>
+
+            <div className="djc-crew-chat-panel djc-bottom-drawer-col">
+              <div className="djc-crew-chat-title">💬 {lang === 'tr' ? 'REJİ CHAT' : 'CREW CHAT'}</div>
+              <div className="djc-crew-chat-messages">
+                {chatMessages.length === 0 && <div className="crew-chat-empty">{lang === 'tr' ? 'Mesaj yok' : 'No messages'}</div>}
+                {chatMessages.map(m => (
+                  <div key={m.id} className={`crew-chat-msg crew-chat-${m.sender}`}>
+                    <span className="crew-chat-sender">{m.sender === 'dj' ? '🎧 DJ' : '🎬 REJİ'}</span>
+                    <span className="crew-chat-text">{m.message}</span>
+                  </div>
+                ))}
+                <div ref={chatEndRef} />
+              </div>
+              <div className="djc-crew-chat-input-row">
+                <input className="djc-crew-chat-input" value={chatInput} onChange={e => setChatInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && sendChat()}
+                  placeholder={lang === 'tr' ? 'Mesaj...' : 'Message...'} maxLength={200} />
+                <button className="djc-crew-chat-send" onClick={sendChat}>↑</button>
+              </div>
             </div>
           </div>
+        )}
         </div>
 
       </div>

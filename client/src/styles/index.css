@@ -1554,6 +1554,276 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
   overflow: hidden;
   background: rgba(255, 255, 255, 0.01);
 }
+
+/* ═══ Analytics Sidebar: İsteklerin Dağılımı + Tarz Analizi (eşit, okunabilir kutular) ═══ */
+.djc-analytics-sidebar {
+  flex: 0 0 350px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.01);
+}
+/* İki widget de tam olarak eşit yüksekliği paylaşsın; taşan içerik kutunun kendi içinde kaysın */
+.djc-analytics-sidebar .djc-analytics-sec {
+  flex: 1 1 50%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
+  overflow: hidden;
+}
+.djc-analytics-sidebar .djc-analytics-sec + .djc-analytics-sec {
+  border-top: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
+}
+.djc-analytics-sidebar .djc-analytics-sec .djc-sec-head {
+  flex-shrink: 0;
+}
+.djc-analytics-sidebar .djc-analytics-sec .djc-sec-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px 2px 4px 0;
+}
+.djc-analytics-sidebar .djc-analytics-sec .djc-sec-body::-webkit-scrollbar { width: 3px; }
+.djc-analytics-sidebar .djc-analytics-sec .djc-sec-body::-webkit-scrollbar-thumb { background: var(--djt-scrollbar-thumb); border-radius: 3px; }
+.djc-analytics-empty {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+  padding: 20px 0;
+  margin: auto 0;
+}
+
+/* ─── Widget 1: İsteklerin Dağılımı ─── */
+.djc-dist-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.djc-dist-funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.djc-dist-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.djc-dist-row-label {
+  flex: 0 0 62px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+}
+.djc-dist-bar-track {
+  flex: 1;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.djc-dist-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+.djc-dist-row-val {
+  flex: 0 0 20px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+}
+.djc-dist-sparkline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.djc-dist-sparkline-label {
+  font-size: 9px;
+  letter-spacing: 0.6px;
+  color: rgba(255,255,255,0.35);
+}
+.djc-dist-spark-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 36px;
+}
+.djc-dist-spark-bar-wrap {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.djc-dist-spark-bar {
+  width: 100%;
+  min-height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(180deg, rgba(var(--theme-rgb, 0,212,255), 0.85), rgba(var(--theme-rgb, 0,212,255), 0.25));
+}
+.djc-dist-top-artists {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.djc-dist-top-artists-title {
+  font-size: 9px;
+  letter-spacing: 0.6px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 2px;
+}
+.djc-dist-artist-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+.djc-dist-artist-rank {
+  flex: 0 0 14px;
+  color: rgba(255,255,255,0.35);
+  font-weight: 700;
+}
+.djc-dist-artist-name {
+  flex: 1;
+  color: rgba(255,255,255,0.8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.djc-dist-artist-count {
+  font-weight: 700;
+  color: var(--theme-primary, #00d4ff);
+}
+
+/* ─── Widget 2: Tarz Analizi ─── */
+.djc-genre-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.djc-genre-velocity {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.djc-genre-velocity-low { background: rgba(34,197,94,0.15); color: #4ade80; }
+.djc-genre-velocity-medium { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.djc-genre-velocity-high { background: rgba(239,68,68,0.18); color: #f87171; }
+.djc-genre-headline {
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+  background: rgba(var(--theme-rgb, 0,212,255), 0.08);
+  border: 1px solid rgba(var(--theme-rgb, 0,212,255), 0.2);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+.djc-genre-headline strong {
+  color: var(--theme-primary, #00d4ff);
+}
+.djc-genre-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.djc-genre-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.djc-genre-row-label {
+  flex: 0 0 78px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.djc-genre-bar-track {
+  flex: 1;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+.djc-genre-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #b829dd, #ff0080);
+  transition: width 0.4s ease;
+}
+.djc-genre-row-pct {
+  flex: 0 0 32px;
+  text-align: right;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+}
+.djc-genre-recent-badge {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+}
+.djc-genre-recent-badge strong {
+  color: rgba(255,255,255,0.8);
+}
+.djc-genre-trend-arrow {
+  color: #4ade80;
+  font-weight: 800;
+}
+.djc-genre-suggestion {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 6px;
+  padding: 7px 9px;
+}
+
+/* ═══ Alt Çekmeceler: Ayarlar + Ekran Kartı — birbirine yakın, tek blok gibi ═══ */
+.djc-bottom-drawers {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-top: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
+  background: rgba(255, 255, 255, 0.015);
+}
+.djc-bottom-drawer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
+  padding: 8px 14px;
+}
+.djc-bottom-drawers .djc-bottom-drawer:first-child {
+  border-top: none;
+}
+.djc-bottom-drawer-toggle {
+  margin-bottom: 0;
+}
+.djc-bottom-drawer-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 12px;
+  margin-top: 10px;
+  max-height: 360px;
+}
+.djc-bottom-drawer-col {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 10px;
+  overflow-y: auto;
+  min-height: 0;
+}
+@media (max-width: 900px) {
+  .djc-bottom-drawer-grid {
+    grid-template-columns: 1fr;
+    max-height: none;
+  }
+}
 .djc-dcard-sidebar-top {
   display: flex;
   flex-direction: column;

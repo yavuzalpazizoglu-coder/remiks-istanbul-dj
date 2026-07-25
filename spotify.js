@@ -30,7 +30,8 @@ async function getToken() {
 
 const GENRE_MAP = [
   { category: 'Türkçe Pop', keywords: ['turkish pop', 'turkce pop', 'turkish dance', 'anatolian pop'] },
-  { category: 'Yabancı Pop', keywords: ['pop', 'dance pop', 'electropop', 'synthpop', 'indie pop', 'k-pop', 'latin pop', 'europop'] },
+  { category: 'Latin', keywords: ['latin', 'latin pop', 'reggaeton', 'salsa', 'bachata', 'latin trap', 'cumbia', 'urbano latino', 'latin hip hop'] },
+  { category: 'Yabancı Pop', keywords: ['pop', 'dance pop', 'electropop', 'synthpop', 'indie pop', 'k-pop', 'europop'] },
   { category: 'Rap', keywords: ['turkish hip hop', 'rap', 'hip hop', 'trap', 'drill', 'grime', 'turkish trap'] },
   { category: 'Arabesk', keywords: ['arabesk', 'arabesque'] },
   { category: 'Türk Halk', keywords: ['turkish folk', 'turkish classical', 'anatolian rock', 'anatolian', 'turku', 'türkü', 'halk'] },

@@ -253,6 +253,29 @@ function djAuth(req, res, next) {
   next();
 }
 
+// ─── Canlı İstatistikler (Tarz Analizi + İsteklerin Dağılımı) ───
+// Son 20dk / son 10dk pencereleri her çağrıda "now" bazlı yeniden hesaplanır (kayan pencere).
+function broadcastStats(slug, eventId) {
+  try {
+    io.to(slug).emit('request-stats-updated', db.getRequestStats(eventId));
+    io.to(slug).emit('genre-stats-updated', db.getGenreStats(eventId));
+  } catch (err) {
+    console.error('İstatistik yayını hatası:', err.message);
+  }
+}
+
+// İstek akışı yavaşlasa/dursa bile kayan pencerenin (son 20dk) doğru kalması için
+// aktif etkinliklerde periyodik olarak da yeniden hesaplanıp yayınlanır.
+setInterval(() => {
+  try {
+    for (const event of db.getActiveEvents()) {
+      broadcastStats(event.slug, event.id);
+    }
+  } catch (err) {
+    console.error('Periyodik istatistik hatası:', err.message);
+  }
+}, 30000);
+
 // ─── API Routes ───
 
 app.get('/api/config', (req, res) => {
@@ -406,8 +429,8 @@ app.post('/api/events/:slug/requests', (req, res) => {
     const { albumArt, spotifyId, deviceId, genre } = req.body;
     const songName = sanitize(req.body.songName);
     const artist = sanitize(req.body.artist);
-    if (!songName || !deviceId) {
-      return res.status(400).json({ error: 'Song name and device ID required' });
+    if (!songName || !deviceId || !spotifyId) {
+      return res.status(400).json({ error: 'Song name, device ID and Spotify ID required' });
     }
 
     const limit = event.request_limit || 2;
@@ -422,7 +445,29 @@ app.post('/api/events/:slug/requests', (req, res) => {
 
     const request = db.createRequest(event.id, songName, artist, albumArt, spotifyId, deviceId, genre || '');
     io.to(req.params.slug).emit('request-added', request);
+    broadcastStats(req.params.slug, event.id);
     res.json(request);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// İstatistikler (DJ Paneli — Tarz Analizi + İsteklerin Dağılımı)
+app.get('/api/events/:slug/request-stats', djAuth, (req, res) => {
+  try {
+    const event = db.getEventBySlug(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    res.json(db.getRequestStats(event.id));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/events/:slug/genre-stats', djAuth, (req, res) => {
+  try {
+    const event = db.getEventBySlug(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    res.json(db.getGenreStats(event.id));
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -492,6 +537,7 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
       }
       const requests = db.getRequests(event.id);
       io.to(event.slug).emit('list-updated', requests);
+      broadcastStats(event.slug, event.id);
     }
 
     res.json(updated);
@@ -520,19 +566,6 @@ app.put('/api/events/:slug/theme', djAuth, (req, res) => {
     const event = db.updateTheme(req.params.slug, theme);
     if (!event) return res.status(404).json({ error: 'Event not found' });
     io.to(req.params.slug).emit('theme-changed', { theme });
-    res.json(event);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.put('/api/events/:slug/list-size', djAuth, (req, res) => {
-  try {
-    const { size } = req.body;
-    if (![15, 30, 40].includes(size)) return res.status(400).json({ error: 'Invalid size' });
-    const event = db.updateListSize(req.params.slug, size);
-    if (!event) return res.status(404).json({ error: 'Event not found' });
-    io.to(req.params.slug).emit('list-size-changed', { size });
     res.json(event);
   } catch (err) {
     res.status(500).json({ error: err.message });

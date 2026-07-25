@@ -850,7 +850,7 @@ export default function DisplayPage() {
   const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
-  const [listSize, setListSize] = useState(15);
+  const listSize = 15;
 
   const [blackout, setBlackout] = useState(false);
   const [spotlightText, setSpotlightText] = useState('');
@@ -881,7 +881,6 @@ export default function DisplayPage() {
       setAnimLevel(eventData.animation_level || 'high');
       setStageDesign(eventData.stage_design || 'elegant');
       setEventLogo(eventData.event_logo || '');
-      setListSize(eventData.display_list_size || 15);
       setRequests((reqData.requests || []).filter(r => r.status === 'approved').sort(sortApprovedDisplay));
       if (eventData.countdown_end) setCountdownEnd(eventData.countdown_end);
       if (eventData.status === 'ended') {
@@ -980,7 +979,6 @@ export default function DisplayPage() {
     socket.on('ticker-font-size', ({ delta }) => setTickerFontDelta(delta));
     socket.on('theme-changed', ({ theme }) => setTheme(theme));
     socket.on('animation-changed', ({ level }) => setAnimLevel(level));
-    socket.on('list-size-changed', ({ size }) => setListSize(size));
     socket.on('stage-design-changed', ({ design }) => setStageDesign(design));
     socket.on('logo-changed', ({ logo }) => setEventLogo(logo));
 
@@ -1036,7 +1034,6 @@ export default function DisplayPage() {
       socket.off('ticker-updated'); socket.off('room-count'); socket.off('request-played');
       socket.off('ticker-font-size');
       socket.off('theme-changed'); socket.off('animation-changed'); socket.off('stage-design-changed');
-      socket.off('list-size-changed');
       socket.off('logo-changed'); socket.off('music-mode');
       clearTimeout(playedSongTimer.current);
       clearTimeout(playedFadeTimer.current);

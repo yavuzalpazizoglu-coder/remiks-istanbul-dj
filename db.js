@@ -277,6 +277,95 @@ export function getVotedRequestIds(eventId, deviceId) {
   `).all(eventId, deviceId).map(r => r.request_id);
 }
 
+const GENRE_UNKNOWN = 'Diğer/Bilinmiyor';
+
+export function getRequestStats(eventId) {
+  const statusRows = db.prepare(`
+    SELECT status, COUNT(*) as count FROM requests WHERE event_id = ? GROUP BY status
+  `).all(eventId);
+  const statusCounts = { pending: 0, approved: 0, playing: 0, played: 0, rejected: 0 };
+  for (const row of statusRows) {
+    if (Object.prototype.hasOwnProperty.call(statusCounts, row.status)) statusCounts[row.status] = row.count;
+  }
+
+  const volumeRows = db.prepare(`
+    SELECT CAST((strftime('%s', 'now') - strftime('%s', created_at)) / 300 AS INTEGER) as bucket
+    FROM requests
+    WHERE event_id = ? AND created_at >= datetime('now', '-60 minutes')
+  `).all(eventId);
+  const volume = new Array(12).fill(0);
+  for (const row of volumeRows) {
+    const idx = 11 - row.bucket;
+    if (idx >= 0 && idx < 12) volume[idx]++;
+  }
+
+  const topArtists = db.prepare(`
+    SELECT artist, COUNT(*) as count FROM requests
+    WHERE event_id = ? AND artist != '' AND status != 'rejected'
+    GROUP BY LOWER(artist) ORDER BY count DESC LIMIT 5
+  `).all(eventId);
+
+  const totals = db.prepare(`
+    SELECT COUNT(*) as total, COALESCE(SUM(votes), 0) as totalVotes
+    FROM requests WHERE event_id = ? AND status != 'rejected'
+  `).get(eventId);
+
+  return {
+    statusCounts,
+    volume,
+    topArtists,
+    total: totals.total,
+    totalVotes: totals.totalVotes,
+  };
+}
+
+export function getGenreStats(eventId) {
+  const allRows = db.prepare(`
+    SELECT COALESCE(NULLIF(genre, ''), ?) as genre, COUNT(*) as count
+    FROM requests WHERE event_id = ? AND status != 'rejected'
+    GROUP BY genre ORDER BY count DESC
+  `).all(GENRE_UNKNOWN, eventId);
+  const totalAll = allRows.reduce((s, r) => s + r.count, 0);
+  const byGenre = allRows.map(r => ({
+    genre: r.genre,
+    count: r.count,
+    percent: totalAll ? Math.round((r.count / totalAll) * 1000) / 10 : 0,
+  }));
+
+  const recentRows = db.prepare(`
+    SELECT COALESCE(NULLIF(genre, ''), ?) as genre, COUNT(*) as count
+    FROM requests
+    WHERE event_id = ? AND status != 'rejected' AND created_at >= datetime('now', '-20 minutes')
+    GROUP BY genre ORDER BY count DESC
+  `).all(GENRE_UNKNOWN, eventId);
+  const totalRecent = recentRows.reduce((s, r) => s + r.count, 0);
+  const recentByGenre = recentRows.map(r => ({
+    genre: r.genre,
+    count: r.count,
+    percent: totalRecent ? Math.round((r.count / totalRecent) * 1000) / 10 : 0,
+  }));
+
+  const velocityRow = db.prepare(`
+    SELECT COUNT(*) as count FROM requests
+    WHERE event_id = ? AND status != 'rejected' AND created_at >= datetime('now', '-10 minutes')
+  `).get(eventId);
+  const velocityCount = velocityRow.count;
+  let level = 'low';
+  if (velocityCount > 8) level = 'high';
+  else if (velocityCount >= 3) level = 'medium';
+
+  return {
+    total: totalAll,
+    byGenre,
+    recentWindowMinutes: 20,
+    recentTotal: totalRecent,
+    recentByGenre,
+    velocity: { level, count: velocityCount, windowMinutes: 10 },
+    dominant: byGenre[0] || null,
+    trending: recentByGenre[0] || null,
+  };
+}
+
 export function updateRequestLimit(slug, limit) {
   db.prepare('UPDATE events SET request_limit = ? WHERE slug = ?').run(limit, slug);
   return getEventBySlug(slug);
@@ -305,6 +394,10 @@ export function updateEventLogo(slug, logoPath) {
 export function updateListSize(slug, size) {
   db.prepare('UPDATE events SET display_list_size = ? WHERE slug = ?').run(size, slug);
   return getEventBySlug(slug);
+}
+
+export function getActiveEvents() {
+  return db.prepare("SELECT * FROM events WHERE status = 'active'").all();
 }
 
 export function getEventHistory(password) {
