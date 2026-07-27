@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import socket from '../socket.js';
 import useSocketStatus from '../useSocketStatus.js';
@@ -616,6 +616,7 @@ function NowPlayingBar({ req, lang, fading }) {
 }
 
 function SongCard({ req, rank, columns = 4 }) {
+  const reduceMotion = useReducedMotion();
   const isTop3 = rank <= 3;
   const tier = rank <= 3 ? rank : 'rest';
   const tierClass = rank === 1 ? 'dsp-card-gold' : rank === 2 ? 'dsp-card-silver' : rank === 3 ? 'dsp-card-bronze' : '';
@@ -630,7 +631,11 @@ function SongCard({ req, rank, columns = 4 }) {
       className={`dsp-song-card ${tierClass} ${rowGroup}`}
       initial={false}
       exit={{ opacity: 0 }}
-      transition={{ opacity: { duration: 0.18 } }}
+      layout={reduceMotion ? false : 'position'}
+      transition={{
+        layout: { duration: 0.6, ease: [0.42, 0, 0.58, 1] },
+        opacity: { duration: 0.18 },
+      }}
     >
       {req.album_art
         ? <img src={req.album_art} alt="" className="dsp-card-art" />
@@ -1329,7 +1334,7 @@ export default function DisplayPage() {
                   </div>
                 ) : (
                   <div className={`dsp-song-grid dsp-song-grid--n${listSize}`}>
-                    <AnimatePresence>
+                    <AnimatePresence mode="popLayout">
                       {topN.map((req, idx) => (
                         <SongCard key={req.id} req={req} rank={idx + 1} columns={gridColumns} />
                       ))}
