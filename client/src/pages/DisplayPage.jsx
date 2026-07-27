@@ -615,15 +615,14 @@ function NowPlayingBar({ req, lang, fading }) {
   );
 }
 
-function SongCard({ req, rank, listSize = 15 }) {
+function SongCard({ req, rank, columns = 4 }) {
   const isTop3 = rank <= 3;
   const tier = rank <= 3 ? rank : 'rest';
   const tierClass = rank === 1 ? 'dsp-card-gold' : rank === 2 ? 'dsp-card-silver' : rank === 3 ? 'dsp-card-bronze' : '';
-  const t3Start = listSize >= 30 ? 10 : 7;
-  const t4Start = listSize >= 30 ? 19 : 10;
+  const row = Math.ceil(rank / columns);
   const rowGroup = rank <= 3 ? 'dsp-row-t1'
-    : rank < t3Start ? 'dsp-row-t2'
-    : rank < t4Start ? 'dsp-row-t3'
+    : row === 2 ? 'dsp-row-t2'
+    : row === 3 ? 'dsp-row-t3'
     : 'dsp-row-t4';
 
   return (
@@ -633,33 +632,32 @@ function SongCard({ req, rank, listSize = 15 }) {
       exit={{ opacity: 0 }}
       transition={{ opacity: { duration: 0.18 } }}
     >
-      <div className={`dsp-card-rank dsp-card-rank-${tier}`}>
-        {isTop3 ? (
-          <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
-        ) : (
-          <>
-            <span className="dsp-card-rank-label">#</span>
-            <span className="dsp-card-rank-num">{rank}</span>
-          </>
-        )}
-      </div>
-
       {req.album_art
         ? <img src={req.album_art} alt="" className="dsp-card-art" />
         : <div className="dsp-card-art-ph">♪</div>
       }
 
       <div className="dsp-card-info">
+        <div className="dsp-card-info-top">
+          <div className={`dsp-card-rank dsp-card-rank-${tier}`}>
+            {isTop3 ? (
+              <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
+            ) : (
+              <>
+                <span className="dsp-card-rank-label">#</span>
+                <span className="dsp-card-rank-num">{rank}</span>
+              </>
+            )}
+          </div>
+          <div className="dsp-card-votes">
+            <span className={`dsp-card-votes-num ${isTop3 ? 'dsp-card-votes-top' : ''}`}>
+              {String(req.votes).padStart(3, '0')}
+            </span>
+          </div>
+        </div>
+
         <div className={`dsp-card-song ${isTop3 ? 'dsp-card-song-top' : ''}`}>{req.song_name}</div>
         {req.artist && <div className="dsp-card-artist">{req.artist}</div>}
-      </div>
-
-      <div className="dsp-card-votes">
-        <div className="dsp-card-votes-box">
-          <span className={`dsp-card-votes-num ${isTop3 ? 'dsp-card-votes-top' : ''}`}>
-            {String(req.votes).padStart(3, '0')}
-          </span>
-        </div>
       </div>
     </motion.div>
   );
@@ -850,7 +848,8 @@ export default function DisplayPage() {
   const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
-  const listSize = 15;
+  const listSize = 20;
+  const gridColumns = 4;
 
   const [blackout, setBlackout] = useState(false);
   const [spotlightText, setSpotlightText] = useState('');
@@ -1332,7 +1331,7 @@ export default function DisplayPage() {
                   <div className={`dsp-song-grid dsp-song-grid--n${listSize}`}>
                     <AnimatePresence>
                       {topN.map((req, idx) => (
-                        <SongCard key={req.id} req={req} rank={idx + 1} listSize={listSize} />
+                        <SongCard key={req.id} req={req} rank={idx + 1} columns={gridColumns} />
                       ))}
                     </AnimatePresence>
                   </div>
