@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo, memo } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
@@ -615,58 +615,108 @@ function NowPlayingBar({ req, lang, fading }) {
   );
 }
 
-function SongCard({ req, rank, columns = 4 }) {
+function CrownIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M3 8.5 6.8 12l3.4-6.2a2 2 0 0 1 3.6 0L17.2 12 21 8.5a1 1 0 0 1 1.66.9l-1.5 8.1a1.5 1.5 0 0 1-1.48 1.25H4.32a1.5 1.5 0 0 1-1.48-1.25l-1.5-8.1A1 1 0 0 1 3 8.5Z" />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="m12 2.6 2.85 6.06 6.4.94-4.63 4.7 1.1 6.7L12 17.83 6.28 21l1.1-6.7-4.63-4.7 6.4-.94Z" />
+    </svg>
+  );
+}
+
+function RankDelta({ delta }) {
+  if (!delta) return null;
+  const up = delta > 0;
+  return (
+    <span className={`dsp-card-delta ${up ? 'dsp-card-delta-up' : 'dsp-card-delta-down'}`}>
+      <span className="dsp-card-delta-arrow">{up ? '▲' : '▼'}</span>
+      {Math.abs(delta)}
+    </span>
+  );
+}
+
+function SongCard({ req, rank, columns = 4, variant = 'chaser', delta = 0 }) {
   const reduceMotion = useReducedMotion();
-  const isTop3 = rank <= 3;
-  const tier = rank <= 3 ? rank : 'rest';
+  const isPodium = variant === 'podium';
   const tierClass = rank === 1 ? 'dsp-card-gold' : rank === 2 ? 'dsp-card-silver' : rank === 3 ? 'dsp-card-bronze' : '';
-  const row = Math.ceil(rank / columns);
-  const rowGroup = rank <= 3 ? 'dsp-row-t1'
-    : row === 2 ? 'dsp-row-t2'
-    : row === 3 ? 'dsp-row-t3'
+  const row = Math.ceil((rank - 3) / columns);
+  const rowGroup = isPodium ? 'dsp-row-t1'
+    : row <= 1 ? 'dsp-row-t2'
+    : row === 2 ? 'dsp-row-t3'
     : 'dsp-row-t4';
 
+  const motionProps = {
+    initial: false,
+    exit: { opacity: 0 },
+    layout: reduceMotion ? false : 'position',
+    layoutId: reduceMotion ? undefined : req.id,
+    transition: {
+      layout: { duration: 0.6, ease: [0.42, 0, 0.58, 1] },
+      opacity: { duration: 0.18 },
+    },
+  };
+
+  const art = req.album_art
+    ? <img src={req.album_art} alt="" className="dsp-card-art" />
+    : <div className="dsp-card-art-ph">♪</div>;
+
+  if (isPodium) {
+    return (
+      <motion.div className={`dsp-song-card dsp-card-podium ${tierClass} ${rowGroup}`} {...motionProps}>
+        <span className="dsp-card-edge" />
+        <span className={`dsp-card-seal dsp-rank-badge-${rank}`}>
+          {rank === 1 ? <CrownIcon /> : <StarIcon />}
+        </span>
+
+        <div className={`dsp-podium-num dsp-card-rank-${rank}`}>{rank}</div>
+
+        {art}
+
+        <div className="dsp-card-info">
+          <div className="dsp-card-song dsp-card-song-top">{req.song_name}</div>
+          {req.artist && <div className="dsp-card-artist">{req.artist}</div>}
+          <div className="dsp-card-votes">
+            <span className="dsp-card-votes-num dsp-card-votes-top">
+              {String(req.votes).padStart(3, '0')}
+            </span>
+            <RankDelta delta={delta} />
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
-    <motion.div
-      className={`dsp-song-card ${tierClass} ${rowGroup}`}
-      initial={false}
-      exit={{ opacity: 0 }}
-      layout={reduceMotion ? false : 'position'}
-      transition={{
-        layout: { duration: 0.6, ease: [0.42, 0, 0.58, 1] },
-        opacity: { duration: 0.18 },
-      }}
-    >
-      {req.album_art
-        ? <img src={req.album_art} alt="" className="dsp-card-art" />
-        : <div className="dsp-card-art-ph">♪</div>
-      }
+    <motion.div className={`dsp-song-card dsp-card-chaser ${rowGroup}`} {...motionProps}>
+      {art}
 
       <div className="dsp-card-info">
         <div className="dsp-card-info-top">
-          <div className={`dsp-card-rank dsp-card-rank-${tier}`}>
-            {isTop3 ? (
-              <span className={`dsp-rank-badge dsp-rank-badge-${rank}`}>{rank}</span>
-            ) : (
-              <>
-                <span className="dsp-card-rank-label">#</span>
-                <span className="dsp-card-rank-num">{rank}</span>
-              </>
-            )}
+          <div className="dsp-card-rank dsp-card-rank-rest">
+            <span className="dsp-card-rank-label">#</span>
+            <span className="dsp-card-rank-num">{rank}</span>
           </div>
           <div className="dsp-card-votes">
-            <span className={`dsp-card-votes-num ${isTop3 ? 'dsp-card-votes-top' : ''}`}>
-              {String(req.votes).padStart(3, '0')}
-            </span>
+            <span className="dsp-card-votes-num">{String(req.votes).padStart(3, '0')}</span>
+            <RankDelta delta={delta} />
           </div>
         </div>
 
-        <div className={`dsp-card-song ${isTop3 ? 'dsp-card-song-top' : ''}`}>{req.song_name}</div>
+        <div className="dsp-card-song">{req.song_name}</div>
         {req.artist && <div className="dsp-card-artist">{req.artist}</div>}
       </div>
     </motion.div>
   );
 }
+
+const MemoSongCard = memo(SongCard);
 
 function EventSummary({ requests, lang, eventName }) {
   const totalRequests = requests.length;
@@ -853,8 +903,11 @@ export default function DisplayPage() {
   const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
   const [modeDJPhotos, setModeDJPhotos] = useState([]);
-  const listSize = 20;
+  const listSize = 15;
   const gridColumns = 4;
+  const [rankDeltas, setRankDeltas] = useState({});
+  const prevOrderRef = useRef(new Map());
+  const deltaClearTimerRef = useRef(null);
 
   const [blackout, setBlackout] = useState(false);
   const [spotlightText, setSpotlightText] = useState('');
@@ -1060,6 +1113,35 @@ export default function DisplayPage() {
   }, [countdownEnd, event?.status]);
 
 
+  // Sıra değişimi takibi — oy azalmadığı için ok, oy farkını değil sıra farkını gösterir
+  const playedSongId = playedSong?.id;
+  useEffect(() => {
+    const visible = (playedSongId ? requests.filter(r => r.id !== playedSongId) : requests).slice(0, listSize);
+    const order = new Map(visible.map((r, i) => [r.id, i + 1]));
+    const prev = prevOrderRef.current;
+    prevOrderRef.current = order;
+
+    // Listeye giriş/çıkış olduğunda tüm sıralar kayar; bunu yükseliş sanmamak için atla
+    if (order.size !== prev.size) return;
+    let sameMembers = true;
+    for (const id of order.keys()) if (!prev.has(id)) { sameMembers = false; break; }
+    if (!sameMembers) return;
+
+    const deltas = {};
+    let changed = false;
+    for (const [id, rank] of order) {
+      const before = prev.get(id);
+      if (before !== rank) { deltas[id] = before - rank; changed = true; }
+    }
+    if (!changed) return;
+
+    setRankDeltas(deltas);
+    clearTimeout(deltaClearTimerRef.current);
+    deltaClearTimerRef.current = setTimeout(() => setRankDeltas({}), 10000);
+  }, [requests, playedSongId, listSize]);
+
+  useEffect(() => () => clearTimeout(deltaClearTimerRef.current), []);
+
   const goFullscreen = () => {
     setShowFullscreenHint(false);
     document.documentElement.requestFullscreen?.().catch(() => {});
@@ -1072,6 +1154,8 @@ export default function DisplayPage() {
     ? requests.filter(r => r.id !== playedSong.id)
     : requests;
   const topN = baseList.slice(0, listSize);
+  const podium = topN.slice(0, 3);
+  const chasers = topN.slice(3);
   const displayName = brandText || event.name;
 
   const themeColors = {
@@ -1333,12 +1417,34 @@ export default function DisplayPage() {
                     <span>🎵</span> {T('display.no_requests')}
                   </div>
                 ) : (
-                  <div className={`dsp-song-grid dsp-song-grid--n${listSize}`}>
-                    <AnimatePresence mode="popLayout">
-                      {topN.map((req, idx) => (
-                        <SongCard key={req.id} req={req} rank={idx + 1} columns={gridColumns} />
-                      ))}
-                    </AnimatePresence>
+                  <div className="dsp-chart">
+                    <div className="dsp-podium-row">
+                      <AnimatePresence mode="popLayout">
+                        {podium.map((req, idx) => (
+                          <MemoSongCard
+                            key={req.id}
+                            req={req}
+                            rank={idx + 1}
+                            variant="podium"
+                            delta={rankDeltas[req.id] || 0}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    </div>
+
+                    <div className="dsp-song-grid dsp-song-grid--chasers">
+                      <AnimatePresence mode="popLayout">
+                        {chasers.map((req, idx) => (
+                          <MemoSongCard
+                            key={req.id}
+                            req={req}
+                            rank={idx + 4}
+                            columns={gridColumns}
+                            delta={rankDeltas[req.id] || 0}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    </div>
                   </div>
                 )}
               </div>
