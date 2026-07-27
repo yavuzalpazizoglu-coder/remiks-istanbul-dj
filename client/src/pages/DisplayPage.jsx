@@ -544,31 +544,17 @@ function NowPlayingBar({ req, lang, fading }) {
   return (
     <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''} ${slotLanded ? 'slot-landed' : ''} ${fading ? 'dsp-np-stage-fadeout' : ''}`}>
 
-      {req && <>
-        <span className="dsp-np-flame dsp-np-flame-l">🔥</span>
-        <span className="dsp-np-flame dsp-np-flame-r">🔥</span>
-      </>}
-
-      {/* Sol: LIVE badge + Albüm + Şarkı Bilgisi */}
+      {/* Sol: dikey şerit + Albüm + Şarkı Bilgisi */}
       <div className="dsp-np-stage-left">
 
-        {/* LIVE / WAIT pill */}
-        <div className={`dsp-np-live-pill ${req ? 'dsp-np-live-pill-on' : 'dsp-np-live-pill-off'}`}>
-          {req ? (
-            <>
-              <span className="dsp-np-live-dot" />
-              <span className="dsp-np-live-text">
-                {lang === 'tr' ? 'ŞU AN\nÇALINIYOR' : 'NOW\nPLAYING'}
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="dsp-np-live-dot dsp-np-live-dot-idle" />
-              <span className="dsp-np-live-text dsp-np-live-text-idle">
-                {lang === 'tr' ? 'DJ\nSAHNESİ' : 'DJ\nSTAGE'}
-              </span>
-            </>
-          )}
+        {/* Dikey durum şeridi */}
+        <div className={`dsp-np-rail ${req ? 'dsp-np-rail-on' : 'dsp-np-rail-off'}`}>
+          <span className={`dsp-np-live-dot ${req ? '' : 'dsp-np-live-dot-idle'}`} />
+          <span className="dsp-np-rail-text">
+            {req
+              ? (lang === 'tr' ? 'ÇALINIYOR' : 'PLAYING')
+              : (lang === 'tr' ? 'DJ SAHNESİ' : 'DJ STAGE')}
+          </span>
         </div>
 
         {/* Albüm fotoğrafı */}
@@ -590,8 +576,11 @@ function NowPlayingBar({ req, lang, fading }) {
               {req.artist && <div className="dsp-np-stage-artist">{req.artist}</div>}
             </div>
           ) : (
-            <div className="dsp-np-stage-waiting-text">
-              {lang === 'tr' ? 'İlk isteği gönder! 🎵' : 'Send the first request! 🎵'}
+            <div className="dsp-np-idle">
+              <div className="dsp-np-stage-waiting-text">
+                {lang === 'tr' ? 'İlk isteği gönder!' : 'Send the first request!'}
+              </div>
+              <IdleWave />
             </div>
           )}
         </div>
@@ -600,18 +589,61 @@ function NowPlayingBar({ req, lang, fading }) {
       {/* Sağ: EQ barları + Oy */}
       <div className="dsp-np-stage-right">
         <div className={`dsp-np-stage-bars ${req ? '' : 'dsp-np-bars-idle'}`}>
-          {[1,2,3,4,5].map(i => <span key={i} className={`dsp-np-eq-bar dsp-np-eq-bar-${i}`} />)}
+          {[1,2,3,4,5,6,7].map(i => <span key={i} className={`dsp-np-eq-bar dsp-np-eq-bar-${i}`} />)}
         </div>
         {req ? (
           <div className="dsp-np-stage-votes-wrap">
-            <span className="dsp-np-stage-votes-num">{req.votes}</span>
-            <span className="dsp-np-stage-votes-lbl">OY</span>
+            <span className="dsp-np-stage-votes-num">{String(req.votes).padStart(3, '0')}</span>
+            <span className="dsp-np-stage-votes-lbl">{lang === 'tr' ? 'OY' : 'VOTES'}</span>
           </div>
         ) : (
           <span className="dsp-np-stage-votes-empty">—</span>
         )}
       </div>
+
+      {/* Çalma süresi — 57sn'lik NOW PLAYING penceresi */}
+      <span className={`dsp-np-progress ${req ? 'dsp-np-progress-on' : ''}`} key={req ? req.id : 'idle'} />
     </div>
+  );
+}
+
+function ChartSkeleton({ listSize }) {
+  return (
+    <div className="dsp-chart dsp-chart-skeleton">
+      <div className="dsp-podium-row">
+        {[1, 2, 3].map(rank => (
+          <div key={rank} className={`dsp-skeleton-card dsp-skeleton-podium dsp-skeleton-p${rank}`}>
+            <span className="dsp-skeleton-num">{rank}</span>
+            <span className="dsp-skeleton-art" />
+            <span className="dsp-skeleton-lines">
+              <span className="dsp-skeleton-line dsp-skeleton-line-lg" />
+              <span className="dsp-skeleton-line dsp-skeleton-line-sm" />
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="dsp-song-grid dsp-song-grid--chasers">
+        {Array.from({ length: listSize - 3 }, (_, i) => (
+          <div key={i} className="dsp-skeleton-card">
+            <span className="dsp-skeleton-art" />
+            <span className="dsp-skeleton-lines">
+              <span className="dsp-skeleton-num-sm">{i + 4}</span>
+              <span className="dsp-skeleton-line dsp-skeleton-line-lg" />
+              <span className="dsp-skeleton-line dsp-skeleton-line-sm" />
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function IdleWave() {
+  return (
+    <svg className="dsp-np-wave" viewBox="0 0 240 24" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 12q15-11 30 0t30 0 30 0 30 0 30 0 30 0 30 0 30 0" />
+    </svg>
   );
 }
 
@@ -1313,7 +1345,7 @@ export default function DisplayPage() {
           <div className="dsp-topbar-left">
             <div className="dsp-logo-inline">
               <img
-                src={eventLogo || '/logos/remiksbox_marka_transparent_hr.png'}
+                src={eventLogo || '/logos/remiksbox_marka_display.png'}
                 alt={eventLogo ? 'Logo' : 'RemiksBox'}
                 className="dsp-logo-inline-img"
               />
@@ -1399,23 +1431,11 @@ export default function DisplayPage() {
 
               {/* Merkez: Altın Saatler + NOW PLAYING + Şarkı Grid */}
               <div className="dsp-beatbox-songs">
-                <div className="dsp-card-title dsp-card-title-altinsaatler">
-                  <span className="dtf-brand-full">
-                    <span className="dtf-hp dtf-hp-left">🎧</span>
-                    <span className="dtf-dj">DJ</span>
-                    <span className="dtf-dot">·</span>
-                    <span className="dtf-sizsiniz">SİZSİNİZ</span>
-                    <span className="dtf-hp dtf-hp-right">🎧</span>
-                  </span>
-                </div>
-
                 {/* NOW PLAYING — sabit çerçeve, her zaman görünür */}
                 <NowPlayingBar req={playedSong} lang={lang} fading={playedSongFading} />
 
                 {requests.length === 0 ? (
-                  <div className="dsp-table-empty">
-                    <span>🎵</span> {T('display.no_requests')}
-                  </div>
+                  <ChartSkeleton listSize={listSize} />
                 ) : (
                   <div className="dsp-chart">
                     <div className="dsp-podium-row">

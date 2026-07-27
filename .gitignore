@@ -2,7 +2,10 @@ node_modules/
 client/node_modules/
 # client/dist/ - Railway deploy için dahil edilir
 data/*.db
+data/*.db-shm
+data/*.db-wal
 .env
 .DS_Store
 scripts/
 backups/
+.kombai/
