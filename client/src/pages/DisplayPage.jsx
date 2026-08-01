@@ -607,33 +607,46 @@ function NowPlayingBar({ req, lang, fading }) {
   );
 }
 
+function SkeletonPodium({ rank }) {
+  return (
+    <div className={`dsp-skeleton-card dsp-skeleton-podium dsp-skeleton-p${rank}`}>
+      <span className="dsp-skeleton-num">{rank}</span>
+      <span className="dsp-skeleton-art" />
+      <span className="dsp-skeleton-lines">
+        <span className="dsp-skeleton-line dsp-skeleton-line-lg" />
+        <span className="dsp-skeleton-line dsp-skeleton-line-sm" />
+      </span>
+    </div>
+  );
+}
+
+function SkeletonChaser({ rank }) {
+  return (
+    <div className="dsp-skeleton-card">
+      <span className="dsp-skeleton-art" />
+      <span className="dsp-skeleton-lines">
+        <span className="dsp-skeleton-num-sm">{rank}</span>
+        <span className="dsp-skeleton-line dsp-skeleton-line-lg" />
+        <span className="dsp-skeleton-line dsp-skeleton-line-sm" />
+      </span>
+    </div>
+  );
+}
+
+// Dolmayan sıralar iskelet olarak çizilir: az istekle ekran çıplak kalmasın
+function skeletonRanks(filled, total, offset = 1) {
+  return Array.from({ length: Math.max(0, total - filled) }, (_, i) => filled + i + offset);
+}
+
 function ChartSkeleton({ listSize }) {
   return (
     <div className="dsp-chart dsp-chart-skeleton">
       <div className="dsp-podium-row">
-        {[1, 2, 3].map(rank => (
-          <div key={rank} className={`dsp-skeleton-card dsp-skeleton-podium dsp-skeleton-p${rank}`}>
-            <span className="dsp-skeleton-num">{rank}</span>
-            <span className="dsp-skeleton-art" />
-            <span className="dsp-skeleton-lines">
-              <span className="dsp-skeleton-line dsp-skeleton-line-lg" />
-              <span className="dsp-skeleton-line dsp-skeleton-line-sm" />
-            </span>
-          </div>
-        ))}
+        {skeletonRanks(0, 3).map(rank => <SkeletonPodium key={rank} rank={rank} />)}
       </div>
 
       <div className="dsp-song-grid dsp-song-grid--chasers">
-        {Array.from({ length: listSize - 3 }, (_, i) => (
-          <div key={i} className="dsp-skeleton-card">
-            <span className="dsp-skeleton-art" />
-            <span className="dsp-skeleton-lines">
-              <span className="dsp-skeleton-num-sm">{i + 4}</span>
-              <span className="dsp-skeleton-line dsp-skeleton-line-lg" />
-              <span className="dsp-skeleton-line dsp-skeleton-line-sm" />
-            </span>
-          </div>
-        ))}
+        {skeletonRanks(0, listSize - 3, 4).map(rank => <SkeletonChaser key={rank} rank={rank} />)}
       </div>
     </div>
   );
@@ -1450,6 +1463,9 @@ export default function DisplayPage() {
                           />
                         ))}
                       </AnimatePresence>
+                      {skeletonRanks(podium.length, 3).map(rank => (
+                        <SkeletonPodium key={`sk-${rank}`} rank={rank} />
+                      ))}
                     </div>
 
                     <div className="dsp-song-grid dsp-song-grid--chasers">
@@ -1464,6 +1480,9 @@ export default function DisplayPage() {
                           />
                         ))}
                       </AnimatePresence>
+                      {skeletonRanks(chasers.length, listSize - 3, 4).map(rank => (
+                        <SkeletonChaser key={`sk-${rank}`} rank={rank} />
+                      ))}
                     </div>
                   </div>
                 )}
