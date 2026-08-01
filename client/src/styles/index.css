@@ -4867,8 +4867,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   width:  clamp(58px, 10.5vh, 122px);
   height: clamp(44px, 8vh, 92px);
   display: block;
-  /* Keskin görünüm: ışıma yerine ince derinlik gölgesi */
-  filter: drop-shadow(0 clamp(1px, 0.25vh, 3px) clamp(2px, 0.5vh, 6px) rgba(0,0,0,0.55));
+  /* Efektsiz, keskin görünüm */
 }
 .dsp-np-crownblk-txt {
   font-family: var(--font-display);

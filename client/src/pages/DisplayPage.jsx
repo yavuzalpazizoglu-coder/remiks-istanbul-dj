@@ -535,27 +535,23 @@ function NpWaveform() {
   );
 }
 
-// Sol blok: keskin hatlı altın taç + "SİZ SEÇTİNİZ" — efektsiz, düz form
+// Sol blok: klasik taç formu (podyum rozetleriyle aynı) + "SİZ SEÇTİNİZ" — efektsiz, keskin
 function NpCrown({ lang, active }) {
   return (
     <div className={`dsp-np-crownblk ${active ? '' : 'dsp-np-crownblk-idle'}`}>
-      <svg viewBox="0 0 96 72" aria-hidden="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
         <defs>
           <linearGradient id="npCrownGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#ffdf7e" />
             <stop offset="1" stopColor="#c9920a" />
           </linearGradient>
         </defs>
-        {/* Gövde — sivri uçlu keskin form */}
         <path
           fill="url(#npCrownGrad)"
           stroke="#8a6200"
-          strokeWidth="1.5"
-          strokeLinejoin="miter"
-          d="M7 17 L25 35 L35 9 L48 29 L61 9 L71 35 L89 17 L81 51 L15 51 Z"
+          strokeWidth="0.7"
+          d="M3 8.5 6.8 12l3.4-6.2a2 2 0 0 1 3.6 0L17.2 12 21 8.5a1 1 0 0 1 1.66.9l-1.5 8.1a1.5 1.5 0 0 1-1.48 1.25H4.32a1.5 1.5 0 0 1-1.48-1.25l-1.5-8.1A1 1 0 0 1 3 8.5Z"
         />
-        {/* Bant — düz, keskin köşeli */}
-        <rect x="15" y="56" width="66" height="9" rx="1" fill="url(#npCrownGrad)" stroke="#8a6200" strokeWidth="1.5" />
       </svg>
       <span className="dsp-np-crownblk-txt">
         {lang === 'tr' ? 'SİZ SEÇTİNİZ' : 'YOU CHOSE'}
