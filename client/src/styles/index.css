@@ -4863,53 +4863,12 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   flex: 0 0 auto;
   padding: 0 clamp(4px, 0.5vw, 10px);
 }
-.dsp-np-crown-fig {
-  position: relative;
-  display: block;
-}
 .dsp-np-crownblk svg {
   width:  clamp(58px, 10.5vh, 122px);
   height: clamp(44px, 8vh, 92px);
   display: block;
-  filter: drop-shadow(0 0 clamp(8px, 1.7vh, 20px) rgba(255,190,0,0.65));
-  animation: npCrownBreath 2.8s ease-in-out infinite;
-  transform-origin: center;
-}
-@keyframes npCrownBreath {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.06); }
-}
-/* Bant taşları — altın palette pırlanta beyazı */
-.dsp-np-crown-gem { fill: #f3f5ff; }
-
-/* Glint — taç yüzeyinden geçen parlama süpürmesi */
-.dsp-np-crown-shine {
-  transform: translateX(-28px) skewX(-18deg);
-  animation: npCrownShineSweep 3.4s ease-in-out infinite;
-  will-change: transform;
-}
-@keyframes npCrownShineSweep {
-  0%, 55%  { transform: translateX(-28px) skewX(-18deg); }
-  85%, 100% { transform: translateX(116px) skewX(-18deg); }
-}
-
-/* Yıldız pırıltıları — taç çevresinde sırayla parlar */
-.dsp-np-sparkle {
-  position: absolute;
-  background: #fff;
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-  opacity: 0;
-  animation: npSparkleTwinkle 2.6s ease-in-out infinite;
-  pointer-events: none;
-}
-.dsp-np-sparkle-1 { width: clamp(7px, 1.2vh, 13px); height: clamp(7px, 1.2vh, 13px); top: -4%; left: 44%; animation-delay: 0s; }
-.dsp-np-sparkle-2 { width: clamp(5px, 0.9vh, 10px); height: clamp(5px, 0.9vh, 10px); top: 18%; left: -5%; animation-delay: 0.7s; background: #ffe98a; }
-.dsp-np-sparkle-3 { width: clamp(6px, 1vh, 11px); height: clamp(6px, 1vh, 11px); top: 8%; right: -4%; animation-delay: 1.3s; }
-.dsp-np-sparkle-4 { width: clamp(4px, 0.8vh, 9px); height: clamp(4px, 0.8vh, 9px); bottom: 6%; left: 12%; animation-delay: 1.9s; background: #ffe98a; }
-@keyframes npSparkleTwinkle {
-  0%, 100% { opacity: 0; transform: scale(0.2) rotate(0deg); }
-  18%      { opacity: 1; transform: scale(1) rotate(70deg); }
-  36%      { opacity: 0; transform: scale(0.2) rotate(140deg); }
+  /* Keskin görünüm: ışıma yerine ince derinlik gölgesi */
+  filter: drop-shadow(0 clamp(1px, 0.25vh, 3px) clamp(2px, 0.5vh, 6px) rgba(0,0,0,0.55));
 }
 .dsp-np-crownblk-txt {
   font-family: var(--font-display);
@@ -4920,9 +4879,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   white-space: nowrap;
 }
 .dsp-np-crownblk-idle { opacity: 0.35; }
-.dsp-np-crownblk-idle svg { filter: grayscale(0.6); animation: none; }
-.dsp-np-crownblk-idle .dsp-np-crown-shine,
-.dsp-np-crownblk-idle .dsp-np-sparkle { animation: none; opacity: 0; }
+.dsp-np-crownblk-idle svg { filter: grayscale(0.6); }
 .dsp-np-crownblk-idle .dsp-np-crownblk-txt { color: rgba(255,255,255,0.4); }
 .dsp-np-stage-art {
   width: clamp(58px, 10.6vh, 120px); height: clamp(58px, 10.6vh, 120px);
@@ -5139,9 +5096,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   .dsp-np-wave { animation: none; }
   .dsp-np-wavebars span { animation: none; }
   .dsp-np-mini-eq span { animation: none; }
-  .dsp-np-crownblk svg { animation: none; }
-  .dsp-np-crown-shine { animation: none; opacity: 0; }
-  .dsp-np-sparkle { animation: none; opacity: 0; }
 }
 
 /* ─── Boş durum iskeleti — istek gelmeden önce sıralama çerçevesi ─── */
@@ -5651,7 +5605,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   height: clamp(17px, 3.15vh, 34px);
   display: block;
   margin-bottom: -2px;
-  filter: drop-shadow(0 0 clamp(4px, 0.9vh, 10px) currentColor);
+  /* Keskin görünüm: ışıma yerine ince derinlik gölgesi */
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
 }
 .dsp-podium-crown-ring {
   width:  clamp(26px, 4.8vh, 52px);
@@ -5665,21 +5620,12 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-variant-numeric: tabular-nums;
   background: #080c16;
   border: clamp(2px, 0.28vh, 3px) solid currentColor;
-  box-shadow: 0 0 clamp(8px, 1.7vh, 18px) -2px currentColor,
-              inset 0 0 clamp(6px, 1.3vh, 14px) -5px currentColor;
+  box-shadow: 0 clamp(1px, 0.25vh, 3px) clamp(3px, 0.6vh, 7px) rgba(0,0,0,0.55);
 }
 .dsp-podium-crown-1 { color: #ffc800; }
 .dsp-podium-crown-2 { color: #cfe3f5; }
 .dsp-podium-crown-3 { color: #e08a3c; }
 .dsp-podium-crown-dim { opacity: 0.3; }
-.dsp-podium-crown-1 svg {
-  animation: sealBreath 2.8s ease-in-out infinite;
-  transform-origin: center;
-}
-@keyframes sealBreath {
-  0%, 100% { opacity: 0.85; transform: scale(1); }
-  50%      { opacity: 1;    transform: scale(1.12); }
-}
 
 /* Podyum kartı içi — sıra numarası taçta olduğu için alan tamamen içeriğe ayrıldı */
 .dsp-card-podium .dsp-card-art,
@@ -5735,7 +5681,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dsp-podium-crown-1 svg { animation: none; }
   .dsp-card-delta { animation: none; }
 }
 
