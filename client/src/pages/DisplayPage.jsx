@@ -695,8 +695,8 @@ function RankDelta({ delta }) {
 
 // Uzun şarkı adları iki satıra sığsın diye kademeli küçültme — elips yerine tam metin
 function podiumSongSizeClass(name = '') {
-  if (name.length > 42) return 'dsp-card-song-xs';
-  if (name.length > 26) return 'dsp-card-song-sm';
+  if (name.length > 44) return 'dsp-card-song-xs';
+  if (name.length > 30) return 'dsp-card-song-sm';
   return '';
 }
 
@@ -738,11 +738,13 @@ function SongCard({ req, rank, columns = 4, variant = 'chaser', delta = 0, lang 
 
         <div className="dsp-card-info">
           <div className={`dsp-card-song dsp-card-song-top ${podiumSongSizeClass(req.song_name)}`}>{req.song_name}</div>
-          {req.artist && <div className="dsp-card-artist">{req.artist}</div>}
-          <div className="dsp-card-votes">
-            <RankDelta delta={delta} />
-            <span className="dsp-card-votes-num dsp-card-votes-top">{req.votes}</span>
-            <span className="dsp-card-votes-lbl">{lang === 'tr' ? 'oy' : 'votes'}</span>
+          <div className="dsp-card-podium-meta">
+            <span className="dsp-card-artist">{req.artist}</span>
+            <span className="dsp-card-votes">
+              <RankDelta delta={delta} />
+              <span className="dsp-card-votes-num dsp-card-votes-top">{req.votes}</span>
+              <span className="dsp-card-votes-lbl">{lang === 'tr' ? 'oy' : 'votes'}</span>
+            </span>
           </div>
         </div>
       </motion.div>
