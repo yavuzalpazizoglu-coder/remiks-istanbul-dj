@@ -4733,6 +4733,9 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 
 /* ─── NOW PLAYING STAGE BOX — başlık ile grid arası, sabit ─── */
 .dsp-np-stage {
+  /* Premium altın palet — kutu, etkinlik temasından bağımsız hep gold */
+  --theme-rgb: 240, 199, 94;
+  --theme-primary: #f2ca62;
   display: flex;
   align-items: center;
   gap: clamp(10px, 1.3vw, 22px);
@@ -4876,7 +4879,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.06); }
 }
-.dsp-np-crown-gem { fill: var(--theme-primary, #00d4ff); }
+/* Bant taşları — altın palette pırlanta beyazı */
+.dsp-np-crown-gem { fill: #f3f5ff; }
 
 /* Glint — taç yüzeyinden geçen parlama süpürmesi */
 .dsp-np-crown-shine {
@@ -5081,7 +5085,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .dsp-np-votesblk-num {
   font-family: var(--font-display);
-  font-size: clamp(26px, 4.8vh, 54px);
+  font-size: clamp(21px, 3.8vh, 42px);
   font-weight: 900;
   color: var(--theme-primary, #00d4ff);
   line-height: 1;
