@@ -5090,16 +5090,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   0%, 100% { opacity: 0.55; }
   50%      { opacity: 1; }
 }
-.dsp-skeleton-num {
-  font-family: var(--font-display);
-  font-size: clamp(30px, 8vh, 86px);
-  font-weight: 900; line-height: 0.9;
-  color: transparent;
-  -webkit-text-stroke: clamp(1px, 0.15vh, 2px) rgba(255,255,255,0.16);
-}
-.dsp-skeleton-p1 .dsp-skeleton-num { -webkit-text-stroke-color: rgba(255,200,0,0.4); }
-.dsp-skeleton-p2 .dsp-skeleton-num { -webkit-text-stroke-color: rgba(207,227,245,0.32); }
-.dsp-skeleton-p3 .dsp-skeleton-num { -webkit-text-stroke-color: rgba(224,138,60,0.32); }
 .dsp-skeleton-num-sm {
   font-family: var(--font-mono, monospace);
   font-size: clamp(9px, 1.3vh, 15px);
@@ -5113,7 +5103,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   background: rgba(255,255,255,0.02);
 }
 .dsp-skeleton-podium .dsp-skeleton-art {
-  width: clamp(38px, 8.4vh, 96px); height: clamp(38px, 8.4vh, 96px);
+  width: clamp(48px, 11.5vh, 130px); height: clamp(48px, 11.5vh, 130px);
 }
 .dsp-skeleton-lines {
   flex: 1; min-width: 0;
@@ -5165,13 +5155,16 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   overflow: hidden;
 }
 
-/* Podyum: 3 geniş kart, yükseklik sabit oran */
+/* Podyum: 3 geniş kart, yükseklik sabit oran.
+   Üstteki padding taç rozetine ayrılmıştır — .dsp-chart overflow:hidden kırpmasın */
 .dsp-podium-row {
   flex: 0 0 34%;
   min-height: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
   gap: clamp(8px, 1vw, 20px);
+  padding-top: clamp(26px, 5.2vh, 56px);
 }
 
 /* Kovalayanlar: 4 sütun × 3 satır, kalan alanı eşit böler */
@@ -5546,8 +5539,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-card-podium {
   position: relative;
   height: 100%;
-  gap: clamp(6px, 0.7vw, 14px);
-  padding: clamp(8px, 1.15vh, 16px) clamp(10px, 0.85vw, 18px);
+  gap: clamp(8px, 1.2vw, 24px);
+  padding: clamp(7px, 1.3vh, 14px) clamp(12px, 1.3vw, 26px);
   border-width: 2px;
   border-radius: clamp(6px, 0.6vw, 10px);
 }
@@ -5566,33 +5559,45 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .dsp-card-silver .dsp-card-edge { background: linear-gradient(90deg, transparent, #cfe3f5, transparent); }
 .dsp-card-bronze .dsp-card-edge { background: linear-gradient(90deg, transparent, #e08a3c, transparent); }
 
-/* Dev sıra numarası — kartın en baskın öğesi */
-.dsp-podium-num {
+/* Taç rozeti — kartla aynı grid hücresinde, üst kenara oturur */
+.dsp-podium-crown {
+  grid-row: 1;
+  align-self: start;
+  justify-self: center;
+  margin-top: calc(-1 * clamp(26px, 5.2vh, 56px));
+  z-index: 6;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dsp-podium-crown svg {
+  width:  clamp(17px, 3.15vh, 34px);
+  height: clamp(17px, 3.15vh, 34px);
+  display: block;
+  margin-bottom: -2px;
+  filter: drop-shadow(0 0 clamp(4px, 0.9vh, 10px) currentColor);
+}
+.dsp-podium-crown-ring {
+  width:  clamp(26px, 4.8vh, 52px);
+  height: clamp(26px, 4.8vh, 52px);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(40px, 8.3vh, 90px);
-  line-height: 0.85;
-  flex-shrink: 0;
-  position: relative; z-index: 2;
+  font-size: clamp(14px, 2.5vh, 27px);
+  line-height: 1;
   font-variant-numeric: tabular-nums;
+  background: #080c16;
+  border: clamp(2px, 0.28vh, 3px) solid currentColor;
+  box-shadow: 0 0 clamp(8px, 1.7vh, 18px) -2px currentColor,
+              inset 0 0 clamp(6px, 1.3vh, 14px) -5px currentColor;
 }
-.dsp-podium-num.dsp-card-rank-1 { color: #ffc800; text-shadow: 0 0 clamp(8px, 1.4vh, 18px) rgba(255,200,0,0.45); }
-.dsp-podium-num.dsp-card-rank-2 { color: #cfe3f5; text-shadow: 0 0 clamp(6px, 1.1vh, 14px) rgba(160,205,245,0.35); }
-.dsp-podium-num.dsp-card-rank-3 { color: #e08a3c; text-shadow: 0 0 clamp(5px, 0.9vh, 12px) rgba(210,130,50,0.35); }
-
-/* Köşe mührü — zemin gradyanları .dsp-rank-badge-1/2/3'ten gelir */
-.dsp-card-seal {
-  position: absolute;
-  top: clamp(5px, 0.7vh, 10px);
-  left: clamp(5px, 0.5vw, 10px);
-  z-index: 4;
-  display: flex; align-items: center; justify-content: center;
-  width:  clamp(24px, 3.5vh, 42px);
-  height: clamp(24px, 3.5vh, 42px);
-  border-radius: 50%;
-}
-.dsp-card-seal svg { width: 55%; height: 55%; display: block; }
-.dsp-card-gold.dsp-card-podium .dsp-card-seal svg {
+.dsp-podium-crown-1 { color: #ffc800; }
+.dsp-podium-crown-2 { color: #cfe3f5; }
+.dsp-podium-crown-3 { color: #e08a3c; }
+.dsp-podium-crown-dim { opacity: 0.3; }
+.dsp-podium-crown-1 svg {
   animation: sealBreath 2.8s ease-in-out infinite;
   transform-origin: center;
 }
@@ -5601,20 +5606,43 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   50%      { opacity: 1;    transform: scale(1.12); }
 }
 
-/* Podyum kartı içi ölçüler */
+/* Podyum kartı içi — sıra numarası taçta olduğu için alan tamamen içeriğe ayrıldı */
 .dsp-card-podium .dsp-card-art,
 .dsp-card-podium .dsp-card-art-ph {
-  width:  clamp(64px, 10.2vh, 110px);
-  height: clamp(64px, 10.2vh, 110px);
+  width:  clamp(46px, 10.6vh, 120px);
+  height: clamp(46px, 10.6vh, 120px);
 }
-.dsp-card-podium .dsp-card-info { gap: clamp(3px, 0.4vh, 6px); }
-.dsp-card-podium .dsp-card-song { font-size: clamp(15px, 2.2vh, 24px); }
-.dsp-card-podium .dsp-card-artist { font-size: clamp(10px, 1.4vh, 16px); }
-.dsp-card-podium .dsp-card-votes { justify-content: flex-start; margin-top: clamp(1px, 0.25vh, 4px); }
-.dsp-card-podium .dsp-card-delta { font-size: clamp(10px, 1.4vh, 15px); }
+.dsp-card-podium .dsp-card-info {
+  align-self: stretch;
+  justify-content: space-between;
+  gap: clamp(2px, 0.35vh, 5px);
+  padding: clamp(1px, 0.3vh, 4px) 0;
+}
+.dsp-card-podium .dsp-card-song {
+  font-size: clamp(15px, 2.55vh, 28px);
+  line-height: 1.22;
+}
+.dsp-card-podium .dsp-card-song-sm { font-size: clamp(13px, 2.15vh, 23px); }
+.dsp-card-podium .dsp-card-song-xs { font-size: clamp(12px, 1.85vh, 20px); }
+.dsp-card-podium .dsp-card-artist { font-size: clamp(10px, 1.75vh, 19px); }
+.dsp-card-podium .dsp-card-votes {
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: clamp(3px, 0.5vw, 9px);
+  margin-top: auto;
+}
+.dsp-card-podium .dsp-card-votes-num { font-size: clamp(19px, 3.5vh, 38px); letter-spacing: 0.02em; }
+.dsp-card-podium .dsp-card-delta { font-size: clamp(11px, 1.7vh, 18px); margin-right: auto; }
+.dsp-card-votes-lbl {
+  font-size: clamp(8px, 1.35vh, 15px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .dsp-card-gold.dsp-card-podium .dsp-card-seal svg { animation: none; }
+  .dsp-podium-crown-1 svg { animation: none; }
   .dsp-card-delta { animation: none; }
 }
 

@@ -609,8 +609,7 @@ function NowPlayingBar({ req, lang, fading }) {
 
 function SkeletonPodium({ rank }) {
   return (
-    <div className={`dsp-skeleton-card dsp-skeleton-podium dsp-skeleton-p${rank}`}>
-      <span className="dsp-skeleton-num">{rank}</span>
+    <div className={`dsp-skeleton-card dsp-skeleton-podium dsp-skeleton-p${rank}`} style={{ gridColumn: rank, gridRow: 1 }}>
       <span className="dsp-skeleton-art" />
       <span className="dsp-skeleton-lines">
         <span className="dsp-skeleton-line dsp-skeleton-line-lg" />
@@ -642,6 +641,7 @@ function ChartSkeleton({ listSize }) {
   return (
     <div className="dsp-chart dsp-chart-skeleton">
       <div className="dsp-podium-row">
+        {[1, 2, 3].map(rank => <PodiumCrown key={`c-${rank}`} rank={rank} dim />)}
         {skeletonRanks(0, 3).map(rank => <SkeletonPodium key={rank} rank={rank} />)}
       </div>
 
@@ -668,11 +668,17 @@ function CrownIcon() {
   );
 }
 
-function StarIcon() {
+// Podyum tacı — kartın üst kenarına oturur, grid'de kartla aynı hücreyi paylaşır
+function PodiumCrown({ rank, dim = false }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="m12 2.6 2.85 6.06 6.4.94-4.63 4.7 1.1 6.7L12 17.83 6.28 21l1.1-6.7-4.63-4.7 6.4-.94Z" />
-    </svg>
+    <div
+      className={`dsp-podium-crown dsp-podium-crown-${rank} ${dim ? 'dsp-podium-crown-dim' : ''}`}
+      style={{ gridColumn: rank, gridRow: 1 }}
+      aria-hidden="true"
+    >
+      <CrownIcon />
+      <span className="dsp-podium-crown-ring">{rank}</span>
+    </div>
   );
 }
 
@@ -687,7 +693,14 @@ function RankDelta({ delta }) {
   );
 }
 
-function SongCard({ req, rank, columns = 4, variant = 'chaser', delta = 0 }) {
+// Uzun şarkı adları iki satıra sığsın diye kademeli küçültme — elips yerine tam metin
+function podiumSongSizeClass(name = '') {
+  if (name.length > 42) return 'dsp-card-song-xs';
+  if (name.length > 26) return 'dsp-card-song-sm';
+  return '';
+}
+
+function SongCard({ req, rank, columns = 4, variant = 'chaser', delta = 0, lang = 'tr' }) {
   const reduceMotion = useReducedMotion();
   const isPodium = variant === 'podium';
   const tierClass = rank === 1 ? 'dsp-card-gold' : rank === 2 ? 'dsp-card-silver' : rank === 3 ? 'dsp-card-bronze' : '';
@@ -714,24 +727,22 @@ function SongCard({ req, rank, columns = 4, variant = 'chaser', delta = 0 }) {
 
   if (isPodium) {
     return (
-      <motion.div className={`dsp-song-card dsp-card-podium ${tierClass} ${rowGroup}`} {...motionProps}>
+      <motion.div
+        className={`dsp-song-card dsp-card-podium ${tierClass} ${rowGroup}`}
+        style={{ gridColumn: rank, gridRow: 1 }}
+        {...motionProps}
+      >
         <span className="dsp-card-edge" />
-        <span className={`dsp-card-seal dsp-rank-badge-${rank}`}>
-          {rank === 1 ? <CrownIcon /> : <StarIcon />}
-        </span>
-
-        <div className={`dsp-podium-num dsp-card-rank-${rank}`}>{rank}</div>
 
         {art}
 
         <div className="dsp-card-info">
-          <div className="dsp-card-song dsp-card-song-top">{req.song_name}</div>
+          <div className={`dsp-card-song dsp-card-song-top ${podiumSongSizeClass(req.song_name)}`}>{req.song_name}</div>
           {req.artist && <div className="dsp-card-artist">{req.artist}</div>}
           <div className="dsp-card-votes">
-            <span className="dsp-card-votes-num dsp-card-votes-top">
-              {String(req.votes).padStart(3, '0')}
-            </span>
             <RankDelta delta={delta} />
+            <span className="dsp-card-votes-num dsp-card-votes-top">{req.votes}</span>
+            <span className="dsp-card-votes-lbl">{lang === 'tr' ? 'oy' : 'votes'}</span>
           </div>
         </div>
       </motion.div>
@@ -1452,6 +1463,9 @@ export default function DisplayPage() {
                 ) : (
                   <div className="dsp-chart">
                     <div className="dsp-podium-row">
+                      {[1, 2, 3].map(rank => (
+                        <PodiumCrown key={`crown-${rank}`} rank={rank} dim={podium.length < rank} />
+                      ))}
                       <AnimatePresence mode="popLayout">
                         {podium.map((req, idx) => (
                           <MemoSongCard
@@ -1460,6 +1474,7 @@ export default function DisplayPage() {
                             rank={idx + 1}
                             variant="podium"
                             delta={rankDeltas[req.id] || 0}
+                            lang={lang}
                           />
                         ))}
                       </AnimatePresence>
