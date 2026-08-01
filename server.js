@@ -207,6 +207,29 @@ const io = new Server(server, {
 app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
+// ─── Kanonik adres: tüm sayfa trafiği www.remiksistanbul.com'da toplanır ───
+// Sadece sayfa yüklemeleri yönlendirilir (GET/HEAD, /api dışı) — healthcheck
+// (/api/config) ve uygulama içi API çağrıları etkilenmez.
+const CANONICAL_HOST = process.env.CANONICAL_HOST || 'www.remiksistanbul.com';
+const REDIRECT_HOSTS = new Set([
+  'remiksistanbul.com',
+  'remiks-istanbul-dj-production.up.railway.app',
+]);
+app.use((req, res, next) => {
+  try {
+    const host = String(req.headers.host || '').toLowerCase().split(':')[0];
+    if (
+      REDIRECT_HOSTS.has(host) &&
+      (req.method === 'GET' || req.method === 'HEAD') &&
+      !req.path.startsWith('/api/') &&
+      !req.path.startsWith('/socket.io')
+    ) {
+      return res.redirect(301, `https://${CANONICAL_HOST}${req.originalUrl}`);
+    }
+  } catch { /* yönlendirme hatası sayfayı engellemesin */ }
+  next();
+});
+
 function sanitize(str) {
   if (typeof str !== 'string') return '';
   return str.replace(/[<>&"']/g, '').trim().slice(0, 200);
