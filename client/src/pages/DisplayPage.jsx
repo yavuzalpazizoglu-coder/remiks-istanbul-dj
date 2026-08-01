@@ -518,7 +518,48 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
   );
 }
 
-function NowPlayingBar({ req, lang, fading }) {
+// Dekoratif dalga formu — sabit yükseklik deseni, sadece transform animasyonu (GPU dostu)
+const NP_WAVE_HEIGHTS = [
+  28, 48, 76, 42, 90, 62, 32, 84, 52, 96, 70, 38, 86, 56, 28, 76,
+  94, 46, 66, 84, 34, 90, 58, 32, 72, 96, 48, 80, 42, 86, 62, 28,
+  70, 90, 38, 84, 52, 94, 66, 34, 76, 44, 86, 30, 58, 90, 42, 72,
+];
+
+function NpWaveform() {
+  return (
+    <div className="dsp-np-wavebars" aria-hidden="true">
+      {NP_WAVE_HEIGHTS.map((h, i) => (
+        <span key={i} style={{ height: `${h}%`, animationDelay: `${(i % 9) * 0.14}s` }} />
+      ))}
+    </div>
+  );
+}
+
+// Sol blok: gradyanlı altın taç + "SİZ SEÇTİNİZ"
+function NpCrown({ lang, active }) {
+  return (
+    <div className={`dsp-np-crownblk ${active ? '' : 'dsp-np-crownblk-idle'}`}>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <defs>
+          <linearGradient id="npCrownGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#ffe98a" />
+            <stop offset="0.55" stopColor="#ffc400" />
+            <stop offset="1" stopColor="#a06e00" />
+          </linearGradient>
+        </defs>
+        <path
+          fill="url(#npCrownGrad)"
+          d="M3 8.5 6.8 12l3.4-6.2a2 2 0 0 1 3.6 0L17.2 12 21 8.5a1 1 0 0 1 1.66.9l-1.5 8.1a1.5 1.5 0 0 1-1.48 1.25H4.32a1.5 1.5 0 0 1-1.48-1.25l-1.5-8.1A1 1 0 0 1 3 8.5Z"
+        />
+      </svg>
+      <span className="dsp-np-crownblk-txt">
+        {lang === 'tr' ? 'SİZ SEÇTİNİZ' : 'YOU CHOSE'}
+      </span>
+    </div>
+  );
+}
+
+function NowPlayingBar({ req, lang, fading, isTop = true }) {
   const [flash, setFlash] = useState(false);
   const [slotActive, setSlotActive] = useState(false);
   const [slotLanded, setSlotLanded] = useState(false);
@@ -544,65 +585,70 @@ function NowPlayingBar({ req, lang, fading }) {
   return (
     <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''} ${slotLanded ? 'slot-landed' : ''} ${fading ? 'dsp-np-stage-fadeout' : ''}`}>
 
-      {/* Sol: dikey şerit + Albüm + Şarkı Bilgisi */}
-      <div className="dsp-np-stage-left">
+      {/* Sol: taç + SİZ SEÇTİNİZ */}
+      <NpCrown lang={lang} active={!!req} />
 
-        {/* Dikey durum şeridi */}
-        <div className={`dsp-np-rail ${req ? 'dsp-np-rail-on' : 'dsp-np-rail-off'}`}>
-          <span className={`dsp-np-live-dot ${req ? '' : 'dsp-np-live-dot-idle'}`} />
-          <span className="dsp-np-rail-text">
-            {req
-              ? (lang === 'tr' ? 'ÇALINIYOR' : 'PLAYING')
-              : (lang === 'tr' ? 'DJ SAHNESİ' : 'DJ STAGE')}
-          </span>
+      {/* Albüm fotoğrafı */}
+      {req ? (
+        req.album_art
+          ? <img src={req.album_art} alt="" className="dsp-np-stage-art" />
+          : <div className="dsp-np-stage-art-ph">♪</div>
+      ) : (
+        <div className="dsp-np-stage-art-empty">
+          <span className="dsp-np-stage-wait-icon">⏸</span>
         </div>
+      )}
 
-        {/* Albüm fotoğrafı */}
+      {/* Orta: etiket + şarkı bilgisi + dalga formu + ilerleme */}
+      <div className="dsp-np-stage-info">
         {req ? (
-          req.album_art
-            ? <img src={req.album_art} alt="" className="dsp-np-stage-art" />
-            : <div className="dsp-np-stage-art-ph">♪</div>
-        ) : (
-          <div className="dsp-np-stage-art-empty">
-            <span className="dsp-np-stage-wait-icon">⏸</span>
-          </div>
-        )}
-
-        {/* Şarkı adı + sanatçı */}
-        <div className="dsp-np-stage-info">
-          {req ? (
+          <>
             <div className={slotActive ? 'dsp-np-slot-spin' : ''}>
+              <div className="dsp-np-label">
+                {lang === 'tr' ? 'ŞU AN ÇALIYOR' : 'NOW PLAYING'}
+                <span className="dsp-np-mini-eq" aria-hidden="true">
+                  {[6, 11, 8, 12, 7].map((h, i) => (
+                    <span key={i} style={{ height: `${h}px`, animationDelay: `${i * 0.14}s` }} />
+                  ))}
+                </span>
+              </div>
               <div className="dsp-np-stage-song">{req.song_name}</div>
               {req.artist && <div className="dsp-np-stage-artist">{req.artist}</div>}
             </div>
-          ) : (
-            <div className="dsp-np-idle">
-              <div className="dsp-np-stage-waiting-text">
-                {lang === 'tr' ? 'İlk isteği gönder!' : 'Send the first request!'}
-              </div>
-              <IdleWave />
+            <NpWaveform />
+          </>
+        ) : (
+          <div className="dsp-np-idle">
+            <div className="dsp-np-stage-waiting-text">
+              {lang === 'tr' ? 'İlk isteği gönder!' : 'Send the first request!'}
             </div>
-          )}
+            <IdleWave />
+          </div>
+        )}
+
+        {/* Çalma süresi — 57sn'lik NOW PLAYING penceresi */}
+        <div className="dsp-np-track">
+          <span className={`dsp-np-progress ${req ? 'dsp-np-progress-on' : ''}`} key={req ? req.id : 'idle'} />
         </div>
       </div>
 
-      {/* Sağ: EQ barları + Oy */}
-      <div className="dsp-np-stage-right">
-        <div className={`dsp-np-stage-bars ${req ? '' : 'dsp-np-bars-idle'}`}>
-          {[1,2,3,4,5,6,7].map(i => <span key={i} className={`dsp-np-eq-bar dsp-np-eq-bar-${i}`} />)}
-        </div>
+      {/* Sağ: ayraç + oy bloğu */}
+      <div className="dsp-np-divider" />
+      <div className="dsp-np-votesblk">
         {req ? (
-          <div className="dsp-np-stage-votes-wrap">
-            <span className="dsp-np-stage-votes-num">{String(req.votes).padStart(3, '0')}</span>
-            <span className="dsp-np-stage-votes-lbl">{lang === 'tr' ? 'OY' : 'VOTES'}</span>
-          </div>
+          <>
+            <span className="dsp-np-votesblk-lbl">{lang === 'tr' ? 'OY SAYISI' : 'VOTE COUNT'}</span>
+            <span className="dsp-np-votesblk-num">{req.votes}</span>
+            <span className="dsp-np-votesblk-cap">
+              {isTop
+                ? (lang === 'tr' ? 'EN ÇOK OY ALAN ŞARKI' : 'MOST VOTED SONG')
+                : (lang === 'tr' ? 'SEÇİLEN ŞARKI' : 'SELECTED SONG')}
+            </span>
+          </>
         ) : (
           <span className="dsp-np-stage-votes-empty">—</span>
         )}
       </div>
-
-      {/* Çalma süresi — 57sn'lik NOW PLAYING penceresi */}
-      <span className={`dsp-np-progress ${req ? 'dsp-np-progress-on' : ''}`} key={req ? req.id : 'idle'} />
     </div>
   );
 }
@@ -1458,7 +1504,12 @@ export default function DisplayPage() {
               {/* Merkez: Altın Saatler + NOW PLAYING + Şarkı Grid */}
               <div className="dsp-beatbox-songs">
                 {/* NOW PLAYING — sabit çerçeve, her zaman görünür */}
-                <NowPlayingBar req={playedSong} lang={lang} fading={playedSongFading} />
+                <NowPlayingBar
+                  req={playedSong}
+                  lang={lang}
+                  fading={playedSongFading}
+                  isTop={!playedSong || (playedSong.votes || 0) >= (requests[0]?.votes || 0)}
+                />
 
                 {requests.length === 0 ? (
                   <ChartSkeleton listSize={listSize} />
