@@ -535,22 +535,41 @@ function NpWaveform() {
   );
 }
 
-// Sol blok: gradyanlı altın taç + "SİZ SEÇTİNİZ"
+// Sol blok: mücevherli altın taç + "SİZ SEÇTİNİZ"
+// Uçlarda inci, bantta tema renkli taşlar
 function NpCrown({ lang, active }) {
   return (
     <div className={`dsp-np-crownblk ${active ? '' : 'dsp-np-crownblk-idle'}`}>
-      <svg viewBox="0 0 24 24" aria-hidden="true">
+      <svg viewBox="0 0 96 72" aria-hidden="true">
         <defs>
           <linearGradient id="npCrownGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#ffe98a" />
-            <stop offset="0.55" stopColor="#ffc400" />
-            <stop offset="1" stopColor="#a06e00" />
+            <stop offset="0" stopColor="#fff3b0" />
+            <stop offset="0.45" stopColor="#ffc400" />
+            <stop offset="1" stopColor="#8f6000" />
           </linearGradient>
+          <radialGradient id="npCrownPearl" cx="35%" cy="30%" r="90%">
+            <stop offset="0" stopColor="#ffffff" />
+            <stop offset="0.35" stopColor="#ffe066" />
+            <stop offset="1" stopColor="#b07800" />
+          </radialGradient>
         </defs>
-        <path
-          fill="url(#npCrownGrad)"
-          d="M3 8.5 6.8 12l3.4-6.2a2 2 0 0 1 3.6 0L17.2 12 21 8.5a1 1 0 0 1 1.66.9l-1.5 8.1a1.5 1.5 0 0 1-1.48 1.25H4.32a1.5 1.5 0 0 1-1.48-1.25l-1.5-8.1A1 1 0 0 1 3 8.5Z"
-        />
+        {/* Gövde — beş sivri uç */}
+        <path fill="url(#npCrownGrad)" d="M10 26 L23 42 L32 16 L41 40 L48 9 L55 40 L64 16 L73 42 L86 26 L80 54 L16 54 Z" />
+        {/* Uç incileri */}
+        <circle cx="10" cy="23" r="4.2" fill="url(#npCrownPearl)" />
+        <circle cx="32" cy="12.5" r="4.2" fill="url(#npCrownPearl)" />
+        <circle cx="48" cy="6" r="5" fill="url(#npCrownPearl)" />
+        <circle cx="64" cy="12.5" r="4.2" fill="url(#npCrownPearl)" />
+        <circle cx="86" cy="23" r="4.2" fill="url(#npCrownPearl)" />
+        {/* Bant */}
+        <rect x="14" y="54" width="68" height="11" rx="5" fill="url(#npCrownGrad)" />
+        {/* Bant taşları — yuva + tema renkli taş */}
+        <circle cx="30" cy="59.5" r="3" fill="#0d1420" opacity="0.85" />
+        <circle cx="48" cy="59.5" r="3.6" fill="#0d1420" opacity="0.85" />
+        <circle cx="66" cy="59.5" r="3" fill="#0d1420" opacity="0.85" />
+        <circle className="dsp-np-crown-gem" cx="30" cy="59.5" r="1.6" />
+        <circle className="dsp-np-crown-gem" cx="48" cy="59.5" r="2" />
+        <circle className="dsp-np-crown-gem" cx="66" cy="59.5" r="1.6" />
       </svg>
       <span className="dsp-np-crownblk-txt">
         {lang === 'tr' ? 'SİZ SEÇTİNİZ' : 'YOU CHOSE'}

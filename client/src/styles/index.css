@@ -4872,6 +4872,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.06); }
 }
+.dsp-np-crown-gem { fill: var(--theme-primary, #00d4ff); }
 .dsp-np-crownblk-txt {
   font-family: var(--font-display);
   font-size: clamp(7px, 1.15vh, 13px);
