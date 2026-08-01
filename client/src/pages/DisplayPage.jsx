@@ -554,7 +554,7 @@ function NpCrown({ lang, active }) {
         />
       </svg>
       <span className="dsp-np-crownblk-txt">
-        {lang === 'tr' ? 'SİZ SEÇTİNİZ' : 'YOU CHOSE'}
+        {lang === 'tr' ? 'DJ SİZSİNİZ' : "YOU'RE THE DJ"}
       </span>
     </div>
   );
