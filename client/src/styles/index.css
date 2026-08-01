@@ -5616,7 +5616,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   align-self: stretch;
   justify-content: space-between;
   gap: clamp(2px, 0.35vh, 5px);
-  padding: clamp(1px, 0.3vh, 4px) 0;
+  /* Üst boşluk: taç rozetinin kart içine taşan yarısı yazıyı kesmesin */
+  padding: clamp(8px, 1.6vh, 18px) 0 clamp(1px, 0.3vh, 4px);
 }
 .dsp-card-podium .dsp-card-song {
   font-size: clamp(15px, 2.7vh, 29px);
