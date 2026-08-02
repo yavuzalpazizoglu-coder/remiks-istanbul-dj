@@ -13,6 +13,7 @@
     "postinstall": "cd client && npm install",
     "build": "cd client && npm run build",
     "start": "NODE_ENV=production node server.js",
+    "check": "node scripts/system-check.mjs",
     "setup": "npm install && cd client && npm install",
     "tanitim:render": "node tanitim/render-tanitim-banner.mjs",
     "tanitim:social": "node tanitim/social/render-social.mjs"

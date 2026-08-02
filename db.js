@@ -418,4 +418,20 @@ export function getDJByEmail(email) {
 }
 
 
+// ─── Yedekleme: günlük otomatik yedek, son 7 kopya tutulur ───
+
+export async function backupDatabase() {
+  const backupDir = path.join(dataDir, 'backups');
+  if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
+  const stamp = new Date().toISOString().slice(0, 10);
+  const target = path.join(backupDir, `remiks-${stamp}.db`);
+  await db.backup(target);
+  const files = fs.readdirSync(backupDir)
+    .filter(f => f.startsWith('remiks-') && f.endsWith('.db'))
+    .sort();
+  while (files.length > 7) fs.unlinkSync(path.join(backupDir, files.shift()));
+  return target;
+}
+
+
 export default db;

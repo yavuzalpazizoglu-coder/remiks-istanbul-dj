@@ -1,0 +1,30 @@
+name: Uptime kontrolu
+
+# Canli sistem her 10 dakikada bir yoklanir. Healthcheck basarisiz olursa
+# workflow fail olur ve GitHub repo sahibine otomatik e-posta bildirimi gonderir.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Canli healthcheck
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" -m 25 https://www.remiksistanbul.com/api/health || echo "000")
+          echo "https://www.remiksistanbul.com/api/health -> HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Canli sistem yanit vermiyor (HTTP $code)"
+            exit 1
+          fi
+      - name: Ana sayfa kontrolu
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" -m 25 https://www.remiksistanbul.com/ || echo "000")
+          echo "https://www.remiksistanbul.com/ -> HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Ana sayfa yanit vermiyor (HTTP $code)"
+            exit 1
+          fi

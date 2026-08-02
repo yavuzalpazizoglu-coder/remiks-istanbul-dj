@@ -299,6 +299,15 @@ setInterval(() => {
   }
 }, 30000);
 
+// ─── Günlük veritabanı yedeği (data/backups, son 7 kopya) ───
+const runDbBackup = () => {
+  db.backupDatabase()
+    .then(p => console.log('✓ DB yedeği alındı:', p))
+    .catch(err => console.error('DB yedek hatası:', err.message));
+};
+setTimeout(runDbBackup, 60 * 1000);            // açılıştan 1 dk sonra ilk yedek
+setInterval(runDbBackup, 24 * 60 * 60 * 1000); // sonra her 24 saatte bir
+
 // ─── API Routes ───
 
 app.get('/api/config', (req, res) => {
