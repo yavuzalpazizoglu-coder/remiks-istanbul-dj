@@ -67,9 +67,18 @@ async function getArtistGenres(artistId, accessToken) {
   }
 }
 
+// Arama sonucu onbellegi — ayni sorgu tekrar Spotify'a gitmez (kota korumasi)
+const searchCache = new Map(); // normalizedQuery -> { results, at }
+const SEARCH_CACHE_TTL = 30 * 60 * 1000; // 30 dk
+const SEARCH_CACHE_MAX = 500;
+
 export async function searchSpotify(query) {
+  const key = query.trim().toLowerCase();
+  const hit = searchCache.get(key);
+  if (hit && Date.now() - hit.at < SEARCH_CACHE_TTL) return hit.results;
+
   const accessToken = await getToken();
-  if (!accessToken) return [];
+  if (!accessToken) return hit ? hit.results : [];
 
   try {
     const params = new URLSearchParams({
@@ -84,12 +93,21 @@ export async function searchSpotify(query) {
     });
 
     const data = await res.json();
-    if (!data.tracks?.items) return [];
+
+    // Kota / rate limit — eski sonuc varsa onu don, yoksa ozel hata firlat
+    if (res.status === 429 || data.error?.status === 429) {
+      if (hit) return hit.results;
+      const err = new Error('Spotify quota exceeded');
+      err.code = 'spotify_quota';
+      throw err;
+    }
+
+    if (!data.tracks?.items) return hit ? hit.results : [];
 
     const artistIds = [...new Set(data.tracks.items.map(t => t.artists[0]?.id).filter(Boolean))];
     await Promise.all(artistIds.map(id => getArtistGenres(id, accessToken)));
 
-    return data.tracks.items.map(track => {
+    const results = data.tracks.items.map(track => {
       const primaryArtistId = track.artists[0]?.id;
       const genres = primaryArtistId ? (artistGenreCache.get(primaryArtistId) || []) : [];
       return {
@@ -101,9 +119,16 @@ export async function searchSpotify(query) {
         genre: classifyGenre(genres),
       };
     });
+
+    searchCache.set(key, { results, at: Date.now() });
+    if (searchCache.size > SEARCH_CACHE_MAX) {
+      searchCache.delete(searchCache.keys().next().value); // en eski kaydi at
+    }
+    return results;
   } catch (err) {
+    if (err.code === 'spotify_quota') throw err;
     console.error('Spotify search error:', err.message);
-    return [];
+    return hit ? hit.results : [];
   }
 }
 

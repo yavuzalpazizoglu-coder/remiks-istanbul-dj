@@ -719,6 +719,9 @@ app.get('/api/spotify/search', async (req, res) => {
     const results = await searchSpotify(q);
     res.json(results);
   } catch (err) {
+    if (err.code === 'spotify_quota') {
+      return res.status(503).json({ error: 'spotify_quota' });
+    }
     res.status(500).json({ error: err.message });
   }
 });

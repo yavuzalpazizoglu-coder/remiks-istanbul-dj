@@ -67,6 +67,7 @@ export default function DJPanel() {
   const [cardTypeOpen, setCardTypeOpen] = useState(false);
   const [cardSearchQuery, setCardSearchQuery] = useState('');
   const [cardSearchResults, setCardSearchResults] = useState([]);
+  const [cardSearchError, setCardSearchError] = useState('');
   const [cardSelectedSong, setCardSelectedSong] = useState(null);
   const [cardSearching, setCardSearching] = useState(false);
   const [cardRecipient, setCardRecipient] = useState('');
@@ -280,14 +281,24 @@ export default function DJPanel() {
     setCardSearchQuery(value);
     setCardSelectedSong(null);
     if (cardSearchTimer.current) clearTimeout(cardSearchTimer.current);
+    setCardSearchError('');
     if (!value.trim() || !spotifyEnabled) { setCardSearchResults([]); return; }
     setCardSearching(true);
     cardSearchTimer.current = setTimeout(async () => {
       try {
         const res = await fetch(`${API}/api/spotify/search?q=${encodeURIComponent(value)}`);
+        if (res.status === 503) {
+          setCardSearchResults([]);
+          setCardSearchError(lang === 'tr' ? 'Spotify şu an yoğun, az sonra tekrar dene' : 'Spotify is busy, try again shortly');
+          return;
+        }
         if (!res.ok) throw new Error();
         setCardSearchResults(await res.json());
-      } catch { setCardSearchResults([]); }
+        setCardSearchError('');
+      } catch {
+        setCardSearchResults([]);
+        setCardSearchError(lang === 'tr' ? 'Arama başarısız' : 'Search failed');
+      }
       finally { setCardSearching(false); }
     }, 400);
   };
@@ -1528,6 +1539,9 @@ export default function DJPanel() {
                   <input className="djc-dcard-input" placeholder={lang === 'tr' ? '🔍 Spotify ara...' : '🔍 Search...'}
                     value={cardSearchQuery} onChange={e => handleCardSearch(e.target.value)} />
                   {cardSearching && <span className="djc-dcard-searching">...</span>}
+                  {cardSearchError && !cardSearching && cardSearchResults.length === 0 && !cardSelectedSong && (
+                    <span className="djc-dcard-search-error">{cardSearchError}</span>
+                  )}
                   {cardSearchResults.length > 0 && !cardSelectedSong && (
                     <div className="djc-dcard-results">
                       {cardSearchResults.slice(0, 5).map(song => (

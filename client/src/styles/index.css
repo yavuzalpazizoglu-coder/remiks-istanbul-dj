@@ -9792,3 +9792,11 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #f2ca62; border-bottom-
 .mm-panel-turkish-delight .mm-center-mode {
   border-style: dashed;
 }
+
+/* Ekran karti arama hata mesaji */
+.djc-dcard-search-error {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #ff9f43;
+}
