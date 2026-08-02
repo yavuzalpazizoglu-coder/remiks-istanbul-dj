@@ -1039,7 +1039,7 @@ export default function DisplayPage() {
   const playedSongTimer = useRef(null);
   const playedFadeTimer = useRef(null);
   const [playedCount, setPlayedCount] = useState(0);
-  const [theme, setTheme] = useState('cyan');
+  const [theme, setTheme] = useState('gold');
   const [animLevel, setAnimLevel] = useState('high');
   const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
@@ -1075,7 +1075,7 @@ export default function DisplayPage() {
       setLang(eventData.language || 'tr');
       setBrandText(eventData.brand_text || '');
       setTickerTexts(eventData.ticker_texts || '');
-      setTheme(eventData.theme || 'cyan');
+      setTheme(eventData.theme || 'gold');
       setAnimLevel(eventData.animation_level || 'high');
       setStageDesign(eventData.stage_design || 'elegant');
       setEventLogo(eventData.event_logo || '');
@@ -1300,6 +1300,7 @@ export default function DisplayPage() {
   const displayName = brandText || event.name;
 
   const themeColors = {
+    gold: { primary: '#f2ca62', glow: 'rgba(242,202,98,0.3)', rgb: '242,202,98' },
     cyan: { primary: '#00d4ff', glow: 'rgba(0,212,255,0.3)', rgb: '0,212,255' },
     purple: { primary: '#b829dd', glow: 'rgba(184,41,221,0.3)', rgb: '184,41,221' },
     pink: { primary: '#ff0080', glow: 'rgba(255,0,128,0.3)', rgb: '255,0,128' },
@@ -1307,7 +1308,7 @@ export default function DisplayPage() {
     orange: { primary: '#ff6b35', glow: 'rgba(255,107,53,0.3)', rgb: '255,107,53' },
     red: { primary: '#ff4444', glow: 'rgba(255,68,68,0.3)', rgb: '255,68,68' },
   };
-  const tc = themeColors[theme] || themeColors.cyan;
+  const tc = themeColors[theme] || themeColors.gold;
 
 
   return (

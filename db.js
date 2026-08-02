@@ -141,8 +141,9 @@ try {
 export function createEvent(name, djPassword) {
   const id = nanoid(12);
   const slug = nanoid(8).toLowerCase();
+  // Yeni etkinlikler varsayılan olarak premium gold temayla açılır
   db.prepare(
-    'INSERT INTO events (id, name, slug, dj_password) VALUES (?, ?, ?, ?)'
+    "INSERT INTO events (id, name, slug, dj_password, theme) VALUES (?, ?, ?, ?, 'gold')"
   ).run(id, name, slug, djPassword);
   return getEventBySlug(slug);
 }

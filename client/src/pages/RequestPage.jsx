@@ -6,6 +6,8 @@ import useSocketStatus from '../useSocketStatus.js';
 import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
+// DJ Sizsiniz LinkedIn sayfası — logo altındaki bağlantı (boşsa bağlantı gizlenir)
+const BRAND_LINKEDIN_URL = '';
 
 function getDeviceId() {
   let id = localStorage.getItem('remiks_device_id');
@@ -37,7 +39,7 @@ export default function RequestPage() {
   const [searching, setSearching] = useState(false);
   const [countdownEnd, setCountdownEnd] = useState(null);
   const [countdownDisplay, setCountdownDisplay] = useState('');
-  const [djTheme, setDjTheme] = useState('cyan');
+  const [djTheme, setDjTheme] = useState('gold');
   const [eventLogo, setEventLogo] = useState('');
 
   const searchTimer = useRef(null);
@@ -229,6 +231,7 @@ export default function RequestPage() {
   if (error) return <div className="status-overlay"><div className="icon">😕</div><h2>Oops</h2><p>{error}</p></div>;
 
   const themeColors = {
+    gold: { primary: '#f2ca62', rgb: '242,202,98' },
     cyan: { primary: '#00d4ff', rgb: '0,212,255' },
     purple: { primary: '#b829dd', rgb: '184,41,221' },
     pink: { primary: '#ff0080', rgb: '255,0,128' },
@@ -236,7 +239,7 @@ export default function RequestPage() {
     orange: { primary: '#ff6b35', rgb: '255,107,53' },
     red: { primary: '#ff4444', rgb: '255,68,68' },
   };
-  const tc = themeColors[djTheme] || themeColors.cyan;
+  const tc = themeColors[djTheme] || themeColors.gold;
   const themeStyle = {
     '--theme-primary': tc.primary,
     '--theme-rgb': tc.rgb,
@@ -295,7 +298,12 @@ export default function RequestPage() {
           <div className="request-header">
         <div className="request-header-logos">
           {eventLogo && <img src={eventLogo} alt="Event" className="request-event-logo" />}
-          <img className="request-brand-logo-img" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
+          <img className="request-brand-logo-img" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
+          {BRAND_LINKEDIN_URL && (
+            <a className="request-brand-link" href={BRAND_LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
+              in · DJ Sizsiniz
+            </a>
+          )}
         </div>
         <h1>{T('request.title')}</h1>
         {event.status === 'countdown' && countdownDisplay && (

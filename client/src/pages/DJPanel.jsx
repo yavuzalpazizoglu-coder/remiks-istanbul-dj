@@ -31,14 +31,23 @@ export default function DJPanel() {
   const [tickerSaving, setTickerSaving] = useState(false);
   const [tickerFontSize, setTickerFontSize] = useState(0);
   const [requestLimit, setRequestLimit] = useState(2);
-  const [theme, setTheme] = useState('cyan');
+  const [theme, setTheme] = useState('gold');
   const [animationLevel, setAnimationLevel] = useState('high');
   const [stageDesign, setStageDesign] = useState('elegant');
   const [eventLogo, setEventLogo] = useState('');
   const [eventHistory, setEventHistory] = useState([]);
   const [activeMusicMode, setActiveMusicMode] = useState(null);
   const [selectedDJs, setSelectedDJs] = useState([]);
-  const [panelTheme, setPanelTheme] = useState(() => localStorage.getItem('remiks_panel_theme') || 'classic');
+  const [panelTheme, setPanelTheme] = useState(() => {
+    // Gold makyaj geçişi: bir defaya mahsus herkesi Pioneer Gold'a taşı
+    // (kullanıcı sonra Winamp'a dönerse tercihi korunur)
+    if (!localStorage.getItem('remiks_panel_theme_v2')) {
+      localStorage.setItem('remiks_panel_theme_v2', '1');
+      localStorage.setItem('remiks_panel_theme', 'pioneer');
+      return 'pioneer';
+    }
+    return localStorage.getItem('remiks_panel_theme') || 'pioneer';
+  });
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [connectedCount, setConnectedCount] = useState(0);
   const [spotifyEnabled, setSpotifyEnabled] = useState(false);
@@ -92,12 +101,16 @@ export default function DJPanel() {
         const scaleY = monitor.offsetHeight / 1080;
         const scale = Math.min(scaleX, scaleY);
         iframe.style.transform = `scale(${scale})`;
+        iframe.style.left = `${Math.max(0, (monitor.offsetWidth - 1920 * scale) / 2)}px`;
+        iframe.style.top = `${Math.max(0, (monitor.offsetHeight - 1080 * scale) / 2)}px`;
       }
     }
     updatePreviewScale();
     const timer = setTimeout(updatePreviewScale, 300);
     window.addEventListener('resize', updatePreviewScale);
-    return () => { window.removeEventListener('resize', updatePreviewScale); clearTimeout(timer); };
+    const ro = new ResizeObserver(updatePreviewScale);
+    if (previewMonitorRef.current) ro.observe(previewMonitorRef.current);
+    return () => { window.removeEventListener('resize', updatePreviewScale); clearTimeout(timer); ro.disconnect(); };
   }, [event]);
 
   const socketConnected = useSocketStatus();
@@ -136,7 +149,7 @@ export default function DJPanel() {
       setBrandText(data.brand_text || '');
       setTickerTexts(data.ticker_texts || '');
       setRequestLimit(data.request_limit || 2);
-      setTheme(data.theme || 'cyan');
+      setTheme(data.theme || 'gold');
       setAnimationLevel(data.animation_level || 'high');
       setStageDesign(data.stage_design || 'elegant');
       setEventLogo(data.event_logo || '');
@@ -825,7 +838,7 @@ export default function DJPanel() {
       {/* ─── Top Header Bar ─── */}
       <div className="djc-row1">
         <div className="djc-brand-block">
-          <img className="djc-remiksbox-logo-img" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
+          <img className="djc-remiksbox-logo-img" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
         </div>
         <div className="djc-row1-divider" />
         <span className="djc-event-name">{event.name}</span>
@@ -1023,18 +1036,6 @@ export default function DJPanel() {
                   <span className="djc-left-stat-lbl">{lang === 'tr' ? 'Bekleyen' : 'Pend.'}</span>
                 </div>
               </div>
-              {approvedRequests.length > 0 && (
-                <div className="djc-left-top3">
-                  <div className="djc-left-top3-title">{lang === 'tr' ? 'EN ÇOK OY' : 'TOP VOTED'}</div>
-                  {[...approvedRequests].sort((a, b) => b.votes - a.votes).slice(0, 3).map((req, i) => (
-                    <div key={req.id} className="djc-left-top3-row">
-                      <span className="djc-left-top3-rank">{i + 1}</span>
-                      <span className="djc-left-top3-name">{req.song_name}</span>
-                      <span className="djc-left-top3-votes">{req.votes}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
 
@@ -1418,6 +1419,7 @@ export default function DJPanel() {
                       <label className="djc-field-label">{lang === 'tr' ? 'Tema' : 'Theme'}</label>
                       <div className="djc-theme-picker">
                         {[
+                          { id: 'gold', color: '#f2ca62', label: 'Gold' },
                           { id: 'cyan', color: '#00d4ff', label: 'Cyan' },
                           { id: 'purple', color: '#b829dd', label: 'Mor' },
                           { id: 'pink', color: '#ff0080', label: 'Pembe' },
