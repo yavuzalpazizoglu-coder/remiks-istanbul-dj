@@ -236,6 +236,7 @@ function sanitize(str) {
 }
 app.use('/logos', express.static(path.join(__dirname, 'public/logos')));
 app.use('/modes', express.static(path.join(__dirname, 'public/modes')));
+app.use('/mode-covers', express.static(path.join(__dirname, 'public/mode-covers'), { maxAge: '7d', immutable: true }));
 app.use('/legal', express.static(path.join(__dirname, 'public/legal')));
 
 const clientDistIndex = path.join(__dirname, 'client/dist/index.html');

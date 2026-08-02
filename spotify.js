@@ -201,9 +201,32 @@ async function fetchArtistTopCovers(artistName, accessToken) {
   }
 }
 
+// Yerel kapak kutuphanesi — public/mode-covers/<mode>/NN.jpg (Spotify'a hic gitmez)
+const LOCAL_COVER_DIR = fileURLToPath(new URL('./public/mode-covers', import.meta.url));
+const localCoverCache = new Map(); // modeId -> covers
+
+async function getLocalCovers(modeId) {
+  if (localCoverCache.has(modeId)) return localCoverCache.get(modeId);
+  try {
+    const { readdir } = await import('fs/promises');
+    const files = (await readdir(`${LOCAL_COVER_DIR}/${modeId}`)).filter(f => f.endsWith('.jpg')).sort();
+    if (files.length >= 12) {
+      const covers = files.map(f => ({ url: `/mode-covers/${modeId}/${f}` }));
+      localCoverCache.set(modeId, covers);
+      return covers;
+    }
+  } catch { /* kutuphane yoksa Spotify yoluna dus */ }
+  localCoverCache.set(modeId, null);
+  return null;
+}
+
 export async function getModeCovers(modeId) {
   const artists = MODE_ARTISTS[modeId];
   if (!artists) return [];
+
+  // 1) Yerel kutuphane — kota bagimsiz, aninda
+  const local = await getLocalCovers(modeId);
+  if (local) return local;
 
   await modeCoverFileLoaded;
 
