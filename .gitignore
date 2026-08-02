@@ -11,3 +11,4 @@ scripts/
 backups/
 .kombai/
 tmp/
+data/mode-covers.json

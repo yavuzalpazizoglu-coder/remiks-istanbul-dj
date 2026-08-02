@@ -375,38 +375,25 @@ function FestivalWaves({ themeRgb }) {
 }
 
 
+// Arka ekran altyapısı tüm modlarda ortak (Arabesk referans alındı)
+const MM_SHARED_BG = 'radial-gradient(ellipse at center, rgba(40, 15, 5, 0.95) 0%, rgba(10, 3, 0, 0.98) 100%)';
+
 const MUSIC_MODE_CONFIG = {
   arabesk: {
     title: { tr: 'ARABESK MODE', en: 'ARABESK MODE' },
-    subtitle: { tr: 'Remiks Arabesk Mode', en: 'Arabesk Mode' },
-    icon: '🎻',
-    bg: 'radial-gradient(ellipse at center, rgba(40, 15, 5, 0.95) 0%, rgba(10, 3, 0, 0.98) 100%)',
     color1: '#d4a017', color2: '#8b4513', color3: '#ff6b35',
-    image: '/modes/mode-arabesk.png', imgClass: 'mm-img-arabesk',
   },
   rock: {
     title: { tr: 'ROCK MODE', en: 'ROCK MODE' },
-    subtitle: { tr: 'Remiks Rock', en: 'Remiks Rock' },
-    icon: '🎸',
-    bg: 'radial-gradient(ellipse at center, rgba(30, 5, 5, 0.95) 0%, rgba(5, 0, 0, 0.98) 100%)',
     color1: '#ff4444', color2: '#ff0000', color3: '#ff6b35',
-    image: '/modes/mode-rock.png', imgClass: 'mm-img-rock',
   },
   '90s-pop': {
     title: { tr: "90'LAR POP", en: "90S TURKISH POP" },
-    subtitle: { tr: "90'lar Türkçe Pop", en: "90s Turkish Pop" },
-    icon: '💿',
-    bg: 'radial-gradient(ellipse at center, rgba(20, 5, 30, 0.95) 0%, rgba(5, 0, 10, 0.98) 100%)',
     color1: '#ff0080', color2: '#00d4ff', color3: '#b829dd',
-    image: '/modes/mode-90s-pop.png', imgClass: 'mm-img-90s',
   },
   'turkish-delight': {
     title: { tr: 'TURKISH DELIGHT', en: 'TURKISH DELIGHT' },
-    subtitle: { tr: 'Ankara Havası · Halay · Zeybek · Horon', en: 'Ankara · Halay · Zeybek · Horon' },
-    icon: '🌹',
-    bg: 'radial-gradient(ellipse at center, rgba(25, 5, 15, 0.95) 0%, rgba(5, 0, 5, 0.98) 100%)',
     color1: '#e8a0bf', color2: '#d4a017', color3: '#ff6b9d',
-    image: '/modes/mode-turkish-delight.png', imgClass: 'mm-img-delight',
   },
 };
 
@@ -433,10 +420,10 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
 
   return (
     <motion.div className={`music-mode-overlay mm-overlay-${mode}`}
-      style={{ background: cfg.bg, '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }}
+      style={{ background: MM_SHARED_BG, '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1 } }}>
 
-      {tiles.length > 0 ? (
+      {tiles.length > 0 && (
         <div className="mm-coverwall" aria-hidden="true">
           {tiles.map((c, i) => (
             <div key={i} className="mm-cover-tile" style={{ animationDelay: `${(i % 8) * 0.09 + Math.floor(i / 8) * 0.12}s` }}>
@@ -444,12 +431,6 @@ function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
             </div>
           ))}
         </div>
-      ) : (
-        cfg.image && <motion.img src={cfg.image} alt="" className={`mm-bg-image ${cfg.imgClass}`}
-          initial={{ opacity: 0, scale: 1.15 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5 }}
-        />
       )}
       <motion.div className={`mm-center-panel mm-panel-${mode}`}
         initial={{ opacity: 0, y: 34, scale: 0.7 }}

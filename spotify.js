@@ -123,6 +123,36 @@ const MODE_ARTISTS = {
 
 const modeCoverCache = new Map(); // modeId -> { covers: [...], fetchedAt }
 const MODE_COVER_TTL = 7 * 24 * 60 * 60 * 1000; // 7 gun
+const MODE_COVER_RETRY_COOLDOWN = 10 * 60 * 1000; // basarisiz denemeden sonra 10 dk bekle
+const modeCoverLastAttempt = new Map(); // modeId -> timestamp
+
+// Dosya tabanli kalici cache — restart/deploy sonrasi Spotify'a tekrar gitmemek icin
+import { fileURLToPath } from 'url';
+const MODE_COVER_FILE = fileURLToPath(new URL('./data/mode-covers.json', import.meta.url));
+const MODE_COVER_DIR = fileURLToPath(new URL('./data', import.meta.url));
+
+async function loadModeCoverFile() {
+  try {
+    const { readFile } = await import('fs/promises');
+    const raw = JSON.parse(await readFile(MODE_COVER_FILE, 'utf8'));
+    for (const [modeId, entry] of Object.entries(raw)) {
+      if (entry?.covers?.length > 0 && !modeCoverCache.has(modeId)) {
+        modeCoverCache.set(modeId, entry);
+      }
+    }
+  } catch { /* dosya yoksa sorun degil */ }
+}
+const modeCoverFileLoaded = loadModeCoverFile();
+
+async function saveModeCoverFile() {
+  try {
+    const { writeFile, mkdir } = await import('fs/promises');
+    await mkdir(MODE_COVER_DIR, { recursive: true }).catch(() => {});
+    await writeFile(MODE_COVER_FILE, JSON.stringify(Object.fromEntries(modeCoverCache)), 'utf8');
+  } catch (err) {
+    console.error('Mode cover cache yazilamadi:', err.message);
+  }
+}
 
 async function fetchArtistTopCovers(artistName, accessToken) {
   try {
@@ -150,8 +180,15 @@ export async function getModeCovers(modeId) {
   const artists = MODE_ARTISTS[modeId];
   if (!artists) return [];
 
+  await modeCoverFileLoaded;
+
   const cached = modeCoverCache.get(modeId);
   if (cached && Date.now() - cached.fetchedAt < MODE_COVER_TTL) return cached.covers;
+
+  // Basarisiz deneme sonrasi bekleme — Spotify kotasini korur (QUOTA_EXCEEDED)
+  const lastAttempt = modeCoverLastAttempt.get(modeId) || 0;
+  if (Date.now() - lastAttempt < MODE_COVER_RETRY_COOLDOWN) return cached ? cached.covers : [];
+  modeCoverLastAttempt.set(modeId, Date.now());
 
   const accessToken = await getToken();
   if (!accessToken) return cached ? cached.covers : [];
@@ -171,6 +208,11 @@ export async function getModeCovers(modeId) {
     }
   }
 
-  if (covers.length > 0) modeCoverCache.set(modeId, { covers, fetchedAt: Date.now() });
-  return covers;
+  if (covers.length > 0) {
+    modeCoverCache.set(modeId, { covers, fetchedAt: Date.now() });
+    saveModeCoverFile();
+    return covers;
+  }
+  // Yeni veri alinamadi — eski cache varsa suresi gecmis olsa bile onu kullan
+  return cached ? cached.covers : [];
 }
