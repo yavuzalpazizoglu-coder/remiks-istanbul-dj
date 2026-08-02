@@ -9658,10 +9658,11 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #f2ca62; border-bottom-
 /* REMİKS İSTANBUL — ana unsur, mod renkli degrade */
 .mm-center-brandline {
   font-family: var(--font-display);
-  font-size: clamp(64px, 6.5vw, 104px);
+  font-size: clamp(54px, 5.6vw, 88px);
   font-weight: 900;
-  letter-spacing: 8px;
-  line-height: 1.05;
+  letter-spacing: 7px;
+  line-height: 1.25;
+  padding-top: 0.08em;
   text-align: center;
   background: linear-gradient(180deg, #ffffff 12%, var(--mm-c1) 68%, var(--mm-c3) 100%);
   -webkit-background-clip: text;
