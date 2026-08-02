@@ -1785,30 +1785,73 @@ body.theme-pioneer-gold .djc-field-textarea:focus {
 }
 
 /* ═══ Alt Çekmeceler: Ayarlar + Ekran Kartı — birbirine yakın, tek blok gibi ═══ */
+/* Alt çekmeceler: tek ince satır, sağa yaslı, yan yana.
+   Açılan içerik yukarı doğru yüzen panel olur — izleme ekranını kapatmaz. */
 .djc-bottom-drawers {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
   flex-shrink: 0;
+  flex-wrap: wrap;
+  padding: 6px 14px;
   border-top: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
   background: rgba(255, 255, 255, 0.015);
 }
 .djc-bottom-drawer {
-  flex-shrink: 0;
-  border-top: 1px solid var(--djt-sec-border, rgba(255,255,255,0.06));
-  padding: 8px 14px;
+  flex: 0 0 auto;
+  position: relative;
 }
-.djc-bottom-drawers .djc-bottom-drawer:first-child {
-  border-top: none;
-}
-.djc-bottom-drawer-toggle {
+.djc-bottom-drawer .djc-bottom-drawer-toggle {
+  width: auto;
+  min-width: 250px;
   margin-bottom: 0;
+}
+/* Çekmece butonları: iki farklı dikkat çekici renk — 1: turkuaz, 2: magenta */
+.djc-bottom-drawer:nth-child(1) .djc-bottom-drawer-toggle {
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.20), rgba(0, 212, 255, 0.07));
+  border-color: rgba(0, 212, 255, 0.55);
+  color: rgba(255, 255, 255, 0.85);
+}
+.djc-bottom-drawer:nth-child(1) .djc-bottom-drawer-toggle::before { background: #00d4ff; opacity: 0.9; }
+.djc-bottom-drawer:nth-child(1) .djc-bottom-drawer-toggle:hover {
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.30), rgba(0, 212, 255, 0.10));
+  border-color: rgba(0, 212, 255, 0.85);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.25);
+}
+.djc-bottom-drawer:nth-child(2) .djc-bottom-drawer-toggle {
+  background: linear-gradient(90deg, rgba(255, 45, 150, 0.20), rgba(255, 45, 150, 0.07));
+  border-color: rgba(255, 45, 150, 0.55);
+  color: rgba(255, 255, 255, 0.85);
+}
+.djc-bottom-drawer:nth-child(2) .djc-bottom-drawer-toggle::before { background: #ff2d96; opacity: 0.9; }
+.djc-bottom-drawer:nth-child(2) .djc-bottom-drawer-toggle:hover {
+  background: linear-gradient(90deg, rgba(255, 45, 150, 0.30), rgba(255, 45, 150, 0.10));
+  border-color: rgba(255, 45, 150, 0.85);
+  box-shadow: 0 0 12px rgba(255, 45, 150, 0.25);
+}
+/* Açılan içerik: toggle'ın üstünde sağa yaslı yüzen panel */
+.djc-bottom-drawer .djc-settings-main,
+.djc-bottom-drawer .djc-bottom-drawer-grid {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: min(860px, calc(100vw - 48px));
+  max-height: 62vh;
+  overflow: auto;
+  background: #0d1119;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 14px;
+  z-index: 60;
+  box-shadow: 0 -12px 40px rgba(0,0,0,0.55);
 }
 .djc-bottom-drawer-grid {
   display: grid;
   grid-template-columns: minmax(260px, 340px) 1fr;
   gap: 12px;
-  margin-top: 10px;
-  max-height: 360px;
+  margin-top: 0;
 }
 .djc-bottom-drawer-col {
   background: rgba(255,255,255,0.02);
