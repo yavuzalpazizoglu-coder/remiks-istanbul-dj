@@ -528,11 +528,6 @@ export default function DJPanel() {
     { id: 'rock', icon: '🎸', tr: 'Rock', en: 'Rock' },
     { id: '90s-pop', icon: '💿', tr: "90'lar", en: "90's" },
     { id: 'turkish-delight', icon: '🌹', tr: 'Turkish D.', en: 'Turkish D.' },
-    { id: 'tech', icon: '🎧', tr: 'Tech', en: 'Tech' },
-    { id: 'latino', icon: '💃', tr: 'Latino', en: 'Latino' },
-    { id: 'rap', icon: '🎤', tr: 'Rap', en: 'Rap' },
-    { id: 'winamp', icon: '📟', tr: 'Winamp', en: 'Winamp' },
-    { id: 'pioneer', icon: '🎛️', tr: 'Pioneer', en: 'Pioneer' },
   ];
 
   const DJ_PHOTOS = [

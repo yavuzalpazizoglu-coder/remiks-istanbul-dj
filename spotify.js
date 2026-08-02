@@ -110,3 +110,67 @@ export async function searchSpotify(query) {
 export function isSpotifyConfigured() {
   return !!(process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET);
 }
+
+/* ═══ Mode Cover Walls — mod basina sanatci listesi, Spotify top-track kapaklari ═══ */
+
+const MODE_ARTISTS = {
+  arabesk: ['Müslüm Gürses', 'Adnan Şenses', 'Ferdi Özbeğen', 'Selami Şahin', 'Orhan Gencebay', 'Ferdi Tayfur', 'Bergen', 'Kibariye', 'Hakkı Bulut', 'Emrah', 'Mahsun Kırmızıgül', 'Özcan Deniz', 'Semicenk', 'Hakan Altun', 'Hakan Taşıyan'],
+  rock: ['Barış Manço', 'Cem Karaca', 'Duman', 'Mor ve Ötesi', 'Şebnem Ferah', 'Teoman', 'maNga', 'Athena', 'Haluk Levent', 'Yüksek Sadakat'],
+  '90s-pop': ['Tarkan', 'Sezen Aksu', 'Mustafa Sandal', 'Serdar Ortaç', 'Yonca Evcimik', 'Kenan Doğulu', 'Sertab Erener', 'Çelik', 'Levent Yüksel', 'Aşkın Nur Yengi'],
+  // Yöresel: Ankara havalari, halay, zeybek, horon
+  'turkish-delight': ['Oğuz Yılmaz', 'Ankaralı Namık', 'Ankaralı Turgut', 'Ankaralı Yasemin', 'Mahmut Tuncer', 'İsmail Türüt', 'Davut Güloğlu', 'Volkan Konak', 'Bülent Serttaş', 'Grup Laçin'],
+};
+
+const modeCoverCache = new Map(); // modeId -> { covers: [...], fetchedAt }
+const MODE_COVER_TTL = 7 * 24 * 60 * 60 * 1000; // 7 gun
+
+async function fetchArtistTopCovers(artistName, accessToken) {
+  try {
+    // Not: top-tracks endpoint'i client-credentials icin 403 veriyor —
+    // track aramasi popülerlik sirasina yakin sonuc dondurur.
+    const params = new URLSearchParams({ q: `artist:"${artistName}"`, type: 'track', limit: '10', market: 'TR' });
+    const res = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const data = await res.json();
+    const items = data.tracks?.items || [];
+    const lower = artistName.toLowerCase();
+    const own = items.filter(t => t.artists?.some(a => a.name.toLowerCase() === lower));
+    return (own.length > 0 ? own : items).map(t => ({
+      url: t.album?.images?.[1]?.url || t.album?.images?.[0]?.url || '',
+      artist: artistName,
+    })).filter(c => c.url);
+  } catch (err) {
+    console.error(`Mode cover fetch error (${artistName}):`, err.message);
+    return [];
+  }
+}
+
+export async function getModeCovers(modeId) {
+  const artists = MODE_ARTISTS[modeId];
+  if (!artists) return [];
+
+  const cached = modeCoverCache.get(modeId);
+  if (cached && Date.now() - cached.fetchedAt < MODE_COVER_TTL) return cached.covers;
+
+  const accessToken = await getToken();
+  if (!accessToken) return cached ? cached.covers : [];
+
+  const perArtist = await Promise.all(artists.map(a => fetchArtistTopCovers(a, accessToken)));
+
+  // Sanatcilar arasi esit dagilim + ayni kapagin tekrarini engelle
+  const seen = new Set();
+  const covers = [];
+  for (let round = 0; round < 10 && covers.length < 48; round++) {
+    for (const list of perArtist) {
+      const c = list[round];
+      if (c && !seen.has(c.url)) {
+        seen.add(c.url);
+        covers.push(c);
+      }
+    }
+  }
+
+  if (covers.length > 0) modeCoverCache.set(modeId, { covers, fetchedAt: Date.now() });
+  return covers;
+}

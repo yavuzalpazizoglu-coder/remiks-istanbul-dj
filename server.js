@@ -8,7 +8,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
 import * as db from './db.js';
-import { searchSpotify, isSpotifyConfigured } from './spotify.js';
+import { searchSpotify, isSpotifyConfigured, getModeCovers } from './spotify.js';
 import nodemailer from 'nodemailer';
 
 /* ── Gmail nodemailer istemcisi ── */
@@ -682,7 +682,7 @@ app.delete('/api/events/:slug/logo', djAuth, (req, res) => {
 app.post('/api/events/:slug/music-mode', djAuth, (req, res) => {
   try {
     const { mode, active, djPhotos } = req.body;
-    const validModes = ['arabesk', 'rock', '90s-pop', 'turkish-delight', 'tech', 'latino', 'rap', 'winamp', 'pioneer'];
+    const validModes = ['arabesk', 'rock', '90s-pop', 'turkish-delight'];
     if (!validModes.includes(mode)) return res.status(400).json({ error: 'Invalid mode' });
     const payload = { mode, active: !!active };
     if (Array.isArray(djPhotos)) payload.djPhotos = djPhotos;
@@ -693,6 +693,17 @@ app.post('/api/events/:slug/music-mode', djAuth, (req, res) => {
     }
     io.to(req.params.slug).emit('music-mode', payload);
     res.json({ ok: true, ...payload });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Mode cover walls — mod basina Spotify top-track albüm kapaklari (7 gun cache)
+app.get('/api/modes/:modeId/covers', async (req, res) => {
+  if (!rateLimit(req.ip, 20)) return res.status(429).json({ error: 'Too many requests' });
+  try {
+    const covers = await getModeCovers(req.params.modeId);
+    res.json({ covers });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

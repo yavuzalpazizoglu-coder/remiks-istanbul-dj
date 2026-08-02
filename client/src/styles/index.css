@@ -3061,7 +3061,7 @@ body.theme-pioneer-gold .djc-topbar-timer-active {
 /* ═══ Music Mode Tags ═══ */
 .djc-mmode-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);  /* 4 mod — tek satir */
   gap: 3px;
   width: 100%;
 }
@@ -9575,4 +9575,220 @@ body.theme-pioneer-gold .right-panel-tab.active { color: #f2ca62; border-bottom-
   .lang-toggle { flex-shrink: 0; }
   .djc-left { width: 360px; }
   .djc-analytics-sidebar { flex: 0 0 280px; }
+}
+
+/* ═══ Music Mode — Spotify Kapak Duvarı (Cover Wall) ═══ */
+.mm-coverwall {
+  position: absolute;
+  inset: -3%;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 8px;
+  z-index: 0;
+  animation: mmWallDrift 38s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes mmWallDrift {
+  0%   { transform: scale(1.02); }
+  100% { transform: scale(1.1); }
+}
+.mm-cover-tile {
+  overflow: hidden;
+  border-radius: 8px;
+  background: #101014;
+  opacity: 0;
+  animation: mmTileIn 0.6s ease-out forwards;
+}
+.mm-cover-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* filtre yok — kapaklar net görünür */
+}
+@keyframes mmTileIn {
+  from { opacity: 0; transform: scale(0.72); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Orta panel — düz siyah zemin, mod rengine göre çerçeve ve tipografi */
+.mm-center-panel {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 54px 104px 48px;
+  background: #050507;               /* düz siyah — banner değil, poster zemini */
+  border: 1px solid color-mix(in srgb, var(--mm-c1) 55%, transparent);
+  border-radius: 6px;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.85);
+  margin-bottom: 33vh;               /* bir kapak sırası yukarı kaydır */
+}
+.mm-center-panel::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border: 1px solid color-mix(in srgb, var(--mm-c1) 26%, transparent);
+  border-radius: 3px;
+  pointer-events: none;
+}
+/* Köşe aksanları — mod renginde */
+.mm-corner {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+}
+.mm-corner::before, .mm-corner::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  background: var(--mm-c1);
+}
+.mm-corner::before { width: 100%; height: 3px; }
+.mm-corner::after { width: 3px; height: 100%; }
+.mm-corner-tl { top: -2px; left: -2px; }
+.mm-corner-tr { top: -2px; right: -2px; transform: scaleX(-1); }
+.mm-corner-bl { bottom: -2px; left: -2px; transform: scaleY(-1); }
+.mm-corner-br { bottom: -2px; right: -2px; transform: scale(-1); }
+
+/* REMİKS İSTANBUL — ana unsur, mod renkli degrade */
+.mm-center-brandline {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 6.5vw, 104px);
+  font-weight: 900;
+  letter-spacing: 8px;
+  line-height: 1.05;
+  text-align: center;
+  background: linear-gradient(180deg, #ffffff 12%, var(--mm-c1) 68%, var(--mm-c3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* SUNAR — iki yana mod renkli çizgiler */
+.mm-center-sunar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-display);
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 16px;
+  text-indent: 16px;
+  color: rgba(255,255,255,0.92);
+}
+.mm-center-sunar::before, .mm-center-sunar::after {
+  content: '';
+  width: 96px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--mm-c1));
+}
+.mm-center-sunar::after { transform: scaleX(-1); }
+/* Mod adı — küçük, mod renkli plaka */
+.mm-center-mode {
+  margin: 12px 0 0;
+  padding: 13px 40px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 2.4vw, 40px);
+  font-weight: 800;
+  letter-spacing: 8px;
+  line-height: 1;
+  color: var(--mm-c1);
+  border: 2px solid var(--mm-c1);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--mm-c1) 10%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-coverwall { animation: none; }
+  .mm-cover-tile { animation-duration: 0.01s; }
+}
+
+/* ═══ Mod bazlı özel panel tasarımları ═══ */
+.mm-panel-motif { margin-bottom: 2px; }
+
+/* — ARABESK: klasik/nostaljik — sıcak altın, çift çerçeve, süsleme — */
+.mm-panel-arabesk {
+  background: linear-gradient(180deg, #0c0803, #060402);
+  border-radius: 14px;
+}
+.mm-panel-arabesk::before {
+  border-style: double;
+  border-width: 4px;
+  border-radius: 8px;
+}
+.mm-panel-arabesk .mm-panel-motif::before {
+  content: '✦ ❖ ✦';
+  font-size: 22px;
+  letter-spacing: 18px;
+  text-indent: 18px;
+  color: #d4a017;
+}
+
+/* — ROCK: sert/sahne — keskin köşe, tehlike şeritli motif, eğik plaka — */
+.mm-panel-rock {
+  background: linear-gradient(165deg, #0b0404, #050202);
+  border-radius: 0;
+  border-width: 2px;
+  border-left-width: 8px;
+  border-right-width: 8px;
+}
+.mm-panel-rock::before { border-radius: 0; }
+.mm-panel-rock .mm-panel-motif {
+  width: 230px;
+  height: 7px;
+  background: repeating-linear-gradient(-45deg, #ff4444 0 14px, transparent 14px 24px);
+}
+.mm-panel-rock .mm-center-mode {
+  transform: skewX(-6deg);
+  border-width: 3px;
+  border-radius: 0;
+}
+
+/* — 90'LAR POP: retro neon — pembe/cyan çift ışıma, krom degrade — */
+.mm-panel-90s-pop {
+  background: linear-gradient(180deg, #0a0510, #050308);
+  border-radius: 20px;
+  border-color: rgba(0, 212, 255, 0.65);
+  box-shadow:
+    0 0 0 2px rgba(255, 0, 128, 0.65),
+    0 0 40px rgba(255, 0, 128, 0.4),
+    inset 0 0 30px rgba(0, 212, 255, 0.1),
+    0 40px 120px rgba(0,0,0,0.85);
+}
+.mm-panel-90s-pop::before { border-radius: 14px; border-color: rgba(0,212,255,0.3); }
+.mm-panel-90s-pop .mm-panel-motif {
+  width: 250px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #ff0080, #b829dd, #00d4ff);
+}
+.mm-panel-90s-pop .mm-center-brandline {
+  background: linear-gradient(180deg, #ffffff 8%, #ff0080 56%, #00d4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.mm-panel-90s-pop .mm-center-mode {
+  color: #00d4ff;
+  border-color: #ff0080;
+  background: rgba(255, 0, 128, 0.1);
+  border-radius: 999px;
+}
+
+/* — TURKISH DELIGHT: yöresel — kilim deseni motifi, bakır/gül tonları — */
+.mm-panel-turkish-delight {
+  background: linear-gradient(180deg, #0b0605, #060303);
+  border-radius: 10px;
+}
+.mm-panel-turkish-delight .mm-panel-motif {
+  width: 270px;
+  height: 12px;
+  background: repeating-conic-gradient(from 45deg, #e8a0bf 0 25%, #7a4a2b 0 50%);
+  background-size: 12px 12px;
+}
+.mm-panel-turkish-delight .mm-center-mode {
+  border-style: dashed;
 }

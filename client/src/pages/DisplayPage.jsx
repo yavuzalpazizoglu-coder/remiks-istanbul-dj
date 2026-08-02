@@ -402,101 +402,66 @@ const MUSIC_MODE_CONFIG = {
   },
   'turkish-delight': {
     title: { tr: 'TURKISH DELIGHT', en: 'TURKISH DELIGHT' },
-    subtitle: { tr: 'Remiks Turkish Delight', en: 'Turkish Delight' },
+    subtitle: { tr: 'Ankara Havası · Halay · Zeybek · Horon', en: 'Ankara · Halay · Zeybek · Horon' },
     icon: '🌹',
     bg: 'radial-gradient(ellipse at center, rgba(25, 5, 15, 0.95) 0%, rgba(5, 0, 5, 0.98) 100%)',
     color1: '#e8a0bf', color2: '#d4a017', color3: '#ff6b9d',
     image: '/modes/mode-turkish-delight.png', imgClass: 'mm-img-delight',
   },
-  tech: {
-    title: { tr: 'TECH MODE', en: 'TECH MODE' },
-    subtitle: { tr: 'Remiks Tech', en: 'Remiks Tech' },
-    icon: '🎧',
-    bg: 'radial-gradient(ellipse at center, rgba(0, 5, 20, 0.95) 0%, rgba(0, 2, 8, 0.98) 100%)',
-    color1: '#0088ff', color2: '#008D4B', color3: '#00d4ff',
-    image: '/modes/mode-tech.png', imgClass: 'mm-img-tech',
-  },
-  latino: {
-    title: { tr: 'LATINO MODE', en: 'LATINO MODE' },
-    subtitle: { tr: 'Remiks Latino', en: 'Remiks Latino' },
-    icon: '💃',
-    bg: 'radial-gradient(ellipse at center, rgba(30, 8, 0, 0.95) 0%, rgba(8, 2, 0, 0.98) 100%)',
-    color1: '#e63946', color2: '#f4a261', color3: '#ff6b35',
-    image: '/modes/mode-latino.png', imgClass: 'mm-img-latino',
-  },
-  rap: {
-    title: { tr: 'RAP MODE', en: 'RAP MODE' },
-    subtitle: { tr: 'Remiks Rap', en: 'Remiks Rap' },
-    icon: '🎤',
-    bg: 'radial-gradient(ellipse at center, rgba(20, 0, 0, 0.95) 0%, rgba(5, 0, 0, 0.98) 100%)',
-    color1: '#cc0000', color2: '#444444', color3: '#8b0000',
-    image: '/modes/mode-rap.png', imgClass: 'mm-img-rap',
-  },
-  winamp: {
-    title: { tr: 'WINAMP MODE', en: 'WINAMP MODE' },
-    subtitle: { tr: 'Winamp Mode', en: 'Winamp Mode' },
-    icon: '📟',
-    bg: 'radial-gradient(ellipse at center, rgba(35, 35, 35, 0.96) 0%, rgba(26, 26, 26, 0.98) 100%)',
-    color1: '#007000', color2: '#008D00', color3: '#005500',
-    image: '/modes/winamp_mode.png', imgClass: 'mm-img-winamp',
-    modeClass: 'display-mode-winamp',
-  },
-  pioneer: {
-    title: { tr: 'PIONEER MODE', en: 'PIONEER MODE' },
-    subtitle: { tr: 'Pioneer Mode', en: 'Pioneer Mode' },
-    icon: '🎛️',
-    bg: 'radial-gradient(ellipse at center, rgba(8, 12, 24, 0.95) 0%, rgba(4, 6, 12, 0.98) 100%)',
-    color1: '#00b4dc', color2: '#dc9628', color3: '#0064c8',
-    image: '/modes/pioneer_mode.png', imgClass: 'mm-img-pioneer',
-    modeClass: 'display-mode-pioneer',
-  },
 };
 
 function MusicModeOverlay({ mode, lang, djPhotos = [] }) {
   const cfg = MUSIC_MODE_CONFIG[mode];
+  const [covers, setCovers] = useState([]);
+
+  useEffect(() => {
+    let alive = true;
+    setCovers([]);
+    fetch(`${API}/api/modes/${mode}/covers`)
+      .then(r => r.json())
+      .then(d => { if (alive && Array.isArray(d.covers) && d.covers.length > 0) setCovers(d.covers); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, [mode]);
+
   if (!cfg) return null;
 
+  // 48 hücrelik kapak duvarı (8x6) — kapak azsa döngüyle doldur
+  const tiles = covers.length > 0
+    ? Array.from({ length: 48 }, (_, i) => covers[i % covers.length])
+    : [];
+
   return (
-    <motion.div className={`music-mode-overlay mm-overlay-${mode} ${cfg.modeClass || ''}`}
-      style={{ background: cfg.bg }}
+    <motion.div className={`music-mode-overlay mm-overlay-${mode}`}
+      style={{ background: cfg.bg, '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }}
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 1 } }}>
-      <div className="mm-border-frame" style={{ '--mm-c1': cfg.color1, '--mm-c2': cfg.color2, '--mm-c3': cfg.color3 }} />
-      {cfg.image && <motion.img src={cfg.image} alt="" className={`mm-bg-image ${cfg.imgClass}`}
-        initial={{ opacity: 0, scale: 1.15 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.5 }}
-      />}
 
-      {mode === 'winamp' && (
-        <>
-          <div className="winamp-scanlines" />
-          <div className="winamp-grid" />
-          <div className="winamp-eq-bg">
-            {Array.from({ length: 20 }, (_, i) => (
-              <div key={i} className="winamp-eq-bar" style={{
-                '--eq-speed': `${(0.6 + Math.random() * 1.0).toFixed(2)}s`,
-                '--eq-min': (0.2 + Math.random() * 0.3).toFixed(2),
-                height: `${30 + Math.random() * 70}%`,
-              }} />
-            ))}
-          </div>
-        </>
-      )}
-
-      {mode === 'pioneer' && (
-        <>
-          <div className="pioneer-grid" />
-          <div className="pioneer-jog-glow" />
-          <div className="pioneer-jog-ring" />
-          {Array.from({ length: 4 }, (_, i) => (
-            <div key={i} className="pioneer-particle" style={{
-              left: `${Math.random() * 100}%`,
-              '--p-dur': `${10 + Math.random() * 15}s`,
-              '--p-delay': `${Math.random() * 10}s`,
-            }} />
+      {tiles.length > 0 ? (
+        <div className="mm-coverwall" aria-hidden="true">
+          {tiles.map((c, i) => (
+            <div key={i} className="mm-cover-tile" style={{ animationDelay: `${(i % 8) * 0.09 + Math.floor(i / 8) * 0.12}s` }}>
+              <img src={c.url} alt="" loading="lazy" />
+            </div>
           ))}
-        </>
+        </div>
+      ) : (
+        cfg.image && <motion.img src={cfg.image} alt="" className={`mm-bg-image ${cfg.imgClass}`}
+          initial={{ opacity: 0, scale: 1.15 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5 }}
+        />
       )}
+      <motion.div className={`mm-center-panel mm-panel-${mode}`}
+        initial={{ opacity: 0, y: 34, scale: 0.7 }}
+        animate={{ opacity: 1, y: 0, scale: 0.75 }}
+        transition={{ delay: 0.7, duration: 0.8, type: 'spring', damping: 20 }}>
+        <span className="mm-corner mm-corner-tl" /><span className="mm-corner mm-corner-tr" />
+        <span className="mm-corner mm-corner-bl" /><span className="mm-corner mm-corner-br" />
+        <div className="mm-panel-motif" aria-hidden="true" />
+        <span className="mm-center-brandline">REMİKS İSTANBUL</span>
+        <span className="mm-center-sunar">SUNAR</span>
+        <h1 className="mm-center-mode">{cfg.title[lang] || cfg.title.tr}</h1>
+      </motion.div>
 
       {djPhotos.length > 0 && (
         <div className="mm-dj-photos">
