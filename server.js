@@ -311,6 +311,20 @@ setInterval(runDbBackup, 24 * 60 * 60 * 1000); // sonra her 24 saatte bir
 
 // ─── API Routes ───
 
+app.get('/api/health', (req, res) => {
+  try {
+    db.getActiveEvents();
+    res.json({
+      ok: true,
+      status: 'up',
+      spotify: isSpotifyConfigured(),
+      time: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 app.get('/api/config', (req, res) => {
   res.json({ spotifyEnabled: isSpotifyConfigured() });
 });
@@ -594,7 +608,7 @@ app.put('/api/events/:slug/limit', djAuth, (req, res) => {
 app.put('/api/events/:slug/theme', djAuth, (req, res) => {
   try {
     const { theme } = req.body;
-    const valid = ['cyan', 'purple', 'pink', 'green', 'orange', 'red'];
+    const valid = ['gold', 'cyan', 'purple', 'pink', 'green', 'orange', 'red'];
     if (!valid.includes(theme)) return res.status(400).json({ error: 'Invalid theme' });
     const event = db.updateTheme(req.params.slug, theme);
     if (!event) return res.status(404).json({ error: 'Event not found' });
