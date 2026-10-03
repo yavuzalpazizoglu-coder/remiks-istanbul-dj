@@ -330,6 +330,13 @@ input, textarea { font-family: inherit; }
   padding: 40px 20px; animation: fadeIn 0.5s ease;
 }
 .status-overlay .icon { font-size: 56px; margin-bottom: 16px; }
+.status-overlay-djsz {
+  width: min(42vw, 168px);
+  height: auto;
+  display: block;
+  margin: 0 auto 18px;
+  object-fit: contain;
+}
 .status-overlay h2 { font-family: var(--font-display); font-size: 22px; margin-bottom: 6px; }
 .status-overlay p { color: var(--text-secondary); font-size: 14px; }
 
@@ -383,26 +390,12 @@ input, textarea { font-family: inherit; }
   object-fit: contain;
   filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
 }
-/* Logo altı: DJ Sizsiniz LinkedIn bağlantısı */
-.request-brand-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(var(--theme-rgb), 0.9);
-  text-decoration: none;
-  border: 1px solid rgba(var(--theme-rgb), 0.35);
-  border-radius: 999px;
-  padding: 4px 14px;
-  margin-top: -2px;
-  transition: background 0.2s, border-color 0.2s;
-}
-.request-brand-link:hover {
-  background: rgba(var(--theme-rgb), 0.12);
-  border-color: rgba(var(--theme-rgb), 0.7);
+.request-djsz-logo {
+  width: min(38vw, 132px);
+  height: auto;
+  display: block;
+  object-fit: contain;
+  margin-top: 2px;
 }
 .request-header .logo { height: 32px; margin-bottom: 14px; }
 .request-header h1 {
@@ -4025,16 +4018,37 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .login-hero {
   text-align: center; margin-bottom: 32px; width: 100%;
 }
+.login-djsz-logo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-height: 148px;
+  max-width: min(168px, 46vw);
+  margin: 0 auto 10px;
+  object-fit: contain;
+}
+.login-djsz-logo-compact {
+  max-height: 92px;
+  max-width: min(108px, 34vw);
+  margin-bottom: 8px;
+}
 .login-remiksbox-logo {
   display: block;
   height: auto;
-  max-height: 128px;
+  max-height: 72px;
   width: auto;
-  max-width: min(280px, 82vw);
+  max-width: min(220px, 70vw);
   margin: 0 auto 12px;
   object-fit: contain;
   filter: none;
   animation: none;
+}
+.login-footer-djsz {
+  display: block;
+  height: 52px;
+  width: auto;
+  margin: 0 auto 8px;
+  object-fit: contain;
 }
 .login-footer-logo-mark {
   display: block;
@@ -4886,32 +4900,23 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   50%     { opacity: 0.4; transform: scale(0.75); }
 }
 
-/* ── Sol blok: altın taç + SİZ SEÇTİNİZ ── */
+/* ── Sol blok: DJ Sizsiniz® tescilli marka ── */
 .dsp-np-crownblk {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(2px, 0.4vh, 5px);
+  justify-content: center;
   flex: 0 0 auto;
   padding: 0 clamp(4px, 0.5vw, 10px);
 }
-.dsp-np-crownblk svg {
-  width:  clamp(58px, 10.5vh, 122px);
-  height: clamp(44px, 8vh, 92px);
+.dsp-np-djsz-logo {
+  width:  clamp(72px, 12.4vh, 138px);
+  height: auto;
   display: block;
-  /* Efektsiz, keskin görünüm */
+  object-fit: contain;
 }
-.dsp-np-crownblk-txt {
-  font-family: var(--font-display);
-  font-size: clamp(7px, 1.15vh, 13px);
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  color: #ffc400;
-  white-space: nowrap;
-}
-.dsp-np-crownblk-idle { opacity: 0.35; }
-.dsp-np-crownblk-idle svg { filter: grayscale(0.6); }
-.dsp-np-crownblk-idle .dsp-np-crownblk-txt { color: rgba(255,255,255,0.4); }
+.dsp-np-crownblk-idle { opacity: 0.42; }
+.dsp-np-crownblk-idle .dsp-np-djsz-logo { filter: grayscale(0.15); }
 .dsp-np-stage-art {
   width: clamp(58px, 10.6vh, 120px); height: clamp(58px, 10.6vh, 120px);
   border-radius: clamp(6px, 0.6vw, 10px);
@@ -6283,6 +6288,13 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .countdown-sub { font-size: clamp(12px, 1.4vw, 32px); color: var(--text-muted); }
 
 .display-waiting-logo { height: clamp(60px, 8vw, 200px); margin-bottom: clamp(18px, 2.5vh, 56px); animation: breathe 4s ease infinite; }
+.display-waiting-djsz {
+  width: clamp(120px, 16vw, 220px);
+  height: auto;
+  display: block;
+  margin: 0 auto clamp(16px, 2vh, 28px);
+  object-fit: contain;
+}
 .display-waiting h2 { font-family: var(--font-display); font-size: clamp(22px, 3vw, 72px); font-weight: 700; margin-bottom: clamp(6px, 1vh, 20px); }
 .display-waiting p { color: var(--text-secondary); font-size: clamp(12px, 1.5vw, 34px); }
 
@@ -6540,6 +6552,13 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   padding-top: clamp(6px, 0.8vw, 16px);
   border-top: 1px solid rgba(255,255,255,0.08);
   width: 100%; max-width: clamp(400px, 60vw, 1000px);
+}
+.summary-djsz-logo {
+  width: clamp(72px, 9vw, 120px);
+  height: auto;
+  display: block;
+  margin: clamp(12px, 1.6vh, 22px) auto 0;
+  object-fit: contain;
 }
 .summary-stat-item {
   display: flex; flex-direction: column; align-items: center; gap: 3px;

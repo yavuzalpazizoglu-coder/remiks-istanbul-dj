@@ -657,8 +657,9 @@ export default function DJPanel() {
     const loginFooter = (
       <footer className="login-footer">
         <div className="login-footer-brand">
+          <img className="login-footer-djsz" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
           <img className="login-footer-logo-mark" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
-          <span className="login-footer-by">by Remiks İstanbul</span>
+          <span className="login-footer-by">DJ Sizsiniz® · by Remiks İstanbul</span>
         </div>
         <div className="login-footer-links">
           <span>{lang === 'tr' ? 'Tüm hakları saklıdır.' : 'All rights reserved.'} &copy; {new Date().getFullYear()}</span>
@@ -669,8 +670,8 @@ export default function DJPanel() {
         </div>
         <div className="login-footer-legal">
           <p>{lang === 'tr'
-            ? 'Bu yazılım Remiks İstanbul tarafından geliştirilmiştir. Ticari veya kişisel kullanım için lisans gereklidir. Müzik içerikleri ilgili hak sahiplerine aittir. Spotify entegrasyonu Spotify AB lisansı altında kullanılmaktadır.'
-            : 'This software is developed by Remiks İstanbul. License required for commercial or personal use. Music content belongs to respective rights holders. Spotify integration is used under Spotify AB license.'
+            ? 'Bu yazılım Remiks İstanbul tarafından geliştirilmiştir. DJ Sizsiniz®, Remiks İstanbul’un tescil sürecindeki markasıdır. Ticari veya kişisel kullanım için lisans gereklidir. Müzik içerikleri ilgili hak sahiplerine aittir. Spotify entegrasyonu Spotify AB lisansı altında kullanılmaktadır.'
+            : 'This software is developed by Remiks İstanbul. DJ Sizsiniz® is a trademark of Remiks İstanbul (registration in progress). License required for commercial or personal use. Music content belongs to respective rights holders. Spotify integration is used under Spotify AB license.'
           }</p>
           <p>{lang === 'tr'
             ? 'İletişim: info@remiksistanbul.com | KVKK ve GDPR uyumlu veri işleme politikalarımız geçerlidir.'
@@ -689,8 +690,9 @@ export default function DJPanel() {
           {loginBg}
           <div className="login-content">
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <img className="login-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
               <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
-              <p className="login-tagline">{lang === 'tr' ? 'DJ Etkinlik Yönetim Sistemi' : 'DJ Event Management System'}</p>
+              <p className="login-tagline">{lang === 'tr' ? 'DJ Sizsiniz® · Etkinlik Yönetim Sistemi' : 'DJ Sizsiniz® · Event Management System'}</p>
               <div className="login-badge-row">
                 <span className="login-badge">Real-Time</span>
                 <span className="login-badge">Spotify</span>
@@ -747,6 +749,7 @@ export default function DJPanel() {
         {loginBg}
         <div className="login-content">
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <img className="login-djsz-logo login-djsz-logo-compact" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
             <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
             <div className="login-user-chip">
               <span className="login-user-avatar">{djUser.name?.charAt(0) || 'D'}</span>
@@ -865,8 +868,8 @@ export default function DJPanel() {
         <button className="djc-guest-link-btn" onClick={() => {
           const guestUrl = `${window.location.origin}/request/${slug}`;
           const guestMsg = lang === 'tr'
-            ? `🎵 ${event.name}\n━━━━━━━━━━━━━━━━━━━━\n🎶 DJ'e şarkı isteğinde bulun!\n🔗 ${guestUrl}\n\nLinke tıkla → İstediğin şarkıyı yaz → Gönder!\nEn çok oy alan şarkılar önce çalınır 🔥\n━━━━━━━━━━━━━━━━━━━━\nPowered by RemiksBox`
-            : `🎵 ${event.name}\n━━━━━━━━━━━━━━━━━━━━\n🎶 Request a song from the DJ!\n🔗 ${guestUrl}\n\nTap the link → Type your song → Send!\nMost voted songs play first 🔥\n━━━━━━━━━━━━━━━━━━━━\nPowered by RemiksBox`;
+            ? `🎵 ${event.name}\n━━━━━━━━━━━━━━━━━━━━\n🎶 DJ'e şarkı isteğinde bulun!\n🔗 ${guestUrl}\n\nLinke tıkla → İstediğin şarkıyı yaz → Gönder!\nEn çok oy alan şarkılar önce çalınır 🔥\n━━━━━━━━━━━━━━━━━━━━\nDJ Sizsiniz®`
+            : `🎵 ${event.name}\n━━━━━━━━━━━━━━━━━━━━\n🎶 Request a song from the DJ!\n🔗 ${guestUrl}\n\nTap the link → Type your song → Send!\nMost voted songs play first 🔥\n━━━━━━━━━━━━━━━━━━━━\nDJ Sizsiniz®`;
           navigator.clipboard.writeText(guestMsg).then(() => showToast(lang === 'tr' ? 'Misafir linki kopyalandı!' : 'Guest link copied!'));
         }} title={lang === 'tr' ? 'Misafir istek linkini kopyala' : 'Copy guest request link'}>
           <svg className="djc-link-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

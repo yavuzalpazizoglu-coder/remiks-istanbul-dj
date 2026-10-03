@@ -6,8 +6,7 @@ import useSocketStatus from '../useSocketStatus.js';
 import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
-// DJ Sizsiniz LinkedIn sayfası — logo altındaki bağlantı (boşsa bağlantı gizlenir)
-const BRAND_LINKEDIN_URL = '';
+const DJSZ_LOGO = '/logos/djsizsiniz.png';
 
 function getDeviceId() {
   let id = localStorage.getItem('remiks_device_id');
@@ -262,7 +261,7 @@ export default function RequestPage() {
     return (
       <div className="request-page" style={themeStyle}>
         <div className="status-overlay">
-          <div className="icon">🎧</div>
+          <img className="status-overlay-djsz" src={DJSZ_LOGO} alt="DJ Sizsiniz®" />
           <h2>{T('request.not_open')}</h2>
           <p>{T('request.waiting_message')}</p>
         </div>
@@ -274,7 +273,7 @@ export default function RequestPage() {
     return (
       <div className="request-page" style={themeStyle}>
         <div className="status-overlay">
-          <div className="icon">🎉</div>
+          <img className="status-overlay-djsz" src={DJSZ_LOGO} alt="DJ Sizsiniz®" />
           <h2>{T('request.ended')}</h2>
           <p>{T('request.ended_message')}</p>
         </div>
@@ -286,7 +285,7 @@ export default function RequestPage() {
     return (
       <div className="request-page" style={themeStyle}>
         <div className="status-overlay">
-          <div className="icon">☕</div>
+          <img className="status-overlay-djsz" src={DJSZ_LOGO} alt="DJ Sizsiniz®" />
           <h2>{T('request.paused')}</h2>
           <p>{T('request.paused_message')}</p>
         </div>
@@ -304,11 +303,7 @@ export default function RequestPage() {
         <div className="request-header-logos">
           {eventLogo && <img src={eventLogo} alt="Event" className="request-event-logo" />}
           <img className="request-brand-logo-img" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
-          {BRAND_LINKEDIN_URL && (
-            <a className="request-brand-link" href={BRAND_LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
-              in · DJ Sizsiniz
-            </a>
-          )}
+          <img className="request-djsz-logo" src={DJSZ_LOGO} alt="DJ Sizsiniz®" width="900" height="900" />
         </div>
         <h1>{T('request.title')}</h1>
         {event.status === 'countdown' && countdownDisplay && (

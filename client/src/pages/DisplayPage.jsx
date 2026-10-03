@@ -481,63 +481,10 @@ function NpWaveform() {
   );
 }
 
-// Sol blok: elmaslı altın taç + "DJ SİZSİNİZ" — efektsiz (animasyon/ışıma yok), keskin hatlı
-function NpCrown({ lang, active }) {
+function NpCrown({ active }) {
   return (
     <div className={`dsp-np-crownblk ${active ? '' : 'dsp-np-crownblk-idle'}`}>
-      <svg viewBox="0 0 96 72" aria-hidden="true">
-        <defs>
-          <linearGradient id="npCrownGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#ffe89a" />
-            <stop offset="0.5" stopColor="#ffc400" />
-            <stop offset="1" stopColor="#9a6b00" />
-          </linearGradient>
-          <radialGradient id="npCrownPearl" cx="35%" cy="30%" r="90%">
-            <stop offset="0" stopColor="#ffffff" />
-            <stop offset="0.4" stopColor="#ffe066" />
-            <stop offset="1" stopColor="#a87400" />
-          </radialGradient>
-          <radialGradient id="npCrownDiamond" cx="35%" cy="30%" r="90%">
-            <stop offset="0" stopColor="#ffffff" />
-            <stop offset="0.55" stopColor="#dbe9ff" />
-            <stop offset="1" stopColor="#7f9dc9" />
-          </radialGradient>
-        </defs>
-        {/* Gövde — beş sivri uç, ince koyu kontur */}
-        <path
-          fill="url(#npCrownGrad)"
-          stroke="#7a5600"
-          strokeWidth="1.4"
-          strokeLinejoin="miter"
-          d="M10 26 L23 42 L32 16 L41 40 L48 9 L55 40 L64 16 L73 42 L86 26 L80 52 L16 52 Z"
-        />
-        {/* Uç incileri */}
-        <circle cx="10" cy="23" r="4" fill="url(#npCrownPearl)" stroke="#7a5600" strokeWidth="1" />
-        <circle cx="32" cy="12.5" r="4" fill="url(#npCrownPearl)" stroke="#7a5600" strokeWidth="1" />
-        <circle cx="48" cy="6" r="4.8" fill="url(#npCrownPearl)" stroke="#7a5600" strokeWidth="1" />
-        <circle cx="64" cy="12.5" r="4" fill="url(#npCrownPearl)" stroke="#7a5600" strokeWidth="1" />
-        <circle cx="86" cy="23" r="4" fill="url(#npCrownPearl)" stroke="#7a5600" strokeWidth="1" />
-        {/* Gövde ortasında büyük elmas */}
-        <path
-          fill="url(#npCrownDiamond)"
-          stroke="#5d7396"
-          strokeWidth="1"
-          strokeLinejoin="miter"
-          d="M48 27 L55 34 L48 44 L41 34 Z"
-        />
-        {/* Bant — keskin köşeli */}
-        <rect x="14" y="55" width="68" height="10" rx="1.5" fill="url(#npCrownGrad)" stroke="#7a5600" strokeWidth="1.4" />
-        {/* Bant elmasları — koyu yuva + pırlanta */}
-        <circle cx="30" cy="60" r="3.2" fill="#141a26" />
-        <circle cx="48" cy="60" r="3.6" fill="#141a26" />
-        <circle cx="66" cy="60" r="3.2" fill="#141a26" />
-        <circle cx="30" cy="60" r="2" fill="url(#npCrownDiamond)" />
-        <circle cx="48" cy="60" r="2.4" fill="url(#npCrownDiamond)" />
-        <circle cx="66" cy="60" r="2" fill="url(#npCrownDiamond)" />
-      </svg>
-      <span className="dsp-np-crownblk-txt">
-        {lang === 'tr' ? 'DJ SİZSİNİZ' : "YOU'RE THE DJ"}
-      </span>
+      <img className="dsp-np-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
     </div>
   );
 }
@@ -569,7 +516,7 @@ function NowPlayingBar({ req, lang, fading, isTop = true }) {
     <div className={`dsp-np-stage ${req ? 'dsp-np-stage-active' : 'dsp-np-stage-waiting'} ${flash ? 'dsp-np-stage-flash' : ''} ${slotLanded ? 'slot-landed' : ''} ${fading ? 'dsp-np-stage-fadeout' : ''}`}>
 
       {/* Sol: taç + SİZ SEÇTİNİZ */}
-      <NpCrown lang={lang} active={!!req} />
+      <NpCrown active={!!req} />
 
       {/* Albüm fotoğrafı */}
       {req ? (
@@ -896,6 +843,8 @@ function EventSummary({ requests, lang, eventName }) {
           <span className="summary-stat-num summary-stat-thanks">{lang === 'tr' ? 'TEŞEKKÜRLER!' : 'THANK YOU!'}</span>
         </div>
       </motion.div>
+
+      <img className="summary-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" />
 
     </div>
   );
@@ -1433,6 +1382,14 @@ export default function DisplayPage() {
         {/* ─── WAITING ─── */}
         {event.status === 'waiting' && (
           <div className="display-state-center display-waiting">
+            <motion.img
+              className="display-waiting-djsz"
+              src="/logos/djsizsiniz.png"
+              alt="DJ Sizsiniz®"
+              initial={{ opacity: 0, scale: 0.86 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+            />
             <motion.h2 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
               {T('display.waiting')}
             </motion.h2>
