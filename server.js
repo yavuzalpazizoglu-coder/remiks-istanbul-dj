@@ -373,6 +373,22 @@ app.get('/api/events/:slug', (req, res) => {
   res.json(safeEvent);
 });
 
+const DEVICE_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+app.get('/api/events/:slug/guest-code', (req, res) => {
+  if (!rateLimit(req.ip, 20)) return res.status(429).json({ error: 'Too many requests' });
+  try {
+    const event = db.getEventBySlug(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    const deviceId = String(req.query.deviceId || '');
+    if (!DEVICE_ID_RE.test(deviceId)) return res.status(400).json({ error: 'Device ID required' });
+    const code = db.getOrCreateGuestCode(event.id, deviceId);
+    res.json({ code });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.put('/api/events/:slug/status', djAuth, (req, res) => {
   try {
     const { status } = req.body;
@@ -577,6 +593,7 @@ app.put('/api/requests/:id/status', djAuth, (req, res) => {
 
     if (event) {
       if (status === 'played' && beforeUpdate) {
+        io.to(event.slug).emit('now-playing', updated);
         io.to(event.slug).emit('request-played', beforeUpdate);
       }
       if (status === 'playing') {
