@@ -869,46 +869,83 @@ function LiveStat({ value, label }) {
   );
 }
 
-function Ticker({ requests, lang, tickerTexts, fontDelta = 0 }) {
-  const hasRequests = requests.length > 0;
+function weaveTicker(lanes) {
+  const queues = lanes.filter(lane => lane.length).map(lane => [...lane]);
+  const out = [];
+  while (queues.some(q => q.length)) {
+    for (const q of queues) {
+      if (q.length) out.push(q.shift());
+    }
+  }
+  return out;
+}
+
+function Ticker({ requests, lang, tickerTexts, fontDelta = 0, requestsOpen = false }) {
   const customLines = (tickerTexts || '').split('\n').map(s => s.trim()).filter(Boolean);
+  const textItems = customLines.map(text => ({ kind: 'text', text }));
+  const voteItems = requests.slice(0, 12).map((req, idx) => ({
+    kind: 'vote',
+    rank: idx + 1,
+    song: req.song_name,
+    artist: req.artist,
+    votes: req.votes || 0,
+  }));
+  const calloutItems = requestsOpen
+    ? [...requests]
+        .filter(req => req.guest_code)
+        .sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')))
+        .slice(0, 8)
+        .map(req => ({ kind: 'callout', code: req.guest_code, song: req.song_name }))
+    : [];
 
-  const reqItems = requests.slice(0, 12);
-  const textItems = customLines.length > 0
-    ? customLines
-    : [lang === 'tr' ? 'Remiks İstanbul etkinliğine hoşgeldiniz!' : 'Welcome to Remiks Istanbul!'];
-
-  const items = hasRequests ? reqItems : textItems;
+  let items = weaveTicker([textItems, calloutItems, voteItems]);
+  if (!items.length) {
+    items = [{
+      kind: 'text',
+      text: lang === 'tr' ? 'Remiks İstanbul etkinliğine hoşgeldiniz!' : 'Welcome to Remiks Istanbul!',
+    }];
+  }
   const doubled = [...items, ...items];
   const duration = Math.max(24, items.length * 4.5);
-
   const separatorEmojis = ['🎶', '◆', '🎵', '◆', '✦', '◆', '🎸', '◆'];
+  const verb = lang === 'tr' ? 'istedi' : 'requested';
+  const voteLabel = lang === 'tr' ? 'oy' : 'votes';
 
   return (
     <div className="display-ticker">
       <div className="ticker-track" style={{ '--ticker-duration': `${duration}s` }}>
-        {doubled.map((item, i) => {
-          const rank = (i % items.length) + 1;
-          return (
-            <div key={`ticker-${i}`} className="ticker-item" style={fontDelta !== 0 ? { fontSize: `calc(clamp(10px, 1.2vw, 26px) + ${fontDelta}px)` } : undefined}>
-              {hasRequests ? (
-                <>
-                  <span className="ticker-emoji">🎵</span>
-                  <span className="ticker-rank">#{rank}</span>
-                  <span className="ticker-song">{item.song_name}</span>
-                  {item.artist && <span className="ticker-artist">· {item.artist}</span>}
-                  <span className="ticker-votes">⬆ {item.votes} oy</span>
-                </>
-              ) : (
-                <>
-                  <span className="ticker-emoji">✨</span>
-                  <span className="ticker-song">{item}</span>
-                </>
-              )}
-              <span className="ticker-dot">{separatorEmojis[i % separatorEmojis.length]}</span>
-            </div>
-          );
-        })}
+        {doubled.map((item, i) => (
+          <div
+            key={`ticker-${i}`}
+            className={`ticker-item${item.kind === 'callout' ? ' is-callout' : ''}`}
+            style={fontDelta !== 0 ? { fontSize: `calc(clamp(10px, 1.2vw, 26px) + ${fontDelta}px)` } : undefined}
+          >
+            {item.kind === 'vote' && (
+              <>
+                <span className="ticker-emoji">🎵</span>
+                <span className="ticker-rank">#{item.rank}</span>
+                <span className="ticker-song">{item.song}</span>
+                {item.artist && <span className="ticker-artist">· {item.artist}</span>}
+                <span className="ticker-votes">⬆ {item.votes} {voteLabel}</span>
+              </>
+            )}
+            {item.kind === 'callout' && (
+              <>
+                <span className="ticker-code">{item.code}</span>
+                {lang === 'en' && <span className="ticker-verb">{verb}</span>}
+                <span className="ticker-song">{item.song}</span>
+                {lang === 'tr' && <span className="ticker-verb">{verb}</span>}
+              </>
+            )}
+            {item.kind === 'text' && (
+              <>
+                <span className="ticker-emoji">✨</span>
+                <span className="ticker-song">{item.text}</span>
+              </>
+            )}
+            <span className="ticker-dot">{separatorEmojis[i % separatorEmojis.length]}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -1377,7 +1414,13 @@ export default function DisplayPage() {
         </div>
 
         {/* ─── Ticker (always visible) ─── */}
-        <Ticker requests={requests} lang={lang} tickerTexts={tickerTexts} fontDelta={tickerFontDelta} />
+        <Ticker
+          requests={requests}
+          lang={lang}
+          tickerTexts={tickerTexts}
+          fontDelta={tickerFontDelta}
+          requestsOpen={event.status === 'active' || event.status === 'countdown'}
+        />
 
         {/* ─── WAITING ─── */}
         {event.status === 'waiting' && (

@@ -40,6 +40,7 @@ export default function RequestPage() {
   const [countdownDisplay, setCountdownDisplay] = useState('');
   const [djTheme, setDjTheme] = useState('gold');
   const [eventLogo, setEventLogo] = useState('');
+  const [guestCode, setGuestCode] = useState('');
 
   const searchTimer = useRef(null);
   const socketConnected = useSocketStatus();
@@ -48,6 +49,16 @@ export default function RequestPage() {
   useEffect(() => {
     fetch(`${API}/api/config`).then(r => r.json()).then(d => setSpotifyEnabled(d.spotifyEnabled)).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!event || !['active', 'countdown'].includes(event.status)) return;
+    let cancelled = false;
+    fetch(`${API}/api/events/${slug}/guest-code?deviceId=${encodeURIComponent(deviceId)}`)
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (!cancelled && d?.code) setGuestCode(d.code); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [event, slug, deviceId]);
 
   const fetchData = useCallback(async () => {
     try {
@@ -187,7 +198,7 @@ export default function RequestPage() {
       setQuery('');
       setSelectedSong(null);
       setSearchResults([]);
-      showToast(T('request.success'));
+      showToast(guestCode ? `${T('request.success')} · ${guestCode}` : T('request.success'));
     } catch (err) {
       showToast(err.message);
     } finally {
@@ -317,6 +328,13 @@ export default function RequestPage() {
             : <span style={{ color: 'var(--neon-pink)' }}>{T('request.limit_reached')}</span>
           }
         </div>
+        {guestCode && (
+          <div className="guest-code-chip">
+            <span className="guest-code-kicker">{T('request.guest_code_label')}</span>
+            <span className="guest-code-value">{guestCode}</span>
+            <span className="guest-code-hint">{T('request.guest_code_hint')}</span>
+          </div>
+        )}
       </div>
 
       <div className="req-tab-bar">

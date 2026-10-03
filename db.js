@@ -61,6 +61,14 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_votes_request ON votes(request_id);
   CREATE INDEX IF NOT EXISTS idx_votes_device ON votes(device_id);
 
+  CREATE TABLE IF NOT EXISTS guest_codes (
+    event_id TEXT NOT NULL,
+    device_id TEXT NOT NULL,
+    code TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (event_id, device_id)
+  );
+
 `);
 
 // ─── Seed DJ Users ───
@@ -136,6 +144,12 @@ try {
   db.exec("ALTER TABLE events ADD COLUMN display_list_size INTEGER DEFAULT 15");
 }
 
+try {
+  db.prepare("SELECT guest_code FROM requests LIMIT 1").get();
+} catch {
+  db.exec("ALTER TABLE requests ADD COLUMN guest_code TEXT DEFAULT ''");
+}
+
 // ─── Events ───
 
 export function createEvent(name, djPassword) {
@@ -190,6 +204,22 @@ export function updateTickerTexts(slug, tickerTexts) {
 
 // ─── Requests ───
 
+export function getOrCreateGuestCode(eventId, deviceId) {
+  const existing = db.prepare(
+    'SELECT code FROM guest_codes WHERE event_id = ? AND device_id = ?'
+  ).get(eventId, deviceId);
+  if (existing) return existing.code;
+
+  const row = db.prepare(
+    'SELECT COUNT(*) AS n FROM guest_codes WHERE event_id = ?'
+  ).get(eventId);
+  const code = `K-${String((row?.n || 0) + 1).padStart(2, '0')}`;
+  db.prepare(
+    'INSERT INTO guest_codes (event_id, device_id, code) VALUES (?, ?, ?)'
+  ).run(eventId, deviceId, code);
+  return code;
+}
+
 export function isDuplicateRequest(eventId, songName, artist) {
   const row = db.prepare(`
     SELECT id FROM requests
@@ -201,10 +231,11 @@ export function isDuplicateRequest(eventId, songName, artist) {
 
 export function createRequest(eventId, songName, artist, albumArt, spotifyId, deviceId, genre) {
   const id = nanoid(12);
+  const guestCode = getOrCreateGuestCode(eventId, deviceId);
   db.prepare(`
-    INSERT INTO requests (id, event_id, song_name, artist, album_art, spotify_id, device_id, genre)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(id, eventId, songName, artist || '', albumArt || '', spotifyId || '', deviceId, genre || '');
+    INSERT INTO requests (id, event_id, song_name, artist, album_art, spotify_id, device_id, genre, guest_code)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(id, eventId, songName, artist || '', albumArt || '', spotifyId || '', deviceId, genre || '', guestCode);
 
   db.prepare('INSERT INTO votes (id, request_id, device_id) VALUES (?, ?, ?)')
     .run(nanoid(12), id, deviceId);

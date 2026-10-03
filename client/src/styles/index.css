@@ -451,6 +451,43 @@ input, textarea { font-family: inherit; }
 }
 .request-remaining strong { color: var(--neon-cyan); font-family: var(--font-display); }
 
+.guest-code-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 12px auto 0;
+  padding: 8px 18px 9px;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(var(--theme-rgb, 242, 202, 98), 0.16), rgba(var(--theme-rgb, 242, 202, 98), 0.05));
+  border: 1px solid rgba(var(--theme-rgb, 242, 202, 98), 0.45);
+  box-shadow: 0 0 22px rgba(var(--theme-rgb, 242, 202, 98), 0.16);
+}
+.guest-code-kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.guest-code-value {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1.15;
+  color: var(--theme-primary, #f2ca62);
+  text-shadow: 0 0 14px rgba(var(--theme-rgb, 242, 202, 98), 0.45);
+}
+.guest-code-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.62);
+  margin-top: 1px;
+}
+
 .search-section { margin-top: 16px; animation: fadeInUp 0.4s ease 0.1s both; }
 
 .search-results { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
@@ -6201,6 +6238,37 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   font-size: clamp(8px, 1.0vw, 18px);
   opacity: 0.7;
   margin: 0 clamp(3px, 0.4vw, 8px);
+}
+.ticker-item.is-callout { gap: clamp(6px, 0.55vw, 12px); }
+.ticker-item .ticker-code {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: 0.82em;
+  line-height: 1;
+  color: #140e04;
+  background: var(--theme-primary, #f2ca62);
+  border-radius: 4px;
+  padding: 0.22em 0.46em;
+  box-shadow: 0 0 12px rgba(var(--theme-rgb, 242, 202, 98), 0.45);
+}
+.ticker-item .ticker-verb {
+  color: rgba(255, 255, 255, 0.62);
+  font-weight: 500;
+}
+.dj-guest-code {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 0 5px;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 16px;
+  color: #f2ca62;
+  background: rgba(242, 202, 98, 0.12);
+  border: 1px solid rgba(242, 202, 98, 0.4);
 }
 
 @keyframes tickerScroll {
