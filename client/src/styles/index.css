@@ -4086,6 +4086,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   width: min(160px, 36vw);
   height: auto;
   object-fit: contain;
+  background: radial-gradient(closest-side, rgba(6, 6, 18, 0.82) 55%, rgba(6, 6, 18, 0) 100%);
 }
 .login-remiksbox-logo {
   display: block;

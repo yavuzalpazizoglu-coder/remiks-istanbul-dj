@@ -687,7 +687,7 @@ export default function DJPanel() {
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="login-brand-lockup">
                 <div className="login-brand-row">
-                  <img className="login-djsz-logo" src="/logos/djsizsiniz_sharp_360.png" srcSet="/logos/djsizsiniz_sharp_360.png 1x, /logos/djsizsiniz_sharp_540.png 2x, /logos/djsizsiniz_sharp_720.png 3x" alt="DJ Sizsiniz®" width="360" height="445" />
+                  <img className="login-djsz-logo" src="/logos/djsz_160@1x.png" srcSet="/logos/djsz_160@1x.png 1x, /logos/djsz_160@2x.png 2x, /logos/djsz_160@3x.png 3x" alt="DJ Sizsiniz®" width="160" height="197" />
                   <span className="login-brand-divider" />
                   <img className="login-remiks-istanbul-logo" src="/logos/remiks_istanbul_white.png" alt="Remiks İstanbul" width="855" height="281" />
                 </div>
@@ -752,7 +752,7 @@ export default function DJPanel() {
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="login-brand-lockup login-brand-lockup-compact">
               <div className="login-brand-row">
-                <img className="login-djsz-logo" src="/logos/djsizsiniz_sharp_360.png" srcSet="/logos/djsizsiniz_sharp_360.png 1x, /logos/djsizsiniz_sharp_540.png 2x, /logos/djsizsiniz_sharp_720.png 3x" alt="DJ Sizsiniz®" width="360" height="445" />
+                <img className="login-djsz-logo" src="/logos/djsz_128@1x.png" srcSet="/logos/djsz_128@1x.png 1x, /logos/djsz_128@2x.png 2x, /logos/djsz_128@3x.png 3x" alt="DJ Sizsiniz®" width="128" height="158" />
                 <span className="login-brand-divider" />
                 <img className="login-remiks-istanbul-logo" src="/logos/remiks_istanbul_white.png" alt="Remiks İstanbul" width="855" height="281" />
               </div>
