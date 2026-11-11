@@ -19,6 +19,7 @@ export default function DJPanel() {
   const [loginPassword, setLoginPassword] = useState('');
   const [slug, setSlug] = useState(paramSlug || '');
   const [event, setEvent] = useState(null);
+  const [rejiKey, setRejiKey] = useState('');
   const [lang, setLang] = useState('tr');
   const [requests, setRequests] = useState([]);
   const [toast, setToast] = useState('');
@@ -170,7 +171,7 @@ export default function DJPanel() {
     if (!slug) return;
 
     socket.connect();
-    socket.emit('join-event', { eventSlug: slug, role: 'dj' });
+    socket.emit('join-event', { eventSlug: slug, role: 'dj', password });
 
     socket.on('request-added', () => fetchRequests(slug));
     socket.on('vote-updated', () => fetchRequests(slug));
@@ -204,7 +205,15 @@ export default function DJPanel() {
       socket.off('request-stats-updated');
       socket.off('genre-stats-updated');
     };
-  }, [slug, fetchRequests]);
+  }, [slug, fetchRequests, password]);
+
+  useEffect(() => {
+    if (!slug || !password) return;
+    fetch(`${API}/api/events/${slug}/reji-key`, { headers: { 'x-dj-password': password } })
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => setRejiKey(d?.key || ''))
+      .catch(() => {});
+  }, [slug, password]);
 
   useEffect(() => {
     if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -883,7 +892,7 @@ export default function DJPanel() {
           {lang === 'tr' ? 'EKRAN' : 'DISPLAY'}
         </button>
         <button className="djc-reji-link-btn" onClick={() => {
-          const url = `${window.location.origin}/reji/${slug}`;
+          const url = `${window.location.origin}/reji/${slug}${rejiKey ? `?k=${rejiKey}` : ''}`;
           const msg = lang === 'tr'
             ? `🎬 REJİ KONTROL PANELİ\n📺 Etkinlik: ${event.name}\n🔗 ${url}\n\nBu linki herhangi bir tarayıcıda (Chrome, Safari vb.) aç.\nLED duvarına gönderilecek sahne görüntüsünü canlı olarak izleyeceksin.\nAlt taraftaki kontrol çubuğu ile sahneyi yönetebilirsin.\n\n━━━━ KONTROL ÇUBUĞU ━━━━\n\n📺 EKRAN YAZISI\n   LED'de görünen ana başlık metnini değiştirir.\n   Yazıp Enter'a bas, anında sahneye yansır.\n\n📜 KAYAN YAZI (Ticker)\n   Ekranın altından geçen kayan mesajı değiştirir.\n   Birden fazla satır yazarsan sırayla döner.\n\n💡 SPOTLIGHT\n   Kutucuğa mesaj yaz → ⚡ butonuna bas.\n   LED'de 5 saniye boyunca büyük neon yazı görünür.\n   Örnek: "Pasta Kesimi", "Gelin Buketi", "DJ Değişimi"\n\n🔲 KARARTMA (Blackout)\n   Tek tuşla LED'i tamamen karartır.\n   Tekrar basınca görüntü geri gelir.\n   Sahne geçişleri ve sürpriz anlar için kullan.\n\n⏱ GERİ SAYIM\n   "5...1" veya "3...1" butonuna bas.\n   LED'de büyük rakamlarla geri sayım görünür.\n   Pasta kesimi, balon patlatma vb. anlarda kullan.\n\n💬 CHAT\n   Sağ taraftaki mesaj kutusu ile DJ'e anlık mesaj atabilirsin.\n   DJ de sana yanıt verebilir. İletişim gerçek zamanlı.\n\n━━━━━━━━━━━━━━━━━━━━\n⚠️ Tarayıcıyı tam ekran aç (F11) — görüntü otomatik ölçeklenir.\n📱 Mobil cihazdan da erişilebilir ama laptop/PC önerilir.\n━━━━━━━━━━━━━━━━━━━━\nPowered by Remiks İstanbul\nremiksistanbul.com`
             : `🎬 CREW CONTROL PANEL\n📺 Event: ${event.name}\n🔗 ${url}\n\nOpen this link in any browser (Chrome, Safari etc.).\nYou will see the live stage output being sent to the LED wall.\nUse the control bar at the bottom to manage the stage.\n\n━━━━ CONTROL BAR ━━━━\n\n📺 SCREEN TEXT\n   Changes the main title shown on the LED.\n   Type and press Enter — reflects instantly on stage.\n\n📜 TICKER\n   Changes the scrolling text at the bottom of the LED.\n   Multiple lines rotate automatically.\n\n💡 SPOTLIGHT\n   Type a message → press ⚡.\n   A large neon text appears on LED for 5 seconds.\n   Example: "Cake Cutting", "Bouquet Toss", "DJ Switch"\n\n🔲 BLACKOUT\n   One press blacks out the entire LED.\n   Press again to restore. Use for transitions and surprises.\n\n⏱ COUNTDOWN\n   Press "5...1" or "3...1".\n   Large countdown numbers appear on LED.\n   Use for cake cutting, balloon pop, etc.\n\n💬 CHAT\n   Use the message box on the right to chat with the DJ.\n   DJ can reply back. Communication is real-time.\n\n━━━━━━━━━━━━━━━━━━━━\n⚠️ Open browser in fullscreen (F11) — display auto-scales.\n📱 Accessible from mobile but laptop/PC recommended.\n━━━━━━━━━━━━━━━━━━━━\nPowered by Remiks İstanbul\nremiksistanbul.com`;

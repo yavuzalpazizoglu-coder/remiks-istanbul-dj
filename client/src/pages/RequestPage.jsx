@@ -156,7 +156,7 @@ export default function RequestPage() {
     setSearching(true);
     searchTimer.current = setTimeout(async () => {
       try {
-        const res = await fetch(`${API}/api/spotify/search?q=${encodeURIComponent(value)}`);
+        const res = await fetch(`${API}/api/spotify/search?q=${encodeURIComponent(value)}&deviceId=${encodeURIComponent(deviceId)}`);
         if (res.status === 503) {
           setSearchResults([]);
           showToast(lang === 'tr' ? 'Spotify şu an yoğun, az sonra tekrar dene' : 'Spotify is busy, try again shortly');

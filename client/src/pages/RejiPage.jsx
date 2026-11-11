@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import socket from '../socket.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
 
 export default function RejiPage() {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const rejiKey = searchParams.get('k') || '';
 
   const [event, setEvent]               = useState(null);
   const [connectedCount, setConnectedCount] = useState(0);
@@ -46,7 +48,7 @@ export default function RejiPage() {
   useEffect(() => {
     fetchData();
     socket.connect();
-    socket.emit('join-event', { eventSlug: slug, role: 'reji' });
+    socket.emit('join-event', { eventSlug: slug, role: 'reji', key: rejiKey, password: localStorage.getItem('remiks_dj_pw') || undefined });
 
     socket.on('event-status',  ({ status }) => setEvent(p => p ? { ...p, status } : p));
     socket.on('room-count',    ({ count })  => setConnectedCount(count));

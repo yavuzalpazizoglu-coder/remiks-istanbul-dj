@@ -243,8 +243,10 @@ export function createRequest(eventId, songName, artist, albumArt, spotifyId, de
   return getRequestById(id);
 }
 
+const PUBLIC_REQUEST_COLUMNS = 'id, event_id, song_name, artist, album_art, spotify_id, votes, status, created_at, genre, guest_code';
+
 export function getRequestById(id) {
-  return db.prepare('SELECT * FROM requests WHERE id = ?').get(id);
+  return db.prepare(`SELECT ${PUBLIC_REQUEST_COLUMNS} FROM requests WHERE id = ?`).get(id);
 }
 
 export function getRequests(eventId, includeRejected = false) {
@@ -252,7 +254,7 @@ export function getRequests(eventId, includeRejected = false) {
     ? ''
     : "AND status != 'rejected' AND status != 'played'";
   return db.prepare(`
-    SELECT * FROM requests
+    SELECT ${PUBLIC_REQUEST_COLUMNS} FROM requests
     WHERE event_id = ? ${statusFilter}
     ORDER BY
       CASE status WHEN 'playing' THEN 0 WHEN 'approved' THEN 1 WHEN 'pending' THEN 2 ELSE 3 END,
@@ -263,12 +265,13 @@ export function getRequests(eventId, includeRejected = false) {
 
 export function getAllRequests(eventId) {
   return db.prepare(`
-    SELECT * FROM requests WHERE event_id = ?
+    SELECT ${PUBLIC_REQUEST_COLUMNS} FROM requests WHERE event_id = ?
     ORDER BY votes DESC, created_at ASC
   `).all(eventId);
 }
 
 export function voteRequest(requestId, deviceId) {
+  if (!db.prepare('SELECT 1 FROM requests WHERE id = ?').get(requestId)) return null;
   const existing = db.prepare(
     'SELECT id FROM votes WHERE request_id = ? AND device_id = ?'
   ).get(requestId, deviceId);

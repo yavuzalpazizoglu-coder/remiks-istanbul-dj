@@ -10,6 +10,7 @@ import multer from 'multer';
 import * as db from './db.js';
 import { searchSpotify, isSpotifyConfigured, getModeCovers } from './spotify.js';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 /* ── Gmail nodemailer istemcisi ── */
 const gmailTransporter = (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD)
@@ -267,6 +268,16 @@ function rateLimit(ip, max = 30, windowMs = 60000) {
   return entry.count <= max;
 }
 
+// Venue WiFi puts hundreds of phones behind one public IP, so per-action limits
+// are keyed by device; the IP ceiling only stops floods.
+function isRateLimited(req, bucket, max, deviceId) {
+  if (!rateLimit(`ip:${req.ip}`, 1500)) return true;
+  return !rateLimit(`${bucket}:${deviceId || req.ip}`, max);
+}
+
+const rejiKey = (slug) =>
+  crypto.createHmac('sha256', process.env.DJ_PASSWORD || '').update(String(slug)).digest('hex').slice(0, 20);
+
 // ─── Auth Middleware ───
 
 function djAuth(req, res, next) {
@@ -376,17 +387,23 @@ app.get('/api/events/:slug', (req, res) => {
 const DEVICE_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 app.get('/api/events/:slug/guest-code', (req, res) => {
-  if (!rateLimit(req.ip, 20)) return res.status(429).json({ error: 'Too many requests' });
   try {
-    const event = db.getEventBySlug(req.params.slug);
-    if (!event) return res.status(404).json({ error: 'Event not found' });
     const deviceId = String(req.query.deviceId || '');
     if (!DEVICE_ID_RE.test(deviceId)) return res.status(400).json({ error: 'Device ID required' });
+    if (isRateLimited(req, 'guest-code', 20, deviceId)) return res.status(429).json({ error: 'Too many requests' });
+    const event = db.getEventBySlug(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
     const code = db.getOrCreateGuestCode(event.id, deviceId);
     res.json({ code });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+app.get('/api/events/:slug/reji-key', djAuth, (req, res) => {
+  const event = db.getEventBySlug(req.params.slug);
+  if (!event) return res.status(404).json({ error: 'Event not found' });
+  res.json({ key: rejiKey(event.slug) });
 });
 
 app.put('/api/events/:slug/status', djAuth, (req, res) => {
@@ -496,7 +513,7 @@ app.post('/api/events/:slug/countdown', djAuth, (req, res) => {
 
 // Requests
 app.post('/api/events/:slug/requests', (req, res) => {
-  if (!rateLimit(req.ip)) return res.status(429).json({ error: 'Too many requests' });
+  if (isRateLimited(req, 'request', 10, req.body?.deviceId)) return res.status(429).json({ error: 'Too many requests' });
 
   try {
     const event = db.getEventBySlug(req.params.slug);
@@ -571,11 +588,10 @@ app.get('/api/events/:slug/requests', (req, res) => {
 
 // Votes
 app.post('/api/requests/:id/vote', (req, res) => {
-  if (!rateLimit(req.ip, 10)) return res.status(429).json({ error: 'Too many votes' });
-
   try {
     const { deviceId } = req.body;
     if (!deviceId) return res.status(400).json({ error: 'Device ID required' });
+    if (isRateLimited(req, 'vote', 10, deviceId)) return res.status(429).json({ error: 'Too many votes' });
 
     const updated = db.voteRequest(req.params.id, deviceId);
     if (!updated) return res.status(400).json({ error: 'Already voted' });
@@ -748,7 +764,7 @@ app.post('/api/events/:slug/music-mode', djAuth, (req, res) => {
 
 // Mode cover walls — mod basina Spotify top-track albüm kapaklari (7 gun cache)
 app.get('/api/modes/:modeId/covers', async (req, res) => {
-  if (!rateLimit(req.ip, 20)) return res.status(429).json({ error: 'Too many requests' });
+  if (isRateLimited(req, 'covers', 60)) return res.status(429).json({ error: 'Too many requests' });
   try {
     const covers = await getModeCovers(req.params.modeId);
     res.json({ covers });
@@ -759,7 +775,8 @@ app.get('/api/modes/:modeId/covers', async (req, res) => {
 
 // Spotify Search
 app.get('/api/spotify/search', async (req, res) => {
-  if (!rateLimit(req.ip, 20)) return res.status(429).json({ error: 'Too many searches' });
+  const searchDevice = DEVICE_ID_RE.test(String(req.query.deviceId || '')) ? req.query.deviceId : undefined;
+  if (isRateLimited(req, 'search', 40, searchDevice)) return res.status(429).json({ error: 'Too many searches' });
 
   try {
     const { q } = req.query;
@@ -785,9 +802,12 @@ function emitRoomCount(eventSlug) {
 }
 
 io.on('connection', (socket) => {
-  socket.on('join-event', ({ eventSlug, role } = {}) => {
+  socket.on('join-event', ({ eventSlug, role, password, key } = {}) => {
     if (!eventSlug || typeof eventSlug !== 'string') return;
-    const safeRole = ['dj', 'reji', 'display', 'request'].includes(role) ? role : 'guest';
+    const isDJ = !!process.env.DJ_PASSWORD && password === process.env.DJ_PASSWORD;
+    let safeRole = ['display', 'request'].includes(role) ? role : 'guest';
+    if (role === 'dj' && isDJ) safeRole = 'dj';
+    if (role === 'reji' && (isDJ || (typeof key === 'string' && key === rejiKey(eventSlug)))) safeRole = 'reji';
     socket.join(eventSlug);
     socket.data.role = safeRole;
     socket.data.eventSlug = eventSlug;
@@ -859,15 +879,24 @@ io.on('connection', (socket) => {
 
   socket.on('clear-playing', () => {
     const { eventSlug } = socket.data;
-    if (!eventSlug) return;
+    if (!eventSlug || !requireRole(socket, 'dj', 'reji')) return;
     io.to(eventSlug).emit('clear-playing');
   });
 
-  socket.on('display-card', (data) => {
+  socket.on('display-card', (data = {}) => {
     const { eventSlug } = socket.data;
-    if (!eventSlug) return;
+    if (!eventSlug || !requireRole(socket, 'dj', 'reji')) return;
+    const albumArt = typeof data.albumArt === 'string' && /^https:\/\/i\.scdn\.co\//.test(data.albumArt) ? data.albumArt : '';
     io.to(eventSlug).emit('display-card', {
-      ...data,
+      type: sanitize(data.type).slice(0, 30),
+      songName: sanitize(data.songName),
+      artist: sanitize(data.artist),
+      albumArt,
+      recipient: sanitize(data.recipient).slice(0, 80),
+      message: sanitize(data.message).slice(0, 200),
+      sender: sanitize(data.sender).slice(0, 80),
+      eventName: sanitize(data.eventName),
+      duration: Math.min(Math.max(Number(data.duration) || 45, 5), 120),
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
       timestamp: Date.now(),
     });
@@ -875,7 +904,7 @@ io.on('connection', (socket) => {
 
   socket.on('dismiss-card', () => {
     const { eventSlug } = socket.data;
-    if (!eventSlug) return;
+    if (!eventSlug || !requireRole(socket, 'dj', 'reji')) return;
     io.to(eventSlug).emit('dismiss-card');
   });
 
