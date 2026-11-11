@@ -647,7 +647,7 @@ export default function DJPanel() {
     const loginFooter = (
       <footer className="login-footer">
         <div className="login-footer-brand">
-          <img className="login-footer-djsz" src="/logos/djsizsiniz_neon.png" alt="DJ Sizsiniz®" width="767" height="940" />
+          <img className="login-footer-djsz" src="/logos/djsizsiniz_neon_120.png" alt="DJ Sizsiniz®" width="120" height="148" />
           <span className="login-footer-brand-divider" />
           <img className="login-footer-ri" src="/logos/remiks_istanbul_white.png" alt="Remiks İstanbul" width="855" height="281" />
           <span className="login-footer-brand-divider" />
@@ -685,7 +685,7 @@ export default function DJPanel() {
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="login-brand-lockup">
                 <div className="login-brand-row">
-                  <img className="login-djsz-logo" src="/logos/djsizsiniz_neon.png" alt="DJ Sizsiniz®" width="767" height="940" />
+                  <img className="login-djsz-logo" src="/logos/djsizsiniz_neon_300.png" srcSet="/logos/djsizsiniz_neon_300.png 2x, /logos/djsizsiniz_neon_480.png 3x" alt="DJ Sizsiniz®" width="300" height="369" />
                   <span className="login-brand-divider" />
                   <img className="login-remiks-istanbul-logo" src="/logos/remiks_istanbul_white.png" alt="Remiks İstanbul" width="855" height="281" />
                 </div>
@@ -750,7 +750,7 @@ export default function DJPanel() {
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="login-brand-lockup login-brand-lockup-compact">
               <div className="login-brand-row">
-                <img className="login-djsz-logo" src="/logos/djsizsiniz_neon.png" alt="DJ Sizsiniz®" width="767" height="940" />
+                <img className="login-djsz-logo" src="/logos/djsizsiniz_neon_300.png" srcSet="/logos/djsizsiniz_neon_300.png 2x, /logos/djsizsiniz_neon_480.png 3x" alt="DJ Sizsiniz®" width="300" height="369" />
                 <span className="login-brand-divider" />
                 <img className="login-remiks-istanbul-logo" src="/logos/remiks_istanbul_white.png" alt="Remiks İstanbul" width="855" height="281" />
               </div>

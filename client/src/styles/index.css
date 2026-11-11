@@ -4092,7 +4092,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   width: min(124px, 30vw);
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 0 22px rgba(255, 64, 160, 0.22)) drop-shadow(0 0 14px rgba(64, 200, 255, 0.18));
 }
 .login-remiksbox-logo {
   display: block;
