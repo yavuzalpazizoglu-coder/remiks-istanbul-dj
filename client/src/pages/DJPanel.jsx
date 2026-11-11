@@ -648,9 +648,10 @@ export default function DJPanel() {
       <footer className="login-footer">
         <div className="login-footer-brand">
           <img className="login-footer-djsz" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
-          <img className="login-footer-logo-mark" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
-          <span className="login-footer-by">DJ Sizsiniz® · by Remiks İstanbul</span>
+          <span className="login-footer-brand-divider" />
+          <img className="login-footer-logo-mark" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
         </div>
+        <div className="login-footer-by">DJ Sizsiniz® · by Remiks İstanbul</div>
         <div className="login-footer-links">
           <span>{lang === 'tr' ? 'Tüm hakları saklıdır.' : 'All rights reserved.'} &copy; {new Date().getFullYear()}</span>
           <span className="login-footer-sep">|</span>
@@ -680,8 +681,10 @@ export default function DJPanel() {
           {loginBg}
           <div className="login-content">
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <img className="login-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
-              <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
+              <div className="login-brand-lockup">
+                <img className="login-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
+                <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
+              </div>
               <p className="login-tagline">{lang === 'tr' ? 'DJ Sizsiniz® · Etkinlik Yönetim Sistemi' : 'DJ Sizsiniz® · Event Management System'}</p>
               <div className="login-badge-row">
                 <span className="login-badge">Real-Time</span>
@@ -739,8 +742,10 @@ export default function DJPanel() {
         {loginBg}
         <div className="login-content">
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <img className="login-djsz-logo login-djsz-logo-compact" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
-            <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_transparent_hr.png" alt="RemiksBox" width="1773" height="1773" />
+            <div className="login-brand-lockup login-brand-lockup-compact">
+              <img className="login-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
+              <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
+            </div>
             <div className="login-user-chip">
               <span className="login-user-avatar">{djUser.name?.charAt(0) || 'D'}</span>
               <span className="login-user-name">{djUser.name}</span>

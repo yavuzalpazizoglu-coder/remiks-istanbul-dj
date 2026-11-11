@@ -412,6 +412,22 @@ app.put('/api/events/:slug/status', djAuth, (req, res) => {
   }
 });
 
+app.delete('/api/events/:slug', djAuth, (req, res) => {
+  try {
+    const event = db.getEventBySlug(req.params.slug);
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    if (['active', 'countdown'].includes(event.status)) {
+      return res.status(409).json({ error: 'Event is live; end it before deleting' });
+    }
+    saveEventBackup(event, db.getAllRequests(event.id));
+    const { requests } = db.deleteEvent(event.id);
+    io.to(event.slug).emit('event-deleted');
+    res.json({ deleted: event.slug, requests });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.put('/api/events/:slug/language', djAuth, (req, res) => {
   try {
     const { language } = req.body;

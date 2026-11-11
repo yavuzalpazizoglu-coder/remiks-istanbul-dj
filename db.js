@@ -432,6 +432,14 @@ export function getActiveEvents() {
   return db.prepare("SELECT * FROM events WHERE status = 'active'").all();
 }
 
+export const deleteEvent = db.transaction((eventId) => {
+  db.prepare('DELETE FROM votes WHERE request_id IN (SELECT id FROM requests WHERE event_id = ?)').run(eventId);
+  const requests = db.prepare('DELETE FROM requests WHERE event_id = ?').run(eventId).changes;
+  db.prepare('DELETE FROM guest_codes WHERE event_id = ?').run(eventId);
+  db.prepare('DELETE FROM events WHERE id = ?').run(eventId);
+  return { requests };
+});
+
 export function getEventHistory(password) {
   return db.prepare(`
     SELECT e.id, e.name, e.slug, e.status, e.created_at,

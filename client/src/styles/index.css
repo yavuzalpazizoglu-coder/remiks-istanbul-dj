@@ -4055,44 +4055,46 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .login-hero {
   text-align: center; margin-bottom: 32px; width: 100%;
 }
+.login-brand-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 0 auto 18px;
+}
 .login-djsz-logo {
   display: block;
-  width: auto;
+  width: min(132px, 36vw);
   height: auto;
-  max-height: 148px;
-  max-width: min(168px, 46vw);
-  margin: 0 auto 10px;
   object-fit: contain;
-}
-.login-djsz-logo-compact {
-  max-height: 92px;
-  max-width: min(108px, 34vw);
-  margin-bottom: 8px;
+  filter: drop-shadow(0 0 18px rgba(255, 64, 160, 0.28));
 }
 .login-remiksbox-logo {
   display: block;
+  width: min(210px, 58vw);
   height: auto;
-  max-height: 72px;
-  width: auto;
-  max-width: min(220px, 70vw);
-  margin: 0 auto 12px;
   object-fit: contain;
-  filter: none;
-  animation: none;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55));
 }
+.login-brand-lockup-compact { gap: 10px; margin-bottom: 14px; }
+.login-brand-lockup-compact .login-djsz-logo { width: min(92px, 28vw); }
+.login-brand-lockup-compact .login-remiksbox-logo { width: min(168px, 50vw); }
 .login-footer-djsz {
   display: block;
-  height: 52px;
-  width: auto;
-  margin: 0 auto 8px;
+  width: 40px;
+  height: auto;
   object-fit: contain;
+}
+.login-footer-brand-divider {
+  width: 1px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.16);
 }
 .login-footer-logo-mark {
   display: block;
-  height: 22px;
-  width: auto;
-  opacity: 0.88;
-  margin-bottom: 4px;
+  width: 112px;
+  height: auto;
+  opacity: 0.9;
 }
 .login-logo-text {
   margin: 0 0 12px;
@@ -4237,8 +4239,8 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   border-top: 1px solid rgba(255,255,255,0.05);
 }
 .login-footer-brand {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  margin-bottom: 10px;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  margin-bottom: 8px;
 }
 .login-footer-logo-img {
   height: 20px;
@@ -4252,7 +4254,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .login-footer-logo-text .login-logo-remiks { color: #008D4B; font-style: italic; }
 .login-footer-logo-text .login-logo-box { color: #CCCCCC; font-weight: 900; }
 .login-footer-by {
-  font-size: 14px; color: #777;
+  font-size: 13px; color: #777; text-align: center; margin-bottom: 10px;
 }
 .login-footer-links {
   display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;
