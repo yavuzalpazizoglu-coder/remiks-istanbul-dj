@@ -4081,12 +4081,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   object-fit: contain;
 }
 .login-brand-lockup-compact .login-remiks-istanbul-logo { width: min(160px, 40vw); }
-.login-footer-ri {
-  display: block;
-  width: 92px;
-  height: auto;
-  opacity: 0.85;
-}
 .login-djsz-logo {
   display: block;
   width: min(160px, 36vw);
@@ -4103,23 +4097,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 .login-brand-lockup-compact { gap: 10px; margin-bottom: 14px; }
 .login-brand-lockup-compact .login-djsz-logo { width: min(128px, 32vw); }
 .login-brand-lockup-compact .login-remiksbox-logo { width: min(168px, 50vw); }
-.login-footer-djsz {
-  display: block;
-  width: 36px;
-  height: auto;
-  object-fit: contain;
-}
-.login-footer-brand-divider {
-  width: 1px;
-  height: 26px;
-  background: rgba(255, 255, 255, 0.16);
-}
-.login-footer-logo-mark {
-  display: block;
-  width: 112px;
-  height: auto;
-  opacity: 0.9;
-}
 .login-logo-text {
   margin: 0 0 12px;
   font-size: 52px;
@@ -4261,10 +4238,6 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   margin-top: 40px; padding: 24px 28px 20px;
   text-align: center;
   border-top: 1px solid rgba(255,255,255,0.05);
-}
-.login-footer-brand {
-  display: flex; align-items: center; justify-content: center; gap: 14px;
-  margin-bottom: 8px;
 }
 .login-footer-logo-img {
   height: 20px;

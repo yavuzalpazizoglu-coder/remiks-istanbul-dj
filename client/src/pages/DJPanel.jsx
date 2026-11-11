@@ -646,13 +646,6 @@ export default function DJPanel() {
 
     const loginFooter = (
       <footer className="login-footer">
-        <div className="login-footer-brand">
-          <img className="login-footer-djsz" src="/logos/djsizsiniz_neon_120.png" alt="DJ Sizsiniz®" width="120" height="148" />
-          <span className="login-footer-brand-divider" />
-          <img className="login-footer-ri" src="/logos/remiks_istanbul_white.png" alt="Remiks İstanbul" width="855" height="281" />
-          <span className="login-footer-brand-divider" />
-          <img className="login-footer-logo-mark" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
-        </div>
         <div className="login-footer-by">DJ Sizsiniz® · by Remiks İstanbul</div>
         <div className="login-footer-links">
           <span>{lang === 'tr' ? 'Tüm hakları saklıdır.' : 'All rights reserved.'} &copy; {new Date().getFullYear()}</span>
