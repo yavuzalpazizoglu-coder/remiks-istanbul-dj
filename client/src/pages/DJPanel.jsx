@@ -541,8 +541,10 @@ export default function DJPanel() {
   ];
 
   const DJ_PHOTOS = [
-    { id: 'derin', name: 'DJ Derin', src: '/logos/dj-derin.png' },
-    { id: 'alp', name: 'DJ Alp', src: '/logos/dj-alp.png' },
+    { id: 'derin', name: 'Derin', src: '/logos/dj-derin.png' },
+    { id: 'alp', name: 'Alp', src: '/logos/dj-alp.png' },
+    { id: 'ipek', name: 'İpek', src: '/logos/dj-ipek.jpg' },
+    { id: 'basak', name: 'Başak', src: '/logos/dj-basak.jpg' },
   ];
 
   const toggleDJPhoto = (djId) => {
