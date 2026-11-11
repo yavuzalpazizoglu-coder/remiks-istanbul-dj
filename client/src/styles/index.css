@@ -3018,7 +3018,7 @@ body.theme-pioneer-gold .djc-topbar-timer-active {
 /* ═══ DJ Grid ═══ */
 .djc-dj-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 3px;
   margin-bottom: 3px;
 }
