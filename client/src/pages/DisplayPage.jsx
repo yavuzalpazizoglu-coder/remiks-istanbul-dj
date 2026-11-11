@@ -484,7 +484,7 @@ function NpWaveform() {
 function NpCrown({ active }) {
   return (
     <div className={`dsp-np-crownblk ${active ? '' : 'dsp-np-crownblk-idle'}`}>
-      <img className="dsp-np-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
+      <img className="dsp-np-djsz-logo" src="/logos/djsizsiniz.png" srcSet="/logos/djsizsiniz-300.png 300w, /logos/djsizsiniz-600.png 600w, /logos/djsizsiniz.png 900w" sizes="138px" alt="DJ Sizsiniz®" width="900" height="900" />
     </div>
   );
 }
@@ -844,7 +844,7 @@ function EventSummary({ requests, lang, eventName }) {
         </div>
       </motion.div>
 
-      <img className="summary-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" />
+      <img className="summary-djsz-logo" src="/logos/djsizsiniz.png" srcSet="/logos/djsizsiniz-300.png 300w, /logos/djsizsiniz-600.png 600w, /logos/djsizsiniz.png 900w" sizes="120px" alt="DJ Sizsiniz®" />
 
     </div>
   );
@@ -1428,6 +1428,8 @@ export default function DisplayPage() {
             <motion.img
               className="display-waiting-djsz"
               src="/logos/djsizsiniz.png"
+              srcSet="/logos/djsizsiniz-300.png 300w, /logos/djsizsiniz-600.png 600w, /logos/djsizsiniz.png 900w"
+              sizes="220px"
               alt="DJ Sizsiniz®"
               initial={{ opacity: 0, scale: 0.86 }}
               animate={{ opacity: 1, scale: 1 }}

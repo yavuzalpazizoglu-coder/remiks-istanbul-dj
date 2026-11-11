@@ -7,6 +7,7 @@ import { t } from '../i18n/index.js';
 
 const API = import.meta.env.PROD ? '' : 'http://localhost:3000';
 const DJSZ_LOGO = '/logos/djsizsiniz.png';
+const DJSZ_LOGO_SET = '/logos/djsizsiniz-300.png 300w, /logos/djsizsiniz-600.png 600w, /logos/djsizsiniz.png 900w';
 
 function getDeviceId() {
   let id = localStorage.getItem('remiks_device_id');
@@ -272,7 +273,7 @@ export default function RequestPage() {
     return (
       <div className="request-page" style={themeStyle}>
         <div className="status-overlay">
-          <img className="status-overlay-djsz" src={DJSZ_LOGO} alt="DJ Sizsiniz®" />
+          <img className="status-overlay-djsz" src={DJSZ_LOGO} srcSet={DJSZ_LOGO_SET} sizes="min(42vw, 168px)" alt="DJ Sizsiniz®" />
           <h2>{T('request.not_open')}</h2>
           <p>{T('request.waiting_message')}</p>
         </div>
@@ -284,7 +285,7 @@ export default function RequestPage() {
     return (
       <div className="request-page" style={themeStyle}>
         <div className="status-overlay">
-          <img className="status-overlay-djsz" src={DJSZ_LOGO} alt="DJ Sizsiniz®" />
+          <img className="status-overlay-djsz" src={DJSZ_LOGO} srcSet={DJSZ_LOGO_SET} sizes="min(42vw, 168px)" alt="DJ Sizsiniz®" />
           <h2>{T('request.ended')}</h2>
           <p>{T('request.ended_message')}</p>
         </div>
@@ -296,7 +297,7 @@ export default function RequestPage() {
     return (
       <div className="request-page" style={themeStyle}>
         <div className="status-overlay">
-          <img className="status-overlay-djsz" src={DJSZ_LOGO} alt="DJ Sizsiniz®" />
+          <img className="status-overlay-djsz" src={DJSZ_LOGO} srcSet={DJSZ_LOGO_SET} sizes="min(42vw, 168px)" alt="DJ Sizsiniz®" />
           <h2>{T('request.paused')}</h2>
           <p>{T('request.paused_message')}</p>
         </div>
@@ -314,7 +315,7 @@ export default function RequestPage() {
         <div className="request-header-logos">
           {eventLogo && <img src={eventLogo} alt="Event" className="request-event-logo" />}
           <img className="request-brand-logo-img" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
-          <img className="request-djsz-logo" src={DJSZ_LOGO} alt="DJ Sizsiniz®" width="900" height="900" />
+          <img className="request-djsz-logo" src={DJSZ_LOGO} srcSet={DJSZ_LOGO_SET} sizes="min(38vw, 132px)" alt="DJ Sizsiniz®" width="900" height="900" />
         </div>
         <h1>{T('request.title')}</h1>
         {event.status === 'countdown' && countdownDisplay && (
