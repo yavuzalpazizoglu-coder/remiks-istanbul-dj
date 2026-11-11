@@ -685,7 +685,7 @@ export default function DJPanel() {
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="login-brand-lockup">
                 <div className="login-brand-row">
-                  <img className="login-djsz-logo" src="/logos/djsizsiniz_neon_300.png" srcSet="/logos/djsizsiniz_neon_300.png 2x, /logos/djsizsiniz_neon_480.png 3x" alt="DJ Sizsiniz®" width="300" height="369" />
+                  <img className="login-djsz-logo" src="/logos/djsizsiniz_neon_180.png" srcSet="/logos/djsizsiniz_neon_180.png 1x, /logos/djsizsiniz_neon_360.png 2x, /logos/djsizsiniz_neon_540.png 3x" alt="DJ Sizsiniz®" width="180" height="222" />
                   <span className="login-brand-divider" />
                   <img className="login-remiks-istanbul-logo" src="/logos/remiks_istanbul_white.png" alt="Remiks İstanbul" width="855" height="281" />
                 </div>
@@ -750,7 +750,7 @@ export default function DJPanel() {
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="login-brand-lockup login-brand-lockup-compact">
               <div className="login-brand-row">
-                <img className="login-djsz-logo" src="/logos/djsizsiniz_neon_300.png" srcSet="/logos/djsizsiniz_neon_300.png 2x, /logos/djsizsiniz_neon_480.png 3x" alt="DJ Sizsiniz®" width="300" height="369" />
+                <img className="login-djsz-logo" src="/logos/djsizsiniz_neon_180.png" srcSet="/logos/djsizsiniz_neon_180.png 1x, /logos/djsizsiniz_neon_360.png 2x, /logos/djsizsiniz_neon_540.png 3x" alt="DJ Sizsiniz®" width="180" height="222" />
                 <span className="login-brand-divider" />
                 <img className="login-remiks-istanbul-logo" src="/logos/remiks_istanbul_white.png" alt="Remiks İstanbul" width="855" height="281" />
               </div>
