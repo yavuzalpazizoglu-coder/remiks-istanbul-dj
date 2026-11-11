@@ -647,7 +647,7 @@ export default function DJPanel() {
     const loginFooter = (
       <footer className="login-footer">
         <div className="login-footer-brand">
-          <img className="login-footer-djsz" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
+          <img className="login-footer-djsz" src="/logos/djsizsiniz_neon.png" alt="DJ Sizsiniz®" width="767" height="940" />
           <span className="login-footer-brand-divider" />
           <img className="login-footer-logo-mark" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
         </div>
@@ -682,7 +682,7 @@ export default function DJPanel() {
           <div className="login-content">
             <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <div className="login-brand-lockup">
-                <img className="login-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
+                <img className="login-djsz-logo" src="/logos/djsizsiniz_neon.png" alt="DJ Sizsiniz®" width="767" height="940" />
                 <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
               </div>
               <p className="login-tagline">{lang === 'tr' ? 'DJ Sizsiniz® · Etkinlik Yönetim Sistemi' : 'DJ Sizsiniz® · Event Management System'}</p>
@@ -743,7 +743,7 @@ export default function DJPanel() {
         <div className="login-content">
           <motion.div className="login-hero" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="login-brand-lockup login-brand-lockup-compact">
-              <img className="login-djsz-logo" src="/logos/djsizsiniz.png" alt="DJ Sizsiniz®" width="900" height="900" />
+              <img className="login-djsz-logo" src="/logos/djsizsiniz_neon.png" alt="DJ Sizsiniz®" width="767" height="940" />
               <img className="login-remiksbox-logo" src="/logos/remiksbox_marka_display.png" alt="RemiksBox" width="1200" height="202" />
             </div>
             <div className="login-user-chip">

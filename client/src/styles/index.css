@@ -4064,10 +4064,10 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
 }
 .login-djsz-logo {
   display: block;
-  width: min(132px, 36vw);
+  width: min(150px, 40vw);
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(255, 64, 160, 0.28));
+  filter: drop-shadow(0 0 22px rgba(255, 64, 160, 0.22)) drop-shadow(0 0 14px rgba(64, 200, 255, 0.18));
 }
 .login-remiksbox-logo {
   display: block;
@@ -4077,11 +4077,11 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55));
 }
 .login-brand-lockup-compact { gap: 10px; margin-bottom: 14px; }
-.login-brand-lockup-compact .login-djsz-logo { width: min(92px, 28vw); }
+.login-brand-lockup-compact .login-djsz-logo { width: min(104px, 30vw); }
 .login-brand-lockup-compact .login-remiksbox-logo { width: min(168px, 50vw); }
 .login-footer-djsz {
   display: block;
-  width: 40px;
+  width: 36px;
   height: auto;
   object-fit: contain;
 }
