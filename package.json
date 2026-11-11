@@ -16,7 +16,8 @@
     "check": "node scripts/system-check.mjs",
     "setup": "npm install && cd client && npm install",
     "tanitim:render": "node tanitim/render-tanitim-banner.mjs",
-    "tanitim:social": "node tanitim/social/render-social.mjs"
+    "tanitim:social": "node tanitim/social/render-social.mjs",
+    "check:e2e": "node scripts/e2e-check.mjs"
   },
   "dependencies": {
     "better-sqlite3": "^11.7.0",
