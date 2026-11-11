@@ -4062,9 +4062,34 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   gap: 14px;
   margin: 0 auto 18px;
 }
+.login-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 4vw, 28px);
+}
+.login-brand-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 10% 0;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+}
+.login-remiks-istanbul-logo {
+  display: block;
+  width: min(220px, 46vw);
+  height: auto;
+  object-fit: contain;
+}
+.login-brand-lockup-compact .login-remiks-istanbul-logo { width: min(160px, 40vw); }
+.login-footer-ri {
+  display: block;
+  width: 92px;
+  height: auto;
+  opacity: 0.85;
+}
 .login-djsz-logo {
   display: block;
-  width: min(150px, 40vw);
+  width: min(124px, 30vw);
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 0 22px rgba(255, 64, 160, 0.22)) drop-shadow(0 0 14px rgba(64, 200, 255, 0.18));
@@ -4077,7 +4102,7 @@ body.theme-pioneer-gold .djc-mmode-tag.mm-rap { border-left-color: #a0a0a0; }
   filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55));
 }
 .login-brand-lockup-compact { gap: 10px; margin-bottom: 14px; }
-.login-brand-lockup-compact .login-djsz-logo { width: min(104px, 30vw); }
+.login-brand-lockup-compact .login-djsz-logo { width: min(90px, 24vw); }
 .login-brand-lockup-compact .login-remiksbox-logo { width: min(168px, 50vw); }
 .login-footer-djsz {
   display: block;
